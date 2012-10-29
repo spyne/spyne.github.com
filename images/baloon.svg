@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:cc="http://creativecommons.org/ns#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:svg="http://www.w3.org/2000/svg"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+     xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+     width="1003.3438"
+     height="717.17792"
+     id="svg2"
+     sodipodi:version="0.32"
+     inkscape:version="0.48.3.1 r9886"
+     version="1.0"
+     sodipodi:docname="basso-sx.svg"
+     inkscape:output_extension="org.inkscape.output.svg.inkscape"
+     inkscape:export-filename="/home/plq/src/octopress/_deploy/images/basso-sx.png"
+     inkscape:export-xdpi="1.8527453"
+     inkscape:export-ydpi="1.8527453">
+    <defs
+         id="defs4" />
+    <sodipodi:namedview
+         id="base"
+         pagecolor="#ffffff"
+         bordercolor="#666666"
+         borderopacity="1.0"
+         inkscape:pageopacity="0.0"
+         inkscape:pageshadow="2"
+         inkscape:zoom="0.5"
+         inkscape:cx="282.04932"
+         inkscape:cy="391.35655"
+         inkscape:document-units="cm"
+         inkscape:current-layer="layer1"
+         width="1052.3622px"
+         height="744.09449px"
+         inkscape:window-width="1440"
+         inkscape:window-height="878"
+         inkscape:window-x="0"
+         inkscape:window-y="0"
+         showgrid="false"
+         inkscape:window-maximized="0"
+         units="cm"
+         fit-margin-top="0"
+         fit-margin-left="0"
+         fit-margin-right="0"
+         fit-margin-bottom="0" />
+    <metadata
+         id="metadata7">
+        <rdf:RDF>
+            <cc:Work
+                 rdf:about="">
+                <dc:format>image/svg+xml</dc:format>
+                <dc:type
+                     rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+                <dc:title></dc:title>
+            </cc:Work>
+        </rdf:RDF>
+    </metadata>
+    <g
+         inkscape:label="Livello 1"
+         inkscape:groupmode="layer"
+         id="layer1"
+         transform="translate(-49.25,9.1571774)">
+        <path
+             style="fill:none;stroke:#ffffff;stroke-width:70.86614227;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+             d="m 631.43751,656.37501 c -98.60784,0 -190.40036,-20.07008 -267.03125,-54.5625 0,0 -147.80814,116.33526 -223.46876,50.78125 86.27546,-2.7315 121.1875,-112.4375 121.1875,-112.4375 -72.56785,-57.91279 -130.4063,-139.07232 -130.4063,-221.1875 0,-182.94857 179.66832,-340.136686 497.71881,-279.437505 195.08503,37.231514 387.71879,142.488945 387.71879,325.437505 -2e-4,182.94857 -117.60449,291.40625 -385.71879,291.40625 z"
+             id="path2164"
+             inkscape:connector-curvature="0"
+             sodipodi:nodetypes="scccssss" />
+    </g>
+</svg>
