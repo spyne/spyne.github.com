@@ -18,12 +18,12 @@ $(document).ready(function(){
     shi.click(function(e) {
         if (hide_imports) {
             hide_imports = false;
-            shi.html("Show Imports");
+            shi.html("Hide Imports");
             regen_code(hide_imports);
         }
         else {
             hide_imports = true;
-            shi.html("Hide Imports");
+            shi.html("Show Imports");
             regen_code(true);
         }
     });
