@@ -1,0 +1,222 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Service Definition &mdash; spyne 2.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.9.0 documentation" href="../index.html" />
+    <link rel="up" title="Spyne API Reference" href="index.html" />
+    <link rel="next" title="RPC Decorators" href="decorator.html" />
+    <link rel="prev" title="Application Definition" href="application.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="decorator.html" title="RPC Decorators"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="application.html" title="Application Definition"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">spyne 2.9.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Spyne API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="application.html"
+                        title="previous chapter">Application Definition</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="decorator.html"
+                        title="next chapter">RPC Decorators</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../sources/reference/service.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-spyne.service">
+<span id="service-definition"></span><h1>Service Definition<a class="headerlink" href="#module-spyne.service" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="spyne.service.ServiceBase">
+<em class="property">class </em><tt class="descclassname">spyne.service.</tt><tt class="descname">ServiceBase</tt><a class="reference internal" href="../modules/spyne/service.html#ServiceBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.service.ServiceBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <tt class="docutils literal"><span class="pre">ServiceBase</span></tt> class is the base class for all service definitions.</p>
+<p>The convention is to have public methods defined under a subclass of this
+class along with common properties of public methods like header classes or
+auxiliary processors. The <a class="reference internal" href="decorator.html#spyne.decorator.srpc" title="spyne.decorator.srpc"><tt class="xref py py-func docutils literal"><span class="pre">spyne.decorator.srpc()</span></tt></a> decorator or its
+wrappers should be used to flag public methods.</p>
+<p>It is a natural abstract base class, because it&#8217;s of no use without any
+method definitions, hence the &#8216;Base&#8217; suffix in the name.</p>
+<dl class="docutils">
+<dt>This class supports the following events:</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method_call</span></tt></dt>
+<dd><p class="first last">Called right before the service method is executed</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method_return_object</span></tt></dt>
+<dd><p class="first last">Called right after the service method is executed</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method_exception_object</span></tt></dt>
+<dd><p class="first last">Called when an exception occurred in a service method, before the
+exception is serialized.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method_accept_document</span></tt></dt>
+<dd><p class="first last">Called by the transport right after the incoming stream is parsed to
+the incoming protocol&#8217;s document type.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method_return_document</span></tt></dt>
+<dd><p class="first last">Called by the transport right after the outgoing object is
+serialized to the outgoing protocol&#8217;s document type.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method_exception_document</span></tt></dt>
+<dd><p class="first last">Called by the transport right before the outgoing exception object
+is serialized to the outgoing protocol&#8217;s document type.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method_return_string</span></tt></dt>
+<dd><p class="first last">Called by the transport right before passing the return string to
+the client.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method_exception_string</span></tt></dt>
+<dd><p class="first last">Called by the transport right before passing the exception string to
+the client.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<dl class="classmethod">
+<dt id="spyne.service.ServiceBase.call_wrapper">
+<em class="property">classmethod </em><tt class="descname">call_wrapper</tt><big>(</big><em>ctx</em><big>)</big><a class="reference internal" href="../modules/spyne/service.html#ServiceBase.call_wrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.service.ServiceBase.call_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called in place of the original method call. You can override this to
+do your own exception handling.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ctx</strong> &#8211; The method context.</td>
+</tr>
+</tbody>
+</table>
+<p>The overriding function must call this function by convention.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.service.ServiceBaseMeta">
+<em class="property">class </em><tt class="descclassname">spyne.service.</tt><tt class="descname">ServiceBaseMeta</tt><big>(</big><em>cls_name</em>, <em>cls_bases</em>, <em>cls_dict</em><big>)</big><a class="reference internal" href="../modules/spyne/service.html#ServiceBaseMeta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.service.ServiceBaseMeta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the <a class="reference internal" href="base.html#spyne.MethodDescriptor" title="spyne.MethodDescriptor"><tt class="xref py py-class docutils literal"><span class="pre">spyne.MethodDescriptor</span></tt></a> objects by iterating over
+tagged methods.</p>
+<dl class="method">
+<dt id="spyne.service.ServiceBaseMeta.mro">
+<tt class="descname">mro</tt><big>(</big><big>)</big> &rarr; list<a class="headerlink" href="#spyne.service.ServiceBaseMeta.mro" title="Permalink to this definition">¶</a></dt>
+<dd><p>return a type&#8217;s method resolution order</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="decorator.html" title="RPC Decorators"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="application.html" title="Application Definition"
+             >previous</a> |</li>
+        <li><a href="../index.html">spyne 2.9.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Spyne API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

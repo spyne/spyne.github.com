@@ -1,0 +1,214 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Auxiliary Processors &mdash; spyne 2.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.9.0 documentation" href="../index.html" />
+    <link rel="up" title="Spyne API Reference" href="index.html" />
+    <link rel="next" title="Miscellanous Spyne Utilities" href="util.html" />
+    <link rel="prev" title="Server Transports" href="server.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="util.html" title="Miscellanous Spyne Utilities"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="server.html" title="Server Transports"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">spyne 2.9.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Spyne API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Auxiliary Processors</a><ul>
+<li><a class="reference internal" href="#auxprocbase">AuxProcBase</a></li>
+<li><a class="reference internal" href="#syncauxproc">SyncAuxProc</a></li>
+<li><a class="reference internal" href="#threadauxproc">ThreadAuxProc</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="server.html"
+                        title="previous chapter">Server Transports</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="util.html"
+                        title="next chapter">Miscellanous Spyne Utilities</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../sources/reference/auxproc.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-spyne.auxproc">
+<span id="auxiliary-processors"></span><span id="reference-auxproc-base"></span><h1>Auxiliary Processors<a class="headerlink" href="#module-spyne.auxproc" title="Permalink to this headline">¶</a></h1>
+<p>The <tt class="docutils literal"><span class="pre">spyne.auxproc</span></tt> package contains backends to process auxiliary method
+contexts.</p>
+<p>&#8220;Auxiliary Methods&#8221; are methods that run asyncronously once the
+primary method returns (either successfully or not). There can be only one
+primary method for a given method identifier but zero or more auxiliary methods.</p>
+<p>To define multiple auxiliary methods for a given main method, you must use
+separate <tt class="xref py py-class docutils literal"><span class="pre">ServiceBase</span></tt> subclasses that you pass to the
+<a class="reference internal" href="application.html#spyne.application.Application" title="spyne.application.Application"><tt class="xref py py-class docutils literal"><span class="pre">spyne.application.Application</span></tt></a> constructor.</p>
+<p>Auxiliary methods are a useful abstraction for a variety of asyncronous
+execution methods like persistent or non-persistent queueing, async execution
+in another thread, process or node.</p>
+<p>Classes from this package will have the <tt class="docutils literal"><span class="pre">AuxProc</span></tt> suffix, short for
+&#8220;Auxiliary Processor&#8221;.</p>
+<p>This package is EXPERIMENTAL.</p>
+<div class="section" id="auxprocbase">
+<h2>AuxProcBase<a class="headerlink" href="#auxprocbase" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="spyne.auxproc._base.AuxProcBase">
+<em class="property">class </em><tt class="descclassname">spyne.auxproc._base.</tt><tt class="descname">AuxProcBase</tt><big>(</big><em>process_exceptions=False</em><big>)</big><a class="reference internal" href="../modules/spyne/auxproc/_base.html#AuxProcBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.auxproc._base.AuxProcBase" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="spyne.auxproc._base.AuxProcBase.initialize">
+<tt class="descname">initialize</tt><big>(</big><em>server</em><big>)</big><a class="reference internal" href="../modules/spyne/auxproc/_base.html#AuxProcBase.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.auxproc._base.AuxProcBase.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this method to make arbitrary initialization of your
+AuxProc. It&#8217;s called once, &#8216;as late as possible&#8217; into the Application
+initialization.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.auxproc._base.AuxProcBase.initialize_context">
+<tt class="descname">initialize_context</tt><big>(</big><em>ctx</em>, <em>p_ctx</em>, <em>error</em><big>)</big><a class="reference internal" href="../modules/spyne/auxproc/_base.html#AuxProcBase.initialize_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.auxproc._base.AuxProcBase.initialize_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this method to alter thow the auxiliary method context is
+initialized. It&#8217;s called every time the method is executed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.auxproc._base.AuxProcBase.process">
+<tt class="descname">process</tt><big>(</big><em>server</em>, <em>ctx</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../modules/spyne/auxproc/_base.html#AuxProcBase.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.auxproc._base.AuxProcBase.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>The method that does the actual processing. This should be called
+from the auxiliary context.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.auxproc._base.AuxProcBase.process_context">
+<tt class="descname">process_context</tt><big>(</big><em>server</em>, <em>ctx</em>, <em>p_ctx</em>, <em>p_error</em><big>)</big><a class="reference internal" href="../modules/spyne/auxproc/_base.html#AuxProcBase.process_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.auxproc._base.AuxProcBase.process_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this to implement your own auxiliary processor.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="syncauxproc">
+<span id="reference-auxproc-sync"></span><h2>SyncAuxProc<a class="headerlink" href="#syncauxproc" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="spyne.auxproc.sync.SyncAuxProc">
+<em class="property">class </em><tt class="descclassname">spyne.auxproc.sync.</tt><tt class="descname">SyncAuxProc</tt><big>(</big><em>process_exceptions=False</em><big>)</big><a class="reference internal" href="../modules/spyne/auxproc/sync.html#SyncAuxProc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.auxproc.sync.SyncAuxProc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.auxproc._base.AuxProcBase" title="spyne.auxproc._base.AuxProcBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.auxproc._base.AuxProcBase</span></tt></a></p>
+<p>SyncAuxProc processes auxiliary methods synchronously. It&#8217;s useful for
+testing purposes.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="threadauxproc">
+<span id="reference-auxproc-thread"></span><h2>ThreadAuxProc<a class="headerlink" href="#threadauxproc" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="spyne.auxproc.thread.ThreadAuxProc">
+<em class="property">class </em><tt class="descclassname">spyne.auxproc.thread.</tt><tt class="descname">ThreadAuxProc</tt><big>(</big><em>pool_size=1</em><big>)</big><a class="reference internal" href="../modules/spyne/auxproc/thread.html#ThreadAuxProc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.auxproc.thread.ThreadAuxProc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.auxproc._base.AuxProcBase" title="spyne.auxproc._base.AuxProcBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.auxproc._base.AuxProcBase</span></tt></a></p>
+<p>ThreadAuxProc processes auxiliary methods asynchronously in another
+thread using the undocumented <tt class="docutils literal"><span class="pre">multiprocessing.pool.ThreadPool</span></tt> class.
+This is available in Python 2.7. It&#8217;s possibly there since 2.6 as well but
+it&#8217;s hard to tell since it&#8217;s not documented.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pool_size</strong> &#8211; Max. number of threads that can be used to process
+methods in auxiliary queue in parallel.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="util.html" title="Miscellanous Spyne Utilities"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="server.html" title="Server Transports"
+             >previous</a> |</li>
+        <li><a href="../index.html">spyne 2.9.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Spyne API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

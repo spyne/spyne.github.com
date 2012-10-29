@@ -1,0 +1,278 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>spyne - Run the interwebs</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="assets/scale.fix.js"></script>
+    <script src="assets/jquery-1.8.2.min.js"></script>
+
+    <script src="assets/jquery.snippet.min.js"></script>
+    <script type="text/javascript">
+$(document).ready(function(){
+    var hide_imports = true;
+
+    var shi = $("#toggle_imports");
+    shi.click(function(e) {
+        if (hide_imports) {
+            hide_imports = false;
+            shi.html("Show Imports");
+            regen_code(hide_imports);
+        }
+        else {
+            hide_imports = true;
+            shi.html("Hide Imports");
+            regen_code(true);
+        }
+    });
+
+    $("input.chk_param").click(function(e) {
+        regen_code(hide_imports);
+    });
+
+    regen_code(hide_imports);
+ });
+
+ function regen_code(hide_imports) {
+    var version = $("span#version").html();
+    var gen_imports = [
+         "from spyne.application import Application"
+        ,"from spyne.decorator import srpc"
+        ,"from spyne.service import ServiceBase"
+        ,"from spyne.model.complex import Array"
+        ,"from spyne.model.primitive import Integer"
+        ,"from spyne.model.primitive import String"
+    ].join("\n")
+
+    var prot_imports = {
+         HttpRpc: "from spyne.protocol.http import HttpRpc"
+        ,XmlDocument: "from spyne.protocol.xml import XmlDocument"
+        ,Soap11: "from spyne.protocol.soap import Soap11"
+        ,JsonDocument: "from spyne.protocol.json import JsonDocument"
+        ,MessagePackDocument: "from spyne.protocol.msgpack import MessagePackDocument"
+        ,MessagePackRpc: "from spyne.protocol.msgpack import MessagePackRpc"
+        ,Csv: "from spyne.protocol.csv import Csv"
+        ,HtmlRowTable: "from spyne.protocol.html import HtmlRowTable"
+        ,HtmlColumnTable: "from spyne.protocol.html import HtmlColumnTable"
+        ,HtmlMicroMormat: "from spyne.protocol.html import HtmlMicroMormat"
+    };
+
+    var tpt_imports = {
+         WsgiApplication: ["from spyne.server.wsgi import WsgiApplication"]
+        ,TwistedWebResource: [
+            "from spyne.server.twisted import TwistedWebResource"
+            ,""
+            ,"from twisted.internet import reactor"
+            ,"from twisted.web.server import Site"
+        ]
+        ,DjangoApplication: [
+             "from spyne.server.django import DjangoApplication"
+            ,""
+            ,"from django.views.decorators.csrf import csrf_exempt"
+        ]
+        ,PyramidApplication: ["from spyne.server.pyramid import PyramidApplication"]
+        ,ZeroMQServer: ["from spyne.server.zeromq import ZeroMQServer"]
+    }
+
+    var tpt_example = {
+         WsgiApplication: ["helloworld_http.py"]
+        ,TwistedWebResource: ["twisted"]
+        ,DjangoApplication: ["django"]
+        ,PyramidApplication: ["pyramid"]
+        ,ZeroMQServer: ["zeromq.py"]
+    }
+
+    var inprot = $('input[name=inprot]:checked').val();
+    var outprot = $('input[name=outprot]:checked').val();
+    var tpt = $('input[name=tpt]:checked').val();
+    var validation = $('input[name=validation]:checked').val();
+
+    if (validation == "true") {
+        if (inprot == "Soap11") {
+            validation = 'validator="lxml"';
+        }
+        else {
+            validation = 'validator="soft"';
+        }
+    }
+
+    var retval = [];
+
+    if (! hide_imports) {
+        retval.push(gen_imports);
+        retval.push("")
+
+        // protocol imports
+        retval.push(prot_imports[inprot]);
+        if (inprot != outprot) {
+            retval.push(prot_imports[outprot]);
+        }
+        retval.push("");
+
+        // transport imports
+        retval = retval.concat(tpt_imports[tpt]);
+        retval.push("");
+    }
+
+    retval.push("class HelloWorldService(ServiceBase):");
+    retval.push("    @srpc(String, Integer, _returns=Array(String))");
+    retval.push("    def say_hello(name, times):");
+    retval.push("        for i in range(times):");
+    retval.push("            yield 'Hello, %s' % name");
+
+    retval.push("");
+
+    retval.push("application = Application([HelloWorldService],");
+    retval.push("    tns='spyne.examples.hello',");
+    retval.push("    in_protocol="+ inprot +"(" + validation + "),");
+    retval.push("    out_protocol="+ outprot +"()");
+    retval.push(")");
+
+    retval.push("");
+
+    if (tpt == "WsgiApplication") {
+        retval.push("if __name__=='__main__':");
+        retval.push("    from wsgiref.simple_server import make_server");
+        retval.push("");
+        retval.push("    wsgi_app = WsgiApplication(application)");
+        retval.push("    server = make_server('0.0.0.0', 7789, wsgi_app)");
+        retval.push("    server.serve_forever()");
+    }
+    else if (tpt == "ZeroMQServer") {
+        retval.push("if __name__=='__main__':");
+        retval.push("    wsgi_app = ZeroMQServer(application,")
+        retval.push("                           'tcp://0.0.0.0:5555')");
+        retval.push("    server.serve_forever()")
+    }
+    else if (tpt == "TwistedWebResource") {
+        retval.push("if __name__=='__main__':");
+        retval.push("    resource = TwistedWebResource(application)");
+        retval.push("    site = Site(resource)");
+        retval.push("");
+        retval.push("    reactor.listenTCP(7789, site, interface='0.0.0.0')");
+    }
+    else if (tpt == "DjangoApplication") {
+        retval = [
+            "# This module resides in a package in your Django project.",
+            ""
+        ].concat(retval);
+
+        retval.push("hello_app = csrf_exempt(DjangoApplication(application))");
+        retval.push("")
+        retval.push("# hello_app here has to be put in a package that is");
+        retval.push("# listed in the INSTALLED_APPS list in your settings.py");
+        retval.push("# and referenced in the url.py under an appropriate");
+        retval.push("# regexp entry.");
+    }
+
+    $("div.code pre").remove()
+    $("div.code").append("<pre/>");
+
+    var example_url = tpt_example[tpt];
+
+    $("span.code_link").html(
+            "<a target=\"_blank\" href=\"https://github.com/arskom/spyne/tree/spyne-" + version +
+            "/examples/"+example_url+"\">A "+tpt+" Example</a>"
+    );
+
+    $("pre").html(retval.join("\n"));
+    $("pre").snippet("python", {
+         style:"whitengrey"
+        ,clipboard:"assets/ZeroClipboard.swf"
+    });
+ }
+    </script>
+
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"> -->
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<div class="wrapper">
+<header>
+    <h1 class="header">spyne</h1>
+    <span class="header">
+        Run the interwebs.
+        <p style="font-weight: bold">
+            Latest release:<br/>
+            Spyne <span id="version">2.9.1</span>
+        </p>
+        <ul>
+            <li class="download"><a class="buttons" href="https://github.com/arskom/spyne/tarball/spyne-2.9.1">Download</a></li>
+            <li class="download"><a class="docs" href="docs">Docs</a></li>
+            <li><a class="buttons github" href="https://github.com/arskom/spyne">View On GitHub</a></li>
+        </ul>
+    </span>
+
+</header>
+
+<section class="what_is">
+    <h1>What is Spyne?</h1>
+
+    <p>Spyne is a RPC toolkit that lets you expose your services using
+            multiple protocols and transports.</p>
+    <h1>Getting Started</h1>
+
+    <div class="hello_world">
+        <div id="parameters">
+            <form action="#" method="foo">
+                <fieldset>
+                    <legend>Input Protocol</legend>
+                    <label><input class="chk_param" type="radio" name="inprot" value="HttpRpc" checked> HttpRpc</label> <br/>
+                    <label><input class="chk_param" type="radio" name="inprot" value="JsonDocument" > Json Document</label>  <br/>
+                    <label><input class="chk_param" type="radio" name="inprot" value="Soap11"> Soap 1.1</label>  <br/>
+                    <label><input class="chk_param" type="radio" name="inprot" value="XmlDocument"> Xml Document</label>  <br/>
+                    <label><input class="chk_param" type="radio" name="inprot" value="MessagePackDocument"> MessagePack Document</label>  <br/>
+                    <label><input class="chk_param" type="radio" name="inprot" value="MessagePackRpc"> MessagePack RPC</label>  <br/>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Output Protocol</legend>
+                    <label><input class="chk_param" type="radio" name="outprot" value="JsonDocument" checked/> Json Document</label>  <br/>
+                    <label><input class="chk_param" type="radio" name="outprot" value="Soap11" /> Soap 1.1</label>  <br/>
+                    <label><input class="chk_param" type="radio" name="outprot" value="XmlDocument" /> Xml Document</label>  <br/>
+                    <label><input class="chk_param" type="radio" name="outprot" value="MessagePackDocument" /> MessagePack Document</label>  <br/>
+                    <label><input class="chk_param" type="radio" name="outprot" value="MessagePackRpc" /> MessagePack RPC</label>  <br/>
+                    <label><input class="chk_param" type="radio" name="outprot" value="Csv" />Comma Separated Values</label>  <br/>
+                    <label><input class="chk_param" type="radio" name="outprot" value="HtmlRowTable" />Html Row Table</label>  <br/>
+                    <label><input class="chk_param" type="radio" name="outprot" value="HtmlColumnTable" />Html Column Table</label>  <br/>
+                    <label><input class="chk_param" type="radio" name="outprot" value="HtmlMicroMormat" />Html MicroFormat</label>  <br/>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Transport</legend>
+                    <label><input class="chk_param" type="radio" name="tpt" value="WsgiApplication" checked> Http (WSGI)</label> <br/>
+                    <label><input class="chk_param" type="radio" name="tpt" value="TwistedWebResource" /> Http (Twisted)</label>  <br/>
+                    <label><input class="chk_param" type="radio" name="tpt" value="DjangoApplication" /> Http (Django)</label> <br/>
+                    <label><input class="chk_param" type="radio" name="tpt" value="PyramidApplication" /> Http (Pyramid)</label> <br/>
+                    <label><input class="chk_param" type="radio" name="tpt" value="ZeroMQServer" /> ZeroMQ</label> <br/>
+                </fieldset>
+                <fieldset>
+                    <legend>Validation:</legend>
+                    <label><input class="chk_param" type="radio" name="validation" value="true" checked> Enabled</label> <br/>
+                    <label><input class="chk_param" type="radio" name="validation" value="" checked> Disabled</label> <br/>
+                </fieldset>
+            </form>
+        </div>
+        <div class="code">
+            <div><a id="toggle_imports">Show Imports</a> |
+            <span class="code_link"></span>
+            </div>
+            <pre>
+            </pre>
+        </div>
+    </div>
+</section>
+</div>
+<footer style="align: center;">
+    <p>Copyright <a href="http://arskom.com.tr">Arskom Ltd.</a></p>
+    <p><small>Hosted on <a href="https://pages.github.com">
+                GitHub Pages</a> using the Dinky theme</small></p>
+</footer>
+<!--[if !IE]><script>fixScale(document);</script><![endif]-->
+</body>
+</html>

@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Spyne Documentation &mdash; spyne 2.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="spyne 2.9.0 documentation" href="#" />
+    <link rel="next" title="Spyne Manual" href="manual/index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="manual/index.html" title="Spyne Manual"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">spyne 2.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Spyne Documentation</a></li>
+<li><a class="reference internal" href="#getting-started">Getting Started</a><ul>
+<li><a class="reference internal" href="#about">About</a></li>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#installing">Installing</a></li>
+<li><a class="reference internal" href="#contributing">Contributing</a><ul>
+<li><a class="reference internal" href="#submitting-pull-requests">Submitting Pull Requests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#library-documentation">Library Documentation</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#other-goodies">Other Goodies</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="manual/index.html"
+                        title="next chapter">Spyne Manual</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="spyne-documentation">
+<h1>Spyne Documentation<a class="headerlink" href="#spyne-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Welcome to Spyne documentation! We hope you find it useful.
+Please do not hesitate to get in touch with us if you think you can help us
+improve Spyne or its documentation one way or another. Contact information is
+below.</p>
+<p>Have fun!</p>
+</div>
+<div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="http://travis-ci.org/arskom/spyne"><img alt="http://travis-ci.org/arskom/spyne.png?branch=master" src="http://travis-ci.org/arskom/spyne.png?branch=master" /></a>
+<div class="section" id="about">
+<h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
+<p>Spyne aims to save the protocol implementers the hassle of implementing their
+own remote procedure call api and the application programmers the hassle of
+jumping through hoops just to expose their services using multiple protocols and
+transports.</p>
+<p>From another perspective, Spyne is a framework for building distributed
+solutions that strictly follow the MVC pattern, where Model = <cite>spyne.model</cite>,
+View = <cite>spyne.protocol</cite> and Controller = <cite>user code</cite>.</p>
+<p>Spyne comes with the implementations of popular transport, protocol and
+interface document standards along with a well-defined API that lets you
+build on existing functionality.</p>
+<p>Spyne currently supports the WSDL 1.1 interface description standard,
+along with SOAP 1.1 and the so-called HttpRpc, XmlObject, JsonObject,
+MessagePackObject and MessagePackRpc protocols which can be transported via Http
+or ZeroMQ. The transports can be used in both a client or server setting.</p>
+<p>The following are the primary sources of information about spyne:</p>
+<ul class="simple">
+<li>The latest documentation for Spyne can be found at: <a class="reference external" href="http://arskom.github.com/spyne">http://arskom.github.com/spyne</a></li>
+<li>The official source code repository is at: <a class="reference external" href="https://github.com/arskom/spyne">https://github.com/arskom/spyne</a></li>
+<li>The official spyne discussion forum is at: <a class="reference external" href="http://mail.python.org/mailman/listinfo/soap">http://mail.python.org/mailman/listinfo/soap</a></li>
+<li>You can download Spyne packages from <a class="reference external" href="http://github.com/arskom/spyne/downloads">github</a>
+or <a class="reference external" href="http://pypi.python.org/pypi/spyne">pypi</a>.</li>
+</ul>
+<p>Spyne is a generalized version of a Soap library known as soaplib. The following
+legacy versions of soaplib are also available in the source repository at github
+as branches:</p>
+<ul class="simple">
+<li>Soaplib-0.8 branch: <a class="reference external" href="http://github.com/arskom/spyne/tree/soaplib-0_8">http://github.com/arskom/spyne/tree/soaplib-0_8</a></li>
+<li>Soaplib-1.0 branch: <a class="reference external" href="http://github.com/arskom/spyne/tree/soaplib-1_0">http://github.com/arskom/spyne/tree/soaplib-1_0</a></li>
+<li>Soaplib-2.0 was never released as a stable package, but the branch is still
+available: <a class="reference external" href="http://github.com/arskom/spyne/tree/soaplib-2_0">http://github.com/arskom/spyne/tree/soaplib-2_0</a></li>
+</ul>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>Spyne runs on any version of Python from 2.5 through 2.7. We&#8217;re also looking for
+volunteers to test Python 3.x.</p>
+<p>While the aim is to have no requirements besides the standard Python library for
+the Spyne core, the following packages are needed if you want to run any
+Spyne service at all:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://codespeak.net/lxml/">lxml</a></li>
+<li><a class="reference external" href="http://pytz.sourceforge.net/">pytz</a></li>
+</ul>
+<p>both of which are available through <tt class="docutils literal"><span class="pre">easy_install</span></tt>.</p>
+<p>Additionally the following software packages are needed for various subsystems
+of Spyne:</p>
+<ul class="simple">
+<li>A Wsgi server of your choice is needed to wrap
+<tt class="docutils literal"><span class="pre">spyne.server.wsgi.WsgiApplication</span></tt></li>
+<li><a class="reference external" href="http://sqlalchemy.org">SQLAlchemy</a> is needed for
+<tt class="docutils literal"><span class="pre">spyne.model.table.TableModel</span></tt>.</li>
+<li><a class="reference external" href="https://github.com/zeromq/pyzmq">pyzmq</a> is needed for
+<tt class="docutils literal"><span class="pre">spyne.client.zeromq.ZeroMQClient</span></tt> and
+<tt class="docutils literal"><span class="pre">spyne.server.zeromq.ZeroMQServer</span></tt>.</li>
+<li><a class="reference external" href="http://werkzeug.pocoo.org/">Werkzeug</a> is needed for
+<tt class="docutils literal"><span class="pre">spyne.protocol.http.HttpRpc</span></tt>.</li>
+<li><a class="reference external" href="http://twistedmatrix.com/">Twisted</a> is needed for
+<tt class="docutils literal"><span class="pre">spyne.server.twisted.TwistedWebResource</span></tt> and
+<tt class="docutils literal"><span class="pre">spyne.client.twisted.TwistedHttpClient</span></tt>.</li>
+<li><a class="reference external" href="http://djangoproject.com/">Django</a> is needed for
+<tt class="docutils literal"><span class="pre">spyne.server.django.DjangoApplication</span></tt>.</li>
+<li><a class="reference external" href="http://pylonsproject.org/">Pyramid</a> is needed for
+<tt class="docutils literal"><span class="pre">spyne.server.pyramid.PyramidApplication</span></tt>.</li>
+<li><a class="reference external" href="http://github.com/msgpack/msgpack-python/">MessagePack</a> is needed for
+<tt class="docutils literal"><span class="pre">spyne.protocol.msgpack</span></tt>.</li>
+<li><a class="reference external" href="http://github.com/simplejson/simplejson">simplejson</a> is used when found
+for <tt class="docutils literal"><span class="pre">spyne.protocol.json</span></tt>.</li>
+</ul>
+<p>You are advised to add these as requirements to your own projects, as these are
+only optional dependencies of Spyne, thus not handled in its setup script.</p>
+</div>
+<div class="section" id="installing">
+<h2>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h2>
+<p>You can get spyne via pypi:</p>
+<div class="highlight-python"><pre>easy_install spyne</pre>
+</div>
+<p>or you can clone from github:</p>
+<div class="highlight-python"><pre>git clone git://github.com/arskom/spyne.git</pre>
+</div>
+<p>or get the source distribution from one of the download sites and unpack it.</p>
+<p>To install from source distribution, you should run its setup script as usual:</p>
+<div class="highlight-python"><pre>python setup.py install</pre>
+</div>
+<p>To run the tests use:</p>
+<div class="highlight-python"><pre>cd spyne/tests &amp;&amp; ./run_tests.sh</pre>
+</div>
+<p>And if you want to make any changes to the Spyne code, just use</p>
+<div class="highlight-python"><pre>python setup.py develop</pre>
+</div>
+<p>so that you can painlessly test your patches.</p>
+</div>
+<div class="section" id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h2>
+<p>The main developers of Spyne lurk in the <a class="reference external" href="http://mail.python.org/mailman/listinfo/soap/">official soap implementors
+forum</a> kindly operated
+by python.org. That&#8217;s mostly because Spyne is the continuation of soaplib,
+but also because soap is an important part of Spyne.</p>
+<p>If you wish to contribute to Spyne&#8217;s development, create a personal fork
+on GitHub.  When you are ready to push to the upstream repository,
+submit a pull request to bring your work to the attention of the core
+committers. They will respond to review your patch and act accordingly.</p>
+<p>To save both parties time, make sure the existing tests pass. If you are
+adding new functionality or fixing a bug, please have the accompanying test.
+This will both help us increase test coverage and insure your use-case
+is immune to feature code changes. You could also summarize in one or
+two lines how your work will affect the life of spyne users in the
+CHANGELOG file.</p>
+<p>Please follow the <a class="reference external" href="http://www.python.org/dev/peps/pep-0008/">PEP 8</a>
+style guidelines for both source code and docstrings.</p>
+<p>We could also use help with the docs, which are built from
+<a class="reference external" href="http://docutils.sourceforge.net/rst.html">restructured text</a> using
+<a class="reference external" href="http://sphinx.pocoo.org">Sphinx</a>.</p>
+<p>Regular contributors may be invited to join as a core Spyne committer on
+GitHub. Even if this gives the core committers the power to commit directly
+to the core repository, we highly value code reviews and expect every
+significant change to be committed via pull requests.</p>
+<div class="section" id="submitting-pull-requests">
+<h3>Submitting Pull Requests<a class="headerlink" href="#submitting-pull-requests" title="Permalink to this headline">¶</a></h3>
+<p>Github&#8217;s pull-request feature is awesome, but there&#8217;s a subtlety that&#8217;s not
+totally obvious for newcomers: If you continue working on the branch that you
+used to submit a pull request, your commits will &#8220;pollute&#8221; the pull request
+until it gets merged. This is not a bug, but a feature &#8211; it gives you the
+ability to address reviewers&#8217; concerns without creating pull requests over and
+over again. So, if you intend to work on other parts of spyne after submitting
+a pull request, please do move your work to its own branch and never submit a
+pull request from your master branch. This will give you the freedom to
+continue working on spyne while waiting for your pull request to be reviewed.</p>
+</div>
+</div>
+</div>
+<div class="section" id="library-documentation">
+<h1>Library Documentation<a class="headerlink" href="#library-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="manual/index.html">Spyne Manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="manual/01_highlevel.html">High-Level Introduction to Spyne</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual/02_helloworld.html">Hello World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual/03_usermanager.html">User Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual/04-01_sqlalchemy.html">SQLAlchemy Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual/04-02_validation.html">Input Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual/05_metadata.html">Working with RPC Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual/06_t_and_p.html">Implementing Transports and Protocols</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference/index.html">Spyne API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/base.html">Fundamental Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/application.html">Application Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/service.html">Service Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/decorator.html">RPC Decorators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/error.html">Common Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/model.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/interface.html">Interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/protocol/index.html">Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/client.html">Client Transports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/server.html">Server Transports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/auxproc.html">Auxiliary Processors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/util.html">Miscellanous Spyne Utilities</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="other-goodies">
+<h1>Other Goodies<a class="headerlink" href="#other-goodies" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tests.html">Running Tests</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tests.html#soap-interoperability-tests">SOAP Interoperability Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Spyne FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#does-spyne-support-the-soap-1-2-standard">Does spyne support the SOAP 1.2 standard?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#how-do-i-implement-a-predefined-wsdl">How do I implement a predefined WSDL?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#is-it-possible-to-use-other-decorators-with-rpc-srpc">Is it possible to use other decorators with &#64;rpc/&#64;srpc?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#how-do-i-alter-the-behaviour-of-a-user-method-without-using-decorators">How do I alter the behaviour of a user method without using decorators?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#how-do-i-use-variable-names-that-are-also-python-keywords">How do I use variable names that are also Python keywords?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#how-does-spyne-behave-in-a-multi-threaded-environment">How does Spyne behave in a multi-threaded environment?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#what-implications-does-spyne-s-license-lgpl-have-for-proprietary-projects-that-use-it">What implications does Spyne&#8217;s license (LGPL) have for proprietary projects that use it?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="h_and_f.html">History and Future</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="h_and_f.html#versioning">Versioning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="h_and_f.html#roadmap-and-criticism">Roadmap and Criticism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="h_and_f.html#comparison-with-other-rpc-frameworks">Comparison with other rpc frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="h_and_f.html#id1">Changelog</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="manual/index.html" title="Spyne Manual"
+             >next</a> |</li>
+        <li><a href="#">spyne 2.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

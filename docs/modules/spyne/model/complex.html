@@ -1,0 +1,898 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>spyne.model.complex &mdash; spyne 2.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.9.0 documentation" href="../../../index.html" />
+    <link rel="up" title="spyne" href="../../spyne.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">spyne 2.9.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for spyne.model.complex</h1><div class="highlight"><pre>
+<span class="c">#</span>
+<span class="c"># spyne - Copyright (C) Spyne contributors.</span>
+<span class="c">#</span>
+<span class="c"># This library is free software; you can redistribute it and/or</span>
+<span class="c"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c"># License as published by the Free Software Foundation; either</span>
+<span class="c"># version 2.1 of the License, or (at your option) any later version.</span>
+<span class="c">#</span>
+<span class="c"># This library is distributed in the hope that it will be useful,</span>
+<span class="c"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c"># Lesser General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c"># License along with this library; if not, write to the Free Software</span>
+<span class="c"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301</span>
+<span class="c">#</span>
+
+<span class="sd">&quot;&quot;&quot;The ``spyne.model.complex`` module contains</span>
+<span class="sd">:class:`spyne.model.complex.ComplexBase` class and its helper objects and</span>
+<span class="sd">subclasses. These are mainly container classes.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">decimal</span>
+
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">ModelBase</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">nillable_dict</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">nillable_string</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">NATIVE_MAP</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Unicode</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Point</span>
+
+<span class="kn">from</span> <span class="nn">spyne.const</span> <span class="kn">import</span> <span class="n">xml_ns</span> <span class="k">as</span> <span class="n">namespace</span>
+<span class="kn">from</span> <span class="nn">spyne.const</span> <span class="kn">import</span> <span class="n">MAX_STRING_FIELD_LENGTH</span>
+<span class="kn">from</span> <span class="nn">spyne.const</span> <span class="kn">import</span> <span class="n">MAX_ARRAY_ELEMENT_NUM</span>
+<span class="kn">from</span> <span class="nn">spyne.const.suffix</span> <span class="kn">import</span> <span class="n">ARRAY_SUFFIX</span>
+<span class="kn">from</span> <span class="nn">spyne.const.suffix</span> <span class="kn">import</span> <span class="n">TYPE_SUFFIX</span>
+
+<span class="kn">from</span> <span class="nn">spyne.util</span> <span class="kn">import</span> <span class="n">sanitize_args</span>
+<span class="kn">from</span> <span class="nn">spyne.util.odict</span> <span class="kn">import</span> <span class="n">odict</span>
+
+
+<span class="k">class</span> <span class="nc">xml</span><span class="p">:</span>
+<div class="viewcode-block" id="xml"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.xml">[docs]</a>    <span class="sd">&quot;&quot;&quot;Complex argument to ``ComplexModelBase.Attributes.store_as`` for xml</span>
+<span class="sd">    serialization.</span>
+
+<span class="sd">    :param root_tag: Root tag of the xml element that contains the field values.</span>
+<span class="sd">    :param no_ns: When true, the xml document is stripped from namespace</span>
+<span class="sd">        information. use with caution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_tag</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">no_ns</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_tag</span> <span class="o">=</span> <span class="n">root_tag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">no_ns</span> <span class="o">=</span> <span class="n">no_ns</span>
+
+
+<span class="k">class</span> <span class="nc">table</span><span class="p">:</span></div>
+<div class="viewcode-block" id="table"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.table">[docs]</a>    <span class="sd">&quot;&quot;&quot;Complex argument to ``ComplexModelBase.Attributes.store_as`` for storing</span>
+<span class="sd">    the class instance as a row in a table in a relational database.</span>
+
+<span class="sd">    :param multi: When false, configures a one-to-many relationship where the</span>
+<span class="sd">        child table has a foreign key to the parent. When true, configures a</span>
+<span class="sd">        many-to-many relationship by creating an intermediate relation table</span>
+<span class="sd">        that has foreign keys to both parent and child classes and generates</span>
+<span class="sd">        a table name automatically. When it&#39;s a string, the value is used as the</span>
+<span class="sd">        table name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">multi</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multi</span> <span class="o">=</span> <span class="n">multi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
+
+
+<span class="k">class</span> <span class="nc">json</span><span class="p">:</span></div>
+<div class="viewcode-block" id="json"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.json">[docs]</a>    <span class="sd">&quot;&quot;&quot;Complex argument to ``ComplexModelBase.Attributes.store_as`` for storing</span>
+<span class="sd">    the class instance as a json document.</span>
+
+<span class="sd">    Make sure you don&#39;t mix this with the json package when importing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">msgpack</span><span class="p">:</span></div>
+    <span class="k">pass</span>  <span class="c"># TODO: not implemented</span>
+
+    <span class="sd">&quot;&quot;&quot;Complex argument to ``ComplexModelBase.Attributes.store_as`` for storing</span>
+<span class="sd">    the class instance as a MessagePack document.</span>
+
+<span class="sd">    Make sure you don&#39;t mix this with the msgpack package when importing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+
+<span class="n">PSSM_VALUES</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;json&#39;</span><span class="p">:</span> <span class="n">json</span><span class="p">,</span> <span class="s">&#39;xml&#39;</span><span class="p">:</span> <span class="n">xml</span><span class="p">,</span> <span class="s">&#39;msgpack&#39;</span><span class="p">:</span> <span class="n">msgpack</span><span class="p">,</span> <span class="s">&#39;table&#39;</span><span class="p">:</span> <span class="n">table</span><span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;Persistent storage serialization method values&quot;&quot;&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">TypeInfo</span><span class="p">(</span><span class="n">odict</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">_SimpleTypeInfoElement</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;path&#39;</span><span class="p">,</span> <span class="s">&#39;parent&#39;</span><span class="p">,</span> <span class="s">&#39;type&#39;</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">type_</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">type_</span>
+
+
+<span class="k">class</span> <span class="nc">XmlAttribute</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+<div class="viewcode-block" id="XmlAttribute"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.XmlAttribute">[docs]</a>    <span class="sd">&quot;&quot;&quot;Items which are marshalled as attributes of the parent element.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">use</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">attribute_of</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">customize</span><span class="p">()</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">_typ</span> <span class="o">=</span> <span class="n">typ</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">_use</span> <span class="o">=</span> <span class="n">use</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">_ns</span> <span class="o">=</span> <span class="n">ns</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">_attribute_of</span> <span class="o">=</span> <span class="n">attribute_of</span>
+        <span class="k">return</span> <span class="n">retval</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">marshall</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">parent_elt</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">_ns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;{</span><span class="si">%s</span><span class="s">}</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">_ns</span><span class="p">,</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">parent_elt</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">_typ</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">describe</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="n">element</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">element</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;type&#39;</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">_typ</span><span class="o">.</span><span class="n">get_type_name_ns</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">interface</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">_use</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">element</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;use&#39;</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">_use</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">resolve_namespace</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">default_ns</span><span class="p">):</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">_typ</span><span class="o">.</span><span class="n">resolve_namespace</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">_typ</span><span class="p">,</span> <span class="n">default_ns</span><span class="p">)</span>
+
+        <span class="n">cls</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_ns</span>
+
+        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">__namespace__</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">cls</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_typ</span><span class="o">.</span><span class="n">get_namespace</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">__namespace__</span> <span class="ow">in</span> <span class="n">namespace</span><span class="o">.</span><span class="n">const_prefmap</span><span class="p">:</span>
+            <span class="n">cls</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="n">default_ns</span>
+
+
+<span class="k">class</span> <span class="nc">XmlAttributeRef</span><span class="p">(</span><span class="n">XmlAttribute</span><span class="p">):</span></div>
+<div class="viewcode-block" id="XmlAttributeRef"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.XmlAttributeRef">[docs]</a>    <span class="sd">&quot;&quot;&quot;Reference to an Xml attribute.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">use</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ref</span> <span class="o">=</span> <span class="n">ref</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_use</span> <span class="o">=</span> <span class="n">use</span>
+
+    <span class="k">def</span> <span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+        <span class="n">element</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;ref&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ref</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_use</span><span class="p">:</span>
+            <span class="n">element</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;use&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_use</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">SelfReference</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></div>
+<div class="viewcode-block" id="SelfReference"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.SelfReference">[docs]</a>    <span class="sd">&#39;&#39;&#39;Use this as a placeholder type in classes that contain themselves. See</span>
+<span class="sd">    :func:`spyne.test.model.test_complex.TestComplexModel.test_self_reference`.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">_get_spyne_type</span><span class="p">(</span><span class="n">v</span><span class="p">):</span></div>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">NATIVE_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">subc</span> <span class="o">=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">ModelBase</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">SelfReference</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">subc</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">if</span> <span class="n">subc</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Array</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">_type_info</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Invalid Array definition in </span><span class="si">%s</span><span class="s">.</span><span class="si">%s</span><span class="s">.&quot;</span><span class="o">%</span> <span class="p">(</span><span class="n">cls_name</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Point</span><span class="p">)</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">dim</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Please specify the number of dimensions&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">v</span>
+
+
+<span class="k">def</span> <span class="nf">_join_args</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">y</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+    <span class="n">xa</span><span class="p">,</span> <span class="n">xk</span> <span class="o">=</span> <span class="n">sanitize_args</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">ya</span><span class="p">,</span> <span class="n">yk</span> <span class="o">=</span> <span class="n">sanitize_args</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="n">xk</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">xk</span><span class="p">)</span>
+    <span class="n">xk</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">yk</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">xa</span> <span class="o">+</span> <span class="n">ya</span><span class="p">,</span> <span class="n">xk</span>
+
+
+<span class="k">class</span> <span class="nc">ComplexModelMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">)):</span>
+<div class="viewcode-block" id="ComplexModelMeta"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelMeta">[docs]</a>    <span class="sd">&#39;&#39;&#39;This metaclass sets ``_type_info``, ``__type_name__`` and ``__extends__``</span>
+<span class="sd">    which are going to be used for (de)serialization and schema generation.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function initializes the class and registers attributes for</span>
+<span class="sd">        serialization.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="n">type_name</span> <span class="o">=</span> <span class="n">cls_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;__type_name__&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">type_name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">cls_dict</span><span class="p">[</span><span class="s">&quot;__type_name__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cls_name</span>
+
+        <span class="n">base_type_info</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c"># get base class (if exists) and enforce single inheritance</span>
+        <span class="n">extends</span> <span class="o">=</span> <span class="n">cls_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;__extends__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">extends</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">cls_bases</span><span class="p">:</span>
+                <span class="n">base_types</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="s">&quot;_type_info&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">base_types</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="s">&#39;__mixin__&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+                        <span class="n">base_type_info</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">_type_info</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">extends</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">b</span><span class="p">)):</span>
+                            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;WSDL 1.1 does not support multiple&quot;</span>
+                                            <span class="s">&quot; inheritance&quot;</span><span class="p">)</span>
+
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">base_types</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">ModelBase</span><span class="p">):</span>
+                                <span class="n">cls_dict</span><span class="p">[</span><span class="s">&quot;__extends__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span>
+
+                        <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span><span class="n">e</span><span class="p">:</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">extends</span><span class="p">))</span>
+                            <span class="k">raise</span>
+
+        <span class="c"># populate children</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="s">&#39;_type_info&#39;</span> <span class="ow">in</span> <span class="n">cls_dict</span><span class="p">):</span>
+            <span class="n">cls_dict</span><span class="p">[</span><span class="s">&#39;_type_info&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_type_info</span> <span class="o">=</span> <span class="n">TypeInfo</span><span class="p">()</span>
+            <span class="n">_type_info</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">base_type_info</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cls_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;__&#39;</span><span class="p">):</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="n">_get_spyne_type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                        <span class="n">_type_info</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_type_info</span> <span class="o">=</span> <span class="n">cls_dict</span><span class="p">[</span><span class="s">&#39;_type_info&#39;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_type_info</span><span class="p">,</span> <span class="n">TypeInfo</span><span class="p">):</span>
+                <span class="n">_type_info</span> <span class="o">=</span> <span class="n">cls_dict</span><span class="p">[</span><span class="s">&#39;_type_info&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TypeInfo</span><span class="p">(</span><span class="n">_type_info</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_type_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">SelfReference</span><span class="p">):</span>
+                    <span class="k">pass</span>
+
+                <span class="k">elif</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">ModelBase</span><span class="p">):</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="n">_get_spyne_type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span> <span class="p">(</span><span class="n">cls_name</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="p">)</span>
+                    <span class="n">_type_info</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Array</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">_type_info</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Invalid Array definition in </span><span class="si">%s</span><span class="s">.</span><span class="si">%s</span><span class="s">.&quot;</span>
+                                                                <span class="o">%</span> <span class="p">(</span><span class="n">cls_name</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+
+        <span class="c"># Initialize Attributes</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="n">cls_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;Attributes&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attrs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">cls_bases</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="s">&#39;Attributes&#39;</span><span class="p">):</span>
+                    <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
+                        <span class="k">pass</span>
+                    <span class="n">attrs</span> <span class="o">=</span> <span class="n">cls_dict</span><span class="p">[</span><span class="s">&#39;Attributes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Attributes</span>
+                    <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;No ModelBase subclass in bases? Huh?&quot;</span><span class="p">)</span>
+
+        <span class="c"># Move sqlalchemy parameters</span>
+        <span class="n">table_name</span> <span class="o">=</span> <span class="n">cls_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;__tablename__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attrs</span><span class="o">.</span><span class="n">table_name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">attrs</span><span class="o">.</span><span class="n">table_name</span> <span class="o">=</span> <span class="n">table_name</span>
+
+        <span class="n">table</span> <span class="o">=</span> <span class="n">cls_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;__table__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attrs</span><span class="o">.</span><span class="n">sqla_table</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">attrs</span><span class="o">.</span><span class="n">sqla_table</span> <span class="o">=</span> <span class="n">table</span>
+
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">cls_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;__metadata__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attrs</span><span class="o">.</span><span class="n">sqla_metadata</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">attrs</span><span class="o">.</span><span class="n">sqla_metadata</span> <span class="o">=</span> <span class="n">metadata</span>
+
+        <span class="n">margs</span> <span class="o">=</span> <span class="n">cls_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;__mapper_args__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">attrs</span><span class="o">.</span><span class="n">sqla_mapper_args</span> <span class="o">=</span> <span class="n">_join_args</span><span class="p">(</span><span class="n">attrs</span><span class="o">.</span><span class="n">sqla_mapper_args</span><span class="p">,</span> <span class="n">margs</span><span class="p">)</span>
+
+        <span class="n">targs</span> <span class="o">=</span> <span class="n">cls_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;__table_args__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">attrs</span><span class="o">.</span><span class="n">sqla_table_args</span> <span class="o">=</span> <span class="n">_join_args</span><span class="p">(</span><span class="n">attrs</span><span class="o">.</span><span class="n">sqla_table_args</span><span class="p">,</span> <span class="n">targs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">):</span>
+        <span class="n">type_info</span> <span class="o">=</span> <span class="n">cls_dict</span><span class="p">[</span><span class="s">&#39;_type_info&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">type_info</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">type_info</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">SelfReference</span><span class="p">):</span>
+                <span class="n">type_info</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">table_name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">sqla_table</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_type_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">spyne.util.sqlalchemy</span> <span class="kn">import</span> <span class="n">gen_spyne_info</span>
+
+                <span class="n">gen_spyne_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">sqla_metadata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_type_info</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">spyne.util.sqlalchemy</span> <span class="kn">import</span> <span class="n">gen_sqla_info</span>
+
+            <span class="n">gen_sqla_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">)</span>
+
+        <span class="nb">type</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">ComplexModelBase</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span></div>
+<div class="viewcode-block" id="ComplexModelBase"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase">[docs]</a>    <span class="sd">&quot;&quot;&quot;If you want to make a better class type, this is what you should inherit</span>
+<span class="sd">    from.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__mixin__</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">ModelBase</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
+<div class="viewcode-block" id="ComplexModelBase.Attributes"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;ComplexModel-specific attributes&quot;&quot;&quot;</span>
+
+        <span class="n">store_as</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;Method for serializing to persistent storage. One of %r. It makes</span>
+<span class="sd">        sense to specify this only when this object is a child of another</span>
+<span class="sd">        ComplexModel sublass.&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">PSSM_VALUES</span><span class="p">,)</span>
+
+        <span class="n">table_name</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;Table name.&quot;&quot;&quot;</span>
+
+        <span class="n">sqla_metadata</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;None or :class:`sqlalchemy.MetaData` instance.&quot;&quot;&quot;</span>
+
+        <span class="n">sqla_table_args</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;A dict that will be passed to :class:`sqlalchemy.schema.Table`</span>
+<span class="sd">        constructor as ``**kwargs``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">sqla_mapper_args</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;A dict that will be passed to :func:`sqlalchemy.orm.mapper`</span>
+<span class="sd">        constructor as. ``**kwargs``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">sqla_table</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;The sqlalchemy table object&quot;&quot;&quot;</span>
+
+        <span class="n">sqla_mapper</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;The sqlalchemy mapper object&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></div>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ComplexModelBase</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+        <span class="c"># this ugliness is due to sqlalchemy&#39;s forcing of relevant types for</span>
+        <span class="c"># database fields</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="p">[])</span>
+                    <span class="k">except</span><span class="p">:</span>
+                        <span class="k">pass</span>
+
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_type_info</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="n">i</span><span class="p">],</span> <span class="bp">None</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">(</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">(),</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+               <span class="p">[</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">=</span><span class="si">%r</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">]))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_serialization_instance</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="ComplexModelBase.get_serialization_instance"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase.get_serialization_instance">[docs]</a>        <span class="sd">&quot;&quot;&quot;Returns the native object corresponding to the serialized form passed</span>
+<span class="sd">        in the ``value`` argument.</span>
+
+<span class="sd">        :param value: This argument can be:</span>
+<span class="sd">            * A list or tuple of native types aligned with cls._type_info.</span>
+<span class="sd">            * A dict of native types.</span>
+<span class="sd">            * The native type itself.</span>
+
+<span class="sd">            If the value type is not a ``list``, ``tuple`` or ``dict``, the</span>
+<span class="sd">            value is returned untouched.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c"># if the instance is a list, convert it to a cls instance.</span>
+        <span class="c"># this is only useful when deserializing method arguments for a client</span>
+        <span class="c"># request which is the only time when the member order is not arbitrary</span>
+        <span class="c"># (as the members are declared and passed around as sequences of</span>
+        <span class="c"># arguments, unlike dictionaries in a regular class definition).</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">_type_info</span><span class="p">)</span>
+
+            <span class="n">inst</span> <span class="o">=</span> <span class="n">cls</span><span class="p">()</span>
+
+            <span class="n">keys</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)):</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">inst</span> <span class="o">=</span> <span class="n">cls</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">_type_info</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">inst</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="k">return</span> <span class="n">inst</span>
+
+    <span class="nd">@classmethod</span></div>
+    <span class="k">def</span> <span class="nf">get_deserialization_instance</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="ComplexModelBase.get_deserialization_instance"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase.get_deserialization_instance">[docs]</a>        <span class="sd">&quot;&quot;&quot;Get an empty native type so that the deserialization logic can set</span>
+<span class="sd">        its attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">__orig__</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cls</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">__orig__</span><span class="p">()</span>
+
+    <span class="nd">@classmethod</span></div>
+    <span class="k">def</span> <span class="nf">get_members_pairs</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">inst</span><span class="p">):</span>
+        <span class="n">parent_cls</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s">&#39;__extends__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">parent_cls</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">parent_cls</span><span class="o">.</span><span class="n">get_members_pairs</span><span class="p">(</span><span class="n">parent_cls</span><span class="p">,</span> <span class="n">inst</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">r</span>
+
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">mo</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">subvalue</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span> <span class="c"># to guard against e.g. sqlalchemy throwing NoSuchColumnError</span>
+                <span class="n">subvalue</span> <span class="o">=</span> <span class="bp">None</span>
+
+            <span class="k">if</span> <span class="n">mo</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">subvalue</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">sv</span><span class="p">)</span> <span class="k">for</span> <span class="n">sv</span> <span class="ow">in</span> <span class="n">subvalue</span><span class="p">))</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">subvalue</span><span class="p">)])</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@nillable_dict</span>
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">inst</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_serialization_instance</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">get_members_pairs</span><span class="p">(</span><span class="n">inst</span><span class="p">))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_flat_type_info</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">retval</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ComplexModelBase.get_flat_type_info"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase.get_flat_type_info">[docs]</a>        <span class="sd">&quot;&quot;&quot;Returns a _type_info dict that includes members from all base classes.</span>
+
+<span class="sd">        It&#39;s called a &quot;flat&quot; dict because it flattens all members from the</span>
+<span class="sd">        inheritance hierarchy into one dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">retval</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="n">TypeInfo</span><span class="p">()</span>
+
+        <span class="n">parent</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s">&#39;__extends__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">parent</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">cls</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">retval</span><span class="p">)</span>
+
+        <span class="n">retval</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">_type_info</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">retval</span>
+
+    <span class="nd">@staticmethod</span></div>
+    <span class="k">def</span> <span class="nf">get_simple_type_info</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">hier_delim</span><span class="o">=</span><span class="s">&quot;_&quot;</span><span class="p">,</span> <span class="n">retval</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<div class="viewcode-block" id="ComplexModelBase.get_simple_type_info"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase.get_simple_type_info">[docs]</a>                                                                    <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a _type_info dict that includes members from all base classes</span>
+<span class="sd">        and whose types are only primitives. It will prefix field names in</span>
+<span class="sd">        non-top-level complex objects with field name of its parent.</span>
+
+<span class="sd">        For example, given hier_delim=&#39;_&#39;; the following hierarchy:</span>
+
+<span class="sd">            {&#39;some_object&#39;: [{&#39;some_string&#39;: [&#39;abc&#39;]}]}</span>
+
+<span class="sd">         would be transformed to:</span>
+
+<span class="sd">            {&#39;some_object_some_string&#39;: [&#39;abc&#39;]}</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">retval</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="n">TypeInfo</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">fti</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">fti</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s">&#39;get_flat_type_info&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">new_prefix</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+                <span class="n">new_prefix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">hier_delim</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">new_prefix</span><span class="p">)</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">retval</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%r</span><span class="s">.</span><span class="si">%s</span><span class="s"> conflicts with </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+
+                <span class="n">retval</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_SimpleTypeInfoElement</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">new_prefix</span><span class="p">),</span>
+                                                        <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span> <span class="n">type_</span><span class="o">=</span><span class="n">v</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">new_prefix</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+                <span class="n">new_prefix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">get_simple_type_info</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">hier_delim</span><span class="p">,</span> <span class="n">retval</span><span class="p">,</span> <span class="n">new_prefix</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">cls</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">retval</span>
+
+    <span class="nd">@classmethod</span></div>
+    <span class="nd">@nillable_string</span>
+    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Only primitives can be serialized to string.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@nillable_string</span>
+    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Only primitives can be deserialized from string.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">resolve_namespace</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">default_ns</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s">&#39;__extends__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">cls</span><span class="o">.</span><span class="n">__extends__</span><span class="o">.</span><span class="n">resolve_namespace</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">__extends__</span><span class="p">,</span> <span class="n">default_ns</span><span class="p">)</span>
+
+        <span class="n">ModelBase</span><span class="o">.</span><span class="n">resolve_namespace</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">default_ns</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">__type_name__</span> <span class="ow">is</span> <span class="n">ModelBase</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_namespace</span><span class="p">()</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">_</span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">(),</span> <span class="n">k</span><span class="p">,</span> <span class="n">TYPE_SUFFIX</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">cls</span><span class="p">):</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">resolve_namespace</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">default_ns</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">_force_own_namespace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">_force_own_namespace</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_namespace</span><span class="p">()</span>
+                <span class="n">ComplexModel</span><span class="o">.</span><span class="n">resolve_namespace</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_namespace</span><span class="p">())</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">produce</span><span class="p">(</span><span class="n">namespace</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">members</span><span class="p">):</span>
+<div class="viewcode-block" id="ComplexModelBase.produce"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase.produce">[docs]</a>        <span class="sd">&quot;&quot;&quot;Lets you create a class programmatically.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">ComplexModelMeta</span><span class="p">(</span><span class="n">type_name</span><span class="p">,</span> <span class="p">(</span><span class="n">ComplexModel</span><span class="p">,),</span> <span class="p">{</span>
+            <span class="s">&#39;__namespace__&#39;</span><span class="p">:</span> <span class="n">namespace</span><span class="p">,</span>
+            <span class="s">&#39;__type_name__&#39;</span><span class="p">:</span> <span class="n">type_name</span><span class="p">,</span>
+            <span class="s">&#39;_type_info&#39;</span><span class="p">:</span> <span class="n">TypeInfo</span><span class="p">(</span><span class="n">members</span><span class="p">),</span>
+        <span class="p">})</span>
+
+    <span class="nd">@staticmethod</span></div>
+    <span class="k">def</span> <span class="nf">alias</span><span class="p">(</span><span class="n">type_name</span><span class="p">,</span> <span class="n">namespace</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<div class="viewcode-block" id="ComplexModelBase.alias"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase.alias">[docs]</a>        <span class="sd">&quot;&quot;&quot;Return an alias class for the given target class.</span>
+
+<span class="sd">        This function is a variation on &#39;ComplexModel.produce&#39;. The alias will</span>
+<span class="sd">        borrow the target&#39;s _type_info.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">retval</span> <span class="o">=</span> <span class="n">Alias</span><span class="o">.</span><span class="n">customize</span><span class="p">()</span>
+
+        <span class="n">retval</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="n">type_name</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="n">namespace</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">_type_info</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;_target&quot;</span><span class="p">:</span> <span class="n">target</span><span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">retval</span>
+
+    <span class="nd">@classmethod</span></div>
+    <span class="k">def</span> <span class="nf">customize</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ComplexModelBase.customize"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase.customize">[docs]</a>        <span class="sd">&quot;&quot;&quot;Duplicates cls and overwrites the values in ``cls.Attributes`` with</span>
+<span class="sd">        ``**kwargs`` and returns the new class.&quot;&quot;&quot;</span>
+
+        <span class="n">store_as</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;store_as&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">store_as</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">PSSM_VALUES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">store_as</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">store_as</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">PSSM_VALUES</span><span class="o">.</span><span class="n">values</span><span class="p">())),</span> \
+                 <span class="s">&quot;&#39;store_as&#39; should be one of: </span><span class="si">%r</span><span class="s"> or an instance of </span><span class="si">%r</span><span class="s"> not </span><span class="si">%r</span><span class="s">&quot;</span> \
+                 <span class="o">%</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">PSSM_VALUES</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">PSSM_VALUES</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+                                                                        <span class="n">store_as</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;store_as&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span><span class="p">()</span>
+
+        <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_s_customize</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">cls_dict</span><span class="p">[</span><span class="s">&#39;__module__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">__module__</span>
+
+        <span class="n">retval</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">)</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">_type_info</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_type_info</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">__type_name__</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">__namespace__</span>
+
+        <span class="n">e</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">retval</span><span class="p">,</span> <span class="s">&#39;__extends__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">e</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">retval</span><span class="o">.</span><span class="n">__extends__</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s">&#39;__extends__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">retval</span>
+
+    <span class="nd">@classmethod</span></div>
+    <span class="k">def</span> <span class="nf">store_as</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">what</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="n">store_as</span><span class="o">=</span><span class="n">what</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">ComplexModel</span><span class="p">(</span><span class="n">ComplexModelBase</span><span class="p">):</span></div>
+<div class="viewcode-block" id="ComplexModel"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModel">[docs]</a>    <span class="sd">&quot;&quot;&quot;The general complexType factory. The __call__ method of this class will</span>
+<span class="sd">    return instances, contrary to primivites where the same call will result in</span>
+<span class="sd">    customized duplicates of the original class definition.</span>
+<span class="sd">    Those who&#39;d like to customize the class should use the customize method.</span>
+<span class="sd">    (see :class:``spyne.model.ModelBase``).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ComplexModelMeta</span>
+
+
+<span class="k">class</span> <span class="nc">Array</span><span class="p">(</span><span class="n">ComplexModelBase</span><span class="p">):</span></div>
+<div class="viewcode-block" id="Array"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.Array">[docs]</a>    <span class="sd">&quot;&quot;&quot;This class generates a ComplexModel child that has one attribute that has</span>
+<span class="sd">    the same name as the serialized class. It&#39;s contained in a Python list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ComplexModelMeta</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">serializer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">serializer</span> <span class="o">=</span> <span class="n">_get_spyne_type</span><span class="p">(</span><span class="n">serializer</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">serializer</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">serializer</span><span class="p">)</span>
+
+        <span class="c"># hack to default to unbounded arrays when the user didn&#39;t specify</span>
+        <span class="c"># max_occurs. We should find a better way.</span>
+        <span class="k">if</span> <span class="n">serializer</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="n">max_occurs</span><span class="o">=</span><span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">(</span><span class="s">&#39;inf&#39;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">serializer</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span> <span class="ow">is</span> <span class="n">ModelBase</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+            <span class="n">member_name</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">__base_type__</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">__type_name__</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">cls</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="n">ModelBase</span><span class="o">.</span><span class="n">Empty</span> <span class="c"># to be resolved later</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">member_name</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">__type_name__</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">cls</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">(),</span>
+                                                                    <span class="n">ARRAY_SUFFIX</span><span class="p">)</span>
+
+        <span class="n">retval</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">Array&#39;</span> <span class="o">%</span> <span class="n">member_name</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">_type_info</span> <span class="o">=</span> <span class="p">{</span><span class="n">member_name</span><span class="p">:</span> <span class="n">serializer</span><span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">retval</span>
+
+    <span class="c"># the array belongs to its child&#39;s namespace, it doesn&#39;t have its own</span>
+    <span class="c"># namespace.</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">resolve_namespace</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">default_ns</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">serializer</span><span class="p">,)</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+
+        <span class="n">serializer</span><span class="o">.</span><span class="n">resolve_namespace</span><span class="p">(</span><span class="n">serializer</span><span class="p">,</span> <span class="n">default_ns</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">__namespace__</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">cls</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">get_namespace</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">__namespace__</span> <span class="ow">in</span> <span class="n">namespace</span><span class="o">.</span><span class="n">const_prefmap</span><span class="p">:</span>
+            <span class="n">cls</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="n">default_ns</span>
+
+        <span class="n">ComplexModel</span><span class="o">.</span><span class="n">resolve_namespace</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">default_ns</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_serialization_instance</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">inst</span> <span class="o">=</span> <span class="n">ComplexModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">Array</span><span class="p">)</span>
+
+        <span class="p">(</span><span class="n">member_name</span><span class="p">,)</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">member_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">inst</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_deserialization_instance</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+
+<span class="k">class</span> <span class="nc">Iterable</span><span class="p">(</span><span class="n">Array</span><span class="p">):</span></div>
+<div class="viewcode-block" id="Iterable"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.Iterable">[docs]</a>    <span class="sd">&quot;&quot;&quot;This class generates a ``ComplexModel`` child that has one attribute that</span>
+<span class="sd">    has the same name as the serialized class. It&#39;s contained in a Python</span>
+<span class="sd">    iterable. The distinction with the ``Array`` is made in the protocol</span>
+<span class="sd">    implementation, this is just a marker.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">Alias</span><span class="p">(</span><span class="n">ComplexModelBase</span><span class="p">):</span></div>
+<div class="viewcode-block" id="Alias"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.Alias">[docs]</a>    <span class="sd">&quot;&quot;&quot;Different type_name, same _type_info.&quot;&quot;&quot;</span>
+
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ComplexModelMeta</span>
+
+
+<span class="k">def</span> <span class="nf">log_repr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">cls</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></div>
+<div class="viewcode-block" id="log_repr"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.log_repr">[docs]</a>    <span class="sd">&quot;&quot;&quot;Use this function if you want to echo a ComplexModel subclass. It will</span>
+<span class="sd">    limit output size of the String types, thus make your logs smaller.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">cls</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">cls</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">__class__</span>
+
+    <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">Array</span><span class="p">):</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">cls</span><span class="p">,</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">logged</span><span class="p">:</span>
+            <span class="n">retval</span> <span class="o">=</span><span class="s">&quot;[</span><span class="si">%s</span><span class="s"> (...)]&quot;</span> <span class="o">%</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="n">_log_repr_obj</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">o</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+            <span class="n">retval</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_log_repr_obj</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">cls</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">MAX_ARRAY_ELEMENT_NUM</span><span class="p">:</span>
+                <span class="n">retval</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;(...)&quot;</span><span class="p">)</span>
+                <span class="k">break</span>
+
+        <span class="n">retval</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">([</span><span class="si">%s</span><span class="s">])&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">(),</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">retval</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">ComplexModel</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">logged</span><span class="p">:</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="n">_log_repr_obj</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">retval</span> <span class="o">=</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">(...)&quot;</span> <span class="o">%</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">retval</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MAX_STRING_FIELD_LENGTH</span><span class="p">:</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="n">retval</span><span class="p">[:</span><span class="n">MAX_STRING_FIELD_LENGTH</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;(...)&quot;</span>
+
+    <span class="k">return</span> <span class="n">retval</span>
+
+
+<span class="k">def</span> <span class="nf">_log_repr_obj</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">cls</span><span class="p">):</span></div>
+    <span class="n">retval</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">t</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">t</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">logged</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">Unicode</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MAX_STRING_FIELD_LENGTH</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">=</span><span class="si">%r</span><span class="s">(...)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">[:</span><span class="n">MAX_STRING_FIELD_LENGTH</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">=</span><span class="si">%r</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+            <span class="n">retval</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">(</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">(),</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">retval</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">TTableModel</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="TTableModel"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.TTableModel">[docs]</a>    <span class="sd">&quot;&quot;&quot;A TableModel template that generates a new TableModel class for each</span>
+<span class="sd">    call. If metadata is not supplied, a new one is instantiated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">import</span> <span class="nn">sqlalchemy</span>
+
+    <span class="k">class</span> <span class="nc">TableModel</span><span class="p">(</span><span class="n">ComplexModelBase</span><span class="p">):</span>
+        <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ComplexModelMeta</span>
+
+        <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">ComplexModelBase</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
+            <span class="n">sqla_metadata</span> <span class="o">=</span> <span class="n">metadata</span> <span class="ow">or</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">MetaData</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">TableModel</span>
+
+<span class="k">try</span><span class="p">:</span></div>
+    <span class="n">TableModel</span> <span class="o">=</span> <span class="n">TTableModel</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">spyne 2.9.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

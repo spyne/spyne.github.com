@@ -1,0 +1,261 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>spyne.server.null &mdash; spyne 2.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.9.0 documentation" href="../../../index.html" />
+    <link rel="up" title="spyne" href="../../spyne.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">spyne 2.9.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for spyne.server.null</h1><div class="highlight"><pre>
+<span class="c">#</span>
+<span class="c"># spyne - Copyright (C) Spyne contributors.</span>
+<span class="c">#</span>
+<span class="c"># This library is free software; you can redistribute it and/or</span>
+<span class="c"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c"># License as published by the Free Software Foundation; either</span>
+<span class="c"># version 2.1 of the License, or (at your option) any later version.</span>
+<span class="c">#</span>
+<span class="c"># This library is distributed in the hope that it will be useful,</span>
+<span class="c"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c"># Lesser General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c"># License along with this library; if not, write to the Free Software</span>
+<span class="c"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301</span>
+<span class="c">#</span>
+
+<span class="sd">&quot;&quot;&quot;The ``spyne.server.null`` module contains the NullServer class and its helper</span>
+<span class="sd">objects.</span>
+
+<span class="sd">The name comes from the &quot;null modem connection&quot;. Look it up.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">spyne</span> <span class="kn">import</span> <span class="n">MethodContext</span>
+
+<span class="kn">from</span> <span class="nn">spyne.client</span> <span class="kn">import</span> <span class="n">Factory</span>
+<span class="kn">from</span> <span class="nn">spyne.const.ansi_color</span> <span class="kn">import</span> <span class="n">LIGHT_RED</span>
+<span class="kn">from</span> <span class="nn">spyne.const.ansi_color</span> <span class="kn">import</span> <span class="n">LIGHT_BLUE</span>
+<span class="kn">from</span> <span class="nn">spyne.const.ansi_color</span> <span class="kn">import</span> <span class="n">END_COLOR</span>
+<span class="kn">from</span> <span class="nn">spyne.server</span> <span class="kn">import</span> <span class="n">ServerBase</span>
+
+
+<span class="n">_big_header</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span> <span class="o">+</span> <span class="n">LIGHT_RED</span>
+<span class="n">_big_footer</span> <span class="o">=</span> <span class="n">END_COLOR</span> <span class="o">+</span> <span class="p">(</span><span class="s">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+<span class="n">_small_header</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">20</span><span class="p">)</span> <span class="o">+</span> <span class="n">LIGHT_BLUE</span>
+<span class="n">_small_footer</span> <span class="o">=</span> <span class="n">END_COLOR</span> <span class="o">+</span> <span class="p">(</span><span class="s">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">20</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">NullServer</span><span class="p">(</span><span class="n">ServerBase</span><span class="p">):</span>
+<div class="viewcode-block" id="NullServer"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.null.NullServer">[docs]</a>    <span class="sd">&quot;&quot;&quot;A server that doesn&#39;t support any transport at all -- it&#39;s implemented</span>
+<span class="sd">    to test services without having to run a server.</span>
+
+<span class="sd">    It implicitly uses the &#39;sync&#39; auxiliary processing mode.</span>
+
+<span class="sd">    Note that:</span>
+<span class="sd">        1) ``**kwargs`` overwrite ``*args``.</span>
+<span class="sd">        2) You can do: ::</span>
+
+<span class="sd">            logging.getLogger(&#39;spyne.server.null&#39;).setLevel(logging.CRITICAL)</span>
+
+<span class="sd">        to hide context delimiters in logs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">transport</span> <span class="o">=</span> <span class="s">&#39;noconn://null.spyne&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+        <span class="n">ServerBase</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">service</span> <span class="o">=</span> <span class="n">_FunctionProxy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">factory</span> <span class="o">=</span> <span class="n">Factory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_wsdl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NullServer.get_wsdl"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.null.NullServer.get_wsdl">[docs]</a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get_interface_document</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></div>
+<div class="viewcode-block" id="NullServer.set_options"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.null.NullServer.set_options">[docs]</a>        <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">in_header</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;soapheaders&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">in_header</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_FunctionProxy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></div></div>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__app</span> <span class="o">=</span> <span class="n">app</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__server</span> <span class="o">=</span> <span class="n">server</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_header</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_FunctionCall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__app</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__server</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_header</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_FunctionCall</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">in_header</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">app</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__key</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__server</span> <span class="o">=</span> <span class="n">server</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__in_header</span> <span class="o">=</span> <span class="n">in_header</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">initial_ctx</span> <span class="o">=</span> <span class="n">MethodContext</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">initial_ctx</span><span class="o">.</span><span class="n">method_request_string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__key</span>
+        <span class="n">initial_ctx</span><span class="o">.</span><span class="n">in_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__in_header</span>
+        <span class="n">initial_ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">NullServer</span><span class="o">.</span><span class="n">transport</span>
+
+        <span class="n">contexts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">in_protocol</span><span class="o">.</span><span class="n">generate_method_contexts</span><span class="p">(</span><span class="n">initial_ctx</span><span class="p">)</span>
+
+        <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> start request </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_big_header</span><span class="p">,</span> <span class="n">_big_footer</span><span class="p">)</span>  <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">ctx</span> <span class="ow">in</span> <span class="n">contexts</span><span class="p">:</span>
+            <span class="c"># this reconstruction is quite costly. I wonder whether it&#39;s a</span>
+            <span class="c"># problem though.</span>
+
+            <span class="n">_type_info</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">in_message</span><span class="o">.</span><span class="n">_type_info</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span> <span class="o">=</span> <span class="p">[</span><span class="bp">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">_type_info</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)):</span>
+                <span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">_type_info</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+
+            <span class="k">if</span> <span class="n">cnt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">p_ctx</span> <span class="o">=</span> <span class="n">ctx</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">aux</span><span class="o">.</span><span class="n">initialize_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">p_ctx</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+
+            <span class="c"># do logging.getLogger(&#39;spyne.server.null&#39;).setLevel(logging.CRITICAL)</span>
+            <span class="c"># to hide the following</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> start context </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_small_header</span><span class="p">,</span> <span class="n">_small_footer</span><span class="p">)</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">process_request</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">  end context  </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_small_header</span><span class="p">,</span> <span class="n">_small_footer</span><span class="p">)</span> <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_error</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_error</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">out_message</span><span class="o">.</span><span class="n">_type_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">_retval</span> <span class="o">=</span> <span class="bp">None</span>
+
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">out_message</span><span class="o">.</span><span class="n">_type_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">_retval</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_object</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                    <span class="c"># workaround to have the context disposed of when the caller</span>
+                    <span class="c"># is done with the return value. the context is sometimes</span>
+                    <span class="c"># needed to fully construct the return object (e.g. when the</span>
+                    <span class="c"># object is a sqlalchemy object bound to a session that&#39;s</span>
+                    <span class="c"># defined in the context object).</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">_retval</span><span class="o">.</span><span class="n">__ctx__</span> <span class="o">=</span> <span class="n">ctx</span>
+                    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                        <span class="c"># not all objects let this happen. (eg. built-in types</span>
+                        <span class="c"># like str, but they don&#39;t need the context anyway).</span>
+                        <span class="k">pass</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_retval</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_object</span>
+
+                    <span class="c"># same as above</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">_retval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">__ctx__</span> <span class="o">=</span> <span class="n">ctx</span>
+                    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                        <span class="k">pass</span>
+
+            <span class="k">if</span> <span class="n">cnt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">retval</span> <span class="o">=</span> <span class="n">_retval</span>
+            <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">  end request  </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_big_header</span><span class="p">,</span> <span class="n">_big_footer</span><span class="p">)</span>  <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">retval</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">spyne 2.9.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

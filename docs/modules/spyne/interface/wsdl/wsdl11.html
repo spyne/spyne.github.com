@@ -1,0 +1,651 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>spyne.interface.wsdl.wsdl11 &mdash; spyne 2.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.9.0 documentation" href="../../../../index.html" />
+    <link rel="up" title="spyne.interface" href="../../interface.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">spyne 2.9.0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../../spyne.html" >spyne</a> &raquo;</li>
+          <li><a href="../../interface.html" accesskey="U">spyne.interface</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for spyne.interface.wsdl.wsdl11</h1><div class="highlight"><pre>
+<span class="c">#</span>
+<span class="c"># spyne - Copyright (C) Spyne contributors.</span>
+<span class="c">#</span>
+<span class="c"># This library is free software; you can redistribute it and/or</span>
+<span class="c"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c"># License as published by the Free Software Foundation; either</span>
+<span class="c"># version 2.1 of the License, or (at your option) any later version.</span>
+<span class="c">#</span>
+<span class="c"># This library is distributed in the hope that it will be useful,</span>
+<span class="c"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c"># Lesser General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c"># License along with this library; if not, write to the Free Software</span>
+<span class="c"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301</span>
+<span class="c">#</span>
+
+<span class="sd">&quot;&quot;&quot;The ``spyne.interface.wsdl.wsdl11`` module contains an implementation of a</span>
+<span class="sd">subset of the Wsdl 1.1 document standard and its helper methods.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="n">REGEX_WSDL</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&#39;[.?]wsdl$&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">spyne.const.xml_ns</span>
+
+<span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
+
+<span class="kn">from</span> <span class="nn">spyne.interface.xml_schema</span> <span class="kn">import</span> <span class="n">XmlSchema</span>
+
+<span class="n">_ns_plink</span> <span class="o">=</span> <span class="n">spyne</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">xml_ns</span><span class="o">.</span><span class="n">plink</span>
+<span class="n">_ns_xsd</span> <span class="o">=</span> <span class="n">spyne</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">xml_ns</span><span class="o">.</span><span class="n">xsd</span>
+<span class="n">_ns_wsa</span> <span class="o">=</span> <span class="n">spyne</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">xml_ns</span><span class="o">.</span><span class="n">wsa</span>
+<span class="n">_ns_wsdl</span> <span class="o">=</span> <span class="n">spyne</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">xml_ns</span><span class="o">.</span><span class="n">wsdl</span>
+<span class="n">_ns_soap</span> <span class="o">=</span> <span class="n">spyne</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">xml_ns</span><span class="o">.</span><span class="n">soap</span>
+<span class="n">_pref_wsa</span> <span class="o">=</span> <span class="n">spyne</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">xml_ns</span><span class="o">.</span><span class="n">const_prefmap</span><span class="p">[</span><span class="n">_ns_wsa</span><span class="p">]</span>
+
+<span class="n">_in_header_msg_suffix</span> <span class="o">=</span> <span class="s">&#39;InHeaderMsg&#39;</span>
+<span class="n">_out_header_msg_suffix</span> <span class="o">=</span> <span class="s">&#39;OutHeaderMsg&#39;</span>
+
+<span class="k">def</span> <span class="nf">check_method_port</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">service</span><span class="o">.</span><span class="n">__port_types__</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">method</span><span class="o">.</span><span class="n">port_type</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">            A port must be declared in the RPC decorator if the service</span>
+<span class="s">            class declares a list of ports</span>
+
+<span class="s">            Method: </span><span class="si">%r</span><span class="s"></span>
+<span class="s">            &quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">method</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">method</span><span class="o">.</span><span class="n">port_type</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">service</span><span class="o">.</span><span class="n">__port_types__</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">            The rpc decorator has declared a port while the service class</span>
+<span class="s">            has not.  Remove the port declaration from the rpc decorator</span>
+<span class="s">            or add a list of ports to the service class</span>
+<span class="s">            &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">method</span><span class="o">.</span><span class="n">port_type</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">__port_types__</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="n">port_type</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">            The port specified in the rpc decorator does not match any of</span>
+<span class="s">            the ports defined by the service class</span>
+<span class="s">            &quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="c"># FIXME: I don&#39;t think this is working.</span>
+<span class="k">def</span> <span class="nf">_add_callbacks</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+    <span class="n">ns_tns</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">get_tns</span><span class="p">()</span>
+    <span class="n">pref_tns</span> <span class="o">=</span> <span class="s">&#39;tns&#39;</span>
+
+    <span class="n">cb_port_type</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="c"># add necessary async headers</span>
+    <span class="c"># WS-Addressing -&gt; RelatesTo ReplyTo MessageID</span>
+    <span class="c"># callback porttype</span>
+    <span class="k">if</span> <span class="n">service</span><span class="o">.</span><span class="n">_has_callbacks</span><span class="p">():</span>
+        <span class="n">wsa_schema</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="s">&quot;{</span><span class="si">%s</span><span class="s">}schema&quot;</span> <span class="o">%</span> <span class="n">_ns_xsd</span><span class="p">)</span>
+        <span class="n">wsa_schema</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;targetNamespace&quot;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">Callback&#39;</span>  <span class="o">%</span> <span class="n">ns_tns</span><span class="p">)</span>
+        <span class="n">wsa_schema</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;elementFormDefault&quot;</span><span class="p">,</span> <span class="s">&quot;qualified&quot;</span><span class="p">)</span>
+
+        <span class="n">import_</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">wsa_schema</span><span class="p">,</span> <span class="s">&quot;{</span><span class="si">%s</span><span class="s">}import&quot;</span> <span class="o">%</span> <span class="n">_ns_xsd</span><span class="p">)</span>
+        <span class="n">import_</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;namespace&quot;</span><span class="p">,</span> <span class="n">_ns_wsa</span><span class="p">)</span>
+        <span class="n">import_</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;schemaLocation&quot;</span><span class="p">,</span> <span class="n">_ns_wsa</span><span class="p">)</span>
+
+        <span class="n">relt_message</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}message&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+        <span class="n">relt_message</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;RelatesToHeader&#39;</span><span class="p">)</span>
+        <span class="n">relt_part</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">relt_message</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}part&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+        <span class="n">relt_part</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;RelatesTo&#39;</span><span class="p">)</span>
+        <span class="n">relt_part</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;element&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:RelatesTo&#39;</span> <span class="o">%</span> <span class="n">_pref_wsa</span><span class="p">)</span>
+
+        <span class="n">reply_message</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}message&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+        <span class="n">reply_message</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;ReplyToHeader&#39;</span><span class="p">)</span>
+        <span class="n">reply_part</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">reply_message</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}part&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+        <span class="n">reply_part</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;ReplyTo&#39;</span><span class="p">)</span>
+        <span class="n">reply_part</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;element&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:ReplyTo&#39;</span> <span class="o">%</span> <span class="n">_pref_wsa</span><span class="p">)</span>
+
+        <span class="n">id_header</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}message&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+        <span class="n">id_header</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;MessageIDHeader&#39;</span><span class="p">)</span>
+        <span class="n">id_part</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">id_header</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}part&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+        <span class="n">id_part</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;MessageID&#39;</span><span class="p">)</span>
+        <span class="n">id_part</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;element&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:MessageID&#39;</span> <span class="o">%</span> <span class="n">_pref_wsa</span><span class="p">)</span>
+
+        <span class="c"># make portTypes</span>
+        <span class="n">cb_port_type</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}portType&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+        <span class="n">cb_port_type</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">Callback&#39;</span> <span class="o">%</span> <span class="n">service_name</span><span class="p">)</span>
+
+        <span class="n">cb_service_name</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">Callback&#39;</span> <span class="o">%</span> <span class="n">service_name</span>
+
+        <span class="n">cb_service</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}service&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+        <span class="n">cb_service</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">cb_service_name</span><span class="p">)</span>
+
+        <span class="n">cb_wsdl_port</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">cb_service</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}port&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+        <span class="n">cb_wsdl_port</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">cb_service_name</span><span class="p">)</span>
+        <span class="n">cb_wsdl_port</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;binding&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pref_tns</span><span class="p">,</span> <span class="n">cb_service_name</span><span class="p">))</span>
+
+        <span class="n">cb_address</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">cb_wsdl_port</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}address&#39;</span> <span class="o">%</span> <span class="n">_ns_soap</span><span class="p">)</span>
+        <span class="n">cb_address</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;location&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cb_port_type</span>
+
+<span class="k">class</span> <span class="nc">Wsdl11</span><span class="p">(</span><span class="n">XmlSchema</span><span class="p">):</span>
+<div class="viewcode-block" id="Wsdl11"><a class="viewcode-back" href="../../../../reference/interface.html#spyne.interface.wsdl.wsdl11.Wsdl11">[docs]</a>    <span class="sd">&quot;&quot;&quot;The implementation of the Wsdl 1.1 interface definition document</span>
+<span class="sd">    standard which is avaible here: http://www.w3.org/TR/wsdl</span>
+
+<span class="sd">    :param app: The parent application.</span>
+<span class="sd">    :param _with_partnerlink: Include the partnerLink tag in the wsdl.</span>
+
+<span class="sd">    Supported events:</span>
+<span class="sd">        * document_built:</span>
+<span class="sd">            Called right after the document is built. The handler gets the</span>
+<span class="sd">            ``Wsdl11`` instance as the only argument. Also called by XmlSchema</span>
+<span class="sd">            class.</span>
+
+<span class="sd">        * wsdl_document_built:</span>
+<span class="sd">            Called right after the document is built. The handler gets the</span>
+<span class="sd">            ``Wsdl11`` instance as the only argument. Only called from this</span>
+<span class="sd">            class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c">#:param import_base_namespaces: Include imports for base namespaces like</span>
+    <span class="c">#    xsd, xsi, wsdl, etc.</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">_with_partnerlink</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="n">XmlSchema</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_with_plink</span> <span class="o">=</span> <span class="n">_with_partnerlink</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">port_type_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_elt_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_elt</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_elt</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__wsdl</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validation_schema</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">_get_binding_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type_name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">port_type_name</span> <span class="c"># subclasses override to control port names.</span>
+
+    <span class="k">def</span> <span class="nf">_get_or_create_port_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates a wsdl:portType element. &quot;&quot;&quot;</span>
+
+        <span class="n">pt</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pt_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">port_type_dict</span><span class="p">:</span>
+            <span class="n">pt</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_elt</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}portType&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+            <span class="n">pt</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">pt_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">port_type_dict</span><span class="p">[</span><span class="n">pt_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pt</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">port_type_dict</span><span class="p">[</span><span class="n">pt_name</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">pt</span>
+
+    <span class="k">def</span> <span class="nf">_get_or_create_service_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Builds a wsdl:service element. &#39;&#39;&#39;</span>
+
+        <span class="n">ser</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">service_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_elt_dict</span><span class="p">:</span>
+            <span class="n">ser</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_elt</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}service&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+            <span class="n">ser</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">service_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">service_elt_dict</span><span class="p">[</span><span class="n">service_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ser</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_elt_dict</span><span class="p">[</span><span class="n">service_name</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">ser</span>
+
+    <span class="k">def</span> <span class="nf">get_interface_document</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wsdl</span>
+
+    <span class="k">def</span> <span class="nf">build_interface_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+<div class="viewcode-block" id="Wsdl11.build_interface_document"><a class="viewcode-back" href="../../../../reference/interface.html#spyne.interface.wsdl.wsdl11.Wsdl11.build_interface_document">[docs]</a>        <span class="sd">&quot;&quot;&quot;Build the wsdl for the application.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">build_schema_nodes</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">REGEX_WSDL</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+        <span class="c">#self.url = url</span>
+
+        <span class="n">service_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
+
+        <span class="c"># create wsdl root node</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_elt</span> <span class="o">=</span> <span class="n">root</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s">&quot;{</span><span class="si">%s</span><span class="s">}definitions&quot;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">,</span>
+                                                     <span class="n">nsmap</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">nsmap</span><span class="p">)</span>
+
+        <span class="n">root</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;targetNamespace&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">tns</span><span class="p">)</span>
+        <span class="n">root</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">service_name</span><span class="p">)</span>
+
+        <span class="c"># create types node</span>
+        <span class="n">types</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s">&quot;{</span><span class="si">%s</span><span class="s">}types&quot;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema_dict</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="n">messages</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">services</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_messages_for_methods</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">messages</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_with_plink</span><span class="p">:</span>
+            <span class="n">plink</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}partnerLinkType&#39;</span> <span class="o">%</span> <span class="n">_ns_plink</span><span class="p">)</span>
+            <span class="n">plink</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">service_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__add_partner_link</span><span class="p">(</span><span class="n">service_name</span><span class="p">,</span> <span class="n">plink</span><span class="p">)</span>
+
+        <span class="c"># create service nodes in advance. they&#39;re to be filled in subsequent</span>
+        <span class="c"># add_port_type calls.</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">services</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">is_auxiliary</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_get_or_create_service_node</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_applied_service_name</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+
+        <span class="c"># create portType nodes</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">services</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">is_auxiliary</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_port_type</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+
+        <span class="n">cb_binding</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">services</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">is_auxiliary</span><span class="p">():</span>
+                <span class="n">cb_binding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_bindings_for_methods</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span>
+                                                   <span class="n">service_name</span><span class="p">,</span> <span class="n">cb_binding</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">transport</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;You must set the &#39;transport&#39; property of the &quot;</span>
+                            <span class="s">&quot;parent &#39;Application&#39; instance&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">fire_event</span><span class="p">(</span><span class="s">&#39;document_built&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">fire_event</span><span class="p">(</span><span class="s">&#39;wsdl_document_built&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__wsdl</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">xml_declaration</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                                               <span class="n">encoding</span><span class="o">=</span><span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__add_partner_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">plink</span><span class="p">):</span></div>
+        <span class="sd">&quot;&quot;&quot;Add the partnerLinkType node to the wsdl.&quot;&quot;&quot;</span>
+
+        <span class="n">ns_tns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">tns</span>
+        <span class="n">pref_tns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">get_namespace_prefix</span><span class="p">(</span><span class="n">ns_tns</span><span class="p">)</span>
+
+        <span class="n">role</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">plink</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}role&#39;</span> <span class="o">%</span> <span class="n">_ns_plink</span><span class="p">)</span>
+        <span class="n">role</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">service_name</span><span class="p">)</span>
+
+        <span class="n">plink_port_type</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}portType&#39;</span> <span class="o">%</span> <span class="n">_ns_plink</span><span class="p">)</span>
+        <span class="n">plink_port_type</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pref_tns</span><span class="p">,</span> <span class="n">service_name</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_callbacks</span><span class="p">():</span>
+            <span class="n">role</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">plink</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}role&#39;</span> <span class="o">%</span> <span class="n">_ns_plink</span><span class="p">)</span>
+            <span class="n">role</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">Callback&#39;</span> <span class="o">%</span> <span class="n">service_name</span><span class="p">)</span>
+
+            <span class="n">plink_port_type</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}portType&#39;</span> <span class="o">%</span> <span class="n">_ns_plink</span><span class="p">)</span>
+            <span class="n">plink_port_type</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:</span><span class="si">%s</span><span class="s">Callback&#39;</span> <span class="o">%</span>
+                                                       <span class="p">(</span><span class="n">pref_tns</span><span class="p">,</span> <span class="n">service_name</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_add_port_to_service</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service</span><span class="p">,</span> <span class="n">port_name</span><span class="p">,</span> <span class="n">binding_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Builds a wsdl:port for a service and binding&quot;&quot;&quot;</span>
+
+        <span class="n">pref_tns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">get_namespace_prefix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">tns</span><span class="p">)</span>
+
+        <span class="n">wsdl_port</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}port&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+        <span class="n">wsdl_port</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">port_name</span><span class="p">)</span>
+        <span class="n">wsdl_port</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;binding&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pref_tns</span><span class="p">,</span> <span class="n">binding_name</span><span class="p">))</span>
+
+        <span class="n">addr</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">wsdl_port</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}address&#39;</span> <span class="o">%</span> <span class="n">_ns_soap</span><span class="p">)</span>
+        <span class="n">addr</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;location&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_has_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">services</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">_has_callbacks</span><span class="p">():</span>
+                <span class="k">return</span> <span class="bp">True</span>
+
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">_get_applied_service_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">service</span><span class="o">.</span><span class="n">get_service_name</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c"># This is the default behavior. i.e. no service interface is</span>
+            <span class="c"># defined in the service heading</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">services</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">retval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">retval</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">get_service_class_name</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">get_service_name</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">retval</span>
+
+    <span class="k">def</span> <span class="nf">add_port_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+        <span class="c"># FIXME: I don&#39;t think this call is working.</span>
+        <span class="n">cb_port_type</span> <span class="o">=</span> <span class="n">_add_callbacks</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+        <span class="n">applied_service_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_applied_service_name</span><span class="p">(</span><span class="n">service</span><span class="p">)</span>
+
+        <span class="n">port_binding_names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">port_type_list</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">get_port_types</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">port_type_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">port_type_name</span> <span class="ow">in</span> <span class="n">port_type_list</span><span class="p">:</span>
+                <span class="n">port_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_or_create_port_type</span><span class="p">(</span><span class="n">port_type_name</span><span class="p">)</span>
+                <span class="n">port_type</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">port_type_name</span><span class="p">)</span>
+
+                <span class="n">binding_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_binding_name</span><span class="p">(</span><span class="n">port_type_name</span><span class="p">)</span>
+                <span class="n">port_binding_names</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">port_type_name</span><span class="p">,</span> <span class="n">binding_name</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">port_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_or_create_port_type</span><span class="p">(</span><span class="n">service_name</span><span class="p">)</span>
+            <span class="n">port_type</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">service_name</span><span class="p">)</span>
+
+            <span class="n">binding_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_binding_name</span><span class="p">(</span><span class="n">service_name</span><span class="p">)</span>
+            <span class="n">port_binding_names</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">service_name</span><span class="p">,</span> <span class="n">binding_name</span><span class="p">))</span>
+
+        <span class="n">port_name</span> <span class="o">=</span> <span class="n">port_type</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">service</span><span class="o">.</span><span class="n">public_methods</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">check_method_port</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">is_callback</span><span class="p">:</span>
+                <span class="n">operation</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">cb_port_type</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}operation&#39;</span>
+                                                                    <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">operation</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">port_type</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}operation&#39;</span>
+                                                                    <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+
+            <span class="n">operation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">doc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">documentation</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}documentation&#39;</span>
+                                                                    <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+                <span class="n">documentation</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">doc</span>
+
+            <span class="n">operation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;parameterOrder&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">in_message</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">())</span>
+
+            <span class="n">op_input</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}input&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+            <span class="n">op_input</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">in_message</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">())</span>
+            <span class="n">op_input</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;message&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">in_message</span><span class="o">.</span><span class="n">get_type_name_ns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">method</span><span class="o">.</span><span class="n">is_callback</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">method</span><span class="o">.</span><span class="n">is_async</span><span class="p">):</span>
+                <span class="n">op_output</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}output&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+                <span class="n">op_output</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">out_message</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">())</span>
+                <span class="n">op_output</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;message&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">out_message</span><span class="o">.</span><span class="n">get_type_name_ns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="n">faults</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">method</span><span class="o">.</span><span class="n">faults</span><span class="p">:</span>
+                        <span class="n">fault</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}fault&#39;</span> <span class="o">%</span>
+                                                                       <span class="n">_ns_wsdl</span><span class="p">)</span>
+                        <span class="n">fault</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">())</span>
+                        <span class="n">fault</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;message&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                                        <span class="n">f</span><span class="o">.</span><span class="n">get_namespace_prefix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">),</span>
+                                        <span class="n">f</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()))</span>
+
+        <span class="n">ser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_elt_dict</span><span class="p">[</span><span class="n">applied_service_name</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">port_name</span><span class="p">,</span> <span class="n">binding_name</span> <span class="ow">in</span> <span class="n">port_binding_names</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_port_to_service</span><span class="p">(</span><span class="n">ser</span><span class="p">,</span> <span class="n">port_name</span><span class="p">,</span> <span class="n">binding_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_add_message_for_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">message_name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">message_name</span> <span class="ow">in</span> <span class="n">messages</span><span class="p">):</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">message_name</span><span class="p">)</span>
+
+            <span class="n">message</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}message&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+            <span class="n">message</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">message_name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="n">objs</span> <span class="o">=</span> <span class="n">obj</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">objs</span> <span class="o">=</span> <span class="p">(</span><span class="n">obj</span><span class="p">,)</span>
+            <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">:</span>
+                <span class="n">part</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}part&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+                <span class="n">part</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">())</span>
+                <span class="n">part</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;element&#39;</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">get_type_name_ns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">add_messages_for_methods</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">messages</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">service</span><span class="o">.</span><span class="n">public_methods</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_message_for_object</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">in_message</span><span class="p">,</span>
+                                    <span class="n">method</span><span class="o">.</span><span class="n">in_message</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_message_for_object</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">out_message</span><span class="p">,</span>
+                                    <span class="n">method</span><span class="o">.</span><span class="n">out_message</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">())</span>
+
+            <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">in_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="n">in_header</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                    <span class="n">in_header_message_name</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">method</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                      <span class="n">_in_header_msg_suffix</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">in_header_message_name</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">in_header</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_add_message_for_object</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span>
+                                    <span class="n">method</span><span class="o">.</span><span class="n">in_header</span><span class="p">,</span> <span class="n">in_header_message_name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">out_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="n">out_header</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                    <span class="n">out_header_message_name</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">method</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                       <span class="n">_out_header_msg_suffix</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">out_header_message_name</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">out_header</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_add_message_for_object</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span>
+                                    <span class="n">method</span><span class="o">.</span><span class="n">out_header</span><span class="p">,</span> <span class="n">out_header_message_name</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">fault</span> <span class="ow">in</span> <span class="n">method</span><span class="o">.</span><span class="n">faults</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_add_message_for_object</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">fault</span><span class="p">,</span>
+                                        <span class="n">fault</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">add_bindings_for_methods</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span>
+                                     <span class="n">cb_binding</span><span class="p">):</span>
+
+        <span class="n">pref_tns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">get_namespace_prefix</span><span class="p">(</span><span class="n">service</span><span class="o">.</span><span class="n">get_tns</span><span class="p">())</span>
+
+        <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">binding</span><span class="p">):</span>
+            <span class="n">operation</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s">&#39;{</span><span class="si">%s</span><span class="s">}operation&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+            <span class="n">operation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="n">soap_operation</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}operation&#39;</span>
+                                                                    <span class="o">%</span> <span class="n">_ns_soap</span><span class="p">)</span>
+            <span class="n">soap_operation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;soapAction&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">soap_operation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;style&#39;</span><span class="p">,</span> <span class="s">&#39;document&#39;</span><span class="p">)</span>
+
+            <span class="c"># get input</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}input&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+            <span class="nb">input</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">in_message</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">())</span>
+
+            <span class="n">soap_body</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}body&#39;</span> <span class="o">%</span> <span class="n">_ns_soap</span><span class="p">)</span>
+            <span class="n">soap_body</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;use&#39;</span><span class="p">,</span> <span class="s">&#39;literal&#39;</span><span class="p">)</span>
+
+            <span class="c"># get input soap header</span>
+            <span class="n">in_header</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">in_header</span>
+            <span class="k">if</span> <span class="n">in_header</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">in_header</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">__in_header__</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">in_header</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_header</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                    <span class="n">in_headers</span> <span class="o">=</span> <span class="n">in_header</span>
+                    <span class="n">in_header_message_name</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">method</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                      <span class="n">_in_header_msg_suffix</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">in_headers</span> <span class="o">=</span> <span class="p">(</span><span class="n">in_header</span><span class="p">,)</span>
+                    <span class="n">in_header_message_name</span> <span class="o">=</span> <span class="n">in_header</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
+
+                <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">in_headers</span><span class="p">:</span>
+                    <span class="n">soap_header</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}header&#39;</span> <span class="o">%</span> <span class="n">_ns_soap</span><span class="p">)</span>
+                    <span class="n">soap_header</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;use&#39;</span><span class="p">,</span> <span class="s">&#39;literal&#39;</span><span class="p">)</span>
+                    <span class="n">soap_header</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;message&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                                <span class="n">header</span><span class="o">.</span><span class="n">get_namespace_prefix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">),</span>
+                                <span class="n">in_header_message_name</span><span class="p">))</span>
+                    <span class="n">soap_header</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;part&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">())</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="n">is_async</span> <span class="ow">or</span> <span class="n">method</span><span class="o">.</span><span class="n">is_callback</span><span class="p">):</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}output&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">out_message</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">())</span>
+
+                <span class="n">soap_body</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}body&#39;</span> <span class="o">%</span> <span class="n">_ns_soap</span><span class="p">)</span>
+                <span class="n">soap_body</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;use&#39;</span><span class="p">,</span> <span class="s">&#39;literal&#39;</span><span class="p">)</span>
+
+                <span class="c"># get output soap header</span>
+                <span class="n">out_header</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">out_header</span>
+                <span class="k">if</span> <span class="n">out_header</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">out_header</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">__out_header__</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">out_header</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out_header</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                        <span class="n">out_headers</span> <span class="o">=</span> <span class="n">out_header</span>
+                        <span class="n">out_header_message_name</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">method</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                        <span class="n">_out_header_msg_suffix</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">out_headers</span> <span class="o">=</span> <span class="p">(</span><span class="n">out_header</span><span class="p">,)</span>
+                        <span class="n">out_header_message_name</span> <span class="o">=</span> <span class="n">out_header</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
+
+                    <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">out_headers</span><span class="p">:</span>
+                        <span class="n">soap_header</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}header&#39;</span>
+                                                                    <span class="o">%</span> <span class="n">_ns_soap</span><span class="p">)</span>
+                        <span class="n">soap_header</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;use&#39;</span><span class="p">,</span> <span class="s">&#39;literal&#39;</span><span class="p">)</span>
+                        <span class="n">soap_header</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;message&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                                <span class="n">header</span><span class="o">.</span><span class="n">get_namespace_prefix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">),</span>
+                                <span class="n">out_header_message_name</span><span class="p">))</span>
+                        <span class="n">soap_header</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;part&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">())</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="n">faults</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">method</span><span class="o">.</span><span class="n">faults</span><span class="p">:</span>
+                        <span class="n">wsdl_fault</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}fault&#39;</span> <span class="o">%</span>
+                                                                    <span class="n">_ns_wsdl</span><span class="p">)</span>
+                        <span class="n">wsdl_fault</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">())</span>
+
+                        <span class="n">soap_fault</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">wsdl_fault</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}fault&#39;</span> <span class="o">%</span>
+                                                                    <span class="n">_ns_soap</span><span class="p">)</span>
+                        <span class="n">soap_fault</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">())</span>
+                        <span class="n">soap_fault</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;use&#39;</span><span class="p">,</span> <span class="s">&#39;literal&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">is_callback</span><span class="p">:</span>
+                <span class="n">relates_to</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}header&#39;</span> <span class="o">%</span> <span class="n">_ns_soap</span><span class="p">)</span>
+
+                <span class="n">relates_to</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;message&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:RelatesToHeader&#39;</span> <span class="o">%</span> <span class="n">pref_tns</span><span class="p">)</span>
+                <span class="n">relates_to</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;part&#39;</span><span class="p">,</span> <span class="s">&#39;RelatesTo&#39;</span><span class="p">)</span>
+                <span class="n">relates_to</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;use&#39;</span><span class="p">,</span> <span class="s">&#39;literal&#39;</span><span class="p">)</span>
+
+                <span class="n">cb_binding</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">is_async</span><span class="p">:</span>
+                    <span class="n">rt_header</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}header&#39;</span> <span class="o">%</span> <span class="n">_ns_soap</span><span class="p">)</span>
+                    <span class="n">rt_header</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;message&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:ReplyToHeader&#39;</span> <span class="o">%</span> <span class="n">pref_tns</span><span class="p">)</span>
+                    <span class="n">rt_header</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;part&#39;</span><span class="p">,</span> <span class="s">&#39;ReplyTo&#39;</span><span class="p">)</span>
+                    <span class="n">rt_header</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;use&#39;</span><span class="p">,</span> <span class="s">&#39;literal&#39;</span><span class="p">)</span>
+
+                    <span class="n">mid_header</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}header&#39;</span><span class="o">%</span> <span class="n">_ns_soap</span><span class="p">)</span>
+                    <span class="n">mid_header</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;message&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:MessageIDHeader&#39;</span> <span class="o">%</span> <span class="n">pref_tns</span><span class="p">)</span>
+                    <span class="n">mid_header</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;part&#39;</span><span class="p">,</span> <span class="s">&#39;MessageID&#39;</span><span class="p">)</span>
+                    <span class="n">mid_header</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;use&#39;</span><span class="p">,</span> <span class="s">&#39;literal&#39;</span><span class="p">)</span>
+
+                <span class="n">binding</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span>
+
+        <span class="n">port_type_list</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">get_port_types</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">port_type_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">port_type_name</span> <span class="ow">in</span> <span class="n">port_type_list</span><span class="p">:</span>
+
+                <span class="c"># create binding nodes</span>
+                <span class="n">binding</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}binding&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+                <span class="n">binding</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">port_type_name</span><span class="p">)</span>
+                <span class="n">binding</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;type&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:</span><span class="si">%s</span><span class="s">&#39;</span><span class="o">%</span> <span class="p">(</span><span class="n">pref_tns</span><span class="p">,</span> <span class="n">port_type_name</span><span class="p">))</span>
+
+                <span class="n">transport</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">binding</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}binding&#39;</span> <span class="o">%</span> <span class="n">_ns_soap</span><span class="p">)</span>
+                <span class="n">transport</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;style&#39;</span><span class="p">,</span> <span class="s">&#39;document&#39;</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">service</span><span class="o">.</span><span class="n">public_methods</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">port_type</span> <span class="o">==</span> <span class="n">port_type_name</span><span class="p">:</span>
+                        <span class="n">inner</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">binding</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># here is the default port.</span>
+            <span class="k">if</span> <span class="n">cb_binding</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">cb_binding</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}binding&#39;</span> <span class="o">%</span> <span class="n">_ns_wsdl</span><span class="p">)</span>
+                <span class="n">cb_binding</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">service_name</span><span class="p">)</span>
+                <span class="n">cb_binding</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;type&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:</span><span class="si">%s</span><span class="s">&#39;</span><span class="o">%</span> <span class="p">(</span><span class="n">pref_tns</span><span class="p">,</span> <span class="n">service_name</span><span class="p">))</span>
+
+                <span class="n">transport</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">cb_binding</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}binding&#39;</span> <span class="o">%</span> <span class="n">_ns_soap</span><span class="p">)</span>
+                <span class="n">transport</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;style&#39;</span><span class="p">,</span> <span class="s">&#39;document&#39;</span><span class="p">)</span>
+                <span class="n">transport</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;transport&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">transport</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">service</span><span class="o">.</span><span class="n">public_methods</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">inner</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">cb_binding</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cb_binding</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">spyne 2.9.0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../../spyne.html" >spyne</a> &raquo;</li>
+          <li><a href="../../interface.html" >spyne.interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
