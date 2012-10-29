@@ -10,12 +10,12 @@
      xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
      xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
      width="1003.3438"
-     height="717.17792"
+     height="1000.6299"
      id="svg2"
      sodipodi:version="0.32"
      inkscape:version="0.48.3.1 r9886"
      version="1.0"
-     sodipodi:docname="basso-sx.svg"
+     sodipodi:docname="baloon.svg"
      inkscape:output_extension="org.inkscape.output.svg.inkscape"
      inkscape:export-filename="/home/plq/src/octopress/_deploy/images/basso-sx.png"
      inkscape:export-xdpi="1.8527453"
@@ -55,7 +55,7 @@
                 <dc:format>image/svg+xml</dc:format>
                 <dc:type
                      rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-                <dc:title></dc:title>
+                <dc:title />
             </cc:Work>
         </rdf:RDF>
     </metadata>
@@ -63,10 +63,10 @@
          inkscape:label="Livello 1"
          inkscape:groupmode="layer"
          id="layer1"
-         transform="translate(-49.25,9.1571774)">
+         transform="translate(-49.25,292.60916)">
         <path
              style="fill:none;stroke:#ffffff;stroke-width:70.86614227;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-             d="m 631.43751,656.37501 c -98.60784,0 -190.40036,-20.07008 -267.03125,-54.5625 0,0 -147.80814,116.33526 -223.46876,50.78125 86.27546,-2.7315 121.1875,-112.4375 121.1875,-112.4375 -72.56785,-57.91279 -130.4063,-139.07232 -130.4063,-221.1875 0,-182.94857 179.66832,-340.136686 497.71881,-279.437505 195.08503,37.231514 387.71879,142.488945 387.71879,325.437505 -2e-4,182.94857 -117.60449,291.40625 -385.71879,291.40625 z"
+             d="m 609.43751,510.37501 c -98.60784,0 -190.40036,-20.07008 -267.03125,-54.5625 0,0 -147.80814,116.33526 -223.46876,50.78125 86.27546,-2.7315 121.1875,-112.4375 121.1875,-112.4375 -72.56785,-57.91279 -130.4063,-139.07232 -130.4063,-221.1875 0,-182.94857 179.66832,-340.13669 497.71881,-279.43751 195.08503,37.231519 387.71879,142.48895 387.71879,325.43751 -2e-4,182.94857 -117.60449,291.40625 -385.71879,291.40625 z"
              id="path2164"
              inkscape:connector-curvature="0"
              sodipodi:nodetypes="scccssss" />

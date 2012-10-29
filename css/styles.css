@@ -372,7 +372,16 @@ a.buttons {
 
 a.docs {
     -webkit-font-smoothing: antialiased;
-    background: url(../images/book.png) no-repeat;
+    background: url(../images/book.png) no-repeat 0 3px;
+    font-weight: normal;
+    text-shadow: rgba(0, 0, 0, 0.4) 0 -1px 0;
+    padding: 2px 2px 2px 22px;
+    height: 30px;
+}
+
+a.blog {
+    -webkit-font-smoothing: antialiased;
+    background: url(../images/baloon.png) no-repeat 0 2px;
     font-weight: normal;
     text-shadow: rgba(0, 0, 0, 0.4) 0 -1px 0;
     padding: 2px 2px 2px 22px;
