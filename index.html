@@ -16,7 +16,7 @@ $(document).ready(function(){
     var hide_imports = true;
 
     $("input.chk_param").click(function(e) {
-        regen_code(hide_imports);
+        regen_code();
     });
 
     var gen_imports = [
@@ -169,7 +169,15 @@ $(document).ready(function(){
             ,"    server.serve_forever()"
         ]
     }
-    function regen_code(hide_imports) {
+
+    function is_supported(transport, inprot, outprot) {
+        if (transport == 'ZeroMQServer' && (inprot == 'HttpRpc' || outprot == 'HttpRpc')) {
+            return false;
+        }
+        return true;
+    }
+
+    function regen_code() {
         var version = $("span#version").html();
 
         var inprot = $('input[name=inprot]:checked').val();
@@ -230,7 +238,7 @@ $(document).ready(function(){
 
         $("div.code").html([
              '<div>'
-            ,  '<a id="toggle_imports">Show Imports</a>'
+            ,  '<a id="toggle_imports">'+(hide_imports?"Show Imports":"Hide Imports")+'</a>'
             ,  ' | '
             ,  '<span class="code_link"></span>'
             ,'</div>'
@@ -241,17 +249,20 @@ $(document).ready(function(){
         shi.click(function(e) {
             if (hide_imports) {
                 hide_imports = false;
-                shi.html("Hide Imports");
-                regen_code(hide_imports);
+                regen_code();
             }
             else {
                 hide_imports = true;
-                shi.html("Show Imports");
-                regen_code(true);
+                regen_code();
             }
         });
 
         var example_url = tpt_example[tpt];
+
+        if (! is_supported(tpt, inprot, outprot)) {
+            $("span.code_link").html("<br/><strong>Unsupported Protocol/Transport Combination.</strong>");
+            return
+        }
 
         $("span.code_link").html(
                 "<a target=\"_blank\" href=\"https://github.com/arskom/spyne/tree/spyne-" + version +
@@ -281,7 +292,7 @@ $(document).ready(function(){
             $("pre#response").text("Add this server response document and send a pull request!");
         }
     }
-    regen_code(hide_imports);
+    regen_code();
 });
     </script>
 
