@@ -99,7 +99,14 @@ $(document).ready(function(){
             ,""
             ,"from django.views.decorators.csrf import csrf_exempt"
         ]
-        ,PyramidApplication: ["from spyne.server.pyramid import PyramidApplication"]
+        ,PyramidApplication: [
+             "from spyne.server.pyramid import PyramidApplication"
+            ,""
+            ,"from pyramid.config import Configurator"
+            ,"from pyramid.view import view_config"
+            ,""
+            ,"from wsgiref.simple_server import make_server"
+        ]
         ,ZeroMQServer: ["from spyne.server.zeromq import ZeroMQServer"]
     }
 
@@ -111,6 +118,55 @@ $(document).ready(function(){
         ,ZeroMQServer: ["zeromq.py"]
     }
 
+    var tpt_code = {
+        WsgiApplication: [
+             "if __name__=='__main__':"
+            ,"    # You can use any Wsgi server. Here we choose Python's built-in "
+            ,"    # wsgi server. Don't use this in production."
+            ,"    from wsgiref.simple_server import make_server"
+            ,""
+            ,"    wsgi_app = WsgiApplication(application)"
+            ,"    server = make_server('0.0.0.0', 7789, wsgi_app)"
+            ,"    server.serve_forever()"
+        ]
+        ,ZeroMQServer: [
+             "if __name__=='__main__':"
+            ,"    wsgi_app = ZeroMQServer(application,"
+            ,"                           'tcp://0.0.0.0:5555')"
+            ,"    server.serve_forever()"
+        ]
+        ,TwistedWebResource: [
+             "if __name__=='__main__':"
+            ,"    resource = TwistedWebResource(application)"
+            ,"    site = Site(resource)"
+            ,""
+            ,"    reactor.listenTCP(7789, site, interface='0.0.0.0')"
+        ]
+        ,DjangoApplication: [
+             "# This module resides in a package in your Django project."
+            ,""
+            ,"hello_app = csrf_exempt(DjangoApplication(application))"
+            ,""
+            ,"# hello_app here has to be put in a package that is"
+            ,"# listed in the INSTALLED_APPS list in your settings.py"
+            ,"# and referenced in the url.py under an appropriate"
+            ,"# regexp entry."
+        ]
+        ,PyramidApplication: [
+             "if __name__ == '__main__':"
+            ,"    app = PyramidApplication(application)"
+            ,"    pyramid_app = view_config(route_name='home')(application)"
+            ,"    settings = {}"
+            ,"    settings['debug_all'] = True"
+            ,"    config = Configurator(settings=settings)"
+            ,"    config.add_route('home', '/')"
+            ,"    config.scan()"
+            ,""
+            ,"    app = config.make_wsgi_app()"
+            ,"    server = make_server('0.0.0.0', 7789, app)"
+            ,"    server.serve_forever()"
+        ]
+    }
     function regen_code(hide_imports) {
         var version = $("span#version").html();
 
@@ -162,48 +218,21 @@ $(document).ready(function(){
 
         retval.push("");
 
-        if (tpt == "WsgiApplication") {
-            retval.push("if __name__=='__main__':");
-            retval.push("    from wsgiref.simple_server import make_server");
-            retval.push("");
-            retval.push("    wsgi_app = WsgiApplication(application)");
-            retval.push("    server = make_server('0.0.0.0', 7789, wsgi_app)");
-            retval.push("    server.serve_forever()");
+        if (tpt_code[tpt]) {
+            retval = retval.concat(tpt_code[tpt]);
         }
-        else if (tpt == "ZeroMQServer") {
-            retval.push("if __name__=='__main__':");
-            retval.push("    wsgi_app = ZeroMQServer(application,")
-            retval.push("                           'tcp://0.0.0.0:5555')");
-            retval.push("    server.serve_forever()")
-        }
-        else if (tpt == "TwistedWebResource") {
-            retval.push("if __name__=='__main__':");
-            retval.push("    resource = TwistedWebResource(application)");
-            retval.push("    site = Site(resource)");
-            retval.push("");
-            retval.push("    reactor.listenTCP(7789, site, interface='0.0.0.0')");
-        }
-        else if (tpt == "DjangoApplication") {
-            retval = [
-                "# This module resides in a package in your Django project.",
-                ""
-            ].concat(retval);
-
-            retval.push("hello_app = csrf_exempt(DjangoApplication(application))");
-            retval.push("")
-            retval.push("# hello_app here has to be put in a package that is");
-            retval.push("# listed in the INSTALLED_APPS list in your settings.py");
-            retval.push("# and referenced in the url.py under an appropriate");
-            retval.push("# regexp entry.");
+        else {
+            retval.push("# Please write an example for this transport and ");
+            retval.push("# send a pull request ");
         }
 
         $("div.code").html([
-                 '<div>'
-                ,  '<a id="toggle_imports">Show Imports</a>'
-                ,  ' | '
-                ,  '<span class="code_link"></span>'
-                ,'</div>'
-                ,'<pre />'
+             '<div>'
+            ,  '<a id="toggle_imports">Show Imports</a>'
+            ,  ' | '
+            ,  '<span class="code_link"></span>'
+            ,'</div>'
+            ,'<pre />'
         ].join(''));
 
         var shi = $("#toggle_imports");
