@@ -220,7 +220,11 @@ img {
     border: 1px solid #ccc;
 }
 
-
+legend {
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+    width: 90%;
+}
 /* Code blocks */
 
 code, pre {
