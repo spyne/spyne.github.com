@@ -121,8 +121,9 @@ $(document).ready(function(){
     var tpt_code = {
         WsgiApplication: [
              "if __name__=='__main__':"
-            ,"    # You can use any Wsgi server. Here we choose Python's built-in "
-            ,"    # wsgi server. Don't use this in production."
+            ,"    # You can use any Wsgi server. Here, we chose"
+            ,"    # Python's built-in wsgi server but you're not"
+            ,"    # supposed to use it in production."
             ,"    from wsgiref.simple_server import make_server"
             ,""
             ,"    wsgi_app = WsgiApplication(application)"
