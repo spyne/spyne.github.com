@@ -11,32 +11,14 @@
 
     <script src="assets/jquery.snippet.min.js"></script>
     <script type="text/javascript">
+
 $(document).ready(function(){
     var hide_imports = true;
-
-    var shi = $("#toggle_imports");
-    shi.click(function(e) {
-        if (hide_imports) {
-            hide_imports = false;
-            shi.html("Hide Imports");
-            regen_code(hide_imports);
-        }
-        else {
-            hide_imports = true;
-            shi.html("Show Imports");
-            regen_code(true);
-        }
-    });
 
     $("input.chk_param").click(function(e) {
         regen_code(hide_imports);
     });
 
-    regen_code(hide_imports);
- });
-
- function regen_code(hide_imports) {
-    var version = $("span#version").html();
     var gen_imports = [
          "from spyne.application import Application"
         ,"from spyne.decorator import srpc"
@@ -58,6 +40,51 @@ $(document).ready(function(){
         ,HtmlColumnTable: "from spyne.protocol.html import HtmlColumnTable"
         ,HtmlMicroMormat: "from spyne.protocol.html import HtmlMicroMormat"
     };
+
+    // TODO: Fill this up.
+    var prot_client = {
+        HttpRpc: ["$ curl http://localhost:7789/say_hello?name=World&amp;times=4"]
+    }
+
+    var prot_response = {
+        JsonDocument: ['{',
+            ,'    "say_helloResponse": {'
+            ,'        "say_helloResult": {'
+            ,'            "string": ['
+            ,'                "Hello, World",'
+            ,'                "Hello, World",'
+            ,'                "Hello, World",'
+            ,'                "Hello, World"'
+            ,'            ]'
+            ,'        }'
+            ,'    }'
+            ,'}']
+        ,Soap11: ["<?xml version='1.0' encoding='utf-8'?>",
+            ,'<senv:Envelope xmlns:wsa="http://schemas.xmlsoap.org/ws/2003/03/addressing"'
+            ,'xmlns:tns="spyne.examples.hello"'
+            ,'xmlns:plink="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"'
+            ,'xmlns:xop="http://www.w3.org/2004/08/xop/include"'
+            ,'xmlns:senc="http://schemas.xmlsoap.org/soap/encoding/"'
+            ,'xmlns:s12env="http://www.w3.org/2003/05/soap-envelope/"'
+            ,'xmlns:s12enc="http://www.w3.org/2003/05/soap-encoding/"'
+            ,'xmlns:xs="http://www.w3.org/2001/XMLSchema"'
+            ,'xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"'
+            ,'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
+            ,'xmlns:senv="http://schemas.xmlsoap.org/soap/envelope/"'
+            ,'xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">'
+            ,'  <senv:Body>'
+            ,'    <tns:say_helloResponse>'
+            ,'      <tns:say_helloResult>'
+            ,'        <tns:string>Hello, World</tns:string>'
+            ,'        <tns:string>Hello, World</tns:string>'
+            ,'        <tns:string>Hello, World</tns:string>'
+            ,'        <tns:string>Hello, World</tns:string>'
+            ,'      </tns:say_helloResult>'
+            ,'    </tns:say_helloResponse>'
+            ,'  </senv:Body>'
+            ,'</senv:Envelope>'
+        ]
+    }
 
     var tpt_imports = {
          WsgiApplication: ["from spyne.server.wsgi import WsgiApplication"]
@@ -84,105 +111,147 @@ $(document).ready(function(){
         ,ZeroMQServer: ["zeromq.py"]
     }
 
-    var inprot = $('input[name=inprot]:checked').val();
-    var outprot = $('input[name=outprot]:checked').val();
-    var tpt = $('input[name=tpt]:checked').val();
-    var validation = $('input[name=validation]:checked').val();
+    function regen_code(hide_imports) {
+        var version = $("span#version").html();
 
-    if (validation == "true") {
-        if (inprot == "Soap11") {
-            validation = 'validator="lxml"';
+        var inprot = $('input[name=inprot]:checked').val();
+        var outprot = $('input[name=outprot]:checked').val();
+        var tpt = $('input[name=tpt]:checked').val();
+        var validation = $('input[name=validation]:checked').val();
+
+        if (validation == "true") {
+            if (inprot == "Soap11") {
+                validation = 'validator="lxml"';
+            }
+            else {
+                validation = 'validator="soft"';
+            }
+        }
+
+        var retval = [];
+
+        if (! hide_imports) {
+            retval.push(gen_imports);
+            retval.push("")
+
+            // protocol imports
+            retval.push(prot_imports[inprot]);
+            if (inprot != outprot) {
+                retval.push(prot_imports[outprot]);
+            }
+            retval.push("");
+
+            // transport imports
+            retval = retval.concat(tpt_imports[tpt]);
+            retval.push("");
+        }
+
+        retval.push("class HelloWorldService(ServiceBase):");
+        retval.push("    @srpc(String, Integer, _returns=Array(String))");
+        retval.push("    def say_hello(name, times):");
+        retval.push("        for i in range(times):");
+        retval.push("            yield 'Hello, %s' % name");
+
+        retval.push("");
+
+        retval.push("application = Application([HelloWorldService],");
+        retval.push("    tns='spyne.examples.hello',");
+        retval.push("    in_protocol="+ inprot +"(" + validation + "),");
+        retval.push("    out_protocol="+ outprot +"()");
+        retval.push(")");
+
+        retval.push("");
+
+        if (tpt == "WsgiApplication") {
+            retval.push("if __name__=='__main__':");
+            retval.push("    from wsgiref.simple_server import make_server");
+            retval.push("");
+            retval.push("    wsgi_app = WsgiApplication(application)");
+            retval.push("    server = make_server('0.0.0.0', 7789, wsgi_app)");
+            retval.push("    server.serve_forever()");
+        }
+        else if (tpt == "ZeroMQServer") {
+            retval.push("if __name__=='__main__':");
+            retval.push("    wsgi_app = ZeroMQServer(application,")
+            retval.push("                           'tcp://0.0.0.0:5555')");
+            retval.push("    server.serve_forever()")
+        }
+        else if (tpt == "TwistedWebResource") {
+            retval.push("if __name__=='__main__':");
+            retval.push("    resource = TwistedWebResource(application)");
+            retval.push("    site = Site(resource)");
+            retval.push("");
+            retval.push("    reactor.listenTCP(7789, site, interface='0.0.0.0')");
+        }
+        else if (tpt == "DjangoApplication") {
+            retval = [
+                "# This module resides in a package in your Django project.",
+                ""
+            ].concat(retval);
+
+            retval.push("hello_app = csrf_exempt(DjangoApplication(application))");
+            retval.push("")
+            retval.push("# hello_app here has to be put in a package that is");
+            retval.push("# listed in the INSTALLED_APPS list in your settings.py");
+            retval.push("# and referenced in the url.py under an appropriate");
+            retval.push("# regexp entry.");
+        }
+
+        $("div.code").html([
+                 '<div>'
+                ,  '<a id="toggle_imports">Show Imports</a>'
+                ,  ' | '
+                ,  '<span class="code_link"></span>'
+                ,'</div>'
+                ,'<pre />'
+        ].join(''));
+
+        var shi = $("#toggle_imports");
+        shi.click(function(e) {
+            if (hide_imports) {
+                hide_imports = false;
+                shi.html("Hide Imports");
+                regen_code(hide_imports);
+            }
+            else {
+                hide_imports = true;
+                shi.html("Show Imports");
+                regen_code(true);
+            }
+        });
+
+        var example_url = tpt_example[tpt];
+
+        $("span.code_link").html(
+                "<a target=\"_blank\" href=\"https://github.com/arskom/spyne/tree/spyne-" + version +
+                "/examples/"+example_url+"\">A "+tpt+" Example</a>"
+        );
+
+        $("pre").html(retval.join("\n"));
+        $("pre").snippet("python", {
+             style:"whitengrey"
+            ,clipboard:"assets/ZeroClipboard.swf"
+        });
+
+        $("div.code").append('Client Code: <pre id="client"/>');
+
+        if (prot_client[inprot]) {
+            $("pre#client").text(prot_client[inprot].join("\n"));
         }
         else {
-            validation = 'validator="soft"';
+            $("pre#client").text("Add this client code and send a pull request!");
+        }
+
+        $("div.code").append('Response Document: <pre id="response"/>');
+        if (prot_response[outprot]) {
+            $("pre#response").text(prot_response[outprot].join("\n"));
+        }
+        else{
+            $("pre#response").text("Add this server response document and send a pull request!");
         }
     }
-
-    var retval = [];
-
-    if (! hide_imports) {
-        retval.push(gen_imports);
-        retval.push("")
-
-        // protocol imports
-        retval.push(prot_imports[inprot]);
-        if (inprot != outprot) {
-            retval.push(prot_imports[outprot]);
-        }
-        retval.push("");
-
-        // transport imports
-        retval = retval.concat(tpt_imports[tpt]);
-        retval.push("");
-    }
-
-    retval.push("class HelloWorldService(ServiceBase):");
-    retval.push("    @srpc(String, Integer, _returns=Array(String))");
-    retval.push("    def say_hello(name, times):");
-    retval.push("        for i in range(times):");
-    retval.push("            yield 'Hello, %s' % name");
-
-    retval.push("");
-
-    retval.push("application = Application([HelloWorldService],");
-    retval.push("    tns='spyne.examples.hello',");
-    retval.push("    in_protocol="+ inprot +"(" + validation + "),");
-    retval.push("    out_protocol="+ outprot +"()");
-    retval.push(")");
-
-    retval.push("");
-
-    if (tpt == "WsgiApplication") {
-        retval.push("if __name__=='__main__':");
-        retval.push("    from wsgiref.simple_server import make_server");
-        retval.push("");
-        retval.push("    wsgi_app = WsgiApplication(application)");
-        retval.push("    server = make_server('0.0.0.0', 7789, wsgi_app)");
-        retval.push("    server.serve_forever()");
-    }
-    else if (tpt == "ZeroMQServer") {
-        retval.push("if __name__=='__main__':");
-        retval.push("    wsgi_app = ZeroMQServer(application,")
-        retval.push("                           'tcp://0.0.0.0:5555')");
-        retval.push("    server.serve_forever()")
-    }
-    else if (tpt == "TwistedWebResource") {
-        retval.push("if __name__=='__main__':");
-        retval.push("    resource = TwistedWebResource(application)");
-        retval.push("    site = Site(resource)");
-        retval.push("");
-        retval.push("    reactor.listenTCP(7789, site, interface='0.0.0.0')");
-    }
-    else if (tpt == "DjangoApplication") {
-        retval = [
-            "# This module resides in a package in your Django project.",
-            ""
-        ].concat(retval);
-
-        retval.push("hello_app = csrf_exempt(DjangoApplication(application))");
-        retval.push("")
-        retval.push("# hello_app here has to be put in a package that is");
-        retval.push("# listed in the INSTALLED_APPS list in your settings.py");
-        retval.push("# and referenced in the url.py under an appropriate");
-        retval.push("# regexp entry.");
-    }
-
-    $("div.code pre").remove()
-    $("div.code").append("<pre/>");
-
-    var example_url = tpt_example[tpt];
-
-    $("span.code_link").html(
-            "<a target=\"_blank\" href=\"https://github.com/arskom/spyne/tree/spyne-" + version +
-            "/examples/"+example_url+"\">A "+tpt+" Example</a>"
-    );
-
-    $("pre").html(retval.join("\n"));
-    $("pre").snippet("python", {
-         style:"whitengrey"
-        ,clipboard:"assets/ZeroClipboard.swf"
-    });
- }
+    regen_code(hide_imports);
+});
     </script>
 
     <!--<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"> -->
@@ -263,13 +332,7 @@ $(document).ready(function(){
                 </fieldset>
             </form>
         </div>
-        <div class="code">
-            <div><a id="toggle_imports">Show Imports</a> |
-            <span class="code_link"></span>
-            </div>
-            <pre>
-            </pre>
-        </div>
+        <div class="code"></div>
     </div>
 </section>
 </div>
