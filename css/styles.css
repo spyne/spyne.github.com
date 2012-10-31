@@ -287,6 +287,7 @@ header {
     background-color: #171717;
     color: #FDFDFB;
     width:170px;
+    min-width: 170px;
     float:left;
     border: 1px solid #000;
     -webkit-border-top-right-radius: 4px;
@@ -382,6 +383,10 @@ a.docs {
     padding: 2px 2px 2px 22px;
     height: 30px;
 }
+a.docs:hover {
+    color: #fff;
+    text-decoration: none;
+}
 
 a.blog {
     -webkit-font-smoothing: antialiased;
@@ -390,6 +395,10 @@ a.blog {
     text-shadow: rgba(0, 0, 0, 0.4) 0 -1px 0;
     padding: 2px 2px 2px 22px;
     height: 30px;
+}
+a.blog:hover {
+    color: #fff;
+    text-decoration: none;
 }
 
 a.github {
@@ -424,6 +433,10 @@ footer {
     border-top: 1px solid #aaa;
 }
 
+div.clear {
+    clear: both;
+}
+
 div#parameters {
     float: left;
 }
@@ -440,15 +453,8 @@ div#parameters {
         width:auto;
     }
 
-    footer {
-        border-top: 1px solid #ccc;
-        margin:0 84px 0 50px;
-        padding:0;
-        clear: both;
-    }
-
     header {
-        padding-right:320px;
+        padding-right:32px;
     }
 
     section {
@@ -461,9 +467,11 @@ div#parameters {
     }
 
     header ul {
-        position:absolute;
-        right:58px;
-        top:47px;
+        float: right;
+    }
+
+    div.header_title {
+        float: left;
     }
 
     div.code {
@@ -478,7 +486,7 @@ div#parameters {
     }
 
     header {
-        padding:10px 20px 0;
+        padding-right:32px;
         margin-right: 0;
     }
 
@@ -487,14 +495,6 @@ div#parameters {
         margin:0 0 30px;
     }
 
-    footer {
-        margin: 0 0 0 30px;
-        clear: both;
-    }
-
-    header ul, header p.view {
-        position:static;
-    }
     div#parameters {
         float: none;
     }
@@ -502,26 +502,36 @@ div#parameters {
         float:none;
         width: auto;
     }
+    
+    div.header_title {
+        float: left;
+    }
 
 }
 
-@media print, screen and (max-width: 480px) {
+@media print, screen and (max-width: 430px) {
+    header ul, header p.view {
+        position:static;
+    }
 
     header ul li.download {
         display:none;
     }
 
-    footer {
-        margin: 0 0 0 20px;
-        clear: both;
-    }
-
-    footer a{
+    footer a {
         display:block;
     }
+
     div.code {
         float:none;
         width: auto;
+    }
+
+    header ul {
+        float: none;
+    }
+    div.header_title {
+        float: none;
     }
 }
 
