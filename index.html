@@ -16,14 +16,14 @@
 $(document).ready(function(){
     var hide_imports = true;
 
-    var rpc_imports = [
+    var gen_imports = [
          "from spyne.application import Application"
         ,"from spyne.decorator import srpc"
         ,"from spyne.service import ServiceBase"
         ,"from spyne.model.complex import Array"
         ,"from spyne.model.primitive import Integer"
-        ,"from spyne.model.primitive import String"
-    ].join("\n")
+        ,"from spyne.model.primitive import Unicode"
+    ]
 
     var prot_imports = {
         HttpRpc: "from spyne.protocol.http import HttpRpc"
@@ -186,6 +186,21 @@ $(document).ready(function(){
                 regen_code_aux();
             }
         });
+        var ti = div.find("#toggle_sqla");
+        ti.click(function(e) {
+            if (hide_sqla) {
+                hide_sqla = false;
+                regen_code_rpc();
+                regen_code_db();
+                regen_code_aux();
+            }
+            else {
+                hide_sqla = true;
+                regen_code_rpc();
+                regen_code_db();
+                regen_code_aux();
+            }
+        });
     }
 
 
@@ -199,7 +214,7 @@ $(document).ready(function(){
     function regen_code_rpc() {
         var retval = [];
 
-        var version = $("span#version").html();
+        var version = $("span#version").text();
         var inprot = $('input[name=inprot]:checked').val();
         var outprot = $('input[name=outprot]:checked').val();
         var tpt = $('input[name=tpt]:checked').val();
@@ -217,7 +232,7 @@ $(document).ready(function(){
 
         // imports
         if (! hide_imports) {
-            retval.push(rpc_imports);
+            retval = retval.concat(gen_imports);
             retval.push("")
 
             // protocol imports
@@ -235,7 +250,7 @@ $(document).ready(function(){
         // user code
         retval = retval.concat([
             ,"class HelloWorldService(ServiceBase:"
-            ,"    @srpc(String, Integer, _returns=Array(String)"
+            ,"    @srpc(Unicode, Integer, _returns=Array(Unicode)"
             ,"    def say_hello(name, times:"
             ,"        for i in range(times:"
             ,"            yield 'Hello, %s' % name"
@@ -305,31 +320,288 @@ $(document).ready(function(){
     }
 
     var db_imports = [
+        ,'import logging'
+        ,'logging.basicConfig(level=logging.DEBUG)'
+        ,'logging.getLogger("sqlalchemy").setLevel(logging.DEBUG)'
+        ,''
+        ,'from sqlalchemy import create_engine'
+        ,'from sqlalchemy import MetaData'
+        ,'from sqlalchemy.orm import sessionmaker'
+        ,''
+        ,'from spyne.model.primitive import Integer32'
+        ,'from spyne.model.complex import TTableModel'
+        ,'from spyne.server.wsgi import WsgiApplication'
+        ,'from spyne.service import ServiceBase'
+    ].concat(gen_imports);
 
+    var db_boilerplate = [
+        ,'# Generate a ComplexModelBase subclass with'
+        ,'# metadata information'
+        ,'TableModel = TTableModel()'
+        ,''
+        ,'# Initialize SQLAlchemy Environment'
+        ,'db = create_engine("postgres://postgres:@localhost/spyne_test")'
+        ,'Session = sessionmaker(bind=db)'
+        ,'TableModel.Attributes.sqla_metadata.bind = db'
     ].join('\n');
+
+    var db_objects = [
+        ,'class Permission(TableModel):'
+        ,'    __tablename__ = "spyne_user_permission"'
+        ,''
+        ,'    permission_id = Integer32(primary_key=True)'
+        ,'    app = Unicode(256)'
+        ,'    op = Unicode(256)'
+        ,''
+        ,"class User(TableModel):"
+        ,"    __tablename__ = 'spyne_user'"
+        ,""
+        ,"    user_id = Integer32(primary_key=True)"
+        ,"    user_name = Unicode(256, nullable=False)"
+        ,"    first_name = Unicode(256)"
+        ,"    last_name = Unicode(256)"
+    ];
+
+    var db_user_perms_col = {
+         None: {
+            code: ["    permissions = Array(Permission)"],
+            imports: []
+        }
+        ,Json: {
+            code: ["    permissions = Array(Permission).store_as(json())"],
+            imports: ['from spyne.model.complex import json']
+        }
+        ,Xml: {
+            code: ["    permissions = Array(Permission).store_as(xml(no_ns=True))"],
+            imports: ['from spyne.model.complex import xml']
+        }
+        ,SqlOtm: {
+            code: ["    permissions = Array(Permission).store_as('table')"],
+            imports: []
+        }
+        ,SqlMtm: {
+            code: ["    permissions = Array(Permission).store_as(table(multi=True))"],
+            imports: ['from spyne.model.complex import table']
+        }
+    }
+
+    var show_sql = {
+        Schema: ['TableModel.Attributes.sqla_metadata.create_all(checkfirst=True)'],
+        Data: [
+             'session = Session()'
+            ,'session.add(User('
+            ,'    user_name="js",'
+            ,'    first_name="John",'
+            ,'    last_name="Smith",'
+            ,'    permissions=['
+            ,'        Permission(app="x", op="y"),'
+            ,'        Permission(app="z", op="t"),'
+            ,'    ]'
+            ,'))'
+            ,'session.commit()'
+        ]
+    }
+
+    var sql_itself = {
+        Schema: { 
+            None: [
+                 "-- Note that there's no relation"
+                ,"-- between user and permission."
+                ,"CREATE TABLE spyne_user ("
+                ,"        last_name VARCHAR(256), "
+                ,"        user_id SERIAL NOT NULL, "
+                ,"        first_name VARCHAR(256), "
+                ,"        user_name VARCHAR(256) NOT NULL, "
+                ,"        PRIMARY KEY (user_id)"
+                ,");"
+                ,""
+                ,"CREATE TABLE spyne_user_permission ("
+                ,"        permission_id SERIAL NOT NULL, "
+                ,"        app VARCHAR(256), "
+                ,"        op VARCHAR(256), "
+                ,"        PRIMARY KEY (permission_id)"
+                ,");"
+            ]
+            ,Json: [
+                 "CREATE TABLE spyne_user ("
+                ,"        last_name VARCHAR(256), "
+                ,"        user_id SERIAL NOT NULL, "
+                ,"        first_name VARCHAR(256), "
+                ,"        user_name VARCHAR(256) NOT NULL, "
+                ,"        permissions json,"
+                ,"        PRIMARY KEY (user_id)"
+                ,");"
+                ,""
+                ,"CREATE TABLE spyne_user_permission ("
+                ,"        permission_id SERIAL NOT NULL, "
+                ,"        app VARCHAR(256), "
+                ,"        op VARCHAR(256), "
+                ,"        PRIMARY KEY (permission_id)"
+                ,");"
+            ]
+            ,Xml: [
+                 "CREATE TABLE spyne_user ("
+                ,"        last_name VARCHAR(256), "
+                ,"        user_id SERIAL NOT NULL, "
+                ,"        first_name VARCHAR(256), "
+                ,"        user_name VARCHAR(256) NOT NULL, "
+                ,"        permissions xml,"
+                ,"        PRIMARY KEY (user_id)"
+                ,");"
+                ,""
+                ,"CREATE TABLE spyne_user_permission ("
+                ,"        permission_id SERIAL NOT NULL, "
+                ,"        app VARCHAR(256), "
+                ,"        op VARCHAR(256), "
+                ,"        PRIMARY KEY (permission_id)"
+                ,");"
+            ]
+            ,SqlOtm: [
+                 "CREATE TABLE spyne_user ("
+                ,"        last_name VARCHAR(256), "
+                ,"        user_id SERIAL NOT NULL, "
+                ,"        first_name VARCHAR(256), "
+                ,"        user_name VARCHAR(256) NOT NULL, "
+                ,"        permissions xml,"
+                ,"        PRIMARY KEY (user_id)"
+                ,");"
+                ,""
+                ,"CREATE TABLE spyne_user_permission ("
+                ,"        permission_id SERIAL NOT NULL, "
+                ,"        app VARCHAR(256), "
+                ,"        op VARCHAR(256), "
+                ,"        spyne_user_user_id INTEGER, "
+                ,"        PRIMARY KEY (permission_id),"
+                ,"        FOREIGN KEY(spyne_user_user_id) REFERENCES spyne_user (user_id)"
+                ,");"
+            ]
+            ,SqlMtm: [
+                 "CREATE TABLE spyne_user_permission ("
+                ,"        permission_id SERIAL NOT NULL, "
+                ,"        app VARCHAR(256), "
+                ,"        op VARCHAR(256), "
+                ,"        PRIMARY KEY (permission_id)"
+                ,")"
+                ,""
+                ,"CREATE TABLE spyne_user ("
+                ,"        last_name VARCHAR(256), "
+                ,"        user_id SERIAL NOT NULL, "
+                ,"        first_name VARCHAR(256), "
+                ,"        user_name VARCHAR(256) NOT NULL, "
+                ,"        PRIMARY KEY (user_id)"
+                ,")"
+                ,""
+                ,"CREATE TABLE spyne_user_permissions ("
+                ,"        spyne_user_user_id INTEGER, "
+                ,"        permissions_permission_id INTEGER, "
+                ,"        FOREIGN KEY(spyne_user_user_id) REFERENCES spyne_user (user_id), "
+                ,"        FOREIGN KEY(permissions_permission_id) REFERENCES spyne_user_permission (permission_id)"
+                ,")"
+            ]
+        }
+        ,Data: {
+            None: [
+                 "BEGIN;"
+                ,"-- Note that permissions attribute is not"
+                ,"-- stored."
+                ,"INSERT INTO spyne_user"
+                ,"        (last_name, first_name, user_name)"
+                ,"        VALUES ('Smith', 'John', 'js');"
+                ,"COMMIT;"
+            ]
+            ,Json: [
+                ,"BEGIN;"
+                ,"INSERT INTO spyne_user"
+                ,"       (last_name, first_name, user_name,"
+                ,"                     permissions)"
+                ,"       VALUES ('Smith', 'John', 'js',"
+                ,' \'{"Permission": [{"app": "x", "permission_id": null, "op": "y"}, {"app": "z", "permission_id": null, "op": "t"}]}\''
+                ,");"
+                ,"COMMIT;"
+            ]
+            ,Xml: [
+                ,"BEGIN;"
+                ,"INSERT INTO spyne_user"
+                ,"       (last_name, first_name, user_name,"
+                ,"                     permissions)"
+                ,"       VALUES ('Smith', 'John', 'js',"
+                ,' \'<ns0:PermissionArray xmlns:ns0="None"><ns0:Permission><ns0:app>x</ns0:app><ns0:op>y</ns0:op></ns0:Permission><ns0:Permission><ns0:app>z</ns0:app><ns0:op>t</ns0:op></ns0:Permission></ns0:PermissionArray>\''
+                ,");"
+                ,"COMMIT;"
+            ]
+            ,SqlOtm: [
+                ,"BEGIN;"
+                ,"INSERT INTO spyne_user"
+                ,"       (last_name, first_name, user_name)"
+                ,"       VALUES ('Smith', 'John', 'js');"
+                ,"INSERT INTO spyne_user_permission"
+                ,"       (app, op, spyne_user_user_id)"
+                ,"       VALUES ('x', 'y', 1);"
+                ,"INSERT INTO spyne_user_permission",
+                ,"       (app, op, spyne_user_user_id)"
+                ,"       VALUES ('z', 't', 1);"
+                ,"COMMIT;"
+            ]
+            ,SqlMtm: [
+                 "BEGIN;"
+                ,"INSERT INTO spyne_user_permission (app, op)"
+                ,"        VALUES ('x', 'y');"
+                ,"INSERT INTO spyne_user_permission (app, op)"
+                ,"        VALUES ('z', 't');"
+                ,"INSERT INTO spyne_user"
+                ,"        (last_name, first_name, user_name)"
+                ,"        VALUES ('Smith', 'John', 'js');"
+                ,"INSERT INTO spyne_user_permissions"
+                ,"        (spyne_user_user_id,"
+                ,"                permissions_permission_id)"
+                ,"        VALUES (1, 1);"
+                ,"INSERT INTO spyne_user_permissions"
+                ,"        (spyne_user_user_id,"
+                ,"                permissions_permission_id)"
+                ,"        VALUES (1, 2);"
+                ,"COMMIT;"
+            ]
+        }
+    };
+
+    var hide_sqla = true;
 
     function regen_code_db() {
         var code = [];
         var sql = [];
+        var imports = [];
 
-        var version = $("span#version").html();
+        var version = $("span#version").text();
         var ser = $('input[name=ser]:checked').val();
+        var show = $('input[name=show]:checked').val();
 
-        // imports
-        if (! hide_imports) {
-            code.push(db_imports);
-            code.push("")
+        var imports = imports.concat(db_imports)
+
+        if (! hide_sqla) {
+            code = code.concat(db_boilerplate)
+        }
+        code = code.concat(db_objects);
+
+        if (db_user_perms_col[ser]) {
+            code = code.concat(db_user_perms_col[ser].code);
+            if (db_user_perms_col[ser].imports.len > 0) {
+                imports = imports.concat([""]).concat(db_user_perms_col[ser].imports);
+            }
         }
 
-        // user code
-        code = code.concat([
+        if (! hide_imports) {
+            code = imports.concat([""]).concat(code);
+        }
 
-        ]);
+        code = code.concat([""]).concat(show_sql[show]);
+        sql = sql.concat(sql_itself[show][ser]);
 
         var div = $("div#code_db");
         div.html([
-            '<div>'
-            ,  '<a id="toggle_imports">'+(hide_imports ? "Show Imports": "Hide Imports")+'</a>'
+             '<div>'
+            ,  '<a id="toggle_imports">' + (hide_imports ? "Show Imports": "Hide Imports") + '</a>'
+            ,  ' | '
+            ,  '<a id="toggle_sqla">' + (hide_sqla ? "Show SQLAlchemy Init": "Hide SQLAlchemy Init") + '</a>'
             ,'</div>'
             ,'<pre id="code"/>'
             ,'Resulting SQL: <pre id="sql" />'
@@ -348,6 +620,10 @@ $(document).ready(function(){
              style:"whitengrey"
             ,clipboard:"assets/ZeroClipboard.swf"
         });
+    }
+
+    function regen_code_aux() {
+
     }
 
     regen_code_rpc();
@@ -474,11 +750,16 @@ $(function() {
                 <form action="#" method="foo">
                     <fieldset>
                         <legend>Serialization</legend>
-                        <label><input class="param_db" type="radio" name="ser" value="None" checked>None</label>  <br/>
+                        <label><input class="param_db" type="radio" name="ser" value="None" checked />None</label>  <br/>
                         <label><input class="param_db" type="radio" name="ser" value="Json">Json</label>  <br/>
                         <label><input class="param_db" type="radio" name="ser" value="Xml">Xml</label>  <br/>
                         <label><input class="param_db" type="radio" name="ser" value="SqlOtm">SQL Table (One-to-many)</label>  <br/>
                         <label><input class="param_db" type="radio" name="ser" value="SqlMtm">SQL Table (Many-to-many)</label>  <br/>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Show</legend>
+                        <label><input class="param_db" type="radio" name="show" value="Schema" checked />Schema</label><br/>
+                        <label><input class="param_db" type="radio" name="show" value="Data">Data</label><br/>
                     </fieldset>
                 </form>
             </div>
