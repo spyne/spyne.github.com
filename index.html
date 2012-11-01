@@ -749,10 +749,10 @@ $(function() {
             <div id="parameters">
                 <form action="#" method="foo">
                     <fieldset>
-                        <legend>Serialization</legend>
+                        <legend>Complex Type Serialization</legend>
                         <label><input class="param_db" type="radio" name="ser" value="None" checked />None</label>  <br/>
-                        <label><input class="param_db" type="radio" name="ser" value="Json">Json</label>  <br/>
-                        <label><input class="param_db" type="radio" name="ser" value="Xml">Xml</label>  <br/>
+                        <label><input class="param_db" type="radio" name="ser" value="Json">Json (&gt;=PostgreSQL-9.2)</label>  <br/>
+                        <label><input class="param_db" type="radio" name="ser" value="Xml">Xml (&gt;=PostgreSQL-8.3)</label>  <br/>
                         <label><input class="param_db" type="radio" name="ser" value="SqlOtm">SQL Table (One-to-many)</label>  <br/>
                         <label><input class="param_db" type="radio" name="ser" value="SqlMtm">SQL Table (Many-to-many)</label>  <br/>
                     </fieldset>
