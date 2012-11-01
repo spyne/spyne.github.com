@@ -13,11 +13,10 @@
 
     <script src="assets/jquery.snippet.min.js"></script>
     <script type="text/javascript">
-
 $(document).ready(function(){
     var hide_imports = true;
 
-    var gen_imports = [
+    var rpc_imports = [
          "from spyne.application import Application"
         ,"from spyne.decorator import srpc"
         ,"from spyne.service import ServiceBase"
@@ -27,7 +26,7 @@ $(document).ready(function(){
     ].join("\n")
 
     var prot_imports = {
-         HttpRpc: "from spyne.protocol.http import HttpRpc"
+        HttpRpc: "from spyne.protocol.http import HttpRpc"
         ,XmlDocument: "from spyne.protocol.xml import XmlDocument"
         ,Soap11: "from spyne.protocol.soap import Soap11"
         ,JsonDocument: "from spyne.protocol.json import JsonDocument"
@@ -85,7 +84,7 @@ $(document).ready(function(){
     }
 
     var tpt_imports = {
-         WsgiApplication: ["from spyne.server.wsgi import WsgiApplication"]
+        WsgiApplication: ["from spyne.server.wsgi import WsgiApplication"]
         ,TwistedWebResource: [
             "from spyne.server.twisted import TwistedWebResource"
             ,""
@@ -93,12 +92,12 @@ $(document).ready(function(){
             ,"from twisted.web.server import Site"
         ]
         ,DjangoApplication: [
-             "from spyne.server.django import DjangoApplication"
+            "from spyne.server.django import DjangoApplication"
             ,""
             ,"from django.views.decorators.csrf import csrf_exempt"
         ]
         ,PyramidApplication: [
-             "from spyne.server.pyramid import PyramidApplication"
+            "from spyne.server.pyramid import PyramidApplication"
             ,""
             ,"from pyramid.config import Configurator"
             ,"from pyramid.view import view_config"
@@ -107,7 +106,7 @@ $(document).ready(function(){
     }
 
     var tpt_example = {
-         WsgiApplication: ["helloworld_http.py"]
+        WsgiApplication: ["helloworld_http.py"]
         ,TwistedWebResource: ["twisted"]
         ,DjangoApplication: ["django"]
         ,PyramidApplication: ["pyramid"]
@@ -116,7 +115,7 @@ $(document).ready(function(){
 
     var tpt_code = {
         WsgiApplication: [
-             "if __name__=='__main__':"
+            "if __name__=='__main__':"
             ,"    # You can use any Wsgi server. Here, we chose"
             ,"    # Python's built-in wsgi server but you're not"
             ,"    # supposed to use it in production."
@@ -127,20 +126,20 @@ $(document).ready(function(){
             ,"    server.serve_forever()"
         ]
         ,ZeroMQServer: [
-             "if __name__=='__main__':"
+            "if __name__=='__main__':"
             ,"    wsgi_app = ZeroMQServer(application,"
             ,"                           'tcp://0.0.0.0:5555')"
             ,"    server.serve_forever()"
         ]
         ,TwistedWebResource: [
-             "if __name__=='__main__':"
+            "if __name__=='__main__':"
             ,"    resource = TwistedWebResource(application)"
             ,"    site = Site(resource)"
             ,""
             ,"    reactor.listenTCP(7789, site, interface='0.0.0.0')"
         ]
         ,DjangoApplication: [
-             "# This module resides in a package in your Django"
+            "# This module resides in a package in your Django"
             ,"# project."
             ,""
             ,"hello_app = csrf_exempt(DjangoApplication(application))"
@@ -151,7 +150,7 @@ $(document).ready(function(){
             ,"# regexp entry."
         ]
         ,PyramidApplication: [
-             "if __name__ == '__main__':"
+            "if __name__ == '__main__':"
             ,"    app = PyramidApplication(application)"
             ,"    pyramid_app = view_config(route_name='home')(application)"
             ,"    settings = {}"
@@ -171,6 +170,25 @@ $(document).ready(function(){
         ]
     }
 
+    function setup_import_toggle(div) {
+        var ti = div.find("#toggle_imports");
+        ti.click(function(e) {
+            if (hide_imports) {
+                hide_imports = false;
+                regen_code_rpc();
+                regen_code_db();
+                regen_code_aux();
+            }
+            else {
+                hide_imports = true;
+                regen_code_rpc();
+                regen_code_db();
+                regen_code_aux();
+            }
+        });
+    }
+
+
     function is_supported(transport, inprot, outprot) {
         if (transport == 'ZeroMQServer' && (inprot == 'HttpRpc' || outprot == 'HttpRpc')) {
             return false;
@@ -178,14 +196,16 @@ $(document).ready(function(){
         return true;
     }
 
-    function regen_code() {
-        var version = $("span#version").html();
+    function regen_code_rpc() {
+        var retval = [];
 
+        var version = $("span#version").html();
         var inprot = $('input[name=inprot]:checked').val();
         var outprot = $('input[name=outprot]:checked').val();
         var tpt = $('input[name=tpt]:checked').val();
         var validation = $('input[name=validation]:checked').val();
 
+        // validation
         if (validation == "true") {
             if (inprot == "Soap11") {
                 validation = 'validator="lxml"';
@@ -195,10 +215,9 @@ $(document).ready(function(){
             }
         }
 
-        var retval = [];
-
+        // imports
         if (! hide_imports) {
-            retval.push(gen_imports);
+            retval.push(rpc_imports);
             retval.push("")
 
             // protocol imports
@@ -213,22 +232,24 @@ $(document).ready(function(){
             retval.push("");
         }
 
-        retval.push("class HelloWorldService(ServiceBase):");
-        retval.push("    @srpc(String, Integer, _returns=Array(String))");
-        retval.push("    def say_hello(name, times):");
-        retval.push("        for i in range(times):");
-        retval.push("            yield 'Hello, %s' % name");
+        // user code
+        retval = retval.concat([
+            ,"class HelloWorldService(ServiceBase:"
+            ,"    @srpc(String, Integer, _returns=Array(String)"
+            ,"    def say_hello(name, times:"
+            ,"        for i in range(times:"
+            ,"            yield 'Hello, %s' % name"
+            ,""
+            ,""
+            ,"application = Application([HelloWorldService],"
+            ,"    tns='spyne.examples.hello',"
+            ,"    in_protocol="+ inprot +"(" + validation + "),"
+            ,"    out_protocol="+ outprot +"()"
+            ,")"
+            ,""
+        ]);
 
-        retval.push("");
-
-        retval.push("application = Application([HelloWorldService],");
-        retval.push("    tns='spyne.examples.hello',");
-        retval.push("    in_protocol="+ inprot +"(" + validation + "),");
-        retval.push("    out_protocol="+ outprot +"()");
-        retval.push(")");
-
-        retval.push("");
-
+        // transport
         if (tpt_code[tpt]) {
             retval = retval.concat(tpt_code[tpt]);
         }
@@ -239,25 +260,17 @@ $(document).ready(function(){
 
         var div = $("div#code_rpc");
         div.html([
-             '<div>'
+            '<div>'
             ,  '<a id="toggle_imports">'+(hide_imports ? "Show Imports": "Hide Imports")+'</a>'
             ,  ' | '
             ,  '<span class="code_link"></span>'
             ,'</div>'
-            ,'<pre />'
+            ,'<pre id="code"/>'
+            ,'Client Code: <pre id="client" />'
+            ,'Response Document: <pre id="response" />'
         ].join(''));
 
-        var ti = div.find("#toggle_imports");
-        ti.click(function(e) {
-            if (hide_imports) {
-                hide_imports = false;
-                regen_code();
-            }
-            else {
-                hide_imports = true;
-                regen_code();
-            }
-        });
+        setup_import_toggle(div);
 
         var example_url = tpt_example[tpt];
         if (! is_supported(tpt, inprot, outprot)) {
@@ -266,17 +279,15 @@ $(document).ready(function(){
         }
 
         $("span.code_link").html(
-                "<a target=\"_blank\" href=\"https://github.com/arskom/spyne/tree/spyne-" + version +
-                "/examples/"+example_url+"\">A "+tpt+" Example</a>"
+        "<a target=\"_blank\" href=\"https://github.com/arskom/spyne/tree/spyne-" + version +
+            "/examples/"+example_url+"\">A "+tpt+" Example</a>"
         );
 
-        div.children("pre").text(retval.join("\n"));
-        div.children("pre").snippet("python", {
-             style:"whitengrey"
+        div.children("pre#code").text(retval.join("\n"));
+        div.children("pre#code").snippet("python", {
+            style:"whitengrey"
             ,clipboard:"assets/ZeroClipboard.swf"
         });
-
-        div.append('Client Code: <pre id="client"/>');
 
         if (prot_client[inprot]) {
             div.children("pre#client").text(prot_client[inprot].join("\n"));
@@ -285,7 +296,6 @@ $(document).ready(function(){
             div.children("pre#client").text("Add this client code and send a pull request!");
         }
 
-        div.append('Response Document: <pre id="response"/>');
         if (prot_response[outprot]) {
             div.children("pre#response").text(prot_response[outprot].join("\n"));
         }
@@ -293,17 +303,67 @@ $(document).ready(function(){
             div.children("pre#response").text("Add this server response document and send a pull request!");
         }
     }
-    regen_code();
 
-    $("input.chk_param").click(function(e) {
-        regen_code();
+    var db_imports = [
+
+    ].join('\n');
+
+    function regen_code_db() {
+        var code = [];
+        var sql = [];
+
+        var version = $("span#version").html();
+        var ser = $('input[name=ser]:checked').val();
+
+        // imports
+        if (! hide_imports) {
+            code.push(db_imports);
+            code.push("")
+        }
+
+        // user code
+        code = code.concat([
+
+        ]);
+
+        var div = $("div#code_db");
+        div.html([
+            '<div>'
+            ,  '<a id="toggle_imports">'+(hide_imports ? "Show Imports": "Hide Imports")+'</a>'
+            ,'</div>'
+            ,'<pre id="code"/>'
+            ,'Resulting SQL: <pre id="sql" />'
+        ].join(''));
+
+        setup_import_toggle(div);
+
+        div.children("pre#code").text(code.join("\n"));
+        div.children("pre#code").snippet("python", {
+             style:"whitengrey"
+            ,clipboard:"assets/ZeroClipboard.swf"
+        });
+
+        div.children("pre#sql").text(sql.join("\n"));
+        div.children("pre#sql").snippet("sql", {
+             style:"whitengrey"
+            ,clipboard:"assets/ZeroClipboard.swf"
+        });
+    }
+
+    regen_code_rpc();
+    regen_code_db();
+
+    $("input.param_rpc").click(function(e) {
+        regen_code_rpc();
+    });
+    $("input.param_db").click(function(e) {
+        regen_code_db();
     });
 });
 
 $(function() {
     $( "#tabs" ).tabs();
 });
-
     </script>
 
     <!--<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"> -->
@@ -311,20 +371,20 @@ $(function() {
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 </head>
-<body>
 
+<body>
 <div class="wrapper">
 <header>
     <div class="header_title">
         <h1 class="header">spyne</h1>
         <small>Tame the interwebs.</small>
 
-        <p class="header"><span style="font-weight: bold">Latest release:</b> <br/>
-            Spyne <span id="version">2.9.1</span> <br />
-            Oct. 29th, 2012 <br />
-            <a href="http://travis-ci.org/arskom/spyne">
-                <!-- <img src="https://secure.travis-ci.org/arskom/spyne.png">-->
-            </a>
+        <p class="header"><span style="font-weight: bold">Latest release:</span> <br/>
+                Spyne <span id="version">2.9.1</span> <br />
+                Oct. 29th, 2012 <br />
+                <a href="http://travis-ci.org/arskom/spyne">
+                    <img src="https://secure.travis-ci.org/arskom/spyne.png">
+                </a>
         </p>
     </div>
     <ul>
@@ -352,7 +412,7 @@ $(function() {
         <a href="http://www.youtube.com/watch?v=N4zdWLuSbV0#t=21m58">lightning talk</a>
         and the <a href="slides/2012-03_pycon-2012.pdf">slides</a> from Pycon 2012
         (from back when the project was called Rpclib).
-        </p>
+    </p>
 
     <h1>Getting Started</h1>
 
@@ -360,106 +420,105 @@ $(function() {
         <ul>
             <li><a href="#tabs-1">RPC</a></li>
             <li><a href="#tabs-2">DB</a></li>
+            <!--
             <li><a href="#tabs-3">Aux</a></li>
+            -->
         </ul>
         <div id="tabs-1">
-            <div class="hello_world">
-                <div id="parameters">
-                    <form action="#" method="foo">
-                        <fieldset>
-                            <legend>Input Protocol</legend>
-                            <label><input class="chk_param" type="radio" name="inprot" value="HttpRpc" checked> HttpRpc</label> <br/>
-                            <label><input class="chk_param" type="radio" name="inprot" value="JsonDocument" > Json Document</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="inprot" value="Soap11"> Soap 1.1</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="inprot" value="XmlDocument"> Xml Document</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="inprot" value="MessagePackDocument"> MessagePack Document</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="inprot" value="MessagePackRpc"> MessagePack RPC</label>  <br/>
-                        </fieldset>
+            <div id="parameters">
+                <form action="#" method="foo">
+                    <fieldset>
+                        <legend>Input Protocol</legend>
+                        <label><input class="param_rpc" type="radio" name="inprot" value="HttpRpc" checked /> HttpRpc</label> <br/>
+                        <label><input class="param_rpc" type="radio" name="inprot" value="JsonDocument" /> Json Document</label>  <br/>
+                        <label><input class="param_rpc" type="radio" name="inprot" value="Soap11" /> Soap 1.1</label>  <br/>
+                        <label><input class="param_rpc" type="radio" name="inprot" value="XmlDocument" /> Xml Document</label>  <br/>
+                        <label><input class="param_rpc" type="radio" name="inprot" value="MessagePackDocument"/> MessagePack Document</label>  <br/>
+                        <label><input class="param_rpc" type="radio" name="inprot" value="MessagePackRpc" /> MessagePack RPC</label>  <br/>
+                    </fieldset>
 
-                        <fieldset>
-                            <legend>Output Protocol</legend>
-                            <label><input class="chk_param" type="radio" name="outprot" value="JsonDocument" checked/> Json Document</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="outprot" value="Soap11" /> Soap 1.1</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="outprot" value="XmlDocument" /> Xml Document</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="outprot" value="MessagePackDocument" /> MessagePack Document</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="outprot" value="MessagePackRpc" /> MessagePack RPC</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="outprot" value="Csv" />Comma Separated Values</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="outprot" value="HtmlRowTable" />Html Row Table</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="outprot" value="HtmlColumnTable" />Html Column Table</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="outprot" value="HtmlMicroFormat" />Html MicroFormat</label>  <br/>
-                        </fieldset>
+                    <fieldset>
+                        <legend>Output Protocol</legend>
+                        <label><input class="param_rpc" type="radio" name="outprot" value="JsonDocument" checked/> Json Document</label>  <br/>
+                        <label><input class="param_rpc" type="radio" name="outprot" value="Soap11" /> Soap 1.1</label>  <br/>
+                        <label><input class="param_rpc" type="radio" name="outprot" value="XmlDocument" /> Xml Document</label>  <br/>
+                        <label><input class="param_rpc" type="radio" name="outprot" value="MessagePackDocument" /> MessagePack Document</label>  <br/>
+                        <label><input class="param_rpc" type="radio" name="outprot" value="MessagePackRpc" /> MessagePack RPC</label>  <br/>
+                        <label><input class="param_rpc" type="radio" name="outprot" value="Csv" />Comma Separated Values</label>  <br/>
+                        <label><input class="param_rpc" type="radio" name="outprot" value="HtmlRowTable" />Html Row Table</label>  <br/>
+                        <label><input class="param_rpc" type="radio" name="outprot" value="HtmlColumnTable" />Html Column Table</label>  <br/>
+                        <label><input class="param_rpc" type="radio" name="outprot" value="HtmlMicroFormat" />Html MicroFormat</label>  <br/>
+                    </fieldset>
 
-                        <fieldset>
-                            <legend>Transport</legend>
-                            <label><input class="chk_param" type="radio" name="tpt" value="WsgiApplication" checked> Http (WSGI)</label> <br/>
-                            <label><input class="chk_param" type="radio" name="tpt" value="TwistedWebResource" /> Http (Twisted)</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="tpt" value="DjangoApplication" /> Http (Django)</label> <br/>
-                            <label><input class="chk_param" type="radio" name="tpt" value="PyramidApplication" /> Http (Pyramid)</label> <br/>
-                            <label><input class="chk_param" type="radio" name="tpt" value="ZeroMQServer" /> ZeroMQ (REQ/REP)</label> <br/>
-                        </fieldset>
-                        <fieldset>
-                            <legend>Validation:</legend>
-                            <label><input class="chk_param" type="radio" name="validation" value="true" checked> Enabled</label> <br/>
-                            <label><input class="chk_param" type="radio" name="validation" value="" checked> Disabled</label> <br/>
-                        </fieldset>
-                    </form>
-                </div>
-
-                <div class="code" id="code_rpc" />
-                <div class="clear" />
+                    <fieldset>
+                        <legend>Transport</legend>
+                        <label><input class="param_rpc" type="radio" name="tpt" value="WsgiApplication" checked /> Http (WSGI)</label> <br/>
+                        <label><input class="param_rpc" type="radio" name="tpt" value="TwistedWebResource" /> Http (Twisted)</label>  <br/>
+                        <label><input class="param_rpc" type="radio" name="tpt" value="DjangoApplication" /> Http (Django)</label> <br/>
+                        <label><input class="param_rpc" type="radio" name="tpt" value="PyramidApplication" /> Http (Pyramid)</label> <br/>
+                        <label><input class="param_rpc" type="radio" name="tpt" value="ZeroMQServer" /> ZeroMQ (REQ/REP)</label> <br/>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Validation:</legend>
+                        <label><input class="param_rpc" type="radio" name="validation" value="true" checked /> Enabled</label> <br/>
+                        <label><input class="param_rpc" type="radio" name="validation" value="" /> Disabled</label> <br/>
+                    </fieldset>
+                </form>
             </div>
+
+            <div class="code" id="code_rpc"></div>
+            <div class="clear"></div>
         </div>
         <div id="tabs-2">
-            <div class="hello_world">
-                <div id="parameters">
-                    <form action="#" method="foo">
-                        <fieldset>
-                            <legend>Serialization</legend>
-                            <label><input class="chk_param" type="radio" name="ser" value="None" checked>None</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="ser" value="Json">Json</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="ser" value="Xml">Xml</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="ser" value="sqlotm">SQL Table (One-to-many)</label>  <br/>
-                            <label><input class="chk_param" type="radio" name="ser" value="sqlmtm">SQL Table (Many-to-many)</label>  <br/>
-                        </fieldset>
-                    </form>
-                </div>
-
-                <div id="code_db" class="code">
-                    <pre />
-                </div>
-                <div class="clear" />
+            <div id="parameters">
+                <form action="#" method="foo">
+                    <fieldset>
+                        <legend>Serialization</legend>
+                        <label><input class="param_db" type="radio" name="ser" value="None" checked>None</label>  <br/>
+                        <label><input class="param_db" type="radio" name="ser" value="Json">Json</label>  <br/>
+                        <label><input class="param_db" type="radio" name="ser" value="Xml">Xml</label>  <br/>
+                        <label><input class="param_db" type="radio" name="ser" value="SqlOtm">SQL Table (One-to-many)</label>  <br/>
+                        <label><input class="param_db" type="radio" name="ser" value="SqlMtm">SQL Table (Many-to-many)</label>  <br/>
+                    </fieldset>
+                </form>
             </div>
+
+            <div class="code" id="code_db"></div>
+            <div class="clear"></div>
         </div>
+
+        <!--
         <div id="tabs-3">
             <div id="parameters">
                 <form action="#" method="foo">
                     <fieldset>
                         <legend>Database</legend>
-                        <label><input class="chk_param" type="radio" name="db" value="auxproc" checked>None</label> <br/>
-                        <label><input class="chk_param" type="radio" name="db" value="auxproc" checked>Sync</label> <br/>
-                        <label><input class="chk_param" type="radio" name="db" value="auxproc" checked>Async (Thread)</label> <br/>
+                        <label><input class="param_aux" type="radio" name="db" value="auxproc" checked>None</label> <br/>
+                        <label><input class="param_aux" type="radio" name="db" value="auxproc" checked>Sync</label> <br/>
+                        <label><input class="param_aux" type="radio" name="db" value="auxproc" checked>Async (Thread)</label> <br/>
                     </fieldset>
                 </form>
             </div>
 
-            <div id="code_ser" class="code">
-                <pre />
-            </div>
-            <div class="clear" />
+            <div class="code" id="code_aux"></div>
+            <div class="clear"></div>
         </div>
-        </div>
+        -->
     </div>
 </section>
+</div>
 
-<footer style="align: center;">
-    <p>&copy; All content on this web site copyright <a href="http://arskom.com.tr">Arskom Ltd.</a></p>
-    <p><small>Hosted on <a href="https://pages.github.com">
-                GitHub Pages</a> using a variation of the Dinky theme.
+<footer style="align: center">
+    <p>&copy; All content on this web site copyright
+        <a href="http://arskom.com.tr">Arskom Ltd.</a></p>
 
-    Please use the
+    <p><small>Hosted on
+    <a href="https://pages.github.com">GitHub Pages</a>
+    using a variation of the Dinky theme. Please use the
     <a href="http://github.com/spyne/spyne.github.com/issues">issue tracker</a>
-            at Github for ideas on improving this web site.</small></p>
+    at Github for ideas on improving this web site.</small></p>
 </footer>
+
 <!--[if !IE]><script>fixScale(document);</script><![endif]-->
 </body>
 </html>
