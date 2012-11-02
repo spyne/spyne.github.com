@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Models &mdash; spyne 2.9.0 documentation</title>
+    <title>Models &mdash; spyne 2.9.2 documentation</title>
     
     <link rel="stylesheet" href="../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.9.0',
+        VERSION:     '2.9.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.9.0 documentation" href="../index.html" />
+    <link rel="top" title="spyne 2.9.2 documentation" href="../index.html" />
     <link rel="up" title="Spyne API Reference" href="index.html" />
     <link rel="next" title="Interfaces" href="interface.html" />
     <link rel="prev" title="Common Exceptions" href="error.html" /> 
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="error.html" title="Common Exceptions"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">spyne 2.9.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">spyne 2.9.2 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Spyne API Reference</a> &raquo;</li> 
       </ul>
     </div>
@@ -524,7 +524,7 @@ implementation, this is just a marker.</p>
 
 <dl class="data">
 <dt id="spyne.model.complex.PSSM_VALUES">
-<tt class="descclassname">spyne.model.complex.</tt><tt class="descname">PSSM_VALUES</tt><em class="property"> = {'xml': &lt;class spyne.model.complex.xml at 0x2826f58&gt;, 'table': &lt;class spyne.model.complex.table at 0x289a188&gt;, 'json': &lt;class spyne.model.complex.json at 0x289a258&gt;, 'msgpack': &lt;class spyne.model.complex.msgpack at 0x289a328&gt;}</em><a class="headerlink" href="#spyne.model.complex.PSSM_VALUES" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">spyne.model.complex.</tt><tt class="descname">PSSM_VALUES</tt><em class="property"> = {'xml': &lt;class spyne.model.complex.xml at 0x2cd5600&gt;, 'table': &lt;class spyne.model.complex.table at 0x2cd57a0&gt;, 'json': &lt;class spyne.model.complex.json at 0x2cd5870&gt;, 'msgpack': &lt;class spyne.model.complex.msgpack at 0x2cd5940&gt;}</em><a class="headerlink" href="#spyne.model.complex.PSSM_VALUES" title="Permalink to this definition">¶</a></dt>
 <dd><p>Persistent storage serialization method values</p>
 </dd></dl>
 
@@ -559,7 +559,7 @@ call. If metadata is not supplied, a new one is instantiated.</p>
 
 <dl class="class">
 <dt id="spyne.model.complex.json">
-<em class="property">class </em><tt class="descclassname">spyne.model.complex.</tt><tt class="descname">json</tt><a class="reference internal" href="../modules/spyne/model/complex.html#json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.complex.json" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">spyne.model.complex.</tt><tt class="descname">json</tt><big>(</big><em>skip_depth=0</em><big>)</big><a class="reference internal" href="../modules/spyne/model/complex.html#json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.complex.json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Complex argument to <tt class="docutils literal"><span class="pre">ComplexModelBase.Attributes.store_as</span></tt> for storing
 the class instance as a json document.</p>
 <p>Make sure you don&#8217;t mix this with the json package when importing.</p>
@@ -581,12 +581,18 @@ the class instance as a row in a table in a relational database.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>multi</strong> &#8211; When false, configures a one-to-many relationship where the
-child table has a foreign key to the parent. When true, configures a
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>multi</strong> &#8211; When False, configures a one-to-many relationship where the
+child table has a foreign key to the parent. When != False, configures a
 many-to-many relationship by creating an intermediate relation table
 that has foreign keys to both parent and child classes and generates
-a table name automatically. When it&#8217;s a string, the value is used as the
-table name.</td>
+a table name automatically. When True, the table name is generated
+automatically. Otherwise, it should be a string, as the value is used as
+the name of the intermediate table.</li>
+<li><strong>left</strong> &#8211; Name of the left join column.</li>
+<li><strong>right</strong> &#8211; Name of the right join column.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -1217,7 +1223,7 @@ or &#8216;ignore&#8217;.</p>
 <dl class="class">
 <dt id="spyne.model.primitive.Uuid">
 <em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Uuid</tt><a class="reference internal" href="../modules/spyne/model/primitive.html#Uuid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Uuid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.Unicode</span></tt></p>
 <p>Unicode subclass for Universially-Unique Identifiers.</p>
 </dd></dl>
 
@@ -1269,7 +1275,7 @@ SQLAlchemy and its information alone.</p>
         <li class="right" >
           <a href="error.html" title="Common Exceptions"
              >previous</a> |</li>
-        <li><a href="../index.html">spyne 2.9.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">spyne 2.9.2 documentation</a> &raquo;</li>
           <li><a href="index.html" >Spyne API Reference</a> &raquo;</li> 
       </ul>
     </div>

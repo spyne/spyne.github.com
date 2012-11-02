@@ -186,6 +186,7 @@ $(document).ready(function(){
                 regen_code_aux();
             }
         });
+
         var ti = div.find("#toggle_sqla");
         ti.click(function(e) {
             if (hide_sqla) {
@@ -202,7 +203,6 @@ $(document).ready(function(){
             }
         });
     }
-
 
     function is_supported(transport, inprot, outprot) {
         if (transport == 'ZeroMQServer' && (inprot == 'HttpRpc' || outprot == 'HttpRpc')) {
@@ -374,7 +374,7 @@ $(document).ready(function(){
         ,Xml: {
             code: [
                  "    permissions = Array(Permission).store_as("
-                ,"                                       xml(no_ns=True))"
+                ,"                                       xml())"
             ],
             imports: ['from spyne.model.complex import xml']
         }
@@ -534,7 +534,7 @@ $(document).ready(function(){
                 ,"       (last_name, first_name, user_name,"
                 ,"                     permissions)"
                 ,"       VALUES ('Smith', 'John', 'js',"
-                ,' \'<ns0:PermissionArray xmlns:ns0="None"><ns0:Permission><ns0:app>x</ns0:app><ns0:op>y</ns0:op></ns0:Permission><ns0:Permission><ns0:app>z</ns0:app><ns0:op>t</ns0:op></ns0:Permission></ns0:PermissionArray>\''
+                ,' \'<PermissionArray><Permission><app>x</app><op>y</op></Permission><Permission><app>z</app><op>t</op></Permission></PermissionArray>\''
                 ,");"
                 ,"COMMIT;"
             ]
@@ -668,8 +668,8 @@ $(function() {
         <small>Tame the interwebs.</small>
 
         <p class="header"><span style="font-weight: bold">Latest release:</span> <br/>
-                Spyne <span id="version">2.9.1</span> <br />
-                Oct. 29th, 2012 <br />
+                Spyne <span id="version">2.9.2</span> <br />
+                Nov. 2nd, 2012 <br />
                 <a href="http://travis-ci.org/arskom/spyne">
                     <img src="https://secure.travis-ci.org/arskom/spyne.png">
                 </a>
