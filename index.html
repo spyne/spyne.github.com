@@ -249,10 +249,10 @@ $(document).ready(function(){
 
         // user code
         retval = retval.concat([
-            ,"class HelloWorldService(ServiceBase:"
-            ,"    @srpc(Unicode, Integer, _returns=Array(Unicode)"
-            ,"    def say_hello(name, times:"
-            ,"        for i in range(times:"
+            ,"class HelloWorldService(ServiceBase):"
+            ,"    @srpc(Unicode, Integer, _returns=Array(Unicode))"
+            ,"    def say_hello(name, times):"
+            ,"        for i in range(times):"
             ,"            yield 'Hello, %s' % name"
             ,""
             ,""
