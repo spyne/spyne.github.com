@@ -19,7 +19,6 @@ $(document).ready(function(){
     var hide_imports = true;
     var db_params = $('#db_parameters');
 
-    console.log(db_params_pos)
     var fix_unfix = function () {
         if (! db_params_pos) {
             return;
@@ -33,6 +32,7 @@ $(document).ready(function(){
             $(db_params).css({position:'relative'});
         }
     }
+
     $(window).scroll(fix_unfix);
     $(window).resize(function() {
         db_params_pos = db_params.offset().top;
