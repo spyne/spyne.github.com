@@ -71,7 +71,8 @@ $(document).ready(function(){
             ,'            ]'
             ,'        }'
             ,'    }'
-            ,'}']
+            ,'}'
+        ]
         ,Soap11: ["<?xml version='1.0' encoding='utf-8'?>",
             ,'<senv:Envelope xmlns:wsa="http://schemas.xmlsoap.org/ws/2003/03/addressing"'
             ,'xmlns:tns="spyne.examples.hello"'
@@ -390,7 +391,7 @@ $(document).ready(function(){
         ,Xml: {
             code: [
                  "    permissions = Array(Permission).store_as("
-                ,"                                       xml())"
+                ,"                                       xml(no_ns=True))"
             ],
             imports: ['from spyne.model.complex import xml']
         }
@@ -410,7 +411,7 @@ $(document).ready(function(){
     var show_sql = {
         Schema: [
              'TableModel.Attributes.sqla_metadata.create_all('
-            ,'                                       checkfirst=True)'
+            ,'                                    checkfirst=True)'
         ],
         Data: [
              'session = Session()'

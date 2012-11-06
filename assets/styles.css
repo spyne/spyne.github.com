@@ -437,7 +437,7 @@ div.clear {
     clear: both;
 }
 
-div#parameters {
+div.parameters {
     float: left;
 }
 
@@ -495,7 +495,7 @@ div#parameters {
         margin:0 0 30px;
     }
 
-    div#parameters {
+    div.parameters {
         float: none;
     }
     div.code {
