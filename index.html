@@ -13,23 +13,30 @@
     <script src="assets/jquery.snippet.min.js"></script>
     <script type="text/javascript">
 
+db_params_pos = null; // FIXME: come on, this isn't THAT bad :)
+
 $(document).ready(function(){
     var hide_imports = true;
-    
-    var db_params = '#db_parameters';
-    var db_params_pos = null;
+    var db_params = $('#db_parameters');
 
-    $(window).scroll(function() {
+    console.log(db_params_pos)
+    var fix_unfix = function () {
         if (! db_params_pos) {
             return;
         }
 
-        if($(this).scrollTop() > db_params_pos) {
+        // 430 is the smallest max-width in css.
+        if($(this).scrollTop() > db_params_pos && $(document).width() > 430) {
             $(db_params).css({position:'fixed', top: 0});
         }
         else {
             $(db_params).css({position:'relative'});
         }
+    }
+    $(window).scroll(fix_unfix);
+    $(window).resize(function() {
+        db_params_pos = db_params.offset().top;
+        fix_unfix();
     });
 
     var gen_imports = [
@@ -42,7 +49,7 @@ $(document).ready(function(){
     ]
 
     var prot_imports = {
-        HttpRpc: "from spyne.protocol.http import HttpRpc"
+         HttpRpc: "from spyne.protocol.http import HttpRpc"
         ,XmlDocument: "from spyne.protocol.xml import XmlDocument"
         ,Soap11: "from spyne.protocol.soap import Soap11"
         ,JsonDocument: "from spyne.protocol.json import JsonDocument"
@@ -60,8 +67,7 @@ $(document).ready(function(){
     }
 
     var prot_response = {
-        JsonDocument: ['{',
-            ,'    "say_helloResponse": {'
+        JsonDocument: ['{\n    "say_helloResponse": {'
             ,'        "say_helloResult": {'
             ,'            "string": ['
             ,'                "Hello, World",'
@@ -73,19 +79,8 @@ $(document).ready(function(){
             ,'    }'
             ,'}'
         ]
-        ,Soap11: ["<?xml version='1.0' encoding='utf-8'?>",
-            ,'<senv:Envelope xmlns:wsa="http://schemas.xmlsoap.org/ws/2003/03/addressing"'
-            ,'xmlns:tns="spyne.examples.hello"'
-            ,'xmlns:plink="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"'
-            ,'xmlns:xop="http://www.w3.org/2004/08/xop/include"'
-            ,'xmlns:senc="http://schemas.xmlsoap.org/soap/encoding/"'
-            ,'xmlns:s12env="http://www.w3.org/2003/05/soap-envelope/"'
-            ,'xmlns:s12enc="http://www.w3.org/2003/05/soap-encoding/"'
-            ,'xmlns:xs="http://www.w3.org/2001/XMLSchema"'
-            ,'xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"'
-            ,'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
-            ,'xmlns:senv="http://schemas.xmlsoap.org/soap/envelope/"'
-            ,'xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">'
+        ,Soap11: ["<?xml version='1.0' encoding='utf-8'?>\n<senv:Envelope xmlns:tns=\"spyne.examples.hello\""
+            ,'       xmlns:senv="http://schemas.xmlsoap.org/soap/envelope/"'
             ,'  <senv:Body>'
             ,'    <tns:say_helloResponse>'
             ,'      <tns:say_helloResult>'
@@ -142,12 +137,14 @@ $(document).ready(function(){
             ,"    server = make_server('0.0.0.0', 7789, wsgi_app)"
             ,"    server.serve_forever()"
         ]
+
         ,ZeroMQServer: [
             "if __name__=='__main__':"
             ,"    wsgi_app = ZeroMQServer(application,"
             ,"                           'tcp://0.0.0.0:5555')"
             ,"    server.serve_forever()"
         ]
+
         ,TwistedWebResource: [
             "if __name__=='__main__':"
             ,"    resource = TwistedWebResource(application)"
@@ -155,6 +152,7 @@ $(document).ready(function(){
             ,""
             ,"    reactor.listenTCP(7789, site, interface='0.0.0.0')"
         ]
+
         ,DjangoApplication: [
             "# This module resides in a package in your Django"
             ,"# project."
@@ -166,6 +164,7 @@ $(document).ready(function(){
             ,"# and referenced in the url.py under an appropriate"
             ,"# regexp entry."
         ]
+
         ,PyramidApplication: [
             "if __name__ == '__main__':"
             ,"    app = PyramidApplication(application)"
@@ -299,7 +298,7 @@ $(document).ready(function(){
             ,'</div>'
             ,'<pre id="code"/>'
             ,'Client Code: <pre id="client" />'
-            ,'Response Document: <pre id="response" />'
+            ,'Response Document: <pre id="response" style="line-height: normal"/>'
         ].join(''));
 
         setup_import_toggle(div);
@@ -667,7 +666,11 @@ $(document).ready(function(){
 });
 
 $(function() {
-    $( "#tabs" ).tabs();
+    $("#tabs").tabs({activate: function(e,u) {
+        if (u.newPanel[0].id == 'tabs-2') {
+            db_params_pos = $("#db_parameters").offset().top;
+        }
+    }});
 });
     </script>
 
@@ -723,8 +726,8 @@ $(function() {
 
     <div id="tabs">
         <ul>
-            <li><a href="#tabs-1">RPC</a></li>
-            <li><a href="#tabs-2">DB</a></li>
+            <li><a href="#tabs-1" id="rpc_link">RPC</a></li>
+            <li><a href="#tabs-2" id="db_link">DB</a></li>
             <!--
             <li><a href="#tabs-3">Aux</a></li>
             -->
@@ -732,7 +735,7 @@ $(function() {
         <div id="tabs-1">
             <p>You can expose the same function using multiple protocols and transports.</p>
             <hr/>
-            <div class="parameters">
+            <div class="parameters" id="rpc_parameters">
                 <form action="#" method="foo">
                     <fieldset>
                         <legend>Input Protocol</legend>
