@@ -98,18 +98,18 @@ $(document).ready(function(){
     var tpt_imports = {
         WsgiApplication: ["from spyne.server.wsgi import WsgiApplication"]
         ,TwistedWebResource: [
-            "from spyne.server.twisted import TwistedWebResource"
+             "from spyne.server.twisted import TwistedWebResource"
             ,""
             ,"from twisted.internet import reactor"
             ,"from twisted.web.server import Site"
         ]
         ,DjangoApplication: [
-            "from spyne.server.django import DjangoApplication"
+             "from spyne.server.django import DjangoApplication"
             ,""
             ,"from django.views.decorators.csrf import csrf_exempt"
         ]
         ,PyramidApplication: [
-            "from spyne.server.pyramid import PyramidApplication"
+             "from spyne.server.pyramid import PyramidApplication"
             ,""
             ,"from pyramid.config import Configurator"
             ,"from pyramid.view import view_config"
@@ -127,7 +127,7 @@ $(document).ready(function(){
 
     var tpt_code = {
         WsgiApplication: [
-            "if __name__=='__main__':"
+             "if __name__=='__main__':"
             ,"    # You can use any Wsgi server. Here, we chose"
             ,"    # Python's built-in wsgi server but you're not"
             ,"    # supposed to use it in production."
@@ -139,14 +139,14 @@ $(document).ready(function(){
         ]
 
         ,ZeroMQServer: [
-            "if __name__=='__main__':"
+             "if __name__=='__main__':"
             ,"    wsgi_app = ZeroMQServer(application,"
             ,"                           'tcp://0.0.0.0:5555')"
             ,"    server.serve_forever()"
         ]
 
         ,TwistedWebResource: [
-            "if __name__=='__main__':"
+             "if __name__=='__main__':"
             ,"    resource = TwistedWebResource(application)"
             ,"    site = Site(resource)"
             ,""
@@ -154,7 +154,7 @@ $(document).ready(function(){
         ]
 
         ,DjangoApplication: [
-            "# This module resides in a package in your Django"
+             "# This module resides in a package in your Django"
             ,"# project."
             ,""
             ,"hello_app = csrf_exempt(DjangoApplication(application))"
@@ -166,7 +166,7 @@ $(document).ready(function(){
         ]
 
         ,PyramidApplication: [
-            "if __name__ == '__main__':"
+             "if __name__ == '__main__':"
             ,"    app = PyramidApplication(application)"
             ,"    pyramid_app = view_config(route_name='home')(application)"
             ,"    settings = {}"
@@ -265,7 +265,7 @@ $(document).ready(function(){
 
         // user code
         retval = retval.concat([
-            ,"class HelloWorldService(ServiceBase):"
+             "class HelloWorldService(ServiceBase):"
             ,"    @srpc(Unicode, Integer, _returns=Array(Unicode))"
             ,"    def say_hello(name, times):"
             ,"        for i in range(times):"
@@ -336,7 +336,7 @@ $(document).ready(function(){
     }
 
     var db_imports = [
-        ,'import logging'
+         'import logging'
         ,'logging.basicConfig(level=logging.DEBUG)'
         ,'logging.getLogger("sqlalchemy").setLevel(logging.DEBUG)'
         ,''
@@ -351,7 +351,7 @@ $(document).ready(function(){
     ].concat(gen_imports);
 
     var db_boilerplate = [
-        ,'# Generate a ComplexModelBase subclass with'
+         '# Generate a ComplexModelBase subclass with'
         ,'# metadata information'
         ,'TableModel = TTableModel()'
         ,''
@@ -359,10 +359,10 @@ $(document).ready(function(){
         ,'db = create_engine("postgres://postgres:@localhost/spyne_test")'
         ,'Session = sessionmaker(bind=db)'
         ,'TableModel.Attributes.sqla_metadata.bind = db'
-    ].join('\n');
+    ];
 
     var db_objects = [
-        ,'class Permission(TableModel):'
+         'class Permission(TableModel):'
         ,'    __tablename__ = "spyne_user_permission"'
         ,''
         ,'    permission_id = Integer32(primary_key=True)'
@@ -600,7 +600,7 @@ $(document).ready(function(){
         var ser = $('input[name=ser]:checked').val();
         var show = $('input[name=show]:checked').val();
 
-        var imports = imports.concat(db_imports)
+        var imports = imports.concat(gen_imports).concat(db_imports);
 
         if (! hide_sqla) {
             code = code.concat(db_boilerplate)
