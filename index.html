@@ -289,6 +289,7 @@ $(document).ready(function(){
         }
 
         var div = $("div#code_rpc");
+
         div.html([
             '<div>'
             ,  '<a id="toggle_imports">'+(hide_imports ? "Show Imports": "Hide Imports")+'</a>'
@@ -347,7 +348,7 @@ $(document).ready(function(){
         ,'from spyne.model.complex import TTableModel'
         ,'from spyne.server.wsgi import WsgiApplication'
         ,'from spyne.service import ServiceBase'
-    ].concat(gen_imports);
+    ];
 
     var db_boilerplate = [
          '# Generate a ComplexModelBase subclass with'
@@ -355,7 +356,8 @@ $(document).ready(function(){
         ,'TableModel = TTableModel()'
         ,''
         ,'# Initialize SQLAlchemy Environment'
-        ,'db = create_engine("postgres://postgres:@localhost/spyne_test")'
+        ,'db = create_engine('
+        ,'          "postgres://postgres:@localhost/spyne_test")'
         ,'Session = sessionmaker(bind=db)'
         ,'TableModel.Attributes.sqla_metadata.bind = db'
     ];
@@ -590,7 +592,7 @@ $(document).ready(function(){
         var ser = $('input[name=ser]:checked').val();
         var show = $('input[name=show]:checked').val();
 
-        var imports = imports.concat(gen_imports).concat(db_imports);
+        var imports = imports.concat(db_imports).concat(gen_imports);
 
         if (! hide_sqla) {
             code = code.concat(db_boilerplate)
@@ -620,6 +622,8 @@ $(document).ready(function(){
         sql = sql.concat(sql_itself[show][ser]);
 
         var div = $("div#code_db");
+        div.css("height", "2000px");
+
         div.html([
              '<div>'
             ,  '<a id="toggle_imports">' + (hide_imports ? "Show Imports": "Hide Imports") + '</a>'
