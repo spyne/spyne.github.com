@@ -715,6 +715,11 @@ $(document).ready(function(){
             ]).concat(aux_imports[auxproc]).concat([""]);
         }
 
+        var params = '';
+        if (auxproc == 'Thread') {
+            params = 'pool_size=1';
+        }
+
         server = server.concat([
              'class SomeService(ServiceBase):'
             ,'    @srpc(Integer)'
@@ -724,7 +729,7 @@ $(document).ready(function(){
             ,'        time.sleep(seconds)'
             ,''
             ,'class SomeAuxService(ServiceBase):'
-            ,'    __aux__ = '+auxproc+'AuxProc()'
+            ,'    __aux__ = '+auxproc+'AuxProc('+params+')'
             ,''
             ,'    @srpc(Integer)'
             ,'    def block(seconds):'
