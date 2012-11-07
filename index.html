@@ -22,19 +22,15 @@ $(document).ready(function(){
     var aux_params = $('#aux_parameters');
 
     var fix_unfix = function () {
-        if (! db_params_pos) {
-            return;
-        }
-
         // 430 is the smallest max-width in css.
-        if($(this).scrollTop() > db_params_pos && $(document).width() > 430) {
+        if(db_params_pos && $(this).scrollTop() > db_params_pos && $(document).width() > 430) {
             $(db_params).css({position:'fixed', top: 0});
         }
         else {
             $(db_params).css({position:'relative'});
         }
 
-        if($(this).scrollTop() > aux_params_pos && $(document).width() > 430) {
+        if(aux_params_pos && $(this).scrollTop() > aux_params_pos && $(document).width() > 430) {
             $(aux_params).css({position:'fixed', top: 0});
         }
         else {
@@ -45,6 +41,7 @@ $(document).ready(function(){
     $(window).scroll(fix_unfix);
     $(window).resize(function() {
         db_params_pos = db_params.offset().top;
+        aux_params_pos = aux_params.offset().top;
         fix_unfix();
     });
 
@@ -796,7 +793,7 @@ $(function() {
             db_params_pos = $("#db_parameters").offset().top;
         }
         if (u.newPanel[0].id == 'tabs-3') {
-            aux_params_pos= $("#aux_parameters").offset().top;
+            aux_params_pos = $("#aux_parameters").offset().top;
         }
     }});
 });
