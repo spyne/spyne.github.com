@@ -14,10 +14,12 @@
     <script type="text/javascript">
 
 db_params_pos = null; // FIXME: come on, this isn't THAT bad :)
+aux_params_pos = null;
 
 $(document).ready(function(){
     var hide_imports = true;
     var db_params = $('#db_parameters');
+    var aux_params = $('#aux_parameters');
 
     var fix_unfix = function () {
         if (! db_params_pos) {
@@ -30,6 +32,13 @@ $(document).ready(function(){
         }
         else {
             $(db_params).css({position:'relative'});
+        }
+
+        if($(this).scrollTop() > aux_params_pos && $(document).width() > 430) {
+            $(aux_params).css({position:'fixed', top: 0});
+        }
+        else {
+            $(aux_params).css({position:'relative'});
         }
     }
 
@@ -737,6 +746,7 @@ $(document).ready(function(){
         client = client.concat(client_code[auxproc])
 
         var div = $("div#code_aux");
+        div.css("height", "2000px");
         div.html([
              '<div>'
             ,  '<a id="toggle_imports">' + (hide_imports ? "Show Imports": "Hide Imports") + '</a>'
@@ -757,6 +767,7 @@ $(document).ready(function(){
         });
 
         div.children("pre.client").text(client.join("\n"));
+        div.css("height", "auto");
     }
 
     regen_code_rpc();
@@ -778,6 +789,9 @@ $(function() {
     $("#tabs").tabs({activate: function(e,u) {
         if (u.newPanel[0].id == 'tabs-2') {
             db_params_pos = $("#db_parameters").offset().top;
+        }
+        if (u.newPanel[0].id == 'tabs-3') {
+            aux_params_pos= $("#aux_parameters").offset().top;
         }
     }});
 });
@@ -920,7 +934,7 @@ $(function() {
             attribute in another service definition class and copy the method signature.
             </p>
             <hr/>
-            <div class="parameters" id="auxproc_parameters">
+            <div class="parameters" id="aux_parameters">
                 <form action="#" method="foo">
                     <fieldset>
                         <legend>Database</legend>
