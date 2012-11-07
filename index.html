@@ -21,7 +21,7 @@ $(document).ready(function(){
     var db_params = $('#db_parameters');
     var aux_params = $('#aux_parameters');
 
-    var fix_unfix = function () {
+    var fix_unfix = function() {
         // 430 is the smallest max-width in css.
         if(db_params_pos && $(this).scrollTop() > db_params_pos && $(document).width() > 430) {
             $(db_params).css({position:'fixed', top: 0});
@@ -296,6 +296,11 @@ $(document).ready(function(){
 
         var div = $("div#code_rpc");
 
+        if (! is_supported(tpt, inprot, outprot)) {
+            div.html("<br/><strong>Unsupported Protocol/Transport Combination.</strong>");
+            return
+        }
+
         div.html([
             '<div>'
             ,  '<a id="toggle_imports">'+(hide_imports ? "Show Imports": "Hide Imports")+'</a>'
@@ -310,15 +315,12 @@ $(document).ready(function(){
         setup_import_toggle(div);
 
         var example_url = tpt_example[tpt];
-        if (! is_supported(tpt, inprot, outprot)) {
-            $("span.code_link").html("<br/><strong>Unsupported Protocol/Transport Combination.</strong>");
-            return
+        if (! example_url) {
+            $("span.code_link").html(
+            "<a target=\"_blank\" href=\"https://github.com/arskom/spyne/tree/spyne-" + version +
+                "/examples/"+example_url+"\">A "+tpt+" Example</a>"
+            );
         }
-
-        $("span.code_link").html(
-        "<a target=\"_blank\" href=\"https://github.com/arskom/spyne/tree/spyne-" + version +
-            "/examples/"+example_url+"\">A "+tpt+" Example</a>"
-        );
 
         div.children("pre#code").text(retval.join("\n"));
         div.children("pre#code").snippet("python", {
@@ -598,10 +600,11 @@ $(document).ready(function(){
         var ser = $('input[name=ser]:checked').val();
         var show = $('input[name=show]:checked').val();
 
-        var imports = imports.concat(db_imports).concat(gen_imports).concat([""]);
+        imports = imports.concat(db_imports).concat([""]);
+        imports = imports.concat(gen_imports).concat([""]);
 
         if (! hide_sqla) {
-            code = code.concat(db_boilerplate)
+            code = code.concat(db_boilerplate).concat([""]);
         }
 
         if (ser == "SqlOtm" || ser == "SqlMtm") {
@@ -609,6 +612,7 @@ $(document).ready(function(){
         }
         else {
             code = code.concat(obj_perm)
+            imports.push("from spyne.model.complex import ComplexModel")
         }
 
         code = code.concat(obj_user);
@@ -616,12 +620,12 @@ $(document).ready(function(){
         if (db_user_perms_col[ser]) {
             code = code.concat(db_user_perms_col[ser].code);
             if (db_user_perms_col[ser].imports.len > 0) {
-                imports = imports.concat([""]).concat(db_user_perms_col[ser].imports);
+                imports = imports.concat(db_user_perms_col[ser].imports);
             }
         }
 
         if (! hide_imports) {
-            code = imports.concat([""]).concat(code);
+            code = imports.concat(code);
         }
 
         code = code.concat([""]).concat(show_sql[show]);
@@ -736,12 +740,13 @@ $(document).ready(function(){
             ,''
             ,'application = Application([SomeService, SomeAuxService],'
             ,'       tns="spyne.examples.auxproc",'
-            ,'       in_protocol=HttpRpc(), out_protocol=XmlDocument())'
+            ,'       in_protocol=HttpRpc(),'
+            ,'       out_protocol=XmlDocument(),'
+            ,'    )'
             ,''
             ,'if __name__ == "__main__":'
-            ,'    services = '
-            ,''
-            ,'    server = make_server(host, port, WsgiApplication(application))'
+            ,'    server = make_server(host, port, '
+            ,'                  WsgiApplication(application))'
             ,'    server.serve_forever()'
         ]);
 
