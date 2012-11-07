@@ -592,7 +592,7 @@ $(document).ready(function(){
         var ser = $('input[name=ser]:checked').val();
         var show = $('input[name=show]:checked').val();
 
-        var imports = imports.concat(db_imports).concat(gen_imports);
+        var imports = imports.concat(db_imports).concat(gen_imports).concat([""]);
 
         if (! hide_sqla) {
             code = code.concat(db_boilerplate)
@@ -622,6 +622,8 @@ $(document).ready(function(){
         sql = sql.concat(sql_itself[show][ser]);
 
         var div = $("div#code_db");
+
+        // this is to prevent scrolling up after the div content is reset
         div.css("height", "2000px");
 
         div.html([
@@ -633,37 +635,142 @@ $(document).ready(function(){
             ,"<a target=\"_blank\" href=\"https://github.com/arskom/spyne/tree/spyne-" + version +
                             "/examples/user_manager/server_sqlalchemy.py\">Example</a>"
             ,'</div>'
-            ,'<pre id="code"/>'
-            ,'Resulting SQL: <pre id="sql" />'
+            ,'<pre class="code"/>'
+            ,'Resulting SQL: <pre class="sql" />'
         ].join(''));
 
         setup_import_toggle(div);
 
-        div.children("pre#code").text(code.join("\n"));
-        div.children("pre#code").snippet("python", {
+        div.children("pre.code").text(code.join("\n"));
+        div.children("pre.code").snippet("python", {
              style:"whitengrey"
             ,clipboard:"assets/ZeroClipboard.swf"
         });
 
-        div.children("pre#sql").text(sql.join("\n"));
-        div.children("pre#sql").snippet("sql", {
+        div.children("pre.sql").text(sql.join("\n"));
+        div.children("pre.sql").snippet("sql", {
              style:"whitengrey"
             ,clipboard:"assets/ZeroClipboard.swf"
         });
+
+        div.css("height", "auto");
+    }
+
+    var aux_imports = {
+        Thread: [
+             "# Requires Python >=2.7"
+            ,"from spyne.auxproc.thread import ThreadAuxProc"
+        ]
+        ,Sync: [
+            "from spyne.auxproc.sync import SyncAuxProc"
+        ]
+    };
+
+    var client_code = {
+        Sync: [
+             "$ time curl http://localhost:9753/block?seconds=2"
+            ,"<?xml version='1.0' encoding='UTF-8'?>"
+            ,'<ns0:blockResponse xmlns:ns0="spyne.examples.auxproc"/>'
+            ,''
+            ,'real    0m6.027s'
+            ,'user    0m0.012s'
+            ,'sys     0m0.005s'
+        ]
+        ,Thread: [
+             "$ time curl http://localhost:9753/block?seconds=2"
+            ,"<?xml version='1.0' encoding='UTF-8'?>"
+            ,'<ns0:blockResponse xmlns:ns0="spyne.examples.auxproc"/>'
+            ,''
+            ,'real    0m2.027s'
+            ,'user    0m0.012s'
+            ,'sys     0m0.005s'
+        ]
     }
 
     function regen_code_aux() {
+        var server = [];
+        var client = [];
 
+        var version = $("span#version").text();
+        var auxproc = $('input[name=auxproc]:checked').val();
+
+        // imports
+        if (! hide_imports) {
+            server = server.concat(gen_imports).concat([
+                 prot_imports['HttpRpc']
+                ,prot_imports['XmlDocument']
+                ,""
+                ,tpt_imports["WsgiApplication"]
+                ,"from wsgiref.simple_server import make_server"
+                ,""
+            ]).concat(aux_imports[auxproc]).concat([""]);
+        }
+
+        server = server.concat([
+             'class SomeService(ServiceBase):'
+            ,'    @srpc(Integer)'
+            ,'    def block(seconds):'
+            ,'        logging.info("Primary sleeping for "'
+            ,'            "%d seconds." % seconds)'
+            ,'        time.sleep(seconds)'
+            ,''
+            ,'class SomeAuxService(ServiceBase):'
+            ,'    __aux__ = '+auxproc+'AuxProc()'
+            ,''
+            ,'    @srpc(Integer)'
+            ,'    def block(seconds):'
+            ,'        logging.info("Auxiliary sleeping for"'
+            ,'            " %d seconds." % (seconds * 2))'
+            ,'        time.sleep(seconds * 2)'
+            ,''
+            ,'application = Application([SomeService, SomeAuxService],'
+            ,'       tns="spyne.examples.auxproc",'
+            ,'       in_protocol=HttpRpc(), out_protocol=XmlDocument())'
+            ,''
+            ,'if __name__ == "__main__":'
+            ,'    services = '
+            ,''
+            ,'    server = make_server(host, port, WsgiApplication(application))'
+            ,'    server.serve_forever()'
+        ]);
+
+        client = client.concat(client_code[auxproc])
+
+        var div = $("div#code_aux");
+        div.html([
+             '<div>'
+            ,  '<a id="toggle_imports">' + (hide_imports ? "Show Imports": "Hide Imports") + '</a>'
+            ,  ' | '
+            ,"<a target=\"_blank\" href=\"https://github.com/arskom/spyne/blob/master" +
+                            "/auxproc.py\">AuxProc Example</a>"
+            ,'</div>'
+            ,'<pre class="server"/>'
+            ,'Client Code: <pre class="client" style="line-height: normal"/>'
+        ].join(''));
+
+        setup_import_toggle(div);
+
+        div.children("pre.server").text(server.join("\n"));
+        div.children("pre.server").snippet("python", {
+             style:"whitengrey"
+            ,clipboard:"assets/ZeroClipboard.swf"
+        });
+
+        div.children("pre.client").text(client.join("\n"));
     }
 
     regen_code_rpc();
     regen_code_db();
+    regen_code_aux();
 
     $("input.param_rpc").click(function(e) {
         regen_code_rpc();
     });
     $("input.param_db").click(function(e) {
         regen_code_db();
+    });
+    $("input.param_aux").click(function(e) {
+        regen_code_aux();
     });
 });
 
@@ -728,11 +835,9 @@ $(function() {
 
     <div id="tabs">
         <ul>
-            <li><a href="#tabs-1" id="rpc_link">RPC</a></li>
-            <li><a href="#tabs-2" id="db_link">DB</a></li>
-            <!--
-            <li><a href="#tabs-3">Aux</a></li>
-            -->
+            <li><a href="#tabs-1">RPC</a></li>
+            <li><a href="#tabs-2">SQL</a></li>
+            <li><a href="#tabs-3">AUX</a></li>
         </ul>
         <div id="tabs-1">
             <p>You can expose the same function using multiple protocols and transports.</p>
@@ -751,7 +856,8 @@ $(function() {
 
                     <fieldset>
                         <legend>Output Protocol</legend>
-                        <label><input class="param_rpc" type="radio" name="outprot" value="JsonDocument" checked/> Json Document</label>  <br/>
+                        <label><input class="param_rpc" type="radio" name="outprot" value="HttpRpc" checked/>HttpRpc</label>  <br/>
+                        <label><input class="param_rpc" type="radio" name="outprot" value="JsonDocument"/> Json Document</label>  <br/>
                         <label><input class="param_rpc" type="radio" name="outprot" value="Soap11" /> Soap 1.1</label>  <br/>
                         <label><input class="param_rpc" type="radio" name="outprot" value="XmlDocument" /> Xml Document</label>  <br/>
                         <label><input class="param_rpc" type="radio" name="outprot" value="MessagePackDocument" /> MessagePack Document</label>  <br/>
@@ -808,15 +914,18 @@ $(function() {
             <div class="clear"></div>
         </div>
 
-        <!--
         <div id="tabs-3">
-            <div id="parameters">
+            <p>Auxiliary Methods offer a rich task queuing mechanism. To do additional
+            work after the response is returned, you can set the <code>__aux__</code>
+            attribute in another service definition class and copy the method signature.
+            </p>
+            <hr/>
+            <div class="parameters" id="auxproc_parameters">
                 <form action="#" method="foo">
                     <fieldset>
                         <legend>Database</legend>
-                        <label><input class="param_aux" type="radio" name="db" value="auxproc" checked>None</label> <br/>
-                        <label><input class="param_aux" type="radio" name="db" value="auxproc" checked>Sync</label> <br/>
-                        <label><input class="param_aux" type="radio" name="db" value="auxproc" checked>Async (Thread)</label> <br/>
+                        <label><input class="param_aux" type="radio" name="auxproc" value="Sync" checked>Sync</label> <br/>
+                        <label><input class="param_aux" type="radio" name="auxproc" value="Thread">Async(Thread)</label> <br/>
                     </fieldset>
                 </form>
             </div>
@@ -824,7 +933,6 @@ $(function() {
             <div class="code" id="code_aux"></div>
             <div class="clear"></div>
         </div>
-        -->
     </div>
 </section>
 </div>
