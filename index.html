@@ -271,7 +271,6 @@ $(document).ready(function(){
             ,"        for i in range(times):"
             ,"            yield 'Hello, %s' % name"
             ,""
-            ,""
             ,"application = Application([HelloWorldService],"
             ,"    tns='spyne.examples.hello',"
             ,"    in_protocol="+ inprot +"(" + validation + "),"
@@ -361,14 +360,7 @@ $(document).ready(function(){
         ,'TableModel.Attributes.sqla_metadata.bind = db'
     ];
 
-    var db_objects = [
-         'class Permission(TableModel):'
-        ,'    __tablename__ = "spyne_user_permission"'
-        ,''
-        ,'    permission_id = Integer32(primary_key=True)'
-        ,'    app = Unicode(256)'
-        ,'    op = Unicode(256)'
-        ,''
+    var obj_user = [
         ,"class User(TableModel):"
         ,"    __tablename__ = 'spyne_user'"
         ,""
@@ -377,6 +369,22 @@ $(document).ready(function(){
         ,"    first_name = Unicode(256)"
         ,"    last_name = Unicode(256)"
     ];
+
+    var obj_perm = [
+         'class Permission(ComplexModel):'
+        ,'    permission_id = Integer32'
+        ,'    app = Unicode(256)'
+        ,'    op = Unicode(256)'
+    ]
+
+    var obj_perm_db = [
+         'class Permission(TableModel):'
+        ,"    __tablename__ = 'spyne_permission'"
+        ,""
+        ,'    permission_id = Integer32(pk=True)'
+        ,'    app = Unicode(256)'
+        ,'    op = Unicode(256)'
+    ]
 
     var db_user_perms_col = {
          None: {
@@ -430,112 +438,94 @@ $(document).ready(function(){
     var sql_itself = {
         Schema: { 
             None: [
-                 "-- Note that there's no relation"
-                ,"-- between user and permission."
+                 "-- Note that Permission is not"
+                ,"-- stored in the database at all."
                 ,"CREATE TABLE spyne_user ("
-                ,"        last_name VARCHAR(256), "
-                ,"        user_id SERIAL NOT NULL, "
-                ,"        first_name VARCHAR(256), "
-                ,"        user_name VARCHAR(256) NOT NULL, "
-                ,"        PRIMARY KEY (user_id)"
-                ,");"
-                ,""
-                ,"CREATE TABLE spyne_user_permission ("
-                ,"        permission_id SERIAL NOT NULL, "
-                ,"        app VARCHAR(256), "
-                ,"        op VARCHAR(256), "
-                ,"        PRIMARY KEY (permission_id)"
+                ,"  last_name VARCHAR(256),"
+                ,"  user_id SERIAL NOT NULL,"
+                ,"  first_name VARCHAR(256),"
+                ,"  user_name VARCHAR(256) NOT NULL,"
+                ,"  PRIMARY KEY (user_id)"
                 ,");"
             ]
             ,Json: [
                  "CREATE TABLE spyne_user ("
-                ,"        last_name VARCHAR(256), "
-                ,"        user_id SERIAL NOT NULL, "
-                ,"        first_name VARCHAR(256), "
-                ,"        user_name VARCHAR(256) NOT NULL, "
-                ,"        permissions json,"
-                ,"        PRIMARY KEY (user_id)"
-                ,");"
-                ,""
-                ,"CREATE TABLE spyne_user_permission ("
-                ,"        permission_id SERIAL NOT NULL, "
-                ,"        app VARCHAR(256), "
-                ,"        op VARCHAR(256), "
-                ,"        PRIMARY KEY (permission_id)"
+                ,"  last_name VARCHAR(256),"
+                ,"  user_id SERIAL NOT NULL,"
+                ,"  first_name VARCHAR(256),"
+                ,"  user_name VARCHAR(256) NOT NULL,"
+                ,"  permissions json,"
+                ,"  PRIMARY KEY (user_id)"
                 ,");"
             ]
             ,Xml: [
                  "CREATE TABLE spyne_user ("
-                ,"        last_name VARCHAR(256), "
-                ,"        user_id SERIAL NOT NULL, "
-                ,"        first_name VARCHAR(256), "
-                ,"        user_name VARCHAR(256) NOT NULL, "
-                ,"        permissions xml,"
-                ,"        PRIMARY KEY (user_id)"
-                ,");"
-                ,""
-                ,"CREATE TABLE spyne_user_permission ("
-                ,"        permission_id SERIAL NOT NULL, "
-                ,"        app VARCHAR(256), "
-                ,"        op VARCHAR(256), "
-                ,"        PRIMARY KEY (permission_id)"
+                ,"  last_name VARCHAR(256),"
+                ,"  user_id SERIAL NOT NULL,"
+                ,"  first_name VARCHAR(256),"
+                ,"  user_name VARCHAR(256) NOT NULL,"
+                ,"  permissions xml,"
+                ,"  PRIMARY KEY (user_id)"
                 ,");"
             ]
             ,SqlOtm: [
                  "CREATE TABLE spyne_user ("
-                ,"        last_name VARCHAR(256), "
-                ,"        user_id SERIAL NOT NULL, "
-                ,"        first_name VARCHAR(256), "
-                ,"        user_name VARCHAR(256) NOT NULL, "
-                ,"        permissions xml,"
-                ,"        PRIMARY KEY (user_id)"
+                ,"  last_name VARCHAR(256),"
+                ,"  user_id SERIAL NOT NULL,"
+                ,"  first_name VARCHAR(256),"
+                ,"  user_name VARCHAR(256) NOT NULL,"
+                ,"  permissions xml,"
+                ,"  PRIMARY KEY (user_id)"
                 ,");"
                 ,""
                 ,"CREATE TABLE spyne_user_permission ("
-                ,"        permission_id SERIAL NOT NULL, "
-                ,"        app VARCHAR(256), "
-                ,"        op VARCHAR(256), "
-                ,"        spyne_user_user_id INTEGER, "
-                ,"        PRIMARY KEY (permission_id),"
-                ,"        FOREIGN KEY(spyne_user_user_id) REFERENCES spyne_user (user_id)"
+                ,"  permission_id SERIAL NOT NULL,"
+                ,"  app VARCHAR(256),"
+                ,"  op VARCHAR(256),"
+                ,"  spyne_user_user_id INTEGER,"
+                ,"  PRIMARY KEY (permission_id),"
+                ,"  FOREIGN KEY(spyne_user_user_id)"
+                ,"              REFERENCES spyne_user (user_id)"
                 ,");"
             ]
             ,SqlMtm: [
                  "CREATE TABLE spyne_user_permission ("
-                ,"        permission_id SERIAL NOT NULL, "
-                ,"        app VARCHAR(256), "
-                ,"        op VARCHAR(256), "
-                ,"        PRIMARY KEY (permission_id)"
+                ,"  permission_id SERIAL NOT NULL,"
+                ,"  app VARCHAR(256),"
+                ,"  op VARCHAR(256),"
+                ,"  PRIMARY KEY (permission_id)"
                 ,")"
                 ,""
                 ,"CREATE TABLE spyne_user ("
-                ,"        last_name VARCHAR(256), "
-                ,"        user_id SERIAL NOT NULL, "
-                ,"        first_name VARCHAR(256), "
-                ,"        user_name VARCHAR(256) NOT NULL, "
-                ,"        PRIMARY KEY (user_id)"
+                ,"  last_name VARCHAR(256),"
+                ,"  user_id SERIAL NOT NULL,"
+                ,"  first_name VARCHAR(256),"
+                ,"  user_name VARCHAR(256) NOT NULL,"
+                ,"  PRIMARY KEY (user_id)"
                 ,")"
                 ,""
                 ,"CREATE TABLE spyne_user_permissions ("
-                ,"        spyne_user_user_id INTEGER, "
-                ,"        permissions_permission_id INTEGER, "
-                ,"        FOREIGN KEY(spyne_user_user_id) REFERENCES spyne_user (user_id), "
-                ,"        FOREIGN KEY(permissions_permission_id) REFERENCES spyne_user_permission (permission_id)"
+                ,"  spyne_user_user_id INTEGER,"
+                ,"  permissions_permission_id INTEGER,"
+                ,"  FOREIGN KEY(spyne_user_user_id)"
+                ,"       REFERENCES spyne_user (user_id),"
+                ,"  FOREIGN KEY(permissions_permission_id)"
+                ,"       REFERENCES spyne_user_permission (permission_id)"
                 ,")"
             ]
         }
         ,Data: {
             None: [
-                 "BEGIN;"
-                ,"-- Note that permissions attribute is not"
+                 "-- Note that permissions attribute is not"
                 ,"-- stored."
+                ,"BEGIN;"
                 ,"INSERT INTO spyne_user"
                 ,"        (last_name, first_name, user_name)"
                 ,"        VALUES ('Smith', 'John', 'js');"
                 ,"COMMIT;"
             ]
             ,Json: [
-                ,"BEGIN;"
+                 "BEGIN;"
                 ,"INSERT INTO spyne_user"
                 ,"       (last_name, first_name, user_name,"
                 ,"                     permissions)"
@@ -545,7 +535,7 @@ $(document).ready(function(){
                 ,"COMMIT;"
             ]
             ,Xml: [
-                ,"BEGIN;"
+                 "BEGIN;"
                 ,"INSERT INTO spyne_user"
                 ,"       (last_name, first_name, user_name,"
                 ,"                     permissions)"
@@ -555,7 +545,7 @@ $(document).ready(function(){
                 ,"COMMIT;"
             ]
             ,SqlOtm: [
-                ,"BEGIN;"
+                 "BEGIN;"
                 ,"INSERT INTO spyne_user"
                 ,"       (last_name, first_name, user_name)"
                 ,"       VALUES ('Smith', 'John', 'js');"
@@ -605,7 +595,15 @@ $(document).ready(function(){
         if (! hide_sqla) {
             code = code.concat(db_boilerplate)
         }
-        code = code.concat(db_objects);
+
+        if (ser == "SqlOtm" || ser == "SqlMtm") {
+            code = code.concat(obj_perm_db)
+        }
+        else {
+            code = code.concat(obj_perm)
+        }
+
+        code = code.concat(obj_user);
 
         if (db_user_perms_col[ser]) {
             code = code.concat(db_user_perms_col[ser].code);
