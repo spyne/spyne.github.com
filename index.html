@@ -243,7 +243,7 @@ $(document).ready(function(){
 
         // validation
         if (validation == "true") {
-            if (inprot == "Soap11") {
+            if (inprot == "Soap11" || inprot == "XmlDocument") {
                 validation = 'validator="lxml"';
             }
             else {
