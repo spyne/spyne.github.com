@@ -397,37 +397,43 @@ $(document).ready(function(){
 
     var db_user_perms_col = {
          None: {
-            code: ["    permissions = Array(Permission)"],
-            imports: []
+             code: [
+                 "    permissions = Array(Permission)"
+            ]
+            ,imports: []
         }
         ,Json: {
-            code: ["    permissions = Array(Permission).store_as(json())"],
-            imports: ['from spyne.model.complex import json']
+             code: [
+                 "    permissions = Array(Permission).store_as(json())"
+            ]
+            ,imports: ['from spyne.model.complex import json']
         }
         ,Xml: {
-            code: [
+             code: [
                  "    permissions = Array(Permission).store_as("
-                ,"                                       xml(no_ns=True))"
-            ],
-            imports: ['from spyne.model.complex import xml']
+                ,"                                        xml(no_ns=True))"
+            ]
+            ,imports: ['from spyne.model.complex import xml']
         }
         ,SqlOtm: {
-            code: ["    permissions = Array(Permission).store_as('table')"],
-            imports: []
+             code: [
+                 "    permissions = Array(Permission).store_as('table')"
+            ]
+            ,imports: []
         }
         ,SqlMtm: {
-            code: [
+             code: [
                  "    permissions = Array(Permission).store_as("
-                ,"                                    table(multi=True))"
-            ],
-            imports: ['from spyne.model.complex import table']
+                ,"                                     table(multi=True))"
+            ]
+            ,imports: ['from spyne.model.complex import table']
         }
     }
 
     var show_sql = {
         Schema: [
              'TableModel.Attributes.sqla_metadata.create_all('
-            ,'                                    checkfirst=True)'
+            ,'                                        checkfirst=True)'
         ],
         Data: [
              'session = Session()'
