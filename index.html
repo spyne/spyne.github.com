@@ -407,6 +407,10 @@ $(document).ready(function(){
                 "/examples/"+example_url+"\">A "+tpt+" Example</a>"
             );
         }
+        else {
+            $("span.code_link").html('<span style="font-size: 12px">' +
+                "Write a " + tpt + " example and send a pull request!</span>");
+        }
 
         div.children("pre#code").text(retval.join("\n"));
         div.children("pre#code").snippet("python", {
