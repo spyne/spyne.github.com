@@ -386,6 +386,14 @@ a.docs:hover {
     text-decoration: none;
 }
 
+a.pypi {
+    -webkit-font-smoothing: antialiased;
+    background: url(../images/python.png) no-repeat 0 2px;
+    font-weight: normal;
+    text-shadow: rgba(0, 0, 0, 0.4) 0 -1px 0;
+    padding: 2px 2px 2px 22px;
+    height: 30px;
+}
 a.blog {
     -webkit-font-smoothing: antialiased;
     background: url(../images/baloon.png) no-repeat 0 2px;
