@@ -416,10 +416,20 @@ $(document).ready(function(){
 
         if (prot_client[inprot]) {
             var g = [].concat(prot_client[inprot])
-            if (inprot == 'HttpRpc' && outprot == 'MessagePackDocument') {
-                // Add hexdump to curl call.
-                g[0] += " \\";
-                g.push("                                                | hexdump -C")
+            if (inprot == 'HttpRpc') {
+                if (outprot == 'MessagePackDocument') {
+                    // Add hexdump to curl call.
+                    g[0] += " \\";
+                    g.push("                                                | hexdump -C");
+                }
+                else if (outprot == "XmlDocument" || outprot == "Soap11") {
+                    g[0] += " \\";
+                    g.push("                                 | tidy -xml -indent -wrap 0");
+                }
+                else if (outprot == "JsonDocument") {
+                    g[0] += " \\";
+                    g.push("                                       | python -m json.tool");
+                }
             }
             div.children("pre#client").text(g.join("\n"));
         }
@@ -919,15 +929,15 @@ $(function() {
         <small>Tame the interwebs.</small>
 
         <p class="header"><span style="font-weight: bold">Latest release:</span> <br/>
-                Spyne <span id="version">2.9.2</span> <br />
-                Nov. 2nd, 2012 <br />
+                Spyne <span id="version">2.9.3</span> <br />
+                Nov. 11th, 2012 <br />
                 <a href="http://travis-ci.org/arskom/spyne">
                     <img src="https://secure.travis-ci.org/arskom/spyne.png">
                 </a>
         </p>
     </div>
     <ul>
-        <li class="download"><a class="buttons" href="https://github.com/arskom/spyne/tarball/spyne-2.9.2">Download</a></li>
+        <li class="download"><a class="buttons" href="https://github.com/arskom/spyne/tarball/spyne-2.9.3">Download</a></li>
         <li class="download"><a class="docs" href="docs/index.html">Docs</a></li>
         <li class="buttons"><a class="blog" href="blog/index.html">Blog</a></li>
         <li><a class="buttons github" href="https://github.com/arskom/spyne">GitHub</a></li>
@@ -942,7 +952,7 @@ $(function() {
         that have a well-defined API using multiple protocols and transports.</p>
 
     <p>It integrates with popular Python web frameworks as well as libraries like
-        <a href="https://github.com/arskom/spyne/blob/spyne-2.9.2/examples/user_manager/server_sqlalchemy.py">SQLAlchemy</a>
+        <a href="https://github.com/arskom/spyne/blob/spyne-2.9.3/examples/user_manager/server_sqlalchemy.py">SQLAlchemy</a>
         to keep your code as
         <a href="http://c2.com/cgi/wiki?DontRepeatYourself">DRY</a> as possible.</p>
 

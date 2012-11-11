@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.model._base &mdash; spyne 2.9.2 documentation</title>
+    <title>spyne.model._base &mdash; spyne 2.9.3 documentation</title>
     
     <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.9.2',
+        VERSION:     '2.9.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.9.2 documentation" href="../../../index.html" />
+    <link rel="top" title="spyne 2.9.3 documentation" href="../../../index.html" />
     <link rel="up" title="spyne" href="../../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.9.2 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.9.3 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -382,10 +382,6 @@
             <span class="k">elif</span> <span class="n">k</span> <span class="o">==</span> <span class="s">&#39;max_occurs&#39;</span> <span class="ow">and</span> <span class="n">v</span> <span class="o">==</span> <span class="s">&#39;unbounded&#39;</span><span class="p">:</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">Attributes</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s">&#39;inf&#39;</span><span class="p">))</span>
 
-            <span class="k">elif</span> <span class="n">k</span> <span class="o">==</span> <span class="s">&#39;pattern&#39;</span><span class="p">:</span>
-                <span class="n">Attributes</span><span class="o">.</span><span class="n">_pattern_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="n">Attributes</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">Attributes</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 
@@ -427,6 +423,18 @@
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">ModelBase</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
 <div class="viewcode-block" id="SimpleModel.Attributes"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.SimpleModel.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;The class that holds the constraints for the given type.&quot;&quot;&quot;</span>
+
+        <span class="k">class</span> <span class="nc">__metaclass__</span><span class="p">(</span><span class="n">AttributesMeta</span><span class="p">):</span>
+            <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">):</span>
+                <span class="n">AttributesMeta</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__pattern</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">def</span> <span class="nf">get_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pattern</span>
+            <span class="k">def</span> <span class="nf">set_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__pattern</span> <span class="o">=</span> <span class="n">pattern</span>
+                <span class="k">if</span> <span class="n">pattern</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_pattern_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_pattern</span><span class="p">,</span> <span class="n">set_pattern</span><span class="p">)</span>
 
         <span class="n">values</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="sd">&quot;&quot;&quot;The set of possible values for this type.&quot;&quot;&quot;</span>
@@ -474,7 +482,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.9.2 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.9.3 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
       </ul>
