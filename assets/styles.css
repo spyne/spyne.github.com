@@ -394,6 +394,11 @@ a.pypi {
     padding: 2px 2px 2px 22px;
     height: 30px;
 }
+a.pypi:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
 a.blog {
     -webkit-font-smoothing: antialiased;
     background: url(../images/baloon.png) no-repeat 0 2px;
