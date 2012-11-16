@@ -234,7 +234,7 @@ pre {
 
 div.code {
     float: right;
-    width: 510px;
+    width: 530px;
 }
 
 /* Tables */
@@ -474,11 +474,6 @@ div.parameters {
 
     div.header_title {
         float: left;
-    }
-
-    div.code {
-        float: right;
-        width: 510px;
     }
 }
 
