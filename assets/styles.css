@@ -240,16 +240,17 @@ div.code {
 /* Tables */
 
 table.mini {
+    width: auto;
     margin: 2px 2px 2px 2px;
     border: 0;
 }
 td.mini {
     padding: 0px;
-    background: #000;
+    background: transparent;
 }
 td.mini_r {
     padding: 0px;
-    background: #000;
+    background: transparent;
     text-align: right;
     padding-right: 4px;
 }
