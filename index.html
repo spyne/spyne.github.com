@@ -13,7 +13,6 @@
     <script src="assets/jquery.snippet.min.js"></script>
     <script src="assets/jquery.ba-bbq.min.js"></script>
     <script type="text/javascript">
-
 db_params_pos = null; // FIXME: come on, this isn't THAT bad :)
 aux_params_pos = null;
 
@@ -77,9 +76,9 @@ $(document).ready(function(){
         ,JsonDocument: [
              '# The following two requests are equivalent:'
             ,'$ curl  http://localhost:7789/ -d \\'
-            ,'                  \'{"say_hello": {"name": "World", "times":5}}\''
+            ,'              \'{"say_hello": {"name": "World", "times":5}}\''
             ,'$ curl  http://localhost:7789/ -d \\'
-            ,'                  \'{"say_hello": ["World", 5]}\''
+            ,'              \'{"say_hello": ["World", 5]}\''
         ]
     }
 
@@ -200,7 +199,7 @@ $(document).ready(function(){
 
     var tpt_code = {
         WsgiApplication: [
-             "if __name__=='__main__':"
+             "if __name__ == '__main__':"
             ,"    # You can use any Wsgi server. Here, we chose"
             ,"    # Python's built-in wsgi server but you're not"
             ,"    # supposed to use it in production."
@@ -212,14 +211,14 @@ $(document).ready(function(){
         ]
 
         ,ZeroMQServer: [
-             "if __name__=='__main__':"
+             "if __name__ == '__main__':"
             ,"    wsgi_app = ZeroMQServer(application,"
             ,"                           'tcp://0.0.0.0:5555')"
             ,"    server.serve_forever()"
         ]
 
         ,TwistedWebResource: [
-             "if __name__=='__main__':"
+             "if __name__ == '__main__':"
             ,"    resource = TwistedWebResource(application)"
             ,"    site = Site(resource)"
             ,""
@@ -308,7 +307,7 @@ $(document).ready(function(){
         var inprot = $('input[name=inprot]:checked').val();
         var outprot = $('input[name=outprot]:checked').val();
         var tpt = $('input[name=tpt]:checked').val();
-        var validator = $('input[name=validation]:checked').val();
+        var validator = $('input[name=validator]:checked').val();
 
         if ($('#tabs').tabs('option', 'active') == 0) {
           window.location.href = $.param.fragment('', {
@@ -320,7 +319,7 @@ $(document).ready(function(){
           });
         }
 
-        // validation
+        // validator
         if (validator == "true") {
             if (inprot == "Soap11" || inprot == "XmlDocument") {
                 validator = 'lxml';
@@ -328,6 +327,9 @@ $(document).ready(function(){
             else {
                 validator = 'soft';
             }
+        }
+        else {
+            validator='';
         }
 
         // imports
@@ -1118,9 +1120,9 @@ $(document).ready(function(){
                         <label><input class="param_rpc" type="radio" name="tpt" value="ZeroMQServer" /> ZeroMQ (REQ/REP)</label> <br/>
                     </fieldset>
                     <fieldset>
-                        <legend>Validation:</legend>
-                        <label><input class="param_rpc" type="radio" name="validation" value="true" checked /> Enabled</label> <br/>
-                        <label><input class="param_rpc" type="radio" name="validation" value="" /> Disabled</label> <br/>
+                        <legend>Validator:</legend>
+                        <label><input class="param_rpc" type="radio" name="validator" value="true" checked /> Enabled</label> <br/>
+                        <label><input class="param_rpc" type="radio" name="validator" value="false" /> Disabled</label> <br/>
                     </fieldset>
                 </form>
             </div>
@@ -1193,5 +1195,8 @@ $(document).ready(function(){
 </footer>
 
 <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+
+
+
 </body>
 </html>
