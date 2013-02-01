@@ -11,6 +11,7 @@
     <script src="assets/jquery-ui-1.9.1.custom.min.js"></script>
 
     <script src="assets/jquery.snippet.min.js"></script>
+    <script src="assets/jquery.ba-bbq.min.js"></script>
     <script type="text/javascript">
 
 db_params_pos = null; // FIXME: come on, this isn't THAT bad :)
@@ -308,6 +309,16 @@ $(document).ready(function(){
         var outprot = $('input[name=outprot]:checked').val();
         var tpt = $('input[name=tpt]:checked').val();
         var validator = $('input[name=validation]:checked').val();
+
+        if ($('#tabs').tabs('option', 'active') == 0) {
+          window.location.href = $.param.fragment('', {
+             s: 'rpc'
+            ,inprot: inprot
+            ,outprot: outprot
+            ,tpt: tpt
+            ,validator: validator ? 'true' : 'false'
+          });
+        }
 
         // validation
         if (validator == "true") {
@@ -722,6 +733,14 @@ $(document).ready(function(){
         var ser = $('input[name=ser]:checked').val();
         var show = $('input[name=show]:checked').val();
 
+        if ($('#tabs').tabs('option', 'active') == 1) {
+          window.location.href = $.param.fragment('', {
+             s: 'sql'
+            ,ser: ser
+            ,show: show
+          });
+        }
+
         imports = imports.concat(db_imports).concat([""]);
         imports = imports.concat(gen_imports).concat([""]);
 
@@ -826,6 +845,13 @@ $(document).ready(function(){
         var version = $("span#version").text();
         var auxproc = $('input[name=auxproc]:checked').val();
 
+        if ($('#tabs').tabs('option', 'active') == 2) {
+          window.location.href = $.param.fragment('', {
+             s: 'aux'
+            ,auxproc: auxproc
+          });
+        }
+
         // imports
         if (! hide_imports) {
             server = server.concat(gen_imports).concat([
@@ -899,30 +925,75 @@ $(document).ready(function(){
         div.css("height", "auto");
     }
 
-    regen_code_rpc();
-    regen_code_db();
-    regen_code_aux();
 
-    $("input.param_rpc").click(function(e) {
+    $("input.param_rpc").change(function(e) {
         regen_code_rpc();
     });
-    $("input.param_db").click(function(e) {
+    $("input.param_db").change(function(e) {
         regen_code_db();
     });
-    $("input.param_aux").click(function(e) {
+    $("input.param_aux").change(function(e) {
         regen_code_aux();
     });
-});
 
-$(function() {
-    $("#tabs").tabs({activate: function(e,u) {
+    /*
+     * TABS
+     */
+    $('#tabs').tabs({activate: function(e, u) {
         if (u.newPanel[0].id == 'tabs-2') {
             db_params_pos = $("#db_parameters").offset().top;
+            regen_code_db();
         }
         if (u.newPanel[0].id == 'tabs-3') {
             aux_params_pos = $("#aux_parameters").offset().top;
+            regen_code_aux();
         }
     }});
+
+    params=$.deparam.fragment();
+
+    s_map={'rpc':0, 'sql': 1, 'aux': 2}
+    if (params.s && s_map[params.s]) {
+      $("#tabs").tabs("option", "active", s_map[params.s]);
+    }
+    if (params.s && s_map[params.s] && params.s == 'rpc') {
+      if (params.inprot) {
+        $('input[name=inprot]').attr("checked", false);
+        $('input[name=inprot][value='+params.inprot+']').attr("checked", true);
+      }
+      if (params.outprot) {
+        $('input[name=outprot]').attr("checked", false);
+        $('input[name=outprot][value='+params.outprot+']').attr("checked", true);
+      }
+      if (params.validator) {
+        $('input[name=validator]').attr("checked", false);
+        $('input[name=validator][value='+params.validator+']').attr("checked", true);
+      }
+      if (params.tpt) {
+        $('input[name=tpt]').attr("checked", false);
+        $('input[name=tpt][value='+params.tpt+']').attr("checked", true);
+      }
+    }
+    if (params.s && s_map[params.s] && params.s == 'sql') {
+      if (params.ser) {
+        $('input[name=ser]').attr("checked", false);
+        $('input[name=ser][value='+params.ser+']').attr("checked", true);
+      }
+      if (params.show) {
+        $('input[name=show]').attr("checked", false);
+        $('input[name=show][value='+params.show+']').attr("checked", true);
+      }
+    }
+    if (params.s && s_map[params.s] && params.s == 'aux') {
+      if (params.auxproc) {
+        $('input[name=auxproc]').attr("checked", false);
+        $('input[name=auxproc][value='+params.auxproc+']').attr("checked", true);
+      }
+    }
+
+    regen_code_db();
+    regen_code_rpc();
+    regen_code_aux();
 });
     </script>
 
