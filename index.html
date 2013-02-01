@@ -72,7 +72,14 @@ $(document).ready(function(){
 
     // TODO: Fill these up.
     var prot_client = {
-        HttpRpc: ['$ curl "http://localhost:7789/say_hello?name=World&times=4"']
+         HttpRpc: ['$ curl "http://localhost:7789/say_hello?name=World&times=4"']
+        ,JsonDocument: [
+             '# The following two requests are equivalent:'
+            ,'$ curl  http://localhost:7789/ -d \\'
+            ,'                  \'{"say_hello": {"name": "World", "times":5}}\''
+            ,'$ curl  http://localhost:7789/ -d \\'
+            ,'                  \'{"say_hello": ["World", 5]}\''
+        ]
     }
 
     var prot_response = {
