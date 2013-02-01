@@ -453,6 +453,25 @@ $(document).ready(function(){
                     g.push("                                        | python -m json.tool");
                 }
             }
+            else if (inprot == 'JsonDocument') {
+                if (outprot == 'MessagePackDocument') {
+                    // Add hexdump to curl call.
+                    g[2] += " \\";
+                    g[4] += " \\";
+                    g.splice(5, 0, "                                                 | hexdump -C");
+                    g.splice(3, 0, "                                                 | hexdump -C");
+                }
+                else if (outprot == "XmlDocument" || outprot == "Soap11") {
+                    g[0] += " \\";
+                    g.push("                                  | tidy -xml -indent -wrap 0");
+                }
+                else if (outprot == "JsonDocument") {
+                    g[2] += " \\";
+                    g[4] += " \\";
+                    g.splice(5, 0, "                                        | python -m json.tool");
+                    g.splice(3, 0, "                                        | python -m json.tool");
+                }
+            }
             div.children("pre#client").text(g.join("\n"));
         }
         else {
