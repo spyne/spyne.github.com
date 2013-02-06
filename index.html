@@ -440,36 +440,32 @@ $(document).ready(function(){
 
         if (prot_client[inprot]) {
             var g = [].concat(prot_client[inprot])
+
+            // append prettifiers to the curl call.
             if (inprot == 'HttpRpc') {
+                g[0] += " \\";
                 if (outprot == 'MessagePackDocument') {
-                    // Add hexdump to curl call.
-                    g[0] += " \\";
                     g.push("                                                 | hexdump -C");
                 }
                 else if (outprot == "XmlDocument" || outprot == "Soap11") {
-                    g[0] += " \\";
                     g.push("                                  | tidy -xml -indent -wrap 0");
                 }
                 else if (outprot == "JsonDocument") {
-                    g[0] += " \\";
                     g.push("                                        | python -m json.tool");
                 }
             }
             else if (inprot == 'JsonDocument') {
+                g[4] += " \\";
+                g[2] += " \\";
                 if (outprot == 'MessagePackDocument') {
-                    // Add hexdump to curl call.
-                    g[2] += " \\";
-                    g[4] += " \\";
                     g.splice(5, 0, "                                                 | hexdump -C");
                     g.splice(3, 0, "                                                 | hexdump -C");
                 }
                 else if (outprot == "XmlDocument" || outprot == "Soap11") {
-                    g[0] += " \\";
-                    g.push("                                  | tidy -xml -indent -wrap 0");
+                    g.splice(5, 0, "                                  | tidy -xml -indent -wrap 0");
+                    g.splice(3, 0, "                                  | tidy -xml -indent -wrap 0");
                 }
                 else if (outprot == "JsonDocument") {
-                    g[2] += " \\";
-                    g[4] += " \\";
                     g.splice(5, 0, "                                        | python -m json.tool");
                     g.splice(3, 0, "                                        | python -m json.tool");
                 }
