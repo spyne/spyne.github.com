@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.model.primitive &mdash; spyne 2.9.3 documentation</title>
+    <title>spyne.model.primitive &mdash; spyne 2.9.4 documentation</title>
     
     <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.9.3',
+        VERSION:     '2.9.4',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.9.3 documentation" href="../../../index.html" />
+    <link rel="top" title="spyne 2.9.4 documentation" href="../../../index.html" />
     <link rel="up" title="spyne" href="../../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.9.3 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.9.4 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -97,6 +97,7 @@
 <span class="kn">import</span> <span class="nn">pytz</span>
 <span class="kn">import</span> <span class="nn">decimal</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">platform</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">import</span> <span class="nn">spyne.const.xml_ns</span>
@@ -126,24 +127,24 @@
                                                             <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="s">&#39;[a-fA-F0-9]&#39;</span><span class="p">}</span>
 
 <span class="k">def</span> <span class="nf">_get_one_point_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="s">&#39; *&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">FLOAT_PATTERN</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&#39; +&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">FLOAT_PATTERN</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">_get_point_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s">&#39;POINT</span><span class="se">\\</span><span class="s">(</span><span class="si">%s</span><span class="se">\\</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="n">_get_one_point_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&#39;POINT *</span><span class="se">\\</span><span class="s">(</span><span class="si">%s</span><span class="se">\\</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="n">_get_one_point_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">_get_one_line_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
     <span class="n">one_point</span> <span class="o">=</span> <span class="n">_get_one_point_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
     <span class="k">return</span> <span class="s">&#39;</span><span class="se">\\</span><span class="s">(</span><span class="si">%s</span><span class="s"> *(, *</span><span class="si">%s</span><span class="s">)*</span><span class="se">\\</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">one_point</span><span class="p">,</span> <span class="n">one_point</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">_get_linestring_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s">&#39;LINESTRING</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">_get_one_line_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&#39;LINESTRING *</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">_get_one_line_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">_get_one_polygon_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
     <span class="n">one_line</span> <span class="o">=</span> <span class="n">_get_one_line_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
     <span class="k">return</span> <span class="s">&#39;</span><span class="se">\\</span><span class="s">(</span><span class="si">%s</span><span class="s"> *(, *</span><span class="si">%s</span><span class="s">)*</span><span class="se">\\</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">one_line</span><span class="p">,</span> <span class="n">one_line</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">_get_polygon_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s">&#39;POLYGON</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">_get_one_polygon_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&#39;POLYGON *</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">_get_one_polygon_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
 
 
 <span class="n">_local_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">DATETIME_PATTERN</span><span class="p">)</span>
@@ -391,9 +392,9 @@
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;fraction_digits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;fraction_digits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="k">assert</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s">&quot;Total digits should be greater than&quot;</span> \
+                <span class="k">assert</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&quot;Total digits should be greater than&quot;</span> \
                                           <span class="s">&quot; or equal to fraction digits.&quot;</span> \
-                                          <span class="s">&quot; </span><span class="si">%r</span><span class="s"> ! &lt;= </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                                          <span class="s">&quot; </span><span class="si">%r</span><span class="s"> ! &lt;= </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
         <span class="n">retval</span> <span class="o">=</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span>  <span class="o">**</span> <span class="n">kwargs</span><span class="p">)</span>
 
@@ -454,9 +455,39 @@
 
 <span class="k">class</span> <span class="nc">Double</span><span class="p">(</span><span class="n">Decimal</span><span class="p">):</span></div>
 <div class="viewcode-block" id="Double"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Double">[docs]</a>    <span class="sd">&quot;&quot;&quot;This is serialized as the python ``float``. So this type comes with its</span>
-<span class="sd">     gotchas.&quot;&quot;&quot;</span>
+<span class="sd">     gotchas. Unless you really know what you&#39;re doing, you should use a</span>
+<span class="sd">     :class:`Decimal` with a pre-defined number of integer and decimal digits.</span>
+<span class="sd">     &quot;&quot;&quot;</span>
 
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;double&#39;</span>
+
+    <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">python_version_tuple</span><span class="p">()[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="s">&#39;2&#39;</span><span class="p">,</span><span class="s">&#39;6&#39;</span><span class="p">):</span>
+        <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Decimal</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Customizable attributes of the :class:`spyne.model.primitive.Double`</span>
+<span class="sd">            type. This class is only here for Python 2.6: See this bug report</span>
+<span class="sd">            for more info: http://bugs.python.org/issue2531</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+
+            <span class="n">gt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s">&#39;-inf&#39;</span><span class="p">)</span> <span class="c"># minExclusive</span>
+            <span class="sd">&quot;&quot;&quot;The value should be greater than this number.&quot;&quot;&quot;</span>
+
+            <span class="n">ge</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s">&#39;-inf&#39;</span><span class="p">)</span> <span class="c"># minInclusive</span>
+            <span class="sd">&quot;&quot;&quot;The value should be greater than or equal to this number.&quot;&quot;&quot;</span>
+
+            <span class="n">lt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s">&#39;inf&#39;</span><span class="p">)</span> <span class="c"># maxExclusive</span>
+            <span class="sd">&quot;&quot;&quot;The value should be lower than this number.&quot;&quot;&quot;</span>
+
+            <span class="n">le</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s">&#39;inf&#39;</span><span class="p">)</span> <span class="c"># maxInclusive</span>
+            <span class="sd">&quot;&quot;&quot;The value should be lower than or equal to this number.&quot;&quot;&quot;</span>
+
+        <span class="nd">@staticmethod</span>
+        <span class="k">def</span> <span class="nf">is_default</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span>    <span class="n">SimpleModel</span><span class="o">.</span><span class="n">is_default</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+                    <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">gt</span> <span class="o">==</span> <span class="n">Double</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">gt</span>
+                    <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">ge</span> <span class="o">==</span> <span class="n">Double</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">ge</span>
+                    <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">lt</span> <span class="o">==</span> <span class="n">Double</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">lt</span>
+                    <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">le</span> <span class="o">==</span> <span class="n">Double</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">le</span>
+                <span class="p">)</span>
 
     <span class="nd">@classmethod</span>
     <span class="nd">@nillable_string</span>
@@ -1033,7 +1064,7 @@
 
 <span class="k">class</span> <span class="nc">Polygon</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span></div>
 <div class="viewcode-block" id="Polygon"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Polygon">[docs]</a>    <span class="sd">&quot;&quot;&quot;An experimental point type whose native format is WKT. You can use</span>
-<span class="sd">    :func:`shapely.wkt.loads` to get a proper point type.&quot;&quot;&quot;</span>
+<span class="sd">    :func:`shapely.wkt.loads` to get a proper polygon type.&quot;&quot;&quot;</span>
 
     <span class="n">__base_type__</span> <span class="o">=</span> <span class="n">Unicode</span>
 
@@ -1159,7 +1190,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.9.3 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.9.4 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
       </ul>
