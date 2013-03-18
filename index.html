@@ -59,9 +59,12 @@ $(document).ready(function(){
         ,"from spyne.application import Application"
         ,"from spyne.decorator import srpc"
         ,"from spyne.service import ServiceBase"
-        ,"from spyne.model.complex import Array"
         ,"from spyne.model.primitive import Integer"
         ,"from spyne.model.primitive import Unicode"
+    ]
+
+    var rpc_imports = [
+         "from spyne.model.complex import Iterable"
     ]
 
     var prot_imports = {
@@ -344,6 +347,9 @@ $(document).ready(function(){
             retval = retval.concat(gen_imports);
             retval.push("")
 
+            retval = retval.concat(rpc_imports);
+            retval.push("")
+
             // protocol imports
             retval.push(prot_imports[inprot]);
             if (prot_imports[inprot] != prot_imports[outprot]) {
@@ -384,7 +390,7 @@ $(document).ready(function(){
         // user code
         retval = retval.concat([
              "class HelloWorldService(ServiceBase):"
-            ,"    @srpc(Unicode, Integer, _returns=Array(Unicode))"
+            ,"    @srpc(Unicode, Integer, _returns=Iterable(Unicode))"
             ,"    def say_hello(name, times):"
             ,"        for i in range(times):"
             ,"            yield 'Hello, %s' % name"
@@ -503,6 +509,7 @@ $(document).ready(function(){
         ,'from sqlalchemy import MetaData'
         ,'from sqlalchemy.orm import sessionmaker'
         ,''
+        ,"from spyne.model.complex import Array"
         ,'from spyne.model.primitive import Integer32'
         ,'from spyne.model.complex import TTableModel'
         ,'from spyne.server.wsgi import WsgiApplication'
