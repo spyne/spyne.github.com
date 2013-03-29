@@ -1,0 +1,1136 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>History and Future &mdash; spyne 2.10.0 documentation</title>
+    
+    <link rel="stylesheet" href="static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.10.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="spyne 2.10.0 documentation" href="index.html" />
+    <link rel="prev" title="Spyne FAQ" href="faq.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="faq.html" title="Spyne FAQ"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">spyne 2.10.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">History and Future</a><ul>
+<li><a class="reference internal" href="#versioning">Versioning</a></li>
+<li><a class="reference internal" href="#roadmap-and-criticism">Roadmap and Criticism</a></li>
+<li><a class="reference internal" href="#comparison-with-other-rpc-frameworks">Comparison with other rpc frameworks</a><ul>
+<li><a class="reference internal" href="#ladon">Ladon</a></li>
+<li><a class="reference internal" href="#wsme">WSME</a></li>
+<li><a class="reference internal" href="#rpyc">RPyC</a></li>
+<li><a class="reference internal" href="#rfoo">rfoo</a></li>
+<li><a class="reference internal" href="#suds">Suds</a></li>
+<li><a class="reference internal" href="#zsi">ZSI</a></li>
+<li><a class="reference internal" href="#soapy">SOAPy</a></li>
+<li><a class="reference internal" href="#rsl">rsl</a></li>
+<li><a class="reference internal" href="#pyro">PyRo</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id1">Changelog</a><ul>
+<li><a class="reference internal" href="#spyne-2-10-0">spyne-2.10.0</a></li>
+<li><a class="reference internal" href="#spyne-2-9-4">spyne-2.9.4</a></li>
+<li><a class="reference internal" href="#spyne-2-9-3">spyne-2.9.3</a></li>
+<li><a class="reference internal" href="#spyne-2-9-2">spyne-2.9.2</a></li>
+<li><a class="reference internal" href="#spyne-2-9-0">spyne-2.9.0</a></li>
+<li><a class="reference internal" href="#spyne-2-8-2-rc">spyne-2.8.2-rc</a></li>
+<li><a class="reference internal" href="#spyne-2-8-1-rc">spyne-2.8.1-rc</a></li>
+<li><a class="reference internal" href="#rpclib-2-8-0-rc-spyne-2-8-0-rc">rpclib-2.8.0-rc -&gt; spyne-2.8.0-rc</a></li>
+<li><a class="reference internal" href="#rpclib-2-7-0-beta">rpclib-2.7.0-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-6-1-beta">rpclib-2.6.1-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-6-0-beta">rpclib-2.6.0-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-5-2-beta">rpclib-2.5.2-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-5-1-beta">rpclib-2.5.1-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-5-0-beta">rpclib-2.5.0-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-4-7-beta">rpclib-2.4.7-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-4-5-beta">rpclib-2.4.5-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-4-3-beta">rpclib-2.4.3-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-4-1-beta">rpclib-2.4.1-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-4-0-beta">rpclib-2.4.0-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-3-3-beta">rpclib-2.3.3-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-3-2-beta">rpclib-2.3.2-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-3-1-beta">rpclib-2.3.1-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-3-0-beta">rpclib-2.3.0-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-2-3-beta">rpclib-2.2.3-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-2-2-beta">rpclib-2.2.2-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-2-1-beta">rpclib-2.2.1-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-2-0-beta">rpclib-2.2.0-beta</a></li>
+<li><a class="reference internal" href="#rpclib-2-1-0-alpha">rpclib-2.1.0-alpha</a></li>
+<li><a class="reference internal" href="#rpclib-2-0-10-alpha">rpclib-2.0.10-alpha</a></li>
+<li><a class="reference internal" href="#rpclib-2-0-9-alpha">rpclib-2.0.9-alpha</a></li>
+<li><a class="reference internal" href="#rpclib-2-0-8-alpha">rpclib-2.0.8-alpha</a></li>
+<li><a class="reference internal" href="#rpclib-2-0-7-alpha">rpclib-2.0.7-alpha</a></li>
+<li><a class="reference internal" href="#rpclib-2-0-6-alpha">rpclib-2.0.6-alpha</a></li>
+<li><a class="reference internal" href="#rpclib-2-0-5-alpha">rpclib-2.0.5-alpha</a></li>
+<li><a class="reference internal" href="#rpclib-2-0-4-alpha">rpclib-2.0.4-alpha</a></li>
+<li><a class="reference internal" href="#rpclib-2-0-3-alpha">rpclib-2.0.3-alpha</a></li>
+<li><a class="reference internal" href="#rpclib-2-0-2-alpha">rpclib-2.0.2-alpha</a></li>
+<li><a class="reference internal" href="#rpclib-2-0-1-alpha">rpclib-2.0.1-alpha</a></li>
+<li><a class="reference internal" href="#rpclib-2-0-0-alpha">rpclib-2.0.0-alpha</a></li>
+<li><a class="reference internal" href="#soaplib-3-x-rpclib-1-1-1-alpha">soaplib-3.x -&gt; rpclib-1.1.1-alpha</a></li>
+<li><a class="reference internal" href="#soaplib-2-x">soaplib-2.x</a></li>
+<li><a class="reference internal" href="#soaplib-1-0">soaplib-1.0</a></li>
+<li><a class="reference internal" href="#soaplib-0-9-4">soaplib-0.9.4</a></li>
+<li><a class="reference internal" href="#soaplib-0-9-3">soaplib-0.9.3</a></li>
+<li><a class="reference internal" href="#soaplib-0-9-2">soaplib-0.9.2</a></li>
+<li><a class="reference internal" href="#soaplib-0-9-1">soaplib-0.9.1</a></li>
+<li><a class="reference internal" href="#soaplib-0-9">soaplib-0.9</a></li>
+<li><a class="reference internal" href="#soaplib-0-8-1">soaplib-0.8.1</a></li>
+<li><a class="reference internal" href="#soaplib-0-8-0">soaplib-0.8.0</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="faq.html"
+                        title="previous chapter">Spyne FAQ</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/h_and_f.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="history-and-future">
+<span id="changelog"></span><h1>History and Future<a class="headerlink" href="#history-and-future" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="versioning">
+<h2>Versioning<a class="headerlink" href="#versioning" title="Permalink to this headline">¶</a></h2>
+<p>Spyne respects the &#8220;Semantic Versioning&#8221; rules outlined in <a class="reference external" href="http://semver.org">http://semver.org</a>.</p>
+<p>This means  you can do better than just adding <tt class="docutils literal"><span class="pre">'spyne'</span></tt> to your list of
+dependencies. Assuming the current version of spyne is 2.4.8,
+you can use the following as dependency string:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">spyne</span></tt> if you feel adventurous or are willing to work on spyne itself.</li>
+<li><tt class="docutils literal"><span class="pre">spyne&lt;2.99</span></tt> if you only want backwards-compatible bug fixes and new
+features.</li>
+<li><tt class="docutils literal"><span class="pre">spyne&lt;2.4.99</span></tt> if you only want backwards-compatible bug fixes.</li>
+<li><tt class="docutils literal"><span class="pre">spyne=2.4.8</span></tt> if you rather like that version.</li>
+</ul>
+<p>We have a policy of pushing to pypi as soon as possible, so be sure to at
+least use the second option to prevent things from breaking unexpectedly.</p>
+<p>Spyne project uses -alpha -beta and -rc labels to denote unfinished code. We
+don&#8217;t prefer using separate integers for experimental labels. So for example,
+instead of having 2.0.0-alpha47, we&#8217;ll have 2.2.5-alpha.</p>
+<ul class="simple">
+<li><strong>-alpha</strong> means unstable code. You may not recognize the project next time
+you look at it.</li>
+<li><strong>-beta</strong> means stable(ish) api, unstable behavior, there are bugs everywhere!
+Don&#8217;t be upset if some quirks that you rely on disappear.</li>
+<li><strong>-rc</strong> means it&#8217;s been working in production sans issues for some time on
+beta-testers&#8217; sites, but we&#8217;d still like it to have tested by a few more
+people.</li>
+</ul>
+<p>These labels apply to the project as a whole. Thus, we won&#8217;t tag the whole
+project as beta because some new feature is not yet well-tested, but we will
+clearly denote experimental code in its documentation.</p>
+</div>
+<div class="section" id="roadmap-and-criticism">
+<h2>Roadmap and Criticism<a class="headerlink" href="#roadmap-and-criticism" title="Permalink to this headline">¶</a></h2>
+<p>This is an attempt to make a free-for-all area to display opinions about
+possible feature directions of Spyne. Doing it in a text file in the source
+repository may not be the best approach for the job, but it should be enough to
+at least spark a discussion around this topic.</p>
+<p>The following would definitely be nice to have, but are just modules that should
+not cause a change in unrelated areas of Spyne.</p>
+<ul class="simple">
+<li>Support for polymorphism in XML Schema.</li>
+<li>Support for the JsonRpc protocol.</li>
+<li>Support for the JsonSchema interface document standard.</li>
+<li>Support for the Thrift binary protocol.</li>
+<li>Support for the Thrift IDL &#8211; The Thrift Interface Definition Language.</li>
+<li>Support for the MessagePack IDL.</li>
+<li>Support for the XmlRpc standard.</li>
+<li>Support for EXI &#8211; The Efficient Xml Interchange as a serializer.</li>
+<li>SMTP as client/server transport.</li>
+<li>SPDY as client/server transport.</li>
+<li>Support security extensions to Soap (maybe using <a class="reference external" href="http://pypi.python.org/pypi/PyXMLSec/0.3.0">PyXMLSec</a> ?)</li>
+<li>Support addressing (routing) extensions to Soap</li>
+<li>Add WSDL Parsing support to Soap client.</li>
+<li>Implement Soap 1.2 standard.</li>
+<li>Implement Wsdl 2.0 standard.</li>
+<li>Reflect transport and protocol pairs other than Soap/Http in the Wsdl.</li>
+<li>etc.</li>
+</ul>
+</div>
+<div class="section" id="comparison-with-other-rpc-frameworks">
+<span id="manual-comparison"></span><h2>Comparison with other rpc frameworks<a class="headerlink" href="#comparison-with-other-rpc-frameworks" title="Permalink to this headline">¶</a></h2>
+<p>RPC is a very popular subject. There&#8217;s a plethora of active and inactive
+projects that satisfy a wide range of requirements. Here are the main sources
+of information:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://pypi.python.org/pypi?%3Aaction=search&amp;term=rpc">http://pypi.python.org/pypi?%3Aaction=search&amp;term=rpc</a></li>
+<li><a class="reference external" href="http://www.ohloh.net/tags/python/rpc">http://www.ohloh.net/tags/python/rpc</a></li>
+<li><a class="reference external" href="http://stackoverflow.com/questions/1879971/what-is-the-current-choice-for-doing-rpc-in-python">http://stackoverflow.com/questions/1879971/what-is-the-current-choice-for-doing-rpc-in-python</a></li>
+</ul>
+<div class="section" id="ladon">
+<h3>Ladon<a class="headerlink" href="#ladon" title="Permalink to this headline">¶</a></h3>
+<p>The Ladon project has almost the same goals and same approach to the rpc-related
+issues as Spyne.</p>
+<p>Discussion thread: <a class="reference external" href="https://answers.launchpad.net/ladon/+question/171664">https://answers.launchpad.net/ladon/+question/171664</a></p>
+<ul>
+<li><p class="first">Supports JsonWSP protocol, which is JsonRpc with interface description. Spyne
+supports JsonDocument which serializes complex object hierarchies as nested
+dict objects.</p>
+</li>
+<li><p class="first">Supports both Python 2 and Python 3. Spyne is Python 2 only.</p>
+</li>
+<li><p class="first">Auto-generates human-readable API documentation.
+(example: <a class="reference external" href="http://ladonize.org/python-demos/AlbumService">http://ladonize.org/python-demos/AlbumService</a>) In Spyne, you need
+to do with the ugliness of a raw wsdl document.</p>
+</li>
+<li><p class="first">Uses standard python tools for xml parsing which is good for pure-python
+deployments. Spyne uses lxml, due to its excellent xml namespace support and
+speed. So Spyne is faster but more difficult to deploy.</p>
+</li>
+<li><p class="first">Does not support ZeroMQ as transport.</p>
+</li>
+<li><p class="first">Does not support MessagePack.</p>
+</li>
+<li><p class="first">Does not support HttpRpc.</p>
+</li>
+<li><p class="first">Does not do declarative input validation. Traditional (imperative) input
+validation is possible via a code injection mechanism similar to Spyne&#8217;s
+events.</p>
+</li>
+<li><p class="first">Does not have a Soap client. Spyne does, but it&#8217;s not that useful as it does
+not parse Wsdl documents.</p>
+<blockquote>
+<div><p>In fact, Ladon is pure server-side software - the whole idea of supporting a
+standard protocol like SOAP is that clients are already out there.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Spyne uses own classes for denoting types, whereas ladon uses Python
+callables. This lets ladon api to be simpler, but gives the Spyne api the
+power to have declarative restrictions on input types.</p>
+</li>
+<li><p class="first">Does not test against ws-i.org deliverables for testing soap compatibility.</p>
+</li>
+<li><p class="first">Does not support parsing and/or modifying protocol or transport headers.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="wsme">
+<h3>WSME<a class="headerlink" href="#wsme" title="Permalink to this headline">¶</a></h3>
+<p>&#8220;&#8221;&#8221;
+Web Service Made Easy (WSME) is a very easy way to implement webservices in your
+python web application. It is originally a rewrite of TGWebServices with focus
+on extensibility, framework-independance and better type handling.
+&#8220;&#8221;&#8220;</p>
+<ul class="simple">
+<li>Supports TurboGears</li>
+<li>Supports REST+Json, REST+Xml, (a subset of) SOAP and ExtDirect.</li>
+<li>Supports type validation.</li>
+<li>No client support.</li>
+<li>Does not test against ws-i.org deliverables for testing soap compatibility.</li>
+<li>Only supports http as transport.</li>
+<li>Uses genshi for Xml support.</li>
+</ul>
+</div>
+<div class="section" id="rpyc">
+<h3>RPyC<a class="headerlink" href="#rpyc" title="Permalink to this headline">¶</a></h3>
+<p>This is preliminary. Please correct these points if you spot any error.</p>
+<ul class="simple">
+<li>Uses own protocol</li>
+<li>Does not do validation.</li>
+<li>Python-specific.</li>
+<li>Fast.</li>
+<li>Not designed for public servers. ??</li>
+</ul>
+</div>
+<div class="section" id="rfoo">
+<h3>rfoo<a class="headerlink" href="#rfoo" title="Permalink to this headline">¶</a></h3>
+<p>This is preliminary. Please correct these points if you spot any error.</p>
+<ul class="simple">
+<li>Uses own protocol</li>
+<li>Does not do validation.</li>
+<li>Python-specific.</li>
+<li>Fast.</li>
+<li>Not designed for public servers. ??</li>
+</ul>
+</div>
+<div class="section" id="suds">
+<h3>Suds<a class="headerlink" href="#suds" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Soap 1.1 / Wsdl 1.1 Client only.</li>
+<li>Excellent wsdl parser, very easy to use.</li>
+<li>Recommended way to interface with Spyne&#8217;s Soap services.</li>
+<li>Uses own pure-python xml implementation, so it&#8217;s roughly 10 times slower
+than Spyne&#8217;s Soap client.</li>
+<li>Pure-python library, so relatively easier to deploy.</li>
+</ul>
+</div>
+<div class="section" id="zsi">
+<h3>ZSI<a class="headerlink" href="#zsi" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Unmaintained, although still works with recent Python versions</li>
+<li>Contains SOAPpy, which is not the same as SOAPy (notice the extra P)</li>
+<li>Supports attachments</li>
+<li>Requires code generation (wsdl2py) for complex data structures</li>
+<li>Almost complete lack of user-friendliness</li>
+<li>Lack of WSDL generator</li>
+</ul>
+</div>
+<div class="section" id="soapy">
+<h3>SOAPy<a class="headerlink" href="#soapy" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Really simple (only two files, both less than 500 lines of code)</li>
+<li>Client only</li>
+<li>Requires PyXML, thus unusable with recent Python versions</li>
+</ul>
+</div>
+<div class="section" id="rsl">
+<h3>rsl<a class="headerlink" href="#rsl" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Client only.</li>
+<li>Unmaintained.</li>
+</ul>
+</div>
+<div class="section" id="pyro">
+<h3>PyRo<a class="headerlink" href="#pyro" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Python Remote Objects</li>
+<li>???</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Changelog<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="spyne-2-10-0">
+<h3>spyne-2.10.0<a class="headerlink" href="#spyne-2-10-0" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Returning twisted&#8217;s Deferred from user code is now supported.</li>
+<li>You can now set Http response headers via ctx.out_object when
+out_protocol is HttpRpc. <a class="reference external" href="https://github.com/arskom/spyne/pull/201">https://github.com/arskom/spyne/pull/201</a></li>
+<li>lxml is not a hard requirement anymore.</li>
+<li>XmlDocument and friends: cleanup_namespaces is now True by default.</li>
+<li>XmlDocument and friends:&#8217;attribute_of&#8217; added to ModelBase to add attribute
+support for primitives. This is currently ignored by (and mostly irrelevant
+to) other protocols.</li>
+<li>XmlDocument and friends: Attribute serialization is working for arrays.</li>
+<li>Add support for exposing existing whose source code via the _args argument
+to the srpc decorator. See the existing_api example for usage examples.</li>
+<li>Add Streaming versions of Pyramid and Django bridge objects.</li>
+<li>Remove destructor from <tt class="docutils literal"><span class="pre">MethodContext</span></tt>. Now transports need to call
+<tt class="docutils literal"><span class="pre">.close()</span></tt> explicitly to close object and fire relevant events.</li>
+<li>Application event &#8216;method_context_constructed&#8217; was renamed to
+<tt class="docutils literal"><span class="pre">'method_context_created'</span></tt></li>
+<li>Application event &#8216;method_context_destroyed&#8217; was removed. The
+<tt class="docutils literal"><span class="pre">'method_context_closed'</span></tt> event can be used instead.</li>
+<li>SQLAlchemy integration now supports advanced features like specifying
+indexing methods.</li>
+<li>The object composition graph can now be cyclic.</li>
+<li>Integers were overhauled. Now boundary values of limited-size types are
+accessible via <tt class="docutils literal"><span class="pre">Attributes._{min,max}_bounds</span></tt></li>
+<li>Added <tt class="docutils literal"><span class="pre">MultiPolygon</span></tt> spatial type.</li>
+<li>The deprecated <tt class="docutils literal"><span class="pre">ProtocolBase.set_method_descriptor</span></tt> function was removed.</li>
+<li>It&#8217;s now possible to override serialization in service implementations.
+You can set <tt class="docutils literal"><span class="pre">ctx.out_document</span></tt> to have the return value from user funtion
+ignored. You can also set <tt class="docutils literal"><span class="pre">ctx.out_string</span></tt> to have the <tt class="docutils literal"><span class="pre">ctx.out_document</span></tt>
+ignored as well.</li>
+<li>Added as_time_zone support to DateTime. It calls
+<tt class="docutils literal"><span class="pre">.astimezone(as_time_zone).replace(tzinfo=None)</span></tt> on native values.</li>
+<li>Added YAML support via PyYaml.</li>
+<li>Split dict logic in DictDocument as <tt class="docutils literal"><span class="pre">HierDictDocument</span></tt> and
+<tt class="docutils literal"><span class="pre">FlatDictDocument</span></tt>.</li>
+<li>Added cookie parsing support to HttpRpc via <tt class="docutils literal"><span class="pre">Cookie.SimpleCookie</span></tt>.</li>
+<li>Moved <tt class="docutils literal"><span class="pre">{to,from}_string</span></tt> logic from data models to ProtocolBase.
+This gives us the ability to have more complex fault messages
+with other fault subelements that are namespace-qualified without
+circular dependency problems - Stefan Andersson &lt;<a class="reference external" href="mailto:norox81&#37;&#52;&#48;gmail&#46;com">norox81<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="spyne-2-9-4">
+<h3>spyne-2.9.4<a class="headerlink" href="#spyne-2-9-4" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Fix for Python 2.6 quirk where any decimal.Decimal() is always less than
+any <tt class="docutils literal"><span class="pre">float()</span></tt></li>
+<li>Fix missing &#8216;/&#8217; in WsgiMounter.</li>
+<li>Fix confusion in <tt class="docutils literal"><span class="pre">spyne.model.primitive.Decimal</span></tt>&#8216;s parameter order.</li>
+<li>Add forgotten <tt class="docutils literal"><span class="pre">HttpBase</span></tt> parameters to <tt class="docutils literal"><span class="pre">WsgiApplication</span></tt>.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="spyne-2-9-3">
+<h3>spyne-2.9.3<a class="headerlink" href="#spyne-2-9-3" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Fix WsgiApplication choking on empty string return value.</li>
+<li>Fix TwistedWebResource choking on generators as return values.</li>
+<li>Fix Csv serializer.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="spyne-2-9-2">
+<h3>spyne-2.9.2<a class="headerlink" href="#spyne-2-9-2" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Fix Array serialization for Html Microformats</li>
+<li>Fix deserialization of Fault objects for Soap11</li>
+<li>Fix Uuid not playing well with soft validation.</li>
+<li>Fix Uuid not playing well with Xml Schema document.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="spyne-2-9-0">
+<h3>spyne-2.9.0<a class="headerlink" href="#spyne-2-9-0" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Spyne is now stable!</li>
+<li>Fix document_built events by adding a <tt class="docutils literal"><span class="pre">doc</span></tt> attribute to the ServerBase
+class. You can now do <tt class="docutils literal"><span class="pre">some_server.doc.wsdl11.event_manager.add_listener</span></tt>
+to add events to interface documents.</li>
+<li>Add wsdl_document_built and xml_document_built events to relevant classes.</li>
+<li>Behavioral change for TableModel&#8217;s relationship handling: It&#8217;s now an array
+by default. The TableModel is deprecated, long live __metadata__ on
+ComplexModel!</li>
+<li>First-class integration with Pyramid.</li>
+<li>First geospatial types: Point and Polygon.</li>
+<li>Initial revision of the http request pattern matching support via
+<tt class="docutils literal"><span class="pre">werkzeug.routing</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">XmlObject</span></tt> -&gt; <tt class="docutils literal"><span class="pre">XmlDocument</span></tt>, <tt class="docutils literal"><span class="pre">JsonObject</span></tt> -&gt; <tt class="docutils literal"><span class="pre">JsonDocument</span></tt>,
+<tt class="docutils literal"><span class="pre">MessagePackObject</span></tt> -&gt; <tt class="docutils literal"><span class="pre">MessagePackDocument</span></tt>,
+<tt class="docutils literal"><span class="pre">DictObject</span> <span class="pre">-&gt;</span> <span class="pre">DictDocument</span></tt>.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="spyne-2-8-2-rc">
+<h3>spyne-2.8.2-rc<a class="headerlink" href="#spyne-2-8-2-rc" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>travis-ci.org integration! See for yourself: <a class="reference external" href="http://travis-ci.org/arskom/spyne">http://travis-ci.org/arskom/spyne</a></li>
+<li>Python 2.4 compatibility claim was dropped, because this particular Python
+version is nowhere to be found.</li>
+<li>Many issues with Python 2.5 compatibility are fixed.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="spyne-2-8-1-rc">
+<h3>spyne-2.8.1-rc<a class="headerlink" href="#spyne-2-8-1-rc" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Misc fixes regarding the spyne.model.binary.File api.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-8-0-rc-spyne-2-8-0-rc">
+<h3>rpclib-2.8.0-rc -&gt; spyne-2.8.0-rc<a class="headerlink" href="#rpclib-2-8-0-rc-spyne-2-8-0-rc" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul>
+<li><p class="first">Rpclib is dead. Long live Spyne!</p>
+</li>
+<li><p class="first">Add support for JsonObject protocol. This initial version is expremental.</p>
+</li>
+<li><p class="first">Add support for MessagePackObject and MessagePackRpc protocols. These
+initial versions are expremental.</p>
+</li>
+<li><p class="first">Make DateTime string format customizable.</p>
+</li>
+<li><p class="first">Implement TwistedWebResource that exposes an <tt class="docutils literal"><span class="pre">Application</span></tt> instance as a
+<tt class="docutils literal"><span class="pre">twisted.web.resource.Resource</span></tt> child.</p>
+</li>
+<li><p class="first">Remove Deprecated XMLAttribute and XMLAttributeRef. Use <tt class="docutils literal"><span class="pre">XmlAttribute</span></tt>
+and <tt class="docutils literal"><span class="pre">XmlAttributeRef</span></tt> instead.</p>
+</li>
+<li><p class="first">Xml Schema: Add support for the &lt;any&gt; tag.</p>
+</li>
+<li><p class="first">Add a chapter about Validation to the manual. Thanks Alex!</p>
+</li>
+<li><p class="first">Interface documents are no longer subclasses of InterfaceBase. It&#8217;s up
+to the transport to expose the application using a given interface document
+standard now. The <tt class="docutils literal"><span class="pre">interface</span></tt> argument to the <tt class="docutils literal"><span class="pre">Application</span></tt> constructor
+is now ignored.</p>
+</li>
+<li><p class="first">Html: Added a very simple lxml-based templating scheme: <tt class="docutils literal"><span class="pre">HtmlPage</span></tt>.</p>
+</li>
+<li><p class="first">Html: Added row-based tables: They show fields in rows. It&#8217;s good for
+showing one object per table.</p>
+</li>
+<li><p class="first">Html: Added ImageUri support. They render as &lt;img&gt; tags in Html output.</p>
+</li>
+<li><p class="first">Html: Added support for locales. You can now render field names as human-
+readable strings.</p>
+</li>
+<li><p class="first">Add support for async methods, which execute after the primary user code
+returns. Currently, the only async execution method is via threads.</p>
+</li>
+<li><p class="first">Xml &amp; friends: Start tags are now in the same namespace as the definitions
+themselves. Intermediate tags are in the parent&#8217;s namespace, just as before.</p>
+</li>
+<li><p class="first">Xml &amp; friends: Make the &#8216;bare&#8217; mode work.</p>
+</li>
+<li><p class="first">spyne.util.xml: <cite>get_object_as_xml</cite> can also get class suggestion.</p>
+</li>
+<li><p class="first">spyne.util.xml: <cite>get_xml_as_object</cite> has argument order swapped:
+cls, elt -&gt; elt, cls. See ab91a3e2ad4756b71d1a2752e5b0d2af8551e061.</p>
+</li>
+<li><p class="first">There&#8217;s a final argument order change in Application ctor:</p>
+<blockquote>
+<div><p>in_protocol, out_protocol, interface, name</p>
+</div></blockquote>
+<p>becomes:</p>
+<blockquote>
+<div><p>name, in_protocol, out_protocol, interface</p>
+</div></blockquote>
+</li>
+<li><dl class="first docutils">
+<dt>Relevant pull requests with new features and behavioral changes:</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="https://github.com/arskom/spyne/pull/128">https://github.com/arskom/spyne/pull/128</a></li>
+<li><a class="reference external" href="https://github.com/arskom/spyne/pull/129">https://github.com/arskom/spyne/pull/129</a></li>
+<li><a class="reference external" href="https://github.com/arskom/spyne/pull/139">https://github.com/arskom/spyne/pull/139</a></li>
+<li><a class="reference external" href="https://github.com/arskom/spyne/pull/142">https://github.com/arskom/spyne/pull/142</a></li>
+<li><a class="reference external" href="https://github.com/arskom/spyne/pull/148">https://github.com/arskom/spyne/pull/148</a></li>
+<li><a class="reference external" href="https://github.com/arskom/spyne/pull/157">https://github.com/arskom/spyne/pull/157</a></li>
+<li><a class="reference external" href="https://github.com/arskom/spyne/pull/173">https://github.com/arskom/spyne/pull/173</a></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-7-0-beta">
+<h3>rpclib-2.7.0-beta<a class="headerlink" href="#rpclib-2-7-0-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul>
+<li><p class="first">Add support for non-chunked encoding to Wsgi transport.</p>
+</li>
+<li><p class="first">Add support for Html Microformats.</p>
+</li>
+<li><p class="first">Add <tt class="docutils literal"><span class="pre">function</span></tt> property to MethodContext that is re-initialized from
+<tt class="docutils literal"><span class="pre">descriptor.function</span></tt> for each new request. Stay away from
+<tt class="docutils literal"><span class="pre">descriptor.function</span></tt> unless you understand the consequences!..</p>
+</li>
+<li><p class="first">String and Unicode models are now separate objects with well-defined
+(de)serialization behaviour.</p>
+</li>
+<li><p class="first">Argument order change in Application ctor:</p>
+<blockquote>
+<div><p>interface, in_protocol, out_protocol</p>
+</div></blockquote>
+<p>becomes:</p>
+<blockquote>
+<div><p>in_protocol, out_protocol, interface</p>
+</div></blockquote>
+<p>See here: <a class="reference external" href="https://github.com/arskom/spyne/commit/45f5af70aa826640008222bda96299d51c9df980#diff-1">https://github.com/arskom/spyne/commit/45f5af70aa826640008222bda96299d51c9df980#diff-1</a></p>
+</li>
+<li><dl class="first docutils">
+<dt>Full changelog:</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="https://github.com/arskom/spyne/pull/123">https://github.com/arskom/spyne/pull/123</a></li>
+<li><a class="reference external" href="https://github.com/arskom/spyne/pull/124">https://github.com/arskom/spyne/pull/124</a></li>
+<li><a class="reference external" href="https://github.com/arskom/spyne/pull/125">https://github.com/arskom/spyne/pull/125</a></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-6-1-beta">
+<h3>rpclib-2.6.1-beta<a class="headerlink" href="#rpclib-2-6-1-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Fix (for real this time) the race condition in wsgi server&#8217;s wsdl handler.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-6-0-beta">
+<h3>rpclib-2.6.0-beta<a class="headerlink" href="#rpclib-2-6-0-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>HttpRpc now parses POST/PUT/PATCH bodies, can accept file uploads.
+Uses werkzeug to do that, which is now a soft dependency.</li>
+<li>ByteArray now child of SimpleModel. It&#8217;s now possible to customize it simply
+by calling it.</li>
+<li>Fix race condition in wsgi server wsdl request.</li>
+<li>Full change log: <a class="reference external" href="https://github.com/arskom/spyne/pull/122">https://github.com/arskom/spyne/pull/122</a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-5-2-beta">
+<h3>rpclib-2.5.2-beta<a class="headerlink" href="#rpclib-2-5-2-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Misc. fixes.</li>
+<li>Full change log: <a class="reference external" href="https://github.com/arskom/spyne/pull/118">https://github.com/arskom/spyne/pull/118</a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-5-1-beta">
+<h3>rpclib-2.5.1-beta<a class="headerlink" href="#rpclib-2-5-1-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul>
+<li><p class="first">Switched to magic cookie constants instead of strings in protocol logic.</p>
+</li>
+<li><p class="first">check_validator -&gt; set_validator in ProtocolBase</p>
+</li>
+<li><p class="first">Started parsing Http headers in HttpRpc protocol.</p>
+</li>
+<li><p class="first">HttpRpc now properly validates nested value frequencies.</p>
+</li>
+<li><p class="first">HttpRpc now works with arrays of simple types as well.</p>
+</li>
+<li><dl class="first docutils">
+<dt>Full change log: <a class="reference external" href="https://github.com/arskom/spyne/pull/117">https://github.com/arskom/spyne/pull/117</a></dt>
+<dd><p class="first last"><a class="reference external" href="https://github.com/arskom/spyne/pull/116">https://github.com/arskom/spyne/pull/116</a></p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-5-0-beta">
+<h3>rpclib-2.5.0-beta<a class="headerlink" href="#rpclib-2-5-0-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Implemented fanout support for transports and protocols that can handle
+that.</li>
+<li>Implemented a helper module that generates a Soap/Wsdl 1.1 application in
+<tt class="docutils literal"><span class="pre">rpclib.util.simple</span></tt></li>
+<li>Some work towards supporting Python3 using <tt class="docutils literal"><span class="pre">2to3</span></tt>. See issue #113.</li>
+<li><tt class="docutils literal"><span class="pre">ctx.descriptor.reset_function</span></tt> implemented. It&#8217;s now safe to fiddle
+with that value in event handlers.</li>
+<li>Added a cleaned-up version of the Django wrapper: <a class="reference external" href="https://gist.github.com/1316025">https://gist.github.com/1316025</a></li>
+<li>Fix most of the tests that fail due to api changes.</li>
+<li>Fix Http soap client.</li>
+<li>Full change log: <a class="reference external" href="https://github.com/arskom/spyne/pull/115">https://github.com/arskom/spyne/pull/115</a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-4-7-beta">
+<h3>rpclib-2.4.7-beta<a class="headerlink" href="#rpclib-2-4-7-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Made color in logs optional</li>
+<li>Fixed ByteArray serializer</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-4-5-beta">
+<h3>rpclib-2.4.5-beta<a class="headerlink" href="#rpclib-2-4-5-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Time primitive was implemented.</li>
+<li>Fix for multiple ports was integrated.</li>
+<li>Added http cookie authentication example with suds.</li>
+<li>Full change log: <a class="reference external" href="https://github.com/arskom/spyne/pull/109">https://github.com/arskom/spyne/pull/109</a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-4-3-beta">
+<h3>rpclib-2.4.3-beta<a class="headerlink" href="#rpclib-2-4-3-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Many issues with &#8216;soft&#8217; validation was fixed.</li>
+<li><tt class="docutils literal"><span class="pre">MethodDescriptor.udp</span></tt> added. Short for &#8220;User-Defined Properties&#8221;, you can
+use it to store arbitrary metadata about the decorated method.</li>
+<li>Fix HttpRpc response serialization.</li>
+<li>Documentation updates.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-4-1-beta">
+<h3>rpclib-2.4.1-beta<a class="headerlink" href="#rpclib-2-4-1-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Fixed import errors in Python&lt;=2.5.</li>
+<li>A problem with rpclib&#8217;s String and unicode objects was fixed.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-4-0-beta">
+<h3>rpclib-2.4.0-beta<a class="headerlink" href="#rpclib-2-4-0-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Fixed Fault publishing in Wsdl.</li>
+<li>Implemented &#8216;soft&#8217; validation.</li>
+<li>Documentation improvements. It&#8217;s mostly ready!</li>
+<li>A bug with min/max_occurs logic was fixed. This causes rpclib not to send
+null values for elements with min_occurs=0 (the default value).</li>
+<li>Native value for <tt class="docutils literal"><span class="pre">rpclib.model.primitive.String</span></tt> was changed to
+<tt class="docutils literal"><span class="pre">unicode</span></tt>. To exchange raw data, you should use
+<tt class="docutils literal"><span class="pre">rpclib.model.binary.ByteArray</span></tt>.</li>
+<li>Full change log: <a class="reference external" href="https://github.com/arskom/spyne/pull/90">https://github.com/arskom/spyne/pull/90</a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-3-3-beta">
+<h3>rpclib-2.3.3-beta<a class="headerlink" href="#rpclib-2-3-3-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Added MAX_CONTENT_LENGTH = 2 * 1024 * 1024 and BLOCK_LENGTH = 8 * 1024
+constants to rpclib.server.wsgi module.</li>
+<li>rpclib.model.binary.Attachment is deprecated, and is replaced by ByteArray.
+The native format of ByteArray is an iterable of strings.</li>
+<li>Exception handling was formalized. HTTP return codes can be set by exception
+classes from rpclib.error or custom exceptions.</li>
+<li>Full change log: <a class="reference external" href="https://github.com/arskom/spyne/pull/88">https://github.com/arskom/spyne/pull/88</a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-3-2-beta">
+<h3>rpclib-2.3.2-beta<a class="headerlink" href="#rpclib-2-3-2-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Limited support for sqlalchemy.orm.relationship (no string arguments)</li>
+<li>Added missing event firings.</li>
+<li>Documented event api and fundamental data structures (rpclib._base)</li>
+<li>Full change log: <a class="reference external" href="https://github.com/arskom/spyne/pull/87">https://github.com/arskom/spyne/pull/87</a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-3-1-beta">
+<h3>rpclib-2.3.1-beta<a class="headerlink" href="#rpclib-2-3-1-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>HttpRpc protocol now returns 404 when a requested resource was not found.</li>
+<li>New tests added for HttpRpc protocol.</li>
+<li>Miscellanous other fixes. See: <a class="reference external" href="https://github.com/arskom/spyne/pull/86">https://github.com/arskom/spyne/pull/86</a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-3-0-beta">
+<h3>rpclib-2.3.0-beta<a class="headerlink" href="#rpclib-2-3-0-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Documentation improvements.</li>
+<li>rpclib.protocol.xml.XmlObject is now working as out_protocol.</li>
+<li>Many fixes.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-2-3-beta">
+<h3>rpclib-2.2.3-beta<a class="headerlink" href="#rpclib-2-2-3-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Documentation improvements.</li>
+<li>rpclib.client.http.Client -&gt; rpclib.client.http.HttpClient</li>
+<li>rpclib.client.zeromq.Client -&gt; rpclib.client.zeromq.ZeroMQClient</li>
+<li>rpclib.server.zeromq.Server -&gt; rpclib.server.zeromq.ZeroMQServer</li>
+<li>rpclib.model.table.TableSerializer -&gt; rpclib.model.table.TableModel</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-2-2-beta">
+<h3>rpclib-2.2.2-beta<a class="headerlink" href="#rpclib-2-2-2-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Fixed call to rpclib.application.Application.call_wrapper</li>
+<li>Fixed HttpRpc server transport instantiation.</li>
+<li>Documentation improvements.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-2-1-beta">
+<h3>rpclib-2.2.1-beta<a class="headerlink" href="#rpclib-2-2-1-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>rpclib.application.Application.call_wrapper introduced</li>
+<li>Documentation improvements.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-2-0-beta">
+<h3>rpclib-2.2.0-beta<a class="headerlink" href="#rpclib-2-2-0-beta" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>The serialization / deserialization logic was redesigned. Now most of the
+serialization-related logic is under the responsibility of the ProtocolBase
+children.</li>
+<li>Interface generation logic was redesigned. The WSDL logic is separated to
+XmlSchema and Wsdl11 classes. &#8216;add_to_schema&#8217; calls were renamed to just
+&#8216;add&#8217; and were moved inside rpclib.interface.xml_schema package.</li>
+<li>Interface and Protocol assignment of an rpclib application is now more
+explicit. Both are also configurable during instantion. This doesn&#8217;t mean
+there&#8217;s much to configure :)</li>
+<li>WS-I Conformance is back!. See <a class="reference external" href="https://github.com/arskom/spyne/blob/master/src/rpclib/test/interop/wsi-report-rpclib.xml">https://github.com/arskom/spyne/blob/master/src/rpclib/test/interop/wsi-report-rpclib.xml</a>
+for the latest conformance report.</li>
+<li>Numeric types now support range restrictions. e.g. Integer(ge=0) will only
+accept positive integers.</li>
+<li>Any -&gt; AnyXml, AnyAsDict -&gt; AnyDict. AnyAsDict is not the child of the AnyXml
+anymore.</li>
+<li>rpclib.model.exception -&gt; rpclib.model.fault.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-1-0-alpha">
+<h3>rpclib-2.1.0-alpha<a class="headerlink" href="#rpclib-2-1-0-alpha" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>The method dispatch logic was rewritten: It&#8217;s now possible for the protocols
+to override how method request strings are matched to methods definitions.</li>
+<li>Unsigned integer primitives were added.</li>
+<li>ZeroMQ client was fixed.</li>
+<li>Header confusion in native http soap client was fixed.</li>
+<li>Grouped transport-specific context information under ctx.transport
+attribute.</li>
+<li>Added a self reference mechanism.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-0-10-alpha">
+<h3>rpclib-2.0.10-alpha<a class="headerlink" href="#rpclib-2-0-10-alpha" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>The inclusion of base xml schemas were made optional.</li>
+<li>WSDL: Fix out header being the same as in header.</li>
+<li>Added type checking to outgoing Integer types. it&#8217;s not handled as nicely as
+it should be.</li>
+<li>Fixed the case where changing the _in_message tag name of the method
+prevented it from being called.</li>
+<li>SOAP/WSDL: Added support for multiple {in,out}_header objects.</li>
+<li>Fix some XMLAttribute bugs.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-0-9-alpha">
+<h3>rpclib-2.0.9-alpha<a class="headerlink" href="#rpclib-2-0-9-alpha" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Added inheritance support to rpclib.model.table.TableSerializer.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-0-8-alpha">
+<h3>rpclib-2.0.8-alpha<a class="headerlink" href="#rpclib-2-0-8-alpha" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>The NullServer now also returns context with the return object to have it
+survive past user-defined method return.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-0-7-alpha">
+<h3>rpclib-2.0.7-alpha<a class="headerlink" href="#rpclib-2-0-7-alpha" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>More tests are migrated to the new api.</li>
+<li>Function identifier strings are no more created directly from the function
+object itself. Function&#8217;s key in the class definition is used as default
+instead.</li>
+<li>Base xml schemas are no longer imported.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-0-6-alpha">
+<h3>rpclib-2.0.6-alpha<a class="headerlink" href="#rpclib-2-0-6-alpha" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Added rpclib.server.null.NullServer, which is a server class with a client
+interface that attempts to do no (de)serialization at all. It&#8217;s intended to
+be used in tests.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-0-5-alpha">
+<h3>rpclib-2.0.5-alpha<a class="headerlink" href="#rpclib-2-0-5-alpha" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Add late mapping support to sqlalchemy table serializer.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-0-4-alpha">
+<h3>rpclib-2.0.4-alpha<a class="headerlink" href="#rpclib-2-0-4-alpha" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Add preliminary support for a sqlalchemy-0.7-compatible serializer.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-0-3-alpha">
+<h3>rpclib-2.0.3-alpha<a class="headerlink" href="#rpclib-2-0-3-alpha" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Migrate the HttpRpc serializer to the new internal api.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-0-2-alpha">
+<h3>rpclib-2.0.2-alpha<a class="headerlink" href="#rpclib-2-0-2-alpha" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>SimpleType -&gt; SimpleModel</li>
+<li>Small bugfixes.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-0-1-alpha">
+<h3>rpclib-2.0.1-alpha<a class="headerlink" href="#rpclib-2-0-1-alpha" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>EventManager now uses ordered sets instead of normal sets to store event
+handlers.</li>
+<li>Implemented sort_wsdl, a small hack to sort wsdl output in order to ease
+debugging.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rpclib-2-0-0-alpha">
+<h3>rpclib-2.0.0-alpha<a class="headerlink" href="#rpclib-2-0-0-alpha" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul>
+<li><p class="first">Implemented EventManager and replaced hook calls with events.</p>
+</li>
+<li><p class="first">The rpc decorator now produces static methods. The methods still get an implicit
+first argument that holds the service contexts. It&#8217;s an instance of the
+MethodContext class, and not the ServiceBase (formerly DefinitionBase) class.</p>
+</li>
+<li><p class="first">The new srpc decorator doesn&#8217;t force the methods to have an implicit first
+argument.</p>
+</li>
+<li><p class="first">Fixed fault namespace resolution.</p>
+</li>
+<li><p class="first">Moved xml constants to rpclib.const.xml_ns</p>
+</li>
+<li><dl class="first docutils">
+<dt>The following changes to soaplib were ported to rpclib&#8217;s SOAP/WSDL parts:</dt>
+<dd><ul class="first last simple">
+<li>duration object is now compatible with Python&#8217;s native timedelta.</li>
+<li>WSDL: Support for multiple &lt;service&gt; tags in the wsdl (one for each class in the
+application)</li>
+<li>WSDL: Support for multiple &lt;portType&gt; tags and multiple ports.</li>
+<li>WSDL: Support for enumerating exceptions a method can throw was added.</li>
+<li>SOAP: Exceptions got some love to be more standards-compliant.</li>
+<li>SOAP: Xml attribute support</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Moved all modules with packagename.base to packagename._base.</p>
+</li>
+<li><dl class="first docutils">
+<dt>Renamed classes to have module name as a prefix:</dt>
+<dd><ul class="first last simple">
+<li>rpclib.client._base.Base -&gt; rpclib.client._base.ClientBase</li>
+<li>rpclib.model._base.Base -&gt; rpclib.model._base.ModelBase</li>
+<li>rpclib.protocol._base.Base -&gt; rpclib.protocol._base.ProtocolBase</li>
+<li>rpclib.server._base.Base -&gt; rpclib.server._base.ServerBase</li>
+<li>rpclib.service.DefinitionBase -&gt; rpclib.service.ServiceBase</li>
+<li>rpclib.server.wsgi.Application  -&gt; rpclib.server.wsgi.WsgiApplication</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Moved some classes and modules around:</dt>
+<dd><ul class="first last simple">
+<li>rpclib.model.clazz -&gt; rpclib.model.complex</li>
+<li>rpclib.model.complex.ClassSerializer -&gt; rpclib.model.complex.ComplexModel</li>
+<li>rpclib.Application -&gt; rpclib.application.Application</li>
+<li>rpclib.service.rpc, srpc -&gt; rpclib.decorator.rpc, srpc</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="soaplib-3-x-rpclib-1-1-1-alpha">
+<h3>soaplib-3.x -&gt; rpclib-1.1.1-alpha<a class="headerlink" href="#soaplib-3-x-rpclib-1-1-1-alpha" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Soaplib is now also protocol agnostic. As it now supports protocols other
+than soap (like Rest-minus-the-verbs HttpRpc), it&#8217;s renamed to rpclib. This
+also means soaplib can now support multiple versions of soap and wsdl
+standards.</li>
+<li>Mention of xml and soap removed from public api where it&#8217;s not directly
+related to soap or xml. (e.g. a hook rename: on_method_exception_xml -&gt;
+on_method_exception_doc)</li>
+<li>Protocol serializers now return iterables instead of complete messages. This
+is a first step towards eliminating the need to have the whole message in
+memory during processing.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="soaplib-2-x">
+<h3>soaplib-2.x<a class="headerlink" href="#soaplib-2-x" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>This release transformed soaplib from a soap server that exclusively supported
+http to a soap serialization/deserialization library that is architecture and
+transport agnostic.</li>
+<li>Hard dependency on WSGI removed.</li>
+<li>Sphinx docs with working examples: <a class="reference external" href="http://arskom.github.com/rpclib/">http://arskom.github.com/rpclib/</a></li>
+<li>Serializers renamed to Models.</li>
+<li>Standalone xsd generation for ClassSerializer objects has been added. This
+allows soaplib to be used to define generic XML schemas, without SOAP
+artifacts.</li>
+<li>Annotation Tags for primitive Models has been added.</li>
+<li>The soaplib client has been re-written after having been dropped from
+recent releases. It follows the suds API but is based on lxml for better
+performance.
+WARNING: the soaplib client is not well-tested and future support is tentative
+and dependent on community response.</li>
+<li>0mq support added.</li>
+<li>Twisted supported via WSGI wrappers.</li>
+<li>Increased test coverage for soaplib and supported servers</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="soaplib-1-0">
+<h3>soaplib-1.0<a class="headerlink" href="#soaplib-1-0" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Standards-compliant Soap Faults</li>
+<li>Allow multiple return values and return types</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="soaplib-0-9-4">
+<h3>soaplib-0.9.4<a class="headerlink" href="#soaplib-0-9-4" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>pritimitive.Array -&gt; clazz.Array</li>
+<li>Support for SimpleType restrictions (pattern, length, etc.)</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="soaplib-0-9-3">
+<h3>soaplib-0.9.3<a class="headerlink" href="#soaplib-0-9-3" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Soap header support</li>
+<li>Tried the WS-I Test first time. Many bug fixes.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="soaplib-0-9-2">
+<h3>soaplib-0.9.2<a class="headerlink" href="#soaplib-0-9-2" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Support for inheritance.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="soaplib-0-9-1">
+<h3>soaplib-0.9.1<a class="headerlink" href="#soaplib-0-9-1" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Support for publishing multiple service classes.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="soaplib-0-9">
+<h3>soaplib-0.9<a class="headerlink" href="#soaplib-0-9" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Soap server logic almost completely rewritten.</li>
+<li>Soap client removed in favor of suds.</li>
+<li>Object definition api no longer needs a class types: under class definition.</li>
+<li>XML Schema validation is supported.</li>
+<li>Support for publishing multiple namespaces. (multiple &lt;schema&gt; tags in the wsdl)</li>
+<li>Support for enumerations.</li>
+<li>Application and Service Definition are separated. Application is instantiated
+on server start, and Service Definition is instantiated for each new request.</li>
+<li>&#64;soapmethod -&gt; &#64;rpc</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="soaplib-0-8-1">
+<h3>soaplib-0.8.1<a class="headerlink" href="#soaplib-0-8-1" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Switched to lxml for proper xml namespace support.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="soaplib-0-8-0">
+<h3>soaplib-0.8.0<a class="headerlink" href="#soaplib-0-8-0" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>First public stable release.</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="faq.html" title="Spyne FAQ"
+             >previous</a> |</li>
+        <li><a href="index.html">spyne 2.10.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

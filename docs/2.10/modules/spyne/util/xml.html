@@ -1,0 +1,215 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>spyne.util.xml &mdash; spyne 2.10.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.10.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.10.0 documentation" href="../../../index.html" />
+    <link rel="up" title="spyne" href="../../spyne.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for spyne.util.xml</h1><div class="highlight"><pre>
+<span class="c">#</span>
+<span class="c"># spyne - Copyright (C) Spyne contributors.</span>
+<span class="c">#</span>
+<span class="c"># This library is free software; you can redistribute it and/or</span>
+<span class="c"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c"># License as published by the Free Software Foundation; either</span>
+<span class="c"># version 2.1 of the License, or (at your option) any later version.</span>
+<span class="c">#</span>
+<span class="c"># This library is distributed in the hope that it will be useful,</span>
+<span class="c"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c"># Lesser General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c"># License along with this library; if not, write to the Free Software</span>
+<span class="c"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301</span>
+<span class="c">#</span>
+
+<span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
+
+<span class="kn">from</span> <span class="nn">spyne.interface</span> <span class="kn">import</span> <span class="n">Interface</span>
+<span class="kn">from</span> <span class="nn">spyne.interface.xml_schema</span> <span class="kn">import</span> <span class="n">XmlSchema</span>
+<span class="kn">from</span> <span class="nn">spyne.protocol.xml</span> <span class="kn">import</span> <span class="n">XmlDocument</span>
+
+<span class="sd">&quot;&quot;&quot;Module that contains various xml utilities.&quot;&quot;&quot;</span>
+
+<span class="k">class</span> <span class="nc">FakeApplication</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span> <span class="nf">get_schema_documents</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">default_namespace</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_schema_documents"><a class="viewcode-back" href="../../../reference/util.html#spyne.util.xml.get_schema_documents">[docs]</a>    <span class="sd">&#39;&#39;&#39;Returns the schema documents in a dict whose keys are namespace prefixes</span>
+<span class="sd">    and values are Element objects.</span>
+
+<span class="sd">    :param models: A list of spyne.model classes that will be represented in</span>
+<span class="sd">                   the schema.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="n">default_namespace</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">default_namespace</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_namespace</span><span class="p">()</span>
+
+    <span class="n">fake_app</span> <span class="o">=</span> <span class="n">FakeApplication</span><span class="p">()</span>
+    <span class="n">fake_app</span><span class="o">.</span><span class="n">tns</span> <span class="o">=</span> <span class="n">default_namespace</span>
+    <span class="n">fake_app</span><span class="o">.</span><span class="n">services</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">interface</span> <span class="o">=</span> <span class="n">Interface</span><span class="p">(</span><span class="n">fake_app</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+        <span class="n">interface</span><span class="o">.</span><span class="n">add_class</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="n">interface</span><span class="o">.</span><span class="n">populate_interface</span><span class="p">(</span><span class="n">fake_app</span><span class="p">)</span>
+
+    <span class="n">document</span> <span class="o">=</span> <span class="n">XmlSchema</span><span class="p">(</span><span class="n">interface</span><span class="p">)</span>
+    <span class="n">document</span><span class="o">.</span><span class="n">build_interface_document</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">document</span><span class="o">.</span><span class="n">get_interface_document</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">get_validation_schema</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">default_namespace</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></div>
+<div class="viewcode-block" id="get_validation_schema"><a class="viewcode-back" href="../../../reference/util.html#spyne.util.xml.get_validation_schema">[docs]</a>    <span class="sd">&#39;&#39;&#39;Returns the validation schema object for the given models.</span>
+
+<span class="sd">    :param models: A list of spyne.model classes that will be represented in</span>
+<span class="sd">                   the schema.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="n">default_namespace</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">default_namespace</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_namespace</span><span class="p">()</span>
+
+    <span class="n">fake_app</span> <span class="o">=</span> <span class="n">FakeApplication</span><span class="p">()</span>
+    <span class="n">fake_app</span><span class="o">.</span><span class="n">tns</span> <span class="o">=</span> <span class="n">default_namespace</span>
+    <span class="n">fake_app</span><span class="o">.</span><span class="n">services</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">interface</span> <span class="o">=</span> <span class="n">XmlSchema</span><span class="p">()</span>
+    <span class="n">interface</span><span class="o">.</span><span class="n">set_app</span><span class="p">(</span><span class="n">fake_app</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+        <span class="n">interface</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+
+    <span class="n">interface</span><span class="o">.</span><span class="n">build_validation_schema</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">interface</span><span class="o">.</span><span class="n">validation_schema</span>
+
+
+<span class="k">def</span> <span class="nf">_dig</span><span class="p">(</span><span class="n">par</span><span class="p">):</span></div>
+    <span class="k">for</span> <span class="n">elt</span> <span class="ow">in</span> <span class="n">par</span><span class="p">:</span>
+        <span class="n">elt</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">elt</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;}&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">_dig</span><span class="p">(</span><span class="n">elt</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_object_as_xml</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">cls</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">root_tag_name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">no_namespace</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="get_object_as_xml"><a class="viewcode-back" href="../../../reference/util.html#spyne.util.xml.get_object_as_xml">[docs]</a>    <span class="sd">&#39;&#39;&#39;Returns an ElementTree representation of a :class:`spyne.model.complex.ComplexModel`</span>
+<span class="sd">    child.</span>
+
+<span class="sd">    :param value: The instance of the class to be serialized.</span>
+<span class="sd">    :param value: The root tag string to use. Defaults to the output of</span>
+<span class="sd">        ``value.__class__.get_type_name_ns()``.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="n">cls</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">cls</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">__class__</span>
+    <span class="n">xml_object</span> <span class="o">=</span> <span class="n">XmlDocument</span><span class="p">()</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s">&quot;parent&quot;</span><span class="p">)</span>
+
+    <span class="n">xml_object</span><span class="o">.</span><span class="n">to_parent_element</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_namespace</span><span class="p">(),</span>
+                                                          <span class="n">parent</span><span class="p">,</span> <span class="n">root_tag_name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">no_namespace</span><span class="p">:</span>
+        <span class="n">_dig</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="n">etree</span><span class="o">.</span><span class="n">cleanup_namespaces</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">get_xml_as_object</span><span class="p">(</span><span class="n">elt</span><span class="p">,</span> <span class="n">cls</span><span class="p">):</span></div>
+<div class="viewcode-block" id="get_xml_as_object"><a class="viewcode-back" href="../../../reference/util.html#spyne.util.xml.get_xml_as_object">[docs]</a>    <span class="sd">&#39;&#39;&#39;Returns a native :class:`spyne.model.complex.ComplexModel` child from an</span>
+<span class="sd">    ElementTree representation of the same class.</span>
+
+<span class="sd">    :param value: The class the xml document represents.</span>
+<span class="sd">    :param value: The xml document to be deserialized.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">xml_object</span> <span class="o">=</span> <span class="n">XmlDocument</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">xml_object</span><span class="o">.</span><span class="n">from_element</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">elt</span><span class="p">)</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

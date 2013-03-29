@@ -1,0 +1,344 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Miscellanous Spyne Utilities &mdash; spyne 2.9.4 documentation</title>
+    
+    <link rel="stylesheet" href="../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.9.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.9.4 documentation" href="../index.html" />
+    <link rel="up" title="Spyne API Reference" href="index.html" />
+    <link rel="next" title="Running Tests" href="../tests.html" />
+    <link rel="prev" title="Auxiliary Processors" href="auxproc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../tests.html" title="Running Tests"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="auxproc.html" title="Auxiliary Processors"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">spyne 2.9.4 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Spyne API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Miscellanous Spyne Utilities</a><ul>
+<li><a class="reference internal" href="#module-spyne.util.cdict">Class Dictionary</a></li>
+<li><a class="reference internal" href="#module-spyne.util.etreeconv">Element Tree Conversion</a></li>
+<li><a class="reference internal" href="#module-spyne.util.simple">Simple Wrappers</a></li>
+<li><a class="reference internal" href="#module-spyne.util.xml">Xml Utilities</a></li>
+<li><a class="reference internal" href="#module-spyne.util.odict">Ordered Dictionary</a></li>
+<li><a class="reference internal" href="#module-spyne.util.oset">Ordered Set</a></li>
+<li><a class="reference internal" href="#module-spyne.util.protocol">Protocol Helpers</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="auxproc.html"
+                        title="previous chapter">Auxiliary Processors</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../tests.html"
+                        title="next chapter">Running Tests</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../sources/reference/util.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="miscellanous-spyne-utilities">
+<h1>Miscellanous Spyne Utilities<a class="headerlink" href="#miscellanous-spyne-utilities" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-spyne.util.cdict">
+<span id="class-dictionary"></span><h2>Class Dictionary<a class="headerlink" href="#module-spyne.util.cdict" title="Permalink to this headline">¶</a></h2>
+<p>cdict (ClassDict) is a funny kind of dict that tries to return the values for
+the base classes of a key when the entry for the key is not found. It is not a
+generalized dictionary that can handle any type of key &#8211; it relies on
+spyne.model api to look for classes.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">spyne.util.cdict</span> <span class="kn">import</span> <span class="n">cdict</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">B</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">D</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="o">=</span><span class="n">cdict</span><span class="p">({</span><span class="n">A</span><span class="p">:</span> <span class="s">&quot;fun&quot;</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="s">&quot;base&quot;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">d</span><span class="p">[</span><span class="n">A</span><span class="p">]</span>
+<span class="go">fun</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">d</span>
+<span class="go">{&lt;class &#39;__main__.A&#39;&gt;: &#39;fun&#39;, &lt;type &#39;object&#39;&gt;: &#39;base&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">d</span><span class="p">[</span><span class="n">B</span><span class="p">]</span>
+<span class="go">fun</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">d</span>
+<span class="go">{&lt;class &#39;__main__.A&#39;&gt;: &#39;fun&#39;, &lt;class &#39;__main__.B&#39;&gt;: &#39;fun&#39;, &lt;type &#39;object&#39;&gt;: &#39;base&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">d</span><span class="p">[</span><span class="n">C</span><span class="p">]</span>
+<span class="go">base</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">d</span>
+<span class="go">{&lt;class &#39;__main__.A&#39;&gt;: &#39;fun&#39;, &lt;class &#39;__main__.B&#39;&gt;: &#39;fun&#39;, &lt;class &#39;__main__.C&#39;&gt;: &#39;base&#39;, &lt;type &#39;object&#39;&gt;: &#39;base&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">d</span><span class="p">[</span><span class="n">D</span><span class="p">]</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+  File <span class="nb">&quot;/home/plq/src/github/plq/spyne/src/spyne/util/cdict.py&quot;</span>, line <span class="m">77</span>, in <span class="n">__getitem__</span>
+    <span class="k">raise</span> <span class="n">e</span>
+<span class="gr">KeyError</span>: <span class="n">&lt;class __main__.D at 0x8d92c0&gt;</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-spyne.util.etreeconv">
+<span id="element-tree-conversion"></span><h2>Element Tree Conversion<a class="headerlink" href="#module-spyne.util.etreeconv" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the utility methods that convert an ElementTree
+hierarchy to python dicts and vice versa.</p>
+<dl class="function">
+<dt id="spyne.util.etreeconv.dict_to_etree">
+<tt class="descclassname">spyne.util.etreeconv.</tt><tt class="descname">dict_to_etree</tt><big>(</big><em>d</em>, <em>parent</em><big>)</big><a class="reference internal" href="../modules/spyne/util/etreeconv.html#dict_to_etree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.util.etreeconv.dict_to_etree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a the dict whose value is either None or an instance of dict, odict
+or an iterable. The iterables can contain either other dicts/odicts or
+str/unicode instances.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="spyne.util.etreeconv.etree_strip_namespaces">
+<tt class="descclassname">spyne.util.etreeconv.</tt><tt class="descname">etree_strip_namespaces</tt><big>(</big><em>element</em><big>)</big><a class="reference internal" href="../modules/spyne/util/etreeconv.html#etree_strip_namespaces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.util.etreeconv.etree_strip_namespaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes any namespace information form the given element recursively.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="spyne.util.etreeconv.etree_to_dict">
+<tt class="descclassname">spyne.util.etreeconv.</tt><tt class="descname">etree_to_dict</tt><big>(</big><em>element</em>, <em>iterable=(&lt;type 'list'&gt;</em>, <em>&lt;method 'append' of 'list' objects&gt;)</em><big>)</big><a class="reference internal" href="../modules/spyne/util/etreeconv.html#etree_to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.util.etreeconv.etree_to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes an xml root element and returns the corresponding dict. The second
+argument is a pair of iterable type and the function used to add elements to
+the iterable. The xml attributes are ignored.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="spyne.util.etreeconv.root_dict_to_etree">
+<tt class="descclassname">spyne.util.etreeconv.</tt><tt class="descname">root_dict_to_etree</tt><big>(</big><em>d</em><big>)</big><a class="reference internal" href="../modules/spyne/util/etreeconv.html#root_dict_to_etree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.util.etreeconv.root_dict_to_etree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a dictionary to an xml hiearchy. Just like a valid xml document,
+the dictionary must have a single element. The format of the child
+dictionaries is the same as <a class="reference internal" href="#spyne.util.etreeconv.dict_to_etree" title="spyne.util.etreeconv.dict_to_etree"><tt class="xref py py-func docutils literal"><span class="pre">dict_to_etree()</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="spyne.util.etreeconv.root_etree_to_dict">
+<tt class="descclassname">spyne.util.etreeconv.</tt><tt class="descname">root_etree_to_dict</tt><big>(</big><em>element</em>, <em>iterable=(&lt;type 'list'&gt;</em>, <em>&lt;method 'append' of 'list' objects&gt;)</em><big>)</big><a class="reference internal" href="../modules/spyne/util/etreeconv.html#root_etree_to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.util.etreeconv.root_etree_to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes an xml root element and returns the corresponding dict. The second
+argument is a pair of iterable type and the function used to add elements to
+the iterable. The xml attributes are ignored.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-spyne.util.simple">
+<span id="simple-wrappers"></span><h2>Simple Wrappers<a class="headerlink" href="#module-spyne.util.simple" title="Permalink to this headline">¶</a></h2>
+<p>Contains functions that implement the most common protocol and transport
+combinations</p>
+<dl class="function">
+<dt id="spyne.util.simple.pyramid_soap11_application">
+<tt class="descclassname">spyne.util.simple.</tt><tt class="descname">pyramid_soap11_application</tt><big>(</big><em>services</em>, <em>tns='spyne.simple.soap'</em>, <em>validator=None</em>, <em>name=None</em><big>)</big><a class="reference internal" href="../modules/spyne/util/simple.html#pyramid_soap11_application"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.util.simple.pyramid_soap11_application" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps <cite>services</cite> argument inside a PyramidApplication that uses Wsdl 1.1 as
+interface document and Soap 1.1 and both input and output protocols.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="spyne.util.simple.wsgi_soap11_application">
+<tt class="descclassname">spyne.util.simple.</tt><tt class="descname">wsgi_soap11_application</tt><big>(</big><em>services</em>, <em>tns='spyne.simple.soap'</em>, <em>validator=None</em>, <em>name=None</em><big>)</big><a class="reference internal" href="../modules/spyne/util/simple.html#wsgi_soap11_application"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.util.simple.wsgi_soap11_application" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps <cite>services</cite> argument inside a WsgiApplication that uses Wsdl 1.1 as
+interface document and Soap 1.1 and both input and output protocols.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="spyne.util.simple.wsgi_soap_application">
+<tt class="descclassname">spyne.util.simple.</tt><tt class="descname">wsgi_soap_application</tt><big>(</big><em>services</em>, <em>tns='spyne.simple.soap'</em>, <em>validator=None</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#spyne.util.simple.wsgi_soap_application" title="Permalink to this definition">¶</a></dt>
+<dd><p>DEPRECATED! Use <a class="reference internal" href="#spyne.util.simple.wsgi_soap11_application" title="spyne.util.simple.wsgi_soap11_application"><tt class="xref py py-func docutils literal"><span class="pre">wsgi_soap11_application()</span></tt></a> instead.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-spyne.util.xml">
+<span id="xml-utilities"></span><h2>Xml Utilities<a class="headerlink" href="#module-spyne.util.xml" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="spyne.util.xml.get_object_as_xml">
+<tt class="descclassname">spyne.util.xml.</tt><tt class="descname">get_object_as_xml</tt><big>(</big><em>value</em>, <em>cls=None</em>, <em>root_tag_name=None</em>, <em>no_namespace=False</em><big>)</big><a class="reference internal" href="../modules/spyne/util/xml.html#get_object_as_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.util.xml.get_object_as_xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an ElementTree representation of a <a class="reference internal" href="model.html#spyne.model.complex.ComplexModel" title="spyne.model.complex.ComplexModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.ComplexModel</span></tt></a>
+child.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>value</strong> &#8211; The instance of the class to be serialized.</li>
+<li><strong>value</strong> &#8211; The root tag string to use. Defaults to the output of
+<tt class="docutils literal"><span class="pre">value.__class__.get_type_name_ns()</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="spyne.util.xml.get_schema_documents">
+<tt class="descclassname">spyne.util.xml.</tt><tt class="descname">get_schema_documents</tt><big>(</big><em>models</em>, <em>default_namespace=None</em><big>)</big><a class="reference internal" href="../modules/spyne/util/xml.html#get_schema_documents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.util.xml.get_schema_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the schema documents in a dict whose keys are namespace prefixes
+and values are Element objects.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>models</strong> &#8211; A list of spyne.model classes that will be represented in
+the schema.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="spyne.util.xml.get_validation_schema">
+<tt class="descclassname">spyne.util.xml.</tt><tt class="descname">get_validation_schema</tt><big>(</big><em>models</em>, <em>default_namespace=None</em><big>)</big><a class="reference internal" href="../modules/spyne/util/xml.html#get_validation_schema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.util.xml.get_validation_schema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the validation schema object for the given models.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>models</strong> &#8211; A list of spyne.model classes that will be represented in
+the schema.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="spyne.util.xml.get_xml_as_object">
+<tt class="descclassname">spyne.util.xml.</tt><tt class="descname">get_xml_as_object</tt><big>(</big><em>elt</em>, <em>cls</em><big>)</big><a class="reference internal" href="../modules/spyne/util/xml.html#get_xml_as_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.util.xml.get_xml_as_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a native <a class="reference internal" href="model.html#spyne.model.complex.ComplexModel" title="spyne.model.complex.ComplexModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.ComplexModel</span></tt></a> child from an
+ElementTree representation of the same class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>value</strong> &#8211; The class the xml document represents.</li>
+<li><strong>value</strong> &#8211; The xml document to be deserialized.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-spyne.util.odict">
+<span id="ordered-dictionary"></span><h2>Ordered Dictionary<a class="headerlink" href="#module-spyne.util.odict" title="Permalink to this headline">¶</a></h2>
+<p>This module contains a sort of an ordered dictionary implementation.</p>
+<dl class="class">
+<dt id="spyne.util.odict.odict">
+<em class="property">class </em><tt class="descclassname">spyne.util.odict.</tt><tt class="descname">odict</tt><big>(</big><em>data=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="../modules/spyne/util/odict.html#odict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.util.odict.odict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sort of an ordered dictionary implementation.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-spyne.util.oset">
+<span id="ordered-set"></span><h2>Ordered Set<a class="headerlink" href="#module-spyne.util.oset" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">spyne.util.oset</span></tt> package contains implementation of an ordered set
+that works on Python versions 2.4 through 2.7.</p>
+</div>
+<div class="section" id="module-spyne.util.protocol">
+<span id="protocol-helpers"></span><h2>Protocol Helpers<a class="headerlink" href="#module-spyne.util.protocol" title="Permalink to this headline">¶</a></h2>
+<p>Helpers for protocol boilerplate.</p>
+<dl class="function">
+<dt id="spyne.util.protocol.deserialize_request_string">
+<tt class="descclassname">spyne.util.protocol.</tt><tt class="descname">deserialize_request_string</tt><big>(</big><em>string</em>, <em>app</em><big>)</big><a class="reference internal" href="../modules/spyne/util/protocol.html#deserialize_request_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.util.protocol.deserialize_request_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deserialize request string using in_protocol in application definition.
+Returns the corresponding native python object.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../tests.html" title="Running Tests"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="auxproc.html" title="Auxiliary Processors"
+             >previous</a> |</li>
+        <li><a href="../index.html">spyne 2.9.4 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Spyne API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

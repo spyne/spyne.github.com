@@ -1,0 +1,202 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Running Tests &mdash; spyne 2.10.0 documentation</title>
+    
+    <link rel="stylesheet" href="static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.10.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="spyne 2.10.0 documentation" href="index.html" />
+    <link rel="next" title="Spyne FAQ" href="faq.html" />
+    <link rel="prev" title="Miscellanous Spyne Utilities" href="reference/util.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="faq.html" title="Spyne FAQ"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="reference/util.html" title="Miscellanous Spyne Utilities"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">spyne 2.10.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Running Tests</a><ul>
+<li><a class="reference internal" href="#soap-interoperability-tests">SOAP Interoperability Tests</a><ul>
+<li><a class="reference internal" href="#python">Python</a></li>
+<li><a class="reference internal" href="#ruby">Ruby</a></li>
+<li><a class="reference internal" href="#net">.Net</a></li>
+<li><a class="reference internal" href="#java">Java</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="reference/util.html"
+                        title="previous chapter">Miscellanous Spyne Utilities</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="faq.html"
+                        title="next chapter">Spyne FAQ</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/tests.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="running-tests">
+<h1>Running Tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h1>
+<p>While the test coverage for Spyne is not that bad, we always accept new tests
+that cover new use-cases. Please consider contributing tests even if your
+use-case is working fine! Given the nature of open-source projects, Spyne may
+shift focus or change maintainers in the future. This can result in patches
+which may cause incompatibilities with your existing code base. The only way to
+detect such corner cases is to have a great test suite.</p>
+<p>Spyne&#8217;s master repository is already integrated with travis-ci.org. Head over to
+<a class="reference external" href="http://travis-ci.org/arskom/spyne">http://travis-ci.org/arskom/spyne</a> to see it for yourself.</p>
+<p>As the necessary configuration is already done, It&#8217;s very simple to integrate
+your own fork of Spyne. Just sign in with your Github account and follow
+instructions.</p>
+<p>If you want to run the tests yourself, <a class="reference external" href="http://pytest.org/latest/">pytest</a> :</p>
+<div class="highlight-python"><pre>python setup.py test</pre>
+</div>
+<p>or you can run individiual tests with py.test:</p>
+<div class="highlight-python"><pre>py.test -v --tb=short spyne/test/protocol/test_json.py</pre>
+</div>
+<p>or directly by executing them:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">spyne</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">protocol</span><span class="o">/</span><span class="n">test_json</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<div class="section" id="soap-interoperability-tests">
+<h2>SOAP Interoperability Tests<a class="headerlink" href="#soap-interoperability-tests" title="Permalink to this headline">¶</a></h2>
+<p>The interoperability servers require twisted.web.</p>
+<div class="section" id="python">
+<h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
+<p>Python interop tests currently use Spyne&#8217;s own clients and suds. For The suds
+test is the first thing we check and try not to break.</p>
+</div>
+<div class="section" id="ruby">
+<h3>Ruby<a class="headerlink" href="#ruby" title="Permalink to this headline">¶</a></h3>
+<p>You need Ruby 1.8.x to run the ruby interop test against soap_http_basic.
+Unfortunately, the Ruby Soap client does not do proper handling of namespaces,
+so you&#8217;ll need to turn off strict validation if you want to work with ruby
+clients.</p>
+<p>Ruby test module is very incomplete, implementing only two (echo_string and
+echo_integer) tests. We&#8217;re looking for volunteers who&#8217;d like to work on
+increasing test coverage for other use cases.</p>
+</div>
+<div class="section" id="net">
+<h3>.Net<a class="headerlink" href="#net" title="Permalink to this headline">¶</a></h3>
+<p>There isn&#8217;t any .Net tests for Spyne. WS-I test compliance reportedly covers
+.Net use cases as well. Patches are welcome!</p>
+</div>
+<div class="section" id="java">
+<h3>Java<a class="headerlink" href="#java" title="Permalink to this headline">¶</a></h3>
+<p>The WS-I test is written in Java. But unfortunately, it only focuses on Wsdl
+document and not the Soap functionality itself. We&#8217;re looking for volunteers
+who&#8217;d like to work on writing Java interop tests for spyne.</p>
+<p>To run the Wsdl tests, you should first get wsi-interop-tools package from
+<a class="reference external" href="http://ws-i.org">http://ws-i.org</a> and unpack it next to test_wsi.py. Here are the relevant links:</p>
+<p><a class="reference external" href="http://www.ws-i.org/deliverables/workinggroup.aspx?wg=testingtools">http://www.ws-i.org/deliverables/workinggroup.aspx?wg=testingtools</a>
+<a class="reference external" href="http://www.ws-i.org/Testing/Tools/2005/06/WSI_Test_Java_Final_1.1.zip">http://www.ws-i.org/Testing/Tools/2005/06/WSI_Test_Java_Final_1.1.zip</a></p>
+<p>See also test_wsi.py for more info.</p>
+<p>Now run the soap_http_basic interop test server and run test_wsi.py. If all goes
+well, you should get a new wsi-report-spyne.xml file in the same directory.</p>
+<p>Here&#8217;s the directory tree from a working setup:</p>
+<div class="highlight-python"><pre>|-- README.rst
+|-- (...)
+|-- interop
+|   |-- (...)
+|   |-- test_wsi.py
+|   `-- wsi-test-tools
+|       |-- License.htm
+|       |-- README.txt
+|       `-- (...)
+`-- (...)</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="faq.html" title="Spyne FAQ"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="reference/util.html" title="Miscellanous Spyne Utilities"
+             >previous</a> |</li>
+        <li><a href="index.html">spyne 2.10.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,362 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>spyne.decorator &mdash; spyne 2.9.4 documentation</title>
+    
+    <link rel="stylesheet" href="../../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.9.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.9.4 documentation" href="../../index.html" />
+    <link rel="up" title="spyne" href="../spyne.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">spyne 2.9.4 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for spyne.decorator</h1><div class="highlight"><pre>
+<span class="c">#</span>
+<span class="c"># spyne - Copyright (C) Spyne contributors.</span>
+<span class="c">#</span>
+<span class="c"># This library is free software; you can redistribute it and/or</span>
+<span class="c"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c"># License as published by the Free Software Foundation; either</span>
+<span class="c"># version 2.1 of the License, or (at your option) any later version.</span>
+<span class="c">#</span>
+<span class="c"># This library is distributed in the hope that it will be useful,</span>
+<span class="c"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c"># Lesser General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c"># License along with this library; if not, write to the Free Software</span>
+<span class="c"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301</span>
+<span class="c">#</span>
+
+<span class="sd">&quot;&quot;&quot;The ``spyne.decorator`` module contains the the @srpc decorator and its</span>
+<span class="sd">helper methods. The @srpc decorator is responsible for tagging methods as remote</span>
+<span class="sd">procedure calls extracting method&#39;s input and output types.</span>
+
+<span class="sd">It&#39;s possible to create custom decorators that wrap the @srpc decorator in order</span>
+<span class="sd">to have a more elegant way of passing frequently-used parameter values. The @rpc</span>
+<span class="sd">decorator is a simple example of this.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">spyne._base</span> <span class="kn">import</span> <span class="n">BODY_STYLE_EMPTY</span>
+<span class="kn">from</span> <span class="nn">spyne</span> <span class="kn">import</span> <span class="n">MethodDescriptor</span>
+<span class="kn">from</span> <span class="nn">spyne._base</span> <span class="kn">import</span> <span class="n">BODY_STYLE_WRAPPED</span>
+<span class="kn">from</span> <span class="nn">spyne._base</span> <span class="kn">import</span> <span class="n">BODY_STYLE_BARE</span>
+<span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">ComplexModel</span>
+<span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">TypeInfo</span>
+
+<span class="kn">from</span> <span class="nn">spyne.const.xml_ns</span> <span class="kn">import</span> <span class="n">DEFAULT_NS</span>
+<span class="kn">from</span> <span class="nn">spyne.const.suffix</span> <span class="kn">import</span> <span class="n">RESPONSE_SUFFIX</span>
+<span class="kn">from</span> <span class="nn">spyne.const.suffix</span> <span class="kn">import</span> <span class="n">RESULT_SUFFIX</span>
+
+<span class="k">def</span> <span class="nf">_produce_input_message</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">kparams</span><span class="p">,</span> <span class="n">_in_message_name</span><span class="p">,</span> <span class="n">_in_variable_names</span><span class="p">,</span> <span class="n">no_ctx</span><span class="p">):</span>
+    <span class="n">_body_style</span> <span class="o">=</span> <span class="n">_validate_body_style</span><span class="p">(</span><span class="n">kparams</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">no_ctx</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">arg_start</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">arg_start</span><span class="o">=</span><span class="mi">1</span>
+
+    <span class="n">argcount</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_argcount</span>
+    <span class="n">param_names</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_varnames</span><span class="p">[</span><span class="n">arg_start</span><span class="p">:</span><span class="n">argcount</span><span class="p">]</span>
+
+    <span class="n">in_params</span> <span class="o">=</span> <span class="n">TypeInfo</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">param_names</span><span class="p">)):</span>
+            <span class="n">e0</span> <span class="o">=</span> <span class="n">_in_variable_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">param_names</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">param_names</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">e1</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="n">in_params</span><span class="p">[</span><span class="n">e0</span><span class="p">]</span> <span class="o">=</span> <span class="n">e1</span>
+
+    <span class="k">except</span> <span class="ne">IndexError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;The parameter numbers of the </span><span class="si">%r</span><span class="s"> function and its &quot;</span>
+                        <span class="s">&quot;decorator mismatch.&quot;</span> <span class="o">%</span> <span class="n">f</span><span class="o">.</span><span class="n">func_name</span><span class="p">)</span>
+
+    <span class="n">ns</span> <span class="o">=</span> <span class="n">DEFAULT_NS</span>
+    <span class="k">if</span> <span class="n">_in_message_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;{&quot;</span><span class="p">):</span>
+        <span class="n">ns</span> <span class="o">=</span> <span class="n">_in_message_name</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s">&quot;}&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">_body_style</span> <span class="o">==</span> <span class="s">&#39;bare&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">in_params</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;body_style=&#39;bare&#39; can handle at most one function &quot;</span>
+                                                                    <span class="s">&quot;argument.&quot;</span><span class="p">)</span>
+        <span class="n">in_param</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">in_params</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">in_param</span><span class="p">,</span> <span class="o">=</span> <span class="n">in_params</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+
+        <span class="n">message</span> <span class="o">=</span> <span class="n">ComplexModel</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="n">_in_message_name</span><span class="p">,</span> <span class="n">ns</span><span class="p">,</span> <span class="n">in_param</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">ComplexModel</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">type_name</span><span class="o">=</span><span class="n">_in_message_name</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="n">ns</span><span class="p">,</span>
+                                                              <span class="n">members</span><span class="o">=</span><span class="n">in_params</span><span class="p">)</span>
+        <span class="n">message</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="n">ns</span>
+
+
+    <span class="k">return</span> <span class="n">message</span>
+
+<span class="k">def</span> <span class="nf">_validate_body_style</span><span class="p">(</span><span class="n">kparams</span><span class="p">):</span>
+    <span class="n">_body_style</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_body_style&#39;</span><span class="p">)</span>
+    <span class="n">_soap_body_style</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_soap_body_style&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">_body_style</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">_body_style</span> <span class="o">=</span> <span class="s">&#39;wrapped&#39;</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="p">(</span><span class="n">_body_style</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;wrapped&#39;</span><span class="p">,</span> <span class="s">&#39;bare&#39;</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;body_style must be one of (&#39;wrapped&#39;, &#39;bare&#39;)&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">_soap_body_style</span> <span class="o">==</span> <span class="s">&#39;document&#39;</span><span class="p">:</span>
+        <span class="n">_body_style</span> <span class="o">=</span> <span class="s">&#39;bare&#39;</span>
+    <span class="k">elif</span> <span class="n">_soap_body_style</span> <span class="o">==</span> <span class="s">&#39;rpc&#39;</span><span class="p">:</span>
+        <span class="n">_body_style</span> <span class="o">=</span> <span class="s">&#39;wrapped&#39;</span>
+    <span class="k">elif</span> <span class="n">_soap_body_style</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;soap_body_style must be one of (&#39;rpc&#39;, &#39;document&#39;)&quot;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">_body_style</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;wrapped&#39;</span><span class="p">,</span> <span class="s">&#39;bare&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_body_style</span>
+
+<span class="k">def</span> <span class="nf">_produce_output_message</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">func_name</span><span class="p">,</span> <span class="n">kparams</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate an output message for &quot;rpc&quot;-style API methods.</span>
+
+<span class="sd">    This message is a wrapper to the declared return type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_returns</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_returns&#39;</span><span class="p">)</span>
+    <span class="n">_body_style</span> <span class="o">=</span> <span class="n">_validate_body_style</span><span class="p">(</span><span class="n">kparams</span><span class="p">)</span>
+
+    <span class="n">_out_message_name</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_out_message&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s%s</span><span class="s">&#39;</span> <span class="o">%</span>
+                                                    <span class="p">(</span><span class="n">func_name</span><span class="p">,</span> <span class="n">RESPONSE_SUFFIX</span><span class="p">))</span>
+    <span class="n">out_params</span> <span class="o">=</span> <span class="n">TypeInfo</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">_returns</span> <span class="ow">and</span> <span class="n">_body_style</span> <span class="o">==</span> <span class="s">&#39;wrapped&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_returns</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="n">default_names</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;</span><span class="si">%s%s%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">func_name</span><span class="p">,</span> <span class="n">RESULT_SUFFIX</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span>
+                                                           <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">_returns</span><span class="p">))]</span>
+
+            <span class="n">_out_variable_names</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_out_variable_names&#39;</span><span class="p">,</span>
+                                                                  <span class="n">default_names</span><span class="p">)</span>
+
+            <span class="k">assert</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">_returns</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">_out_variable_names</span><span class="p">))</span>
+
+            <span class="n">var_pair</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">_out_variable_names</span><span class="p">,</span> <span class="n">_returns</span><span class="p">)</span>
+            <span class="n">out_params</span> <span class="o">=</span> <span class="n">TypeInfo</span><span class="p">(</span><span class="n">var_pair</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_out_variable_name</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_out_variable_name&#39;</span><span class="p">,</span>
+                                           <span class="s">&#39;</span><span class="si">%s%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">func_name</span><span class="p">,</span> <span class="n">RESULT_SUFFIX</span><span class="p">))</span>
+
+            <span class="n">out_params</span><span class="p">[</span><span class="n">_out_variable_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_returns</span>
+
+    <span class="n">ns</span> <span class="o">=</span> <span class="n">DEFAULT_NS</span>
+    <span class="k">if</span> <span class="n">_out_message_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;{&quot;</span><span class="p">):</span>
+        <span class="n">ns</span> <span class="o">=</span> <span class="n">_out_message_name</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s">&quot;}&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">_body_style</span> <span class="o">==</span> <span class="s">&#39;bare&#39;</span> <span class="ow">and</span> <span class="n">_returns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">ComplexModel</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="n">_out_message_name</span><span class="p">,</span> <span class="n">ns</span><span class="p">,</span> <span class="n">_returns</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">ComplexModel</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">type_name</span><span class="o">=</span><span class="n">_out_message_name</span><span class="p">,</span>
+                                        <span class="n">namespace</span><span class="o">=</span><span class="n">ns</span><span class="p">,</span>
+                                        <span class="n">members</span><span class="o">=</span><span class="n">out_params</span><span class="p">)</span>
+        <span class="n">message</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="n">ns</span> <span class="c"># FIXME: is this necessary?</span>
+
+
+    <span class="k">return</span> <span class="n">message</span>
+
+<span class="k">def</span> <span class="nf">rpc</span><span class="p">(</span><span class="o">*</span><span class="n">params</span><span class="p">,</span> <span class="o">**</span><span class="n">kparams</span><span class="p">):</span>
+<div class="viewcode-block" id="rpc"><a class="viewcode-back" href="../../reference/decorator.html#spyne.decorator.rpc">[docs]</a>    <span class="sd">&#39;&#39;&#39;Method decorator to tag a method as a remote procedure call. See</span>
+<span class="sd">    :func:`spyne.decorator.srpc` for detailed information.</span>
+
+<span class="sd">    This decorator enables passing :class:`spyne.MethodContext` instance as an</span>
+<span class="sd">    implicit first argument to the user callable.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">kparams</span><span class="p">[</span><span class="s">&quot;_no_ctx&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="n">srpc</span><span class="p">(</span><span class="o">*</span><span class="n">params</span><span class="p">,</span> <span class="o">**</span><span class="n">kparams</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">srpc</span><span class="p">(</span><span class="o">*</span><span class="n">params</span><span class="p">,</span> <span class="o">**</span><span class="n">kparams</span><span class="p">):</span></div>
+<div class="viewcode-block" id="srpc"><a class="viewcode-back" href="../../reference/decorator.html#spyne.decorator.srpc">[docs]</a>    <span class="sd">&#39;&#39;&#39;Method decorator to tag a method as a remote procedure call.</span>
+
+<span class="sd">    The methods tagged with this decorator do not behave like a normal python</span>
+<span class="sd">    method but return &#39;MethodDescriptor&#39; object when called.</span>
+
+<span class="sd">    The initial &quot;s&quot; stands for &quot;static&quot;. In Spyne&#39;s context, that means no</span>
+<span class="sd">    implicit first argument is passed to the user callable.</span>
+
+<span class="sd">    You should use the :class:`spyne.server.null.NullServer` transport if you</span>
+<span class="sd">    want to call the methods directly. You can also use the &#39;function&#39; attribute</span>
+<span class="sd">    of the returned object to call the function itself.</span>
+
+<span class="sd">    :param _in_header: A type or an iterable of types that that this method</span>
+<span class="sd">        accepts as incoming header.</span>
+<span class="sd">    :param _out_header: A type or an iterable of types that that this method</span>
+<span class="sd">        sends as outgoing header.</span>
+<span class="sd">    :param _in_message_name: The public name of the function.</span>
+<span class="sd">    :param _in_variable_names: The public names of the function arguments. It&#39;s</span>
+<span class="sd">        a dict that maps argument names in the code to public ones.</span>
+<span class="sd">    :param _out_variable_name: The public name of the function response object.</span>
+<span class="sd">        It&#39;s a string. Ignored when ``_body_style != &#39;wrapped&#39;`` or ``_returns``</span>
+<span class="sd">        is a sequence.</span>
+<span class="sd">    :param _out_variable_names: The public name of the function response object.</span>
+<span class="sd">        It&#39;s a sequence of strings. Ignored when ``_body_style != &#39;wrapped&#39;`` or</span>
+<span class="sd">        or ``_returns`` is not a sequence. Must be the same length as</span>
+<span class="sd">        ``_returns``.</span>
+<span class="sd">    :param _body_style: One of ``(&#39;bare&#39;, &#39;wrapped&#39;)``. Default: ``&#39;wrapped&#39;``.</span>
+<span class="sd">        In wrapped mode, wraps response objects in an additional class.</span>
+<span class="sd">    :param _soap_body_style: One of (&#39;rpc&#39;, &#39;document&#39;). Default ``&#39;document&#39;``.</span>
+<span class="sd">        ``_soap_body_style=&#39;document&#39;`` is an alias for ``_body_style=&#39;wrapped&#39;``.</span>
+<span class="sd">        ``_soap_body_style=&#39;rpc&#39;`` is an alias for ``_body_style=&#39;bare&#39;``.</span>
+<span class="sd">    :param _port_type: Soap port type string.</span>
+<span class="sd">    :param _no_ctx: Don&#39;t pass implicit ctx object to the user method.</span>
+<span class="sd">    :param _udp: Short for UserDefinedProperties, you can use this to mark the</span>
+<span class="sd">        method with arbitrary metadata.</span>
+<span class="sd">    :param _aux: The auxiliary backend to run this method. ``None`` if primary.</span>
+<span class="sd">    :param _throws: A sequence of exceptions that this function can throw. No</span>
+<span class="sd">        real functionality besides publishing this information in interface</span>
+<span class="sd">        documents.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">explain</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">explain_method</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">function_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;_default_function_name&#39;</span><span class="p">]</span>
+
+            <span class="n">_is_callback</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_is_callback&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+            <span class="n">_is_async</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_is_async&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+            <span class="n">_mtom</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_mtom&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+            <span class="n">_in_header</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_in_header&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="n">_out_header</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_out_header&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="n">_port_type</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_soap_port_type&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="n">_no_ctx</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_no_ctx&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+            <span class="n">_udp</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_udp&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="n">_aux</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_aux&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="n">_pattern</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;_pattern&quot;</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+            <span class="n">_patterns</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;_patterns&quot;</span><span class="p">,[])</span>
+
+            <span class="n">_faults</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s">&#39;_faults&#39;</span> <span class="ow">in</span> <span class="n">kparams</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s">&#39;_throws&#39;</span> <span class="ow">in</span> <span class="n">kparams</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;only one of &#39;_throws &#39; and &#39;_faults&#39; arguments&quot;</span>
+                                 <span class="s">&quot;should be given, as they&#39;re synonyms.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s">&#39;_faults&#39;</span> <span class="ow">in</span> <span class="n">kparams</span><span class="p">:</span>
+                <span class="n">_faults</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_faults&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s">&#39;_throws&#39;</span> <span class="ow">in</span> <span class="n">kparams</span><span class="p">:</span>
+                <span class="n">_faults</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_throws&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+            <span class="n">_in_message_name</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_in_message_name&#39;</span><span class="p">,</span> <span class="n">function_name</span><span class="p">)</span>
+            <span class="n">_in_variable_names</span> <span class="o">=</span> <span class="n">kparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;_in_variable_names&#39;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="n">in_message</span> <span class="o">=</span> <span class="n">_produce_input_message</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">kparams</span><span class="p">,</span> 
+                                <span class="n">_in_message_name</span><span class="p">,</span> <span class="n">_in_variable_names</span><span class="p">,</span> <span class="n">_no_ctx</span><span class="p">)</span>
+
+            <span class="n">out_message</span> <span class="o">=</span> <span class="n">_produce_output_message</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">kparams</span><span class="p">)</span>
+
+            <span class="n">doc</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">&#39;__doc__&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">_pattern</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">_patterns</span> <span class="o">!=</span> <span class="p">[]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;only one of &#39;_pattern&#39; and &#39;__patterns&#39; &quot;</span>
+                                                    <span class="s">&quot;arguments should be given&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">_pattern</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">_patterns</span> <span class="o">=</span> <span class="p">[</span><span class="n">_pattern</span><span class="p">]</span>
+
+            <span class="n">body_style</span> <span class="o">=</span> <span class="n">BODY_STYLE_WRAPPED</span>
+            <span class="k">if</span> <span class="n">_validate_body_style</span><span class="p">(</span><span class="n">kparams</span><span class="p">)</span> <span class="o">==</span> <span class="s">&#39;bare&#39;</span><span class="p">:</span>
+                <span class="n">body_style</span> <span class="o">=</span> <span class="n">BODY_STYLE_BARE</span>
+                <span class="n">t</span><span class="p">,</span> <span class="o">=</span> <span class="n">in_message</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">t</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">body_style</span> <span class="o">=</span> <span class="n">BODY_STYLE_EMPTY</span>
+
+            <span class="n">retval</span> <span class="o">=</span> <span class="n">MethodDescriptor</span><span class="p">(</span><span class="n">f</span><span class="p">,</span>
+                    <span class="n">in_message</span><span class="p">,</span> <span class="n">out_message</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="n">_is_callback</span><span class="p">,</span> <span class="n">_is_async</span><span class="p">,</span>
+                    <span class="n">_mtom</span><span class="p">,</span> <span class="n">_in_header</span><span class="p">,</span> <span class="n">_out_header</span><span class="p">,</span> <span class="n">_faults</span><span class="p">,</span>
+                    <span class="n">port_type</span><span class="o">=</span><span class="n">_port_type</span><span class="p">,</span> <span class="n">no_ctx</span><span class="o">=</span><span class="n">_no_ctx</span><span class="p">,</span> <span class="n">udp</span><span class="o">=</span><span class="n">_udp</span><span class="p">,</span>
+                    <span class="n">class_key</span><span class="o">=</span><span class="n">function_name</span><span class="p">,</span> <span class="n">aux</span><span class="o">=</span><span class="n">_aux</span><span class="p">,</span> <span class="n">patterns</span><span class="o">=</span><span class="n">_patterns</span><span class="p">,</span>
+                    <span class="n">body_style</span><span class="o">=</span><span class="n">body_style</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">retval</span>
+
+        <span class="n">explain_method</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">__doc__</span>
+        <span class="n">explain_method</span><span class="o">.</span><span class="n">_is_rpc</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">return</span> <span class="n">explain_method</span>
+    <span class="k">return</span> <span class="n">explain</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">spyne 2.9.4 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../spyne.html" >spyne</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

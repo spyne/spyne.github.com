@@ -1,0 +1,249 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>User Manager &mdash; spyne 2.10.0 documentation</title>
+    
+    <link rel="stylesheet" href="../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.10.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.10.0 documentation" href="../index.html" />
+    <link rel="up" title="Spyne Manual" href="index.html" />
+    <link rel="next" title="SQLAlchemy Integration" href="04-01_sqlalchemy.html" />
+    <link rel="prev" title="Hello World" href="02_helloworld.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="04-01_sqlalchemy.html" title="SQLAlchemy Integration"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="02_helloworld.html" title="Hello World"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Spyne Manual</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">User Manager</a><ul>
+<li><a class="reference internal" href="#what-s-next">What&#8217;s next?</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="02_helloworld.html"
+                        title="previous chapter">Hello World</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="04-01_sqlalchemy.html"
+                        title="next chapter">SQLAlchemy Integration</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../sources/manual/03_usermanager.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="user-manager">
+<span id="manual-user-manager"></span><h1>User Manager<a class="headerlink" href="#user-manager" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial builds on the <a class="reference internal" href="02_helloworld.html#manual-helloworld"><em>Hello World</em></a> tutorial. If you haven&#8217;t
+done so, we recommended you to read it first.</p>
+<p>In this tutorial, we will talk about:</p>
+<ul class="simple">
+<li>Defining complex types.</li>
+<li>Customizing types.</li>
+<li>Defining events.</li>
+</ul>
+<p>The simple example that we are going to be studying here using complex, nested
+data is available here:
+<a class="reference external" href="http://github.com/arskom/spyne/blob/master/examples/user_manager/server_basic.py">http://github.com/arskom/spyne/blob/master/examples/user_manager/server_basic.py</a></p>
+<p>Jumping into what&#8217;s new: Spyne uses <tt class="docutils literal"><span class="pre">ComplexModel</span></tt> as a general type that,
+when subclassed, will produce complex serializable types that can be used in a
+public service. The <tt class="docutils literal"><span class="pre">Permission</span></tt> class is a fairly simple class with just
+two members:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Permission</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
+    <span class="n">application</span> <span class="o">=</span> <span class="n">Unicode</span>
+    <span class="n">feature</span> <span class="o">=</span> <span class="n">Unicode</span>
+</pre></div>
+</div>
+<p>Let&#8217;s also look at the <tt class="docutils literal"><span class="pre">User</span></tt> class:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">Integer</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">Unicode</span>
+    <span class="n">firstname</span> <span class="o">=</span> <span class="n">Unicode</span>
+    <span class="n">lastname</span> <span class="o">=</span> <span class="n">Unicode</span>
+</pre></div>
+</div>
+<p>Nothing new so far.</p>
+<p>Below, you can see that the <tt class="docutils literal"><span class="pre">email</span></tt> member which has a regular expression
+restriction defined. The <tt class="docutils literal"><span class="pre">Unicode</span></tt> type accepts other restrictions, please
+refer to the <a class="reference internal" href="../reference/model.html#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a> documentation for more
+information:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">email</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s">r&#39;\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[A-Z]{2,4}\b&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">permissions</span></tt> attribute is an array, whose native type is a <tt class="docutils literal"><span class="pre">list</span></tt> of
+<tt class="docutils literal"><span class="pre">Permission</span></tt> objects.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">permissions</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="n">Permission</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The following is deserialized as a generator, but looks the same from the
+points of view of protocol and interface documents:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">permissions</span> <span class="o">=</span> <span class="n">Iterable</span><span class="p">(</span><span class="n">Permission</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The following is deserialized as a list of <tt class="docutils literal"><span class="pre">Permission</span></tt> objects, just like with
+the <tt class="docutils literal"><span class="pre">Array</span></tt> example, but is shown and serialized differently in Wsdl and Soap
+representations.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">permissions</span> <span class="o">=</span> <span class="n">Permission</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="n">max_occurs</span><span class="o">=</span><span class="s">&#39;unbounded&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With the <tt class="docutils literal"><span class="pre">Array</span></tt> and <tt class="docutils literal"><span class="pre">Iterable</span></tt> types, a container class wraps multiple
+occurences of the inner data type. So <tt class="docutils literal"><span class="pre">Array(Permission)</span></tt> is actually
+equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">PermissionArray</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
+    <span class="n">Permisstion</span> <span class="o">=</span> <span class="n">Permission</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="n">max_occurs</span><span class="o">=</span><span class="s">&#39;unbounded&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, we need to use the <a class="reference internal" href="../reference/model.html#spyne.model._base.ModelBase.customize" title="spyne.model._base.ModelBase.customize"><tt class="xref py py-func docutils literal"><span class="pre">spyne.model._base.ModelBase.customize()</span></tt></a> call
+because calling a <tt class="docutils literal"><span class="pre">ComplexModel</span></tt> subclass instantiates that class, whereas
+calling a <tt class="docutils literal"><span class="pre">SimpleModel</span></tt> child implicitly calls the <tt class="docutils literal"><span class="pre">.customize</span></tt> method of
+that class.</p>
+<p>The <tt class="docutils literal"><span class="pre">customize</span></tt> function just sets given arguments as class attributes to
+<tt class="docutils literal"><span class="pre">cls.Attributes</span></tt> class. You can refer to the documentation of each class to
+see which member of the <tt class="docutils literal"><span class="pre">Attributes</span></tt> class is used for the given object.</p>
+<p>Here, we define a function to be called for every method call. It instantiates
+the <tt class="docutils literal"><span class="pre">UserDefinedContext</span></tt> class and sets it to the context object&#8217;s <tt class="docutils literal"><span class="pre">udc</span></tt>
+attribute, which is in fact short for &#8216;User Defined Context&#8217;.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">_on_method_call</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">udc</span> <span class="o">=</span> <span class="n">UserDefinedContext</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We register it to the application&#8217;s &#8216;method_call&#8217; handler.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">application</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">add_listener</span><span class="p">(</span><span class="s">&#39;method_call&#39;</span><span class="p">,</span> <span class="n">_on_method_call</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that registering it to the service definition&#8217;s event manager would have
+the same effect, but it&#8217;d have to be set for every service definition:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">UserManagerService</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">add_listener</span><span class="p">(</span><span class="s">&#39;method_call&#39;</span><span class="p">,</span> <span class="n">_on_method_call</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also prefer to define your own <tt class="docutils literal"><span class="pre">ServiceBase</span></tt> class and use it as a
+base class throughout your projects:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyServiceBase</span><span class="p">(</span><span class="n">ServiceBase</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="n">MyServiceBase</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">add_listener</span><span class="p">(</span><span class="s">&#39;method_call&#39;</span><span class="p">,</span> <span class="n">_on_method_call</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next, we define the UserDefinedContext object. It&#8217;s just a regular python class
+with no specific api it should adhere to, other than your own.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">UserDefinedContext</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">users</span> <span class="o">=</span> <span class="n">_user_database</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_next_user_id</span><span class="p">():</span>
+        <span class="k">global</span> <span class="n">_user_id_seq</span>
+
+        <span class="n">_user_id_seq</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">_user_id_seq</span>
+</pre></div>
+</div>
+<p>Such custom objects could be used to manage everything from transactions to
+logging or to performance measurements. You can have a look at the
+<a class="reference external" href="http://github.com/arskom/spyne/blob/master/examples/user_manager/server_basic.py">events.py example</a>
+in the examples directory in the source distribution for an example on using
+events to measure method performance)</p>
+<div class="section" id="what-s-next">
+<h2>What&#8217;s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial walks you through what you need to know to expose more complex
+services. You can read the <a class="reference internal" href="04-01_sqlalchemy.html#manual-sqlalchemy"><em>SQLAlchemy Integration</em></a> document where the
+<a class="reference internal" href="../reference/model.html#spyne.model.table.TableModel" title="spyne.model.table.TableModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.table.TableModel</span></tt></a> class and its helpers are introduced.
+You can also have look at the <a class="reference internal" href="04-02_validation.html#manual-validation"><em>Input Validation</em></a> section where Spyne&#8217;s
+imperative and declarative input validation features are introduced.</p>
+<p>Otherwise, please refer to the rest of the documentation or the mailing list
+if you have further questions.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="04-01_sqlalchemy.html" title="SQLAlchemy Integration"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="02_helloworld.html" title="Hello World"
+             >previous</a> |</li>
+        <li><a href="../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Spyne Manual</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,168 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>spyne.model.fault &mdash; spyne 2.9.4 documentation</title>
+    
+    <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.9.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.9.4 documentation" href="../../../index.html" />
+    <link rel="up" title="spyne" href="../../spyne.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">spyne 2.9.4 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for spyne.model.fault</h1><div class="highlight"><pre>
+<span class="c">#</span>
+<span class="c"># spyne - Copyright (C) Spyne contributors.</span>
+<span class="c">#</span>
+<span class="c"># This library is free software; you can redistribute it and/or</span>
+<span class="c"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c"># License as published by the Free Software Foundation; either</span>
+<span class="c"># version 2.1 of the License, or (at your option) any later version.</span>
+<span class="c">#</span>
+<span class="c"># This library is distributed in the hope that it will be useful,</span>
+<span class="c"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c"># Lesser General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c"># License along with this library; if not, write to the Free Software</span>
+<span class="c"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301</span>
+<span class="c">#</span>
+
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">ModelBase</span>
+
+<span class="k">class</span> <span class="nc">Fault</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="Fault"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.fault.Fault">[docs]</a>    <span class="sd">&quot;&quot;&quot;Use this class as a base for all public exceptions.</span>
+<span class="sd">    The Fault object adheres to the</span>
+<span class="sd">    `SOAP 1.1 Fault definition &lt;http://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Toc478383507&gt;`_,</span>
+
+<span class="sd">    which has three main attributes:</span>
+
+<span class="sd">    :param faultcode: It&#39;s a dot-delimited string whose first fragment is</span>
+<span class="sd">        either &#39;Client&#39; or &#39;Server&#39;. Just like HTTP 4xx and 5xx codes,</span>
+<span class="sd">        &#39;Client&#39; indicates that something was wrong with the input, and &#39;Server&#39;</span>
+<span class="sd">        indicates something went wrong during the processing of an otherwise</span>
+<span class="sd">        legitimate request.</span>
+
+<span class="sd">        Protocol implementors should heed the values in ``faultcode`` to set</span>
+<span class="sd">        proper return codes in the protocol level when necessary. E.g. HttpRpc</span>
+<span class="sd">        protocol will return a HTTP 404 error when a</span>
+<span class="sd">        :class:`spyne.error.ResourceNotFound` is raised, and a general HTTP 400</span>
+<span class="sd">        when the ``faultcode`` starts with ``&#39;Client.&#39;`` or is ``&#39;Client&#39;``.</span>
+
+<span class="sd">        Soap would return Http 500 for any kind of exception, and denote the</span>
+<span class="sd">        nature of the exception in the Soap response body. (because that&#39;s what</span>
+<span class="sd">        the standard says... Yes, soap is famous for a reason :))</span>
+<span class="sd">    :param faultstring: It&#39;s the human-readable explanation of the exception.</span>
+<span class="sd">    :param detail: Additional information dict.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&quot;Fault&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">faultcode</span><span class="o">=</span><span class="s">&#39;Server&#39;</span><span class="p">,</span> <span class="n">faultstring</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">faultactor</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span>
+                                                                   <span class="n">detail</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">faultcode</span> <span class="o">=</span> <span class="n">faultcode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">faultstring</span> <span class="o">=</span> <span class="n">faultstring</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">faultactor</span> <span class="o">=</span> <span class="n">faultactor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">detail</span> <span class="o">=</span> <span class="n">detail</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;Fault(</span><span class="si">%s</span><span class="s">: </span><span class="si">%r</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">faultcode</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">faultstring</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_string_iterable</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">faultcode</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\n\n</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">faultstring</span><span class="p">]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">cls</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">():</span> <span class="p">{</span>
+            <span class="s">&quot;faultcode&quot;</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">faultcode</span><span class="p">,</span>
+            <span class="s">&quot;faultstring&quot;</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">faultstring</span><span class="p">,</span>
+            <span class="s">&quot;detail&quot;</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">detail</span><span class="p">,</span>
+        <span class="p">}}</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">spyne 2.9.4 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,251 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Protocol Base Class &mdash; spyne 2.10.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.10.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.10.0 documentation" href="../../index.html" />
+    <link rel="up" title="Protocols" href="index.html" />
+    <link rel="next" title="Http" href="http.html" />
+    <link rel="prev" title="Protocols" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="http.html" title="Http"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Protocols"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Protocols</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Protocols</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="http.html"
+                        title="next chapter">Http</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../sources/reference/protocol/base.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-spyne.protocol._base">
+<span id="protocol-base-class"></span><span id="reference-protocol-base"></span><h1>Protocol Base Class<a class="headerlink" href="#module-spyne.protocol._base" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="spyne.protocol._base.ProtocolBase">
+<em class="property">class </em><tt class="descclassname">spyne.protocol._base.</tt><tt class="descname">ProtocolBase</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>skip_depth=0</em>, <em>ignore_uncap=False</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/_base.html#ProtocolBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol._base.ProtocolBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This is the abstract base class for all protocol implementations. Child
+classes can implement only the required subset of the public methods.</p>
+<p>An output protocol must implement <a class="reference internal" href="#spyne.protocol._base.ProtocolBase.serialize" title="spyne.protocol._base.ProtocolBase.serialize"><tt class="xref py py-func docutils literal"><span class="pre">serialize()</span></tt></a> and
+<a class="reference internal" href="#spyne.protocol._base.ProtocolBase.create_out_string" title="spyne.protocol._base.ProtocolBase.create_out_string"><tt class="xref py py-func docutils literal"><span class="pre">create_out_string()</span></tt></a>.</p>
+<p>An input protocol must implement <a class="reference internal" href="#spyne.protocol._base.ProtocolBase.create_in_document" title="spyne.protocol._base.ProtocolBase.create_in_document"><tt class="xref py py-func docutils literal"><span class="pre">create_in_document()</span></tt></a>,
+<a class="reference internal" href="#spyne.protocol._base.ProtocolBase.decompose_incoming_envelope" title="spyne.protocol._base.ProtocolBase.decompose_incoming_envelope"><tt class="xref py py-func docutils literal"><span class="pre">decompose_incoming_envelope()</span></tt></a> and <a class="reference internal" href="#spyne.protocol._base.ProtocolBase.deserialize" title="spyne.protocol._base.ProtocolBase.deserialize"><tt class="xref py py-func docutils literal"><span class="pre">deserialize()</span></tt></a>.</p>
+<p>The ProtocolBase class supports the following events:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">before_deserialize</span></tt>:
+Called before the deserialization operation is attempted.</li>
+<li><tt class="docutils literal"><span class="pre">after_deserialize</span></tt>:
+Called after the deserialization operation is finished.</li>
+<li><tt class="docutils literal"><span class="pre">before_serialize</span></tt>:
+Called before after the serialization operation is attempted.</li>
+<li><tt class="docutils literal"><span class="pre">after_serialize</span></tt>:
+Called after the serialization operation is finished.</li>
+</ul>
+<p>The arguments the constructor takes are as follows:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>app</strong> &#8211; The application this protocol belongs to.</li>
+<li><strong>validator</strong> &#8211; The type of validation this protocol should do on
+incoming data.</li>
+<li><strong>mime_type</strong> &#8211; The mime_type this protocol should set for transports
+that support this. This is a quick way to override the mime_type by
+default instead of subclassing the releavant protocol implementation.</li>
+<li><strong>skip_depth</strong> &#8211; Number of wrapper classes to ignore. This is
+typically one of (0, 1, 2) but higher numbers may also work for your
+case.</li>
+<li><strong>ignore_uncap</strong> &#8211; Silently ignore cases when the protocol is not capable
+of serializing return values instead of raising a TypeError.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="spyne.protocol._base.ProtocolBase.create_in_document">
+<tt class="descname">create_in_document</tt><big>(</big><em>ctx</em>, <em>in_string_encoding=None</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/_base.html#ProtocolBase.create_in_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol._base.ProtocolBase.create_in_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses <tt class="docutils literal"><span class="pre">ctx.in_string</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.in_document</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.protocol._base.ProtocolBase.create_out_string">
+<tt class="descname">create_out_string</tt><big>(</big><em>ctx</em>, <em>out_string_encoding=None</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/_base.html#ProtocolBase.create_out_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol._base.ProtocolBase.create_out_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses ctx.out_document to set ctx.out_string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.protocol._base.ProtocolBase.decompose_incoming_envelope">
+<tt class="descname">decompose_incoming_envelope</tt><big>(</big><em>ctx</em>, <em>message</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/_base.html#ProtocolBase.decompose_incoming_envelope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol._base.ProtocolBase.decompose_incoming_envelope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the <tt class="docutils literal"><span class="pre">ctx.method_request_string</span></tt>, <tt class="docutils literal"><span class="pre">ctx.in_body_doc</span></tt>,
+<tt class="docutils literal"><span class="pre">ctx.in_header_doc</span></tt> and <tt class="docutils literal"><span class="pre">ctx.service</span></tt> properties of the ctx object,
+if applicable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.protocol._base.ProtocolBase.deserialize">
+<tt class="descname">deserialize</tt><big>(</big><em>ctx</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/_base.html#ProtocolBase.deserialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol._base.ProtocolBase.deserialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a MethodContext instance and a string containing ONE document
+instance in the <tt class="docutils literal"><span class="pre">ctx.in_string</span></tt> attribute.</p>
+<p>Returns the corresponding native python object in the ctx.in_object
+attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.protocol._base.ProtocolBase.fault_to_http_response_code">
+<tt class="descname">fault_to_http_response_code</tt><big>(</big><em>fault</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/_base.html#ProtocolBase.fault_to_http_response_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol._base.ProtocolBase.fault_to_http_response_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Special function to convert native Python exceptions to Http response
+codes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.protocol._base.ProtocolBase.generate_method_contexts">
+<tt class="descname">generate_method_contexts</tt><big>(</big><em>ctx</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/_base.html#ProtocolBase.generate_method_contexts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol._base.ProtocolBase.generate_method_contexts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates MethodContext instances for every callable assigned to the
+given method handle.</p>
+<p>The first element in the returned list is always the primary method
+context whereas the rest are all auxiliary method contexts.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.protocol._base.ProtocolBase.get_call_handles">
+<tt class="descname">get_call_handles</tt><big>(</big><em>ctx</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/_base.html#ProtocolBase.get_call_handles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol._base.ProtocolBase.get_call_handles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to be overriden to perform any sort of custom method mapping
+using any data in the method context. Returns a list of contexts.
+Can return multiple contexts if a method_request_string matches more
+than one function. (This is called the fanout mode.)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.protocol._base.ProtocolBase.serialize">
+<tt class="descname">serialize</tt><big>(</big><em>ctx</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/_base.html#ProtocolBase.serialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol._base.ProtocolBase.serialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a MethodContext instance and the object to be serialized in the
+ctx.out_object attribute.</p>
+<p>Returns the corresponding document structure in the ctx.out_document
+attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.protocol._base.ProtocolBase.set_validator">
+<tt class="descname">set_validator</tt><big>(</big><em>validator</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/_base.html#ProtocolBase.set_validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol._base.ProtocolBase.set_validator" title="Permalink to this definition">¶</a></dt>
+<dd><p>You must override this function if you want your protocol to support
+validation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.protocol._base.ProtocolBase.type">
+<tt class="descname">type</tt><em class="property"> = set([])</em><a class="headerlink" href="#spyne.protocol._base.ProtocolBase.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set that contains keywords about a protocol.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.protocol._base.ProtocolBase.validate_document">
+<tt class="descname">validate_document</tt><big>(</big><em>payload</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/_base.html#ProtocolBase.validate_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol._base.ProtocolBase.validate_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to be overriden to perform any sort of custom input
+validation on the parsed input document.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="http.html" title="Http"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Protocols"
+             >previous</a> |</li>
+        <li><a href="../../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li>
+          <li><a href="index.html" >Protocols</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

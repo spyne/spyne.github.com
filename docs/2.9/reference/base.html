@@ -1,0 +1,553 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Fundamental Data Structures &mdash; spyne 2.9.4 documentation</title>
+    
+    <link rel="stylesheet" href="../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.9.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.9.4 documentation" href="../index.html" />
+    <link rel="up" title="Spyne API Reference" href="index.html" />
+    <link rel="next" title="Application Definition" href="application.html" />
+    <link rel="prev" title="Spyne API Reference" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="application.html" title="Application Definition"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Spyne API Reference"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">spyne 2.9.4 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Spyne API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Fundamental Data Structures</a><ul>
+<li><a class="reference internal" href="#methodcontext">MethodContext</a></li>
+<li><a class="reference internal" href="#methoddescriptor">MethodDescriptor</a></li>
+<li><a class="reference internal" href="#eventmanager">EventManager</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Spyne API Reference</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="application.html"
+                        title="next chapter">Application Definition</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../sources/reference/base.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="fundamental-data-structures">
+<span id="reference-base"></span><h1>Fundamental Data Structures<a class="headerlink" href="#fundamental-data-structures" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="methodcontext">
+<h2>MethodContext<a class="headerlink" href="#methodcontext" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="spyne.MethodContext">
+<em class="property">class </em><tt class="descclassname">spyne.</tt><tt class="descname">MethodContext</tt><big>(</big><em>transport</em><big>)</big><a class="headerlink" href="#spyne.MethodContext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>The base class for all RPC Contexts. Holds all information about the
+current state of execution of a remote procedure call.</p>
+<dl class="attribute">
+<dt id="spyne.MethodContext.app">
+<tt class="descname">app</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.app" title="Permalink to this definition">¶</a></dt>
+<dd><p>The parent application.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.aux">
+<tt class="descname">aux</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.aux" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auxiliary-method specific context. You can use this to share data
+between auxiliary sessions. This is not set in primary contexts.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.call_end">
+<tt class="descname">call_end</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.call_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time the rpc operation was completed in seconds-since-epoch
+format.</p>
+<p>Useful for benchmarking purposes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.call_start">
+<tt class="descname">call_start</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.call_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time the rpc operation was initiated in seconds-since-epoch
+format.</p>
+<p>Useful for benchmarking purposes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.descriptor">
+<tt class="descname">descriptor</tt><a class="headerlink" href="#spyne.MethodContext.descriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The :class:<tt class="docutils literal"><span class="pre">MethodDescriptor</span></tt> object representing the current method.
+It is only set when the incoming request was successfully mapped to a method
+in the public interface. The contents of this property should not be changed
+by the user code.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.event">
+<tt class="descname">event</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event-specific context. Use this as you want, preferably only in
+events, as you&#8217;d probably want to separate the event data from the
+method data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.frozen">
+<tt class="descname">frozen</tt><em class="property"> = False</em><a class="headerlink" href="#spyne.MethodContext.frozen" title="Permalink to this definition">¶</a></dt>
+<dd><p>When this is set, no new attribute can be added to this class
+instance. This is mostly for internal use.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.function">
+<tt class="descname">function</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.function" title="Permalink to this definition">¶</a></dt>
+<dd><p>The callable of the user code.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.in_body_doc">
+<tt class="descname">in_body_doc</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.in_body_doc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Incoming body document of the request.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.in_document">
+<tt class="descname">in_document</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.in_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>Incoming document, what you get when you parse the incoming stream.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.in_error">
+<tt class="descname">in_error</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.in_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Native python error object. If this is set, either there was a
+parsing error or the incoming document was representing an exception.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.in_header">
+<tt class="descname">in_header</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.in_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deserialized incoming header &#8211; a native object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.in_header_doc">
+<tt class="descname">in_header_doc</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.in_header_doc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Incoming header document of the request.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.in_object">
+<tt class="descname">in_object</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.in_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>In the request (i.e. server) case, this contains the function
+argument sequence for the function in the service definition class.
+In the response (i.e. client) case, this contains the object returned
+by the remote procedure call.</p>
+<dl class="docutils">
+<dt>It&#8217;s always a sequence of objects:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">[None]</span></tt> when the function has no output (client)/input (server)
+types.</li>
+<li>A single-element list that wraps the return value when the
+function has one return type defined,</li>
+<li>A tuple of return values in case of the function having more than
+one return value.</li>
+</ul>
+</dd>
+</dl>
+<p>The order of the argument sequence is in line with
+<tt class="docutils literal"><span class="pre">self.descriptor.in_message._type_info.keys()</span></tt>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.in_string">
+<tt class="descname">in_string</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.in_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Incoming bytestream as a sequence of <tt class="docutils literal"><span class="pre">str</span></tt> or <tt class="docutils literal"><span class="pre">bytes</span></tt> instances.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.locale">
+<tt class="descname">locale</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.locale" title="Permalink to this definition">¶</a></dt>
+<dd><p>The locale the request will use when needed for things like date
+formatting, html rendering and such.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.method_name">
+<tt class="descname">method_name</tt><a class="headerlink" href="#spyne.MethodContext.method_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The public name of the method the <tt class="docutils literal"><span class="pre">method_request_string</span></tt> was
+matched to.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.method_request_string">
+<tt class="descname">method_request_string</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.method_request_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is used to decide which native method to call. It is set by
+the protocol classes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.out_body_doc">
+<tt class="descname">out_body_doc</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.out_body_doc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialized body object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.out_document">
+<tt class="descname">out_document</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.out_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>out_body_doc and out_header_doc wrapped in the outgoing envelope</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.out_error">
+<tt class="descname">out_error</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.out_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Native exception thrown by the function in the service definition
+class.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.out_header">
+<tt class="descname">out_header</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.out_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Native python object set by the function in the service definition
+class.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.out_header_doc">
+<tt class="descname">out_header_doc</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.out_header_doc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialized header object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.out_object">
+<tt class="descname">out_object</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.out_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>In the response (i.e. server) case, this contains the native python
+object(s) returned by the function in the service definition class.
+In the request (i.e. client) case, this contains the function arguments
+passed to the function call wrapper.</p>
+<dl class="docutils">
+<dt>It&#8217;s always a sequence of objects:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">[None]</span></tt> when the function has no output (server)/input (client)
+types.</li>
+<li>A single-element list that wraps the return value when the
+function has one return type defined,</li>
+<li>A tuple of return values in case of the function having more than
+one return value.</li>
+</ul>
+</dd>
+</dl>
+<p>The order of the argument sequence is in line with
+<tt class="docutils literal"><span class="pre">self.descriptor.out_message._type_info.keys()</span></tt>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.out_string">
+<tt class="descname">out_string</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.out_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Outgoing bytestream (i.e. a sequence of strings)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.protocol">
+<tt class="descname">protocol</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.protocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>The protocol-specific context. Protocol implementors can use this
+to their liking.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.service_class">
+<tt class="descname">service_class</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.service_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>The service definition class the method belongs to.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.transport">
+<tt class="descname">transport</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.transport" title="Permalink to this definition">¶</a></dt>
+<dd><p>The transport-specific context. Transport implementors can use this
+to their liking.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodContext.udc">
+<tt class="descname">udc</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodContext.udc" title="Permalink to this definition">¶</a></dt>
+<dd><p>The user defined context. Use it to your liking.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="methoddescriptor">
+<h2>MethodDescriptor<a class="headerlink" href="#methoddescriptor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="spyne.MethodDescriptor">
+<em class="property">class </em><tt class="descclassname">spyne.</tt><tt class="descname">MethodDescriptor</tt><big>(</big><em>function</em>, <em>in_message</em>, <em>out_message</em>, <em>doc</em>, <em>is_callback=False</em>, <em>is_async=False</em>, <em>mtom=False</em>, <em>in_header=None</em>, <em>out_header=None</em>, <em>faults=None</em>, <em>port_type=None</em>, <em>no_ctx=False</em>, <em>udp=None</em>, <em>class_key=None</em>, <em>aux=None</em>, <em>patterns=None</em>, <em>body_style=None</em><big>)</big><a class="headerlink" href="#spyne.MethodDescriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class represents the method signature of an exposed service. It is
+produced by the <a class="reference internal" href="decorator.html#spyne.decorator.srpc" title="spyne.decorator.srpc"><tt class="xref py py-func docutils literal"><span class="pre">spyne.decorator.srpc()</span></tt></a> decorator.</p>
+<dl class="attribute">
+<dt id="spyne.MethodDescriptor.aux">
+<tt class="descname">aux</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodDescriptor.aux" title="Permalink to this definition">¶</a></dt>
+<dd><p>Value to indicate what kind of auxiliary method this is. (None means
+primary)</p>
+<p>Primary methods block the request as long as they&#8217;re running. Their
+return values are returned to the client. Auxiliary ones execute
+asyncronously after the primary method returns, and their return values
+are ignored by the rpc layer.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodDescriptor.body_style">
+<tt class="descname">body_style</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodDescriptor.body_style" title="Permalink to this definition">¶</a></dt>
+<dd><p>One of (BODY_STYLE_EMPTY, BODY_STYLE_BARE, BODY_STYLE_WRAPPED).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodDescriptor.class_key">
+<tt class="descname">class_key</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodDescriptor.class_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>The identifier of this method in its parent
+<a class="reference internal" href="service.html#spyne.service.ServiceBase" title="spyne.service.ServiceBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.service.ServiceBase</span></tt></a> subclass.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodDescriptor.doc">
+<tt class="descname">doc</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodDescriptor.doc" title="Permalink to this definition">¶</a></dt>
+<dd><p>The function docstring.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodDescriptor.faults">
+<tt class="descname">faults</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodDescriptor.faults" title="Permalink to this definition">¶</a></dt>
+<dd><p>An iterable of <a class="reference internal" href="model.html#spyne.model.fault.Fault" title="spyne.model.fault.Fault"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.fault.Fault</span></tt></a> subclasses to denote
+the types of exceptions that this method can throw.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodDescriptor.in_header">
+<tt class="descname">in_header</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodDescriptor.in_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>An iterable of <a class="reference internal" href="model.html#spyne.model.complex.ComplexModel" title="spyne.model.complex.ComplexModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.ComplexModel</span></tt></a>
+subclasses to denote the types of header objects that this method can
+accept.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodDescriptor.in_message">
+<tt class="descname">in_message</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodDescriptor.in_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="model.html#spyne.model.complex.ComplexModel" title="spyne.model.complex.ComplexModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.ComplexModel</span></tt></a> subclass that defines the
+input signature of the user function and that was automatically
+generated by the <tt class="docutils literal"><span class="pre">&#64;srpc</span></tt> decorator.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodDescriptor.key">
+<tt class="descname">key</tt><a class="headerlink" href="#spyne.MethodDescriptor.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>The function identifier in &#8216;{namespace}name&#8217; form.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodDescriptor.name">
+<tt class="descname">name</tt><a class="headerlink" href="#spyne.MethodDescriptor.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The public name of the function. Equals to the type_name of the
+in_message.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodDescriptor.no_ctx">
+<tt class="descname">no_ctx</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodDescriptor.no_ctx" title="Permalink to this definition">¶</a></dt>
+<dd><p>no_ctx: Boolean flag to denote whether the user code gets an
+implicit <a class="reference internal" href="#spyne.MethodContext" title="spyne.MethodContext"><tt class="xref py py-class docutils literal"><span class="pre">spyne.MethodContext</span></tt></a> instance as first argument.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodDescriptor.out_header">
+<tt class="descname">out_header</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodDescriptor.out_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>An iterable of <a class="reference internal" href="model.html#spyne.model.complex.ComplexModel" title="spyne.model.complex.ComplexModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.ComplexModel</span></tt></a>
+subclasses to denote the types of header objects that this method can
+emit along with its return value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodDescriptor.out_message">
+<tt class="descname">out_message</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodDescriptor.out_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="model.html#spyne.model.complex.ComplexModel" title="spyne.model.complex.ComplexModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.ComplexModel</span></tt></a> subclass that defines the
+output signature of the user function and that was automatically
+generated by the <tt class="docutils literal"><span class="pre">&#64;srpc</span></tt> decorator.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodDescriptor.patterns">
+<tt class="descname">patterns</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodDescriptor.patterns" title="Permalink to this definition">¶</a></dt>
+<dd><p>This list stores patterns which will match this callable using
+various elements of the request protocol.</p>
+<p>Currently, the only object supported here is the
+<a class="reference internal" href="protocol/http.html#spyne.protocol.http.HttpPattern" title="spyne.protocol.http.HttpPattern"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol.http.HttpPattern</span></tt></a> object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.MethodDescriptor.udp">
+<tt class="descname">udp</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.MethodDescriptor.udp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short for &#8220;User Defined Properties&#8221;, this is just an arbitrary python
+object set by the user to pass arbitrary metadata via the <tt class="docutils literal"><span class="pre">&#64;srpc</span></tt>
+decorator.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="eventmanager">
+<span id="reference-eventmanager"></span><h2>EventManager<a class="headerlink" href="#eventmanager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="spyne.EventManager">
+<em class="property">class </em><tt class="descclassname">spyne.</tt><tt class="descname">EventManager</tt><big>(</big><em>parent</em>, <em>handlers={}</em><big>)</big><a class="headerlink" href="#spyne.EventManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spyne supports a simple event system that can be used to have repetitive
+boiler plate code that has to run for every method call nicely tucked away
+in one or more event handlers. The popular use-cases include things like
+database transaction management, logging and measuring performance.</p>
+<p>Various Spyne components support firing events at various stages during the
+processing of the request, which are documented in the relevant classes.</p>
+<dl class="docutils">
+<dt>The classes that support events are:</dt>
+<dd><ul class="first last simple">
+<li><a class="reference internal" href="application.html#spyne.application.Application" title="spyne.application.Application"><tt class="xref py py-class docutils literal"><span class="pre">spyne.application.Application</span></tt></a></li>
+<li><a class="reference internal" href="service.html#spyne.service.ServiceBase" title="spyne.service.ServiceBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.service.ServiceBase</span></tt></a></li>
+<li><a class="reference internal" href="protocol/base.html#spyne.protocol._base.ProtocolBase" title="spyne.protocol._base.ProtocolBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol._base.ProtocolBase</span></tt></a></li>
+<li><a class="reference internal" href="server.html#spyne.server.wsgi.WsgiApplication" title="spyne.server.wsgi.WsgiApplication"><tt class="xref py py-class docutils literal"><span class="pre">spyne.server.wsgi.WsgiApplication</span></tt></a></li>
+</ul>
+</dd>
+</dl>
+<p>The events are stored in an ordered set. This means that the events are ran
+in the order they were added and adding a handler twice does not cause it to
+run twice.</p>
+<dl class="method">
+<dt id="spyne.EventManager.add_listener">
+<tt class="descname">add_listener</tt><big>(</big><em>event_name</em>, <em>handler</em><big>)</big><a class="headerlink" href="#spyne.EventManager.add_listener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a handler for the given event name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>event_name</strong> &#8211; The event identifier, indicated by the documentation.
+Usually, this is a string.</li>
+<li><strong>handler</strong> &#8211; A static python function that receives a single
+MethodContext argument.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.EventManager.fire_event">
+<tt class="descname">fire_event</tt><big>(</big><em>event_name</em>, <em>ctx</em><big>)</big><a class="headerlink" href="#spyne.EventManager.fire_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run all the handlers for a given event name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>event_name</strong> &#8211; The event identifier, indicated by the documentation.
+Usually, this is a string.</li>
+<li><strong>handler</strong> &#8211; The method context. Event-related data is conventionally
+stored in ctx.event attribute.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="application.html" title="Application Definition"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Spyne API Reference"
+             >previous</a> |</li>
+        <li><a href="../index.html">spyne 2.9.4 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Spyne API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

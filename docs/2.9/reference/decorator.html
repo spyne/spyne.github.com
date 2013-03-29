@@ -1,0 +1,186 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>RPC Decorators &mdash; spyne 2.9.4 documentation</title>
+    
+    <link rel="stylesheet" href="../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.9.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.9.4 documentation" href="../index.html" />
+    <link rel="up" title="Spyne API Reference" href="index.html" />
+    <link rel="next" title="Common Exceptions" href="error.html" />
+    <link rel="prev" title="Service Definition" href="service.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="error.html" title="Common Exceptions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="service.html" title="Service Definition"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">spyne 2.9.4 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Spyne API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="service.html"
+                        title="previous chapter">Service Definition</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="error.html"
+                        title="next chapter">Common Exceptions</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../sources/reference/decorator.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-spyne.decorator">
+<span id="rpc-decorators"></span><h1>RPC Decorators<a class="headerlink" href="#module-spyne.decorator" title="Permalink to this headline">¶</a></h1>
+<p>The <tt class="docutils literal"><span class="pre">spyne.decorator</span></tt> module contains the the &#64;srpc decorator and its
+helper methods. The &#64;srpc decorator is responsible for tagging methods as remote
+procedure calls extracting method&#8217;s input and output types.</p>
+<p>It&#8217;s possible to create custom decorators that wrap the &#64;srpc decorator in order
+to have a more elegant way of passing frequently-used parameter values. The &#64;rpc
+decorator is a simple example of this.</p>
+<dl class="function">
+<dt id="spyne.decorator.rpc">
+<tt class="descclassname">spyne.decorator.</tt><tt class="descname">rpc</tt><big>(</big><em>*params</em>, <em>**kparams</em><big>)</big><a class="reference internal" href="../modules/spyne/decorator.html#rpc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.decorator.rpc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method decorator to tag a method as a remote procedure call. See
+<a class="reference internal" href="#spyne.decorator.srpc" title="spyne.decorator.srpc"><tt class="xref py py-func docutils literal"><span class="pre">spyne.decorator.srpc()</span></tt></a> for detailed information.</p>
+<p>This decorator enables passing <a class="reference internal" href="base.html#spyne.MethodContext" title="spyne.MethodContext"><tt class="xref py py-class docutils literal"><span class="pre">spyne.MethodContext</span></tt></a> instance as an
+implicit first argument to the user callable.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="spyne.decorator.srpc">
+<tt class="descclassname">spyne.decorator.</tt><tt class="descname">srpc</tt><big>(</big><em>*params</em>, <em>**kparams</em><big>)</big><a class="reference internal" href="../modules/spyne/decorator.html#srpc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.decorator.srpc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method decorator to tag a method as a remote procedure call.</p>
+<p>The methods tagged with this decorator do not behave like a normal python
+method but return &#8216;MethodDescriptor&#8217; object when called.</p>
+<p>The initial &#8220;s&#8221; stands for &#8220;static&#8221;. In Spyne&#8217;s context, that means no
+implicit first argument is passed to the user callable.</p>
+<p>You should use the <a class="reference internal" href="server.html#spyne.server.null.NullServer" title="spyne.server.null.NullServer"><tt class="xref py py-class docutils literal"><span class="pre">spyne.server.null.NullServer</span></tt></a> transport if you
+want to call the methods directly. You can also use the &#8216;function&#8217; attribute
+of the returned object to call the function itself.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>_in_header</strong> &#8211; A type or an iterable of types that that this method
+accepts as incoming header.</li>
+<li><strong>_out_header</strong> &#8211; A type or an iterable of types that that this method
+sends as outgoing header.</li>
+<li><strong>_in_message_name</strong> &#8211; The public name of the function.</li>
+<li><strong>_in_variable_names</strong> &#8211; The public names of the function arguments. It&#8217;s
+a dict that maps argument names in the code to public ones.</li>
+<li><strong>_out_variable_name</strong> &#8211; The public name of the function response object.
+It&#8217;s a string. Ignored when <tt class="docutils literal"><span class="pre">_body_style</span> <span class="pre">!=</span> <span class="pre">'wrapped'</span></tt> or <tt class="docutils literal"><span class="pre">_returns</span></tt>
+is a sequence.</li>
+<li><strong>_out_variable_names</strong> &#8211; The public name of the function response object.
+It&#8217;s a sequence of strings. Ignored when <tt class="docutils literal"><span class="pre">_body_style</span> <span class="pre">!=</span> <span class="pre">'wrapped'</span></tt> or
+or <tt class="docutils literal"><span class="pre">_returns</span></tt> is not a sequence. Must be the same length as
+<tt class="docutils literal"><span class="pre">_returns</span></tt>.</li>
+<li><strong>_body_style</strong> &#8211; One of <tt class="docutils literal"><span class="pre">('bare',</span> <span class="pre">'wrapped')</span></tt>. Default: <tt class="docutils literal"><span class="pre">'wrapped'</span></tt>.
+In wrapped mode, wraps response objects in an additional class.</li>
+<li><strong>_soap_body_style</strong> &#8211; One of (&#8216;rpc&#8217;, &#8216;document&#8217;). Default <tt class="docutils literal"><span class="pre">'document'</span></tt>.
+<tt class="docutils literal"><span class="pre">_soap_body_style='document'</span></tt> is an alias for <tt class="docutils literal"><span class="pre">_body_style='wrapped'</span></tt>.
+<tt class="docutils literal"><span class="pre">_soap_body_style='rpc'</span></tt> is an alias for <tt class="docutils literal"><span class="pre">_body_style='bare'</span></tt>.</li>
+<li><strong>_port_type</strong> &#8211; Soap port type string.</li>
+<li><strong>_no_ctx</strong> &#8211; Don&#8217;t pass implicit ctx object to the user method.</li>
+<li><strong>_udp</strong> &#8211; Short for UserDefinedProperties, you can use this to mark the
+method with arbitrary metadata.</li>
+<li><strong>_aux</strong> &#8211; The auxiliary backend to run this method. <tt class="docutils literal"><span class="pre">None</span></tt> if primary.</li>
+<li><strong>_throws</strong> &#8211; A sequence of exceptions that this function can throw. No
+real functionality besides publishing this information in interface
+documents.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="error.html" title="Common Exceptions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="service.html" title="Service Definition"
+             >previous</a> |</li>
+        <li><a href="../index.html">spyne 2.9.4 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Spyne API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

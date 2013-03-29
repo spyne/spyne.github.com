@@ -1,0 +1,252 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Comparison with other rpc frameworks &mdash; spyne 2.9.4 documentation</title>
+    
+    <link rel="stylesheet" href="static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.9.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="spyne 2.9.4 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">spyne 2.9.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Comparison with other rpc frameworks</a><ul>
+<li><a class="reference internal" href="#ladon">Ladon</a></li>
+<li><a class="reference internal" href="#wsme">WSME</a></li>
+<li><a class="reference internal" href="#rpyc">RPyC</a></li>
+<li><a class="reference internal" href="#rfoo">rfoo</a></li>
+<li><a class="reference internal" href="#suds">Suds</a></li>
+<li><a class="reference internal" href="#zsi">ZSI</a></li>
+<li><a class="reference internal" href="#soapy">SOAPy</a></li>
+<li><a class="reference internal" href="#rsl">rsl</a></li>
+<li><a class="reference internal" href="#pyro">PyRo</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/comparison.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="comparison-with-other-rpc-frameworks">
+<span id="manual-comparison"></span><h1>Comparison with other rpc frameworks<a class="headerlink" href="#comparison-with-other-rpc-frameworks" title="Permalink to this headline">¶</a></h1>
+<p>RPC is a very popular subject. There&#8217;s a plethora of active and inactive
+projects that satisfy a wide range of requirements. Here are the main sources
+of information:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://pypi.python.org/pypi?%3Aaction=search&amp;term=rpc">http://pypi.python.org/pypi?%3Aaction=search&amp;term=rpc</a></li>
+<li><a class="reference external" href="http://www.ohloh.net/tags/python/rpc">http://www.ohloh.net/tags/python/rpc</a></li>
+<li><a class="reference external" href="http://stackoverflow.com/questions/1879971/what-is-the-current-choice-for-doing-rpc-in-python">http://stackoverflow.com/questions/1879971/what-is-the-current-choice-for-doing-rpc-in-python</a></li>
+</ul>
+<div class="section" id="ladon">
+<h2>Ladon<a class="headerlink" href="#ladon" title="Permalink to this headline">¶</a></h2>
+<p>The Ladon project has almost the same goals and same approach to the rpc-related
+issues as Spyne.</p>
+<p>Discussion thread: <a class="reference external" href="https://answers.launchpad.net/ladon/+question/171664">https://answers.launchpad.net/ladon/+question/171664</a></p>
+<ul>
+<li><p class="first">Supports JsonWSP protocol, which is JsonRpc with interface description. Spyne
+supports JsonDocument which serializes complex object hierarchies as nested
+dict objects.</p>
+</li>
+<li><p class="first">Supports both Python 2 and Python 3. Spyne is Python 2 only.</p>
+</li>
+<li><p class="first">Auto-generates human-readable API documentation.
+(example: <a class="reference external" href="http://ladonize.org/python-demos/AlbumService">http://ladonize.org/python-demos/AlbumService</a>) In Spyne, you need
+to do with the ugliness of a raw wsdl document.</p>
+</li>
+<li><p class="first">Uses standard python tools for xml parsing which is good for pure-python
+deployments. Spyne uses lxml, due to its excellent xml namespace support and
+speed. So Spyne is faster but more difficult to deploy.</p>
+</li>
+<li><p class="first">Does not support ZeroMQ as transport.</p>
+</li>
+<li><p class="first">Does not support MessagePack.</p>
+</li>
+<li><p class="first">Does not support HttpRpc.</p>
+</li>
+<li><p class="first">Does not do declarative input validation. Traditional (imperative) input
+validation is possible via a code injection mechanism similar to Spyne&#8217;s
+events.</p>
+</li>
+<li><p class="first">Does not have a Soap client. Spyne does, but it&#8217;s not that useful as it does
+not parse Wsdl documents.</p>
+<blockquote>
+<div><p>In fact, Ladon is pure server-side software - the whole idea of supporting a
+standard protocol like SOAP is that clients are already out there.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Spyne uses own classes for denoting types, whereas ladon uses Python
+callables. This lets ladon api to be simpler, but gives the Spyne api the
+power to have declarative restrictions on input types.</p>
+</li>
+<li><p class="first">Does not test against ws-i.org deliverables for testing soap compatibility.</p>
+</li>
+<li><p class="first">Does not support parsing and/or modifying protocol or transport headers.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="wsme">
+<h2>WSME<a class="headerlink" href="#wsme" title="Permalink to this headline">¶</a></h2>
+<p>&#8220;&#8221;&#8221;
+Web Service Made Easy (WSME) is a very easy way to implement webservices in your
+python web application. It is originally a rewrite of TGWebServices with focus
+on extensibility, framework-independance and better type handling.
+&#8220;&#8221;&#8220;</p>
+<ul class="simple">
+<li>Supports TurboGears</li>
+<li>Supports REST+Json, REST+Xml, (a subset of) SOAP and ExtDirect.</li>
+<li>Supports type validation.</li>
+<li>No client support.</li>
+<li>Does not test against ws-i.org deliverables for testing soap compatibility.</li>
+<li>Only supports http as transport.</li>
+<li>Uses genshi for Xml support.</li>
+</ul>
+</div>
+<div class="section" id="rpyc">
+<h2>RPyC<a class="headerlink" href="#rpyc" title="Permalink to this headline">¶</a></h2>
+<p>This is preliminary. Please correct these points if you spot any error.</p>
+<ul class="simple">
+<li>Uses own protocol</li>
+<li>Does not do validation.</li>
+<li>Python-specific.</li>
+<li>Fast.</li>
+<li>Not designed for public servers. ??</li>
+</ul>
+</div>
+<div class="section" id="rfoo">
+<h2>rfoo<a class="headerlink" href="#rfoo" title="Permalink to this headline">¶</a></h2>
+<p>This is preliminary. Please correct these points if you spot any error.</p>
+<ul class="simple">
+<li>Uses own protocol</li>
+<li>Does not do validation.</li>
+<li>Python-specific.</li>
+<li>Fast.</li>
+<li>Not designed for public servers. ??</li>
+</ul>
+</div>
+<div class="section" id="suds">
+<h2>Suds<a class="headerlink" href="#suds" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Soap 1.1 / Wsdl 1.1 Client only.</li>
+<li>Excellent wsdl parser, very easy to use.</li>
+<li>Recommended way to interface with Spyne&#8217;s Soap services.</li>
+<li>Uses own pure-python xml implementation, so it&#8217;s roughly 10 times slower
+than Spyne&#8217;s Soap client.</li>
+<li>Pure-python library, so relatively easier to deploy.</li>
+</ul>
+</div>
+<div class="section" id="zsi">
+<h2>ZSI<a class="headerlink" href="#zsi" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Unmaintained, although still works with recent Python versions</li>
+<li>Contains SOAPpy, which is not the same as SOAPy (notice the extra P)</li>
+<li>Supports attachments</li>
+<li>Requires code generation (wsdl2py) for complex data structures</li>
+<li>Almost complete lack of user-friendliness</li>
+<li>Lack of WSDL generator</li>
+</ul>
+</div>
+<div class="section" id="soapy">
+<h2>SOAPy<a class="headerlink" href="#soapy" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Really simple (only two files, both less than 500 lines of code)</li>
+<li>Client only</li>
+<li>Requires PyXML, thus unusable with recent Python versions</li>
+</ul>
+</div>
+<div class="section" id="rsl">
+<h2>rsl<a class="headerlink" href="#rsl" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Client only.</li>
+<li>Unmaintained.</li>
+</ul>
+</div>
+<div class="section" id="pyro">
+<h2>PyRo<a class="headerlink" href="#pyro" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Python Remote Objects</li>
+<li>???</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">spyne 2.9.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

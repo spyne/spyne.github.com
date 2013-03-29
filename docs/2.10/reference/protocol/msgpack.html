@@ -1,0 +1,187 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>MessagePack &mdash; spyne 2.10.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.10.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.10.0 documentation" href="../../index.html" />
+    <link rel="up" title="Protocols" href="index.html" />
+    <link rel="next" title="Client Transports" href="../client.html" />
+    <link rel="prev" title="Soap 1.1" href="soap.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../client.html" title="Client Transports"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="soap.html" title="Soap 1.1"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Protocols</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="soap.html"
+                        title="previous chapter">Soap 1.1</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../client.html"
+                        title="next chapter">Client Transports</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../sources/reference/protocol/msgpack.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-spyne.protocol.msgpack">
+<span id="messagepack"></span><span id="reference-protocol-msgpack"></span><h1>MessagePack<a class="headerlink" href="#module-spyne.protocol.msgpack" title="Permalink to this headline">¶</a></h1>
+<p>The <tt class="docutils literal"><span class="pre">spyne.protocol.msgpack</span></tt> module contains implementations for protocols
+that use MessagePack as serializer.</p>
+<p>Initially released in 2.8.0-rc.</p>
+<p>This module is EXPERIMENTAL. You may not recognize the code here next time you
+look at it.</p>
+<dl class="class">
+<dt id="spyne.protocol.msgpack.MessagePackDocument">
+<em class="property">class </em><tt class="descclassname">spyne.protocol.msgpack.</tt><tt class="descname">MessagePackDocument</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>skip_depth=0</em>, <em>ignore_uncap=False</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/msgpack.html#MessagePackDocument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.msgpack.MessagePackDocument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol.dictdoc.HierDictDocument</span></tt></p>
+<p>An integration class for the msgpack protocol.</p>
+<dl class="method">
+<dt id="spyne.protocol.msgpack.MessagePackDocument.create_in_document">
+<tt class="descname">create_in_document</tt><big>(</big><em>ctx</em>, <em>in_string_encoding=None</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/msgpack.html#MessagePackDocument.create_in_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.msgpack.MessagePackDocument.create_in_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets <tt class="docutils literal"><span class="pre">ctx.in_document</span></tt>,  using <tt class="docutils literal"><span class="pre">ctx.in_string</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ctx</strong> &#8211; The MethodContext object</li>
+<li><strong>in_string_encoding</strong> &#8211; MessagePack is a binary protocol. So this
+argument is ignored.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.protocol.msgpack.MessagePackObject">
+<tt class="descclassname">spyne.protocol.msgpack.</tt><tt class="descname">MessagePackObject</tt><a class="headerlink" href="#spyne.protocol.msgpack.MessagePackObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>DEPRECATED. Use <a class="reference internal" href="#spyne.protocol.msgpack.MessagePackDocument" title="spyne.protocol.msgpack.MessagePackDocument"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol.msgpack.MessagePackDocument</span></tt></a> instead</p>
+<p>alias of <a class="reference internal" href="#spyne.protocol.msgpack.MessagePackDocument" title="spyne.protocol.msgpack.MessagePackDocument"><tt class="xref py py-class docutils literal"><span class="pre">MessagePackDocument</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.protocol.msgpack.MessagePackRpc">
+<em class="property">class </em><tt class="descclassname">spyne.protocol.msgpack.</tt><tt class="descname">MessagePackRpc</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>skip_depth=0</em>, <em>ignore_uncap=False</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/msgpack.html#MessagePackRpc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.msgpack.MessagePackRpc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.protocol.msgpack.MessagePackDocument" title="spyne.protocol.msgpack.MessagePackDocument"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol.msgpack.MessagePackDocument</span></tt></a></p>
+<p>An integration class for the msgpack-rpc protocol.</p>
+<dl class="method">
+<dt id="spyne.protocol.msgpack.MessagePackRpc.create_in_document">
+<tt class="descname">create_in_document</tt><big>(</big><em>ctx</em>, <em>in_string_encoding=None</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/msgpack.html#MessagePackRpc.create_in_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.msgpack.MessagePackRpc.create_in_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets <tt class="docutils literal"><span class="pre">ctx.in_document</span></tt>,  using <tt class="docutils literal"><span class="pre">ctx.in_string</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ctx</strong> &#8211; The MethodContext object</li>
+<li><strong>in_string_encoding</strong> &#8211; MessagePack is a binary protocol. So this
+argument is ignored.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../client.html" title="Client Transports"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="soap.html" title="Soap 1.1"
+             >previous</a> |</li>
+        <li><a href="../../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li>
+          <li><a href="index.html" >Protocols</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
