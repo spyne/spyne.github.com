@@ -474,13 +474,17 @@ $(document).ready(function(){
                     g.splice(5, 0, "                                                 | hexdump -C");
                     g.splice(3, 0, "                                                 | hexdump -C");
                 }
-                else if (outprot == "XmlDocument" || outprot == "Soap11") {
+                else if (outprot in ["XmlDocument", "Soap11"]) {
                     g.splice(5, 0, "                                  | tidy -xml -indent -wrap 0");
                     g.splice(3, 0, "                                  | tidy -xml -indent -wrap 0");
                 }
                 else if (outprot == "JsonDocument") {
                     g.splice(5, 0, "                                        | python -m json.tool");
                     g.splice(3, 0, "                                        | python -m json.tool");
+                }
+                else if (outprot in ["HtmlMicroFormat", "HtmlRowTable", "HtmlColumnTable"]) {
+                    g.splice(5, 0, "                                       | tidy -indent -wrap 0");
+                    g.splice(3, 0, "                                       | tidy -indent -wrap 0");
                 }
             }
             div.children("pre#client").text(g.join("\n"));
