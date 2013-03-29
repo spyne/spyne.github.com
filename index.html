@@ -85,9 +85,9 @@ $(document).ready(function(){
          HttpRpc: ['$ curl "http://localhost:7789/say_hello?name=World&times=4"']
         ,JsonDocument: [
              '# The following two requests are equivalent:'
-            ,'$ curl http://localhost:7789/ -d \\'
+            ,'$ curl -s http://localhost:7789/ -d \\'
             ,'             \'{"say_hello": {"name": "World", "times": 5}}\''
-            ,'$ curl http://localhost:7789/ -d \\'
+            ,'$ curl -s http://localhost:7789/ -d \\'
             ,'             \'{"say_hello": ["World", 5]}\''
         ]
     }
@@ -453,38 +453,35 @@ $(document).ready(function(){
 
         if (prot_client[inprot]) {
             var g = [].concat(prot_client[inprot])
+            var hexdump   = "                                                 | hexdump -C";
+            var tidy_xml  = "                               | tidy -q -xml -indent -wrap 0";
+            var json_tool = "                                        | python -m json.tool";
+            var tidy_html = "                                    | tidy -q -indent -wrap 0";
+            var prettifier_map = {
+                MessagePackDocument: hexdump,
 
-            // append prettifiers to the curl call.
-            if (inprot == 'HttpRpc') {
-                g[0] += " \\";
-                if (outprot == 'MessagePackDocument') {
-                    g.push("                                                 | hexdump -C");
-                }
-                else if (outprot == "XmlDocument" || outprot == "Soap11") {
-                    g.push("                                  | tidy -xml -indent -wrap 0");
-                }
-                else if (outprot == "JsonDocument") {
-                    g.push("                                        | python -m json.tool");
-                }
+                XmlDocument: tidy_xml,
+                Soap11: tidy_xml,
+
+                JsonDocument: json_tool,
+
+                HtmlMicroFormat: tidy_xml, // looks nicer
+                HtmlRowTable: tidy_html,
+                HtmlColumnTable: tidy_html,
             }
-            else if (inprot == 'JsonDocument') {
-                g[4] += " \\";
-                g[2] += " \\";
-                if (outprot == 'MessagePackDocument') {
-                    g.splice(5, 0, "                                                 | hexdump -C");
-                    g.splice(3, 0, "                                                 | hexdump -C");
+
+            var prettifier = prettifier_map[outprot];
+            if (prettifier) {
+                if (inprot == 'HttpRpc') {
+                    g[0] += " \\";
+                    g.push(prettifier);
                 }
-                else if (outprot in ["XmlDocument", "Soap11"]) {
-                    g.splice(5, 0, "                                  | tidy -xml -indent -wrap 0");
-                    g.splice(3, 0, "                                  | tidy -xml -indent -wrap 0");
-                }
-                else if (outprot == "JsonDocument") {
-                    g.splice(5, 0, "                                        | python -m json.tool");
-                    g.splice(3, 0, "                                        | python -m json.tool");
-                }
-                else if (outprot in ["HtmlMicroFormat", "HtmlRowTable", "HtmlColumnTable"]) {
-                    g.splice(5, 0, "                                       | tidy -indent -wrap 0");
-                    g.splice(3, 0, "                                       | tidy -indent -wrap 0");
+                else if (inprot == 'JsonDocument') {
+                    g[4] += " \\";
+                    g[2] += " \\";
+
+                    g.splice(5, 0, prettifier);
+                    g.splice(3, 0, prettifier);
                 }
             }
             div.children("pre#client").text(g.join("\n"));
