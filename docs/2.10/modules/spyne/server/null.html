@@ -191,6 +191,7 @@
             <span class="c"># do logging.getLogger(&#39;spyne.server.null&#39;).setLevel(logging.CRITICAL)</span>
             <span class="c"># to hide the following</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> start context </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_small_header</span><span class="p">,</span> <span class="n">_small_footer</span><span class="p">)</span> <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span> <span class="s">&quot;</span><span class="si">%r</span><span class="s">.</span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">service_class</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">function</span><span class="p">)</span> <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">process_request</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">  end context  </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_small_header</span><span class="p">,</span> <span class="n">_small_footer</span><span class="p">)</span> <span class="p">)</span>
 
@@ -228,6 +229,11 @@
             <span class="k">if</span> <span class="n">cnt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">retval</span> <span class="o">=</span> <span class="n">_retval</span>
             <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="n">ctx</span> <span class="o">!=</span> <span class="n">p_ctx</span><span class="p">:</span>
+                <span class="n">ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="n">p_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">  end request  </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_big_header</span><span class="p">,</span> <span class="n">_big_footer</span><span class="p">)</span>  <span class="p">)</span>
 

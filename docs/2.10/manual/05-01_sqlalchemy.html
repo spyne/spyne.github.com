@@ -27,8 +27,8 @@
     <script type="text/javascript" src="../static/doctools.js"></script>
     <link rel="top" title="spyne 2.10.0 documentation" href="../index.html" />
     <link rel="up" title="Spyne Manual" href="index.html" />
-    <link rel="next" title="Input Validation" href="04-02_validation.html" />
-    <link rel="prev" title="User Manager" href="03_usermanager.html" /> 
+    <link rel="next" title="Input Validation" href="05-02_validation.html" />
+    <link rel="prev" title="User Manager" href="04_usermanager.html" /> 
   </head>
   <body>
     <div class="related">
@@ -41,10 +41,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="04-02_validation.html" title="Input Validation"
+          <a href="05-02_validation.html" title="Input Validation"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="03_usermanager.html" title="User Manager"
+          <a href="04_usermanager.html" title="User Manager"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Spyne Manual</a> &raquo;</li> 
@@ -61,14 +61,14 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="03_usermanager.html"
+  <p class="topless"><a href="04_usermanager.html"
                         title="previous chapter">User Manager</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="04-02_validation.html"
+  <p class="topless"><a href="05-02_validation.html"
                         title="next chapter">Input Validation</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="../sources/manual/04-01_sqlalchemy.txt"
+    <li><a href="../sources/manual/05-01_sqlalchemy.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -94,14 +94,14 @@
             
   <div class="section" id="sqlalchemy-integration">
 <span id="manual-sqlalchemy"></span><h1>SQLAlchemy Integration<a class="headerlink" href="#sqlalchemy-integration" title="Permalink to this headline">¶</a></h1>
-<p>This tutorial builds on the <a class="reference internal" href="03_usermanager.html#manual-user-manager"><em>User Manager</em></a> tutorial. If you haven&#8217;t
+<p>This tutorial builds on the <a class="reference internal" href="04_usermanager.html#manual-user-manager"><em>User Manager</em></a> tutorial. If you haven&#8217;t
 done so, we recommend you to read it first.</p>
 <p>In this tutorial, we talk about using Spyne tools that make it easy to deal with
 database-related operations. We will show how to integrate SQLAlchemy and Spyne
 object definitions, and how to do painless transaction management using Spyne
 events.</p>
 <p>The full example is available here: <a class="reference external" href="http://github.com/arskom/spyne/blob/master/examples/user_manager/server_sqlalchemy.py">http://github.com/arskom/spyne/blob/master/examples/user_manager/server_sqlalchemy.py</a></p>
-<p>Again, focusing on what&#8217;s different from previous <a class="reference internal" href="03_usermanager.html#manual-user-manager"><em>User Manager</em></a>
+<p>Again, focusing on what&#8217;s different from previous <a class="reference internal" href="04_usermanager.html#manual-user-manager"><em>User Manager</em></a>
 example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">TableModel</span><span class="p">,</span> <span class="n">DeclarativeBase</span><span class="p">):</span>
     <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;spyne.examples.user_manager&#39;</span>
@@ -176,7 +176,7 @@ completes without throwing any exceptions.</p>
 <div class="section" id="what-s-next">
 <h2>What&#8217;s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
 <p>This tutorial walks you through most of what you need to know to expose your
-services. You can read the <a class="reference internal" href="05_metadata.html#manual-metadata"><em>Working with RPC Metadata</em></a> section where service metadata
+services. You can read the <a class="reference internal" href="06_metadata.html#manual-metadata"><em>Working with RPC Metadata</em></a> section where service metadata
 management apis are introduced.</p>
 <p>Otherwise, you can refer to the reference of the documentation or the mailing
 list if you have further questions.</p>
@@ -199,10 +199,10 @@ list if you have further questions.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="04-02_validation.html" title="Input Validation"
+          <a href="05-02_validation.html" title="Input Validation"
              >next</a> |</li>
         <li class="right" >
-          <a href="03_usermanager.html" title="User Manager"
+          <a href="04_usermanager.html" title="User Manager"
              >previous</a> |</li>
         <li><a href="../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Spyne Manual</a> &raquo;</li> 

@@ -110,28 +110,36 @@
 <span class="k">def</span> <span class="nf">nillable_string</span><span class="p">(</span><span class="n">func</span><span class="p">):</span></div>
 <div class="viewcode-block" id="nillable_string"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.nillable_string">[docs]</a>    <span class="sd">&quot;&quot;&quot;Decorator that retuns None if input is None.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">string</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">None</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">wrapper</span>
 
 
 <span class="k">def</span> <span class="nf">nillable_iterable</span><span class="p">(</span><span class="n">func</span><span class="p">):</span></div>
 <div class="viewcode-block" id="nillable_iterable"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.nillable_iterable">[docs]</a>    <span class="sd">&quot;&quot;&quot;Decorator that retuns [] if input is None.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">prot</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">string</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">prot</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">wrapper</span>
 
 
 <span class="k">class</span> <span class="nc">AttributesMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="nb">object</span><span class="p">)):</span></div>
-<div class="viewcode-block" id="AttributesMeta"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.AttributesMeta">[docs]</a>    <span class="sd">&quot;&quot;&quot;I hate quirks. So this is a 10-minute attempt to get rid of a one-letter</span>
+<div class="viewcode-block" id="AttributesMeta"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.AttributesMeta">[docs]</a>    <span class="sd">&quot;&quot;&quot;I hate quirks. This is a 10-minute attempt to get rid of a one-letter</span>
 <span class="sd">    quirk.&quot;&quot;&quot;</span>
+
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">):</span>
+        <span class="c"># Mapper args should not be inherited.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="s">&#39;sqla_mapper_args&#39;</span> <span class="ow">in</span> <span class="n">cls_dict</span><span class="p">:</span>
+            <span class="n">cls_dict</span><span class="p">[</span><span class="s">&#39;sqla_mapper_args&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">):</span>
         <span class="n">nullable</span> <span class="o">=</span> <span class="n">cls_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;nullable&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
@@ -163,8 +171,15 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__orig__</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="sd">&quot;&quot;&quot;This holds the original class the class .customize()d from. &quot;&quot;&quot;</span>
+
     <span class="n">__namespace__</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="sd">&quot;&quot;&quot;The public namespace of this class. Use ``get_namespace()`` instead of</span>
+<span class="sd">    accessing it directly.&quot;&quot;&quot;</span>
+
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="sd">&quot;&quot;&quot;The public type name of the class. Use ``get_type_name()`` instead of</span>
+<span class="sd">    accessing it directly.&quot;&quot;&quot;</span>
 
     <span class="c"># These are not the xml schema defaults. The xml schema defaults are</span>
     <span class="c"># considered in ComplexModel&#39;s add_to_schema method. the defaults here</span>
@@ -224,6 +239,24 @@
         <span class="sd">&quot;&quot;&quot;If false, this object will be ignored in ``log_repr``, mostly used</span>
 <span class="sd">        for logging purposes.&quot;&quot;&quot;</span>
 
+        <span class="n">unique</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;If True, this object will be set as unique in the database schema</span>
+<span class="sd">        with default indexing options. If the value is a string, it will be used</span>
+<span class="sd">        as the indexing method to create the unique index.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">index</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;Can be ``True``, a string, or a tuple of two strings.</span>
+
+<span class="sd">        * If True, this object will be set as indexed in the database schema</span>
+<span class="sd">          with default options.</span>
+<span class="sd">        * If the value is a string, the value will denote the indexing method</span>
+<span class="sd">          used by the database. See: http://www.postgresql.org/docs/9.2/static/indexes-types.html</span>
+<span class="sd">        * If the vale is a tuple of two strings, the first value will denote the</span>
+<span class="sd">          index name and the second value will denote the indexing method as</span>
+<span class="sd">          above.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
     <span class="k">class</span> <span class="nc">Annotations</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></div>
 <div class="viewcode-block" id="ModelBase.Annotations"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.ModelBase.Annotations">[docs]</a>        <span class="sd">&quot;&quot;&quot;The class that holds the annotations for the given type.&quot;&quot;&quot;</span>
 
@@ -267,7 +300,7 @@
         <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">__namespace__</span>
 
     <span class="nd">@staticmethod</span></div>
-    <span class="k">def</span> <span class="nf">resolve_namespace</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">default_ns</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">resolve_namespace</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">default_ns</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
 <div class="viewcode-block" id="ModelBase.resolve_namespace"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.ModelBase.resolve_namespace">[docs]</a>        <span class="sd">&quot;&quot;&quot;This call finalizes the namespace assignment. The default namespace</span>
 <span class="sd">        is not available until the application calls populate_interface method</span>
 <span class="sd">        of the interface generator.</span>
@@ -318,14 +351,6 @@
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="nd">@nillable_iterable</span>
-    <span class="k">def</span> <span class="nf">to_string_iterable</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the result of :func:`to_string` in a list. This method should</span>
-<span class="sd">        be overridden if this is not enough.&quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="p">[</span><span class="n">cls</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">value</span><span class="p">)]</span>
-
-    <span class="nd">@classmethod</span>
     <span class="nd">@nillable_dict</span>
     <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a dict with type name as key and str(value) as value. This</span>
@@ -358,6 +383,9 @@
             <span class="n">translations</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">sqla_column_args</span> <span class="o">=</span> <span class="p">(),</span> <span class="p">{}</span>
         <span class="n">cls_dict</span><span class="p">[</span><span class="s">&#39;Attributes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Attributes</span>
+        <span class="c"># as nillable is a property, it gets reset everytime a new class is</span>
+        <span class="c"># defined.</span>
+        <span class="n">Attributes</span><span class="o">.</span><span class="n">nillable</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">nillable</span>
 
         <span class="k">class</span> <span class="nc">Annotations</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">Annotations</span><span class="p">):</span>
             <span class="k">pass</span>
@@ -372,6 +400,9 @@
 
             <span class="k">elif</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;primary_key&#39;</span><span class="p">,</span><span class="s">&#39;pk&#39;</span><span class="p">):</span>
                 <span class="n">Attributes</span><span class="o">.</span><span class="n">sqla_column_args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s">&#39;primary_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+            <span class="k">elif</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;autoincrement&#39;</span><span class="p">):</span>
+                <span class="n">Attributes</span><span class="o">.</span><span class="n">sqla_column_args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
 
             <span class="k">elif</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;foreign_key&#39;</span><span class="p">,</span><span class="s">&#39;fk&#39;</span><span class="p">):</span>
                 <span class="kn">from</span> <span class="nn">sqlalchemy.schema</span> <span class="kn">import</span> <span class="n">ForeignKey</span>
@@ -405,13 +436,7 @@
 
 
 <span class="k">class</span> <span class="nc">Null</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span></div></div>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&quot;&quot;</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">None</span>
+    <span class="k">pass</span>
 
 
 <span class="k">class</span> <span class="nc">SimpleModel</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>

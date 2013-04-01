@@ -116,17 +116,15 @@
                 <span class="c"># these two lines are needed for staticmethod wrapping to work</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">descriptor</span><span class="o">.</span><span class="n">function</span><span class="p">))</span>
                 <span class="n">descriptor</span><span class="o">.</span><span class="n">reset_function</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+                <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">descriptor</span> <span class="o">=</span> <span class="n">descriptor</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">public_methods</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">descriptor</span>
                 <span class="k">if</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">aux</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__has_aux_methods</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__aux__</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;you can&#39;t mix primary and &quot;</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;You can&#39;t mix primary and &quot;</span>
                             <span class="s">&quot;auxiliary methods in a single service definition.&quot;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">__has_aux_methods</span> <span class="o">=</span> <span class="bp">True</span>
-
-                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">patterns</span><span class="p">:</span>
-                    <span class="n">p</span><span class="o">.</span><span class="n">endpoint</span> <span class="o">=</span> <span class="n">k</span>
 
     <span class="k">def</span> <span class="nf">__get_base_event_handlers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">):</span>
         <span class="n">handlers</span> <span class="o">=</span> <span class="p">{}</span>
@@ -243,6 +241,7 @@
             <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">__tns__</span>
 
         <span class="n">retval</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">__module__</span>
+
         <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">__module__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
             <span class="n">service_name</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_service_class_name</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">retval</span> <span class="o">=</span> <span class="s">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">service_name</span><span class="p">,</span> <span class="n">service_name</span><span class="p">))</span>
@@ -274,10 +273,11 @@
         <span class="k">elif</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">body_style</span> <span class="ow">is</span> <span class="n">BODY_STYLE_EMPTY</span><span class="p">:</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">no_ctx</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ctx</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ctx</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="o">*</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">no_ctx</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ctx</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ctx</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="o">*</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span></div>
     <span class="k">def</span> <span class="nf">get_method_id</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">):</span>

@@ -548,7 +548,7 @@ purposes.</p>
 
 <dl class="data">
 <dt id="spyne.model.complex.PSSM_VALUES">
-<tt class="descclassname">spyne.model.complex.</tt><tt class="descname">PSSM_VALUES</tt><em class="property"> = {'xml': &lt;class spyne.model.complex.xml at 0x2c631f0&gt;, 'table': &lt;class spyne.model.complex.table at 0x2d9f808&gt;, 'json': &lt;class spyne.model.complex.json at 0x2d9f870&gt;, 'msgpack': &lt;class spyne.model.complex.msgpack at 0x2d9f8d8&gt;}</em><a class="headerlink" href="#spyne.model.complex.PSSM_VALUES" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">spyne.model.complex.</tt><tt class="descname">PSSM_VALUES</tt><em class="property"> = {'xml': &lt;class spyne.model.complex.xml at 0x2ae0598&gt;, 'table': &lt;class spyne.model.complex.table at 0x2a74bb0&gt;, 'json': &lt;class spyne.model.complex.json at 0x2a74c18&gt;, 'msgpack': &lt;class spyne.model.complex.msgpack at 0x2a74c80&gt;}</em><a class="headerlink" href="#spyne.model.complex.PSSM_VALUES" title="Permalink to this definition">¶</a></dt>
 <dd><p>Persistent storage serialization method values</p>
 </dd></dl>
 
@@ -571,7 +571,8 @@ call. If metadata is not supplied, a new one is instantiated.</p>
 <dt id="spyne.model.complex.XmlAttribute">
 <em class="property">class </em><tt class="descclassname">spyne.model.complex.</tt><tt class="descname">XmlAttribute</tt><a class="reference internal" href="../modules/spyne/model/complex.html#XmlAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.complex.XmlAttribute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#spyne.model._base.ModelBase" title="spyne.model._base.ModelBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.ModelBase</span></tt></a></p>
-<p>Items which are marshalled as attributes of the parent element.</p>
+<p>Items which are marshalled as attributes of the parent element, unless
+<tt class="docutils literal"><span class="pre">attribute_of</span></tt> is passed.</p>
 </dd></dl>
 
 <dl class="class">
@@ -1021,30 +1022,44 @@ It&#8217;s here for compatibility reasons.</p>
 
 <dl class="attribute">
 <dt id="spyne.model.primitive.Integer16">
-<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Integer16</tt><a class="reference internal" href="../modules/spyne/model/primitive.html#Integer16"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Integer16" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Integer16</tt><a class="headerlink" href="#spyne.model.primitive.Integer16" title="Permalink to this definition">¶</a></dt>
 <dd><p>The 16-bit signed integer, also known as <tt class="docutils literal"><span class="pre">short</span></tt>.</p>
 <p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedInteger</span></tt></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="spyne.model.primitive.Integer32">
-<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Integer32</tt><a class="reference internal" href="../modules/spyne/model/primitive.html#Integer32"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Integer32" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Integer32</tt><a class="headerlink" href="#spyne.model.primitive.Integer32" title="Permalink to this definition">¶</a></dt>
 <dd><p>The 64-bit signed integer, also known as <tt class="docutils literal"><span class="pre">int</span></tt>.</p>
 <p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedInteger</span></tt></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="spyne.model.primitive.Integer64">
-<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Integer64</tt><a class="reference internal" href="../modules/spyne/model/primitive.html#Integer64"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Integer64" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Integer64</tt><a class="headerlink" href="#spyne.model.primitive.Integer64" title="Permalink to this definition">¶</a></dt>
 <dd><p>The 64-bit signed integer, also known as <tt class="docutils literal"><span class="pre">long</span></tt>.</p>
 <p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedInteger</span></tt></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="spyne.model.primitive.Integer8">
-<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Integer8</tt><a class="reference internal" href="../modules/spyne/model/primitive.html#Integer8"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Integer8" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Integer8</tt><a class="headerlink" href="#spyne.model.primitive.Integer8" title="Permalink to this definition">¶</a></dt>
 <dd><p>The 8-bit signed integer, also known as <tt class="docutils literal"><span class="pre">byte</span></tt>.</p>
 <p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.Line">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Line</tt><a class="reference internal" href="../modules/spyne/model/primitive.html#Line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a></p>
+<p>A point type whose native format is a WKT string. You can use
+<tt class="xref py py-func docutils literal"><span class="pre">shapely.wkt.loads()</span></tt> to get a proper point type.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.LineString">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">LineString</tt><a class="headerlink" href="#spyne.model.primitive.LineString" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#spyne.model.primitive.Line" title="spyne.model.primitive.Line"><tt class="xref py py-class docutils literal"><span class="pre">Line</span></tt></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1061,8 +1076,30 @@ It&#8217;s here for compatibility reasons.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="spyne.model.primitive.MultiLine">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">MultiLine</tt><a class="reference internal" href="../modules/spyne/model/primitive.html#MultiLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.MultiLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a></p>
+<p>A Multipolygon type whose native format is a WKT string. You can use
+<tt class="xref py py-func docutils literal"><span class="pre">shapely.wkt.loads()</span></tt> to get a proper multipolygon type.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.MultiLineString">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">MultiLineString</tt><a class="headerlink" href="#spyne.model.primitive.MultiLineString" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#spyne.model.primitive.MultiLine" title="spyne.model.primitive.MultiLine"><tt class="xref py py-class docutils literal"><span class="pre">MultiLine</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.MultiPoint">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">MultiPoint</tt><a class="reference internal" href="../modules/spyne/model/primitive.html#MultiPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.MultiPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a></p>
+<p>A Multipolygon type whose native format is a WKT string. You can use
+<tt class="xref py py-func docutils literal"><span class="pre">shapely.wkt.loads()</span></tt> to get a proper multipolygon type.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="spyne.model.primitive.MultiPolygon">
-<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">MultiPolygon</tt><a class="headerlink" href="#spyne.model.primitive.MultiPolygon" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">MultiPolygon</tt><a class="reference internal" href="../modules/spyne/model/primitive.html#MultiPolygon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.MultiPolygon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a></p>
 <p>A Multipolygon type whose native format is a WKT string. You can use
 <tt class="xref py py-func docutils literal"><span class="pre">shapely.wkt.loads()</span></tt> to get a proper multipolygon type.</p>
@@ -1225,28 +1262,28 @@ or &#8216;ignore&#8217;.</p>
 
 <dl class="attribute">
 <dt id="spyne.model.primitive.UnsignedInteger16">
-<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedInteger16</tt><a class="reference internal" href="../modules/spyne/model/primitive.html#UnsignedInteger16"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.UnsignedInteger16" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedInteger16</tt><a class="headerlink" href="#spyne.model.primitive.UnsignedInteger16" title="Permalink to this definition">¶</a></dt>
 <dd><p>The 16-bit unsigned integer, also known as <tt class="docutils literal"><span class="pre">unsignedShort</span></tt>.</p>
 <p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedUnsignedInteger</span></tt></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="spyne.model.primitive.UnsignedInteger32">
-<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedInteger32</tt><a class="reference internal" href="../modules/spyne/model/primitive.html#UnsignedInteger32"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.UnsignedInteger32" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedInteger32</tt><a class="headerlink" href="#spyne.model.primitive.UnsignedInteger32" title="Permalink to this definition">¶</a></dt>
 <dd><p>The 64-bit unsigned integer, also known as <tt class="docutils literal"><span class="pre">unsignedInt</span></tt>.</p>
 <p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedUnsignedInteger</span></tt></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="spyne.model.primitive.UnsignedInteger64">
-<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedInteger64</tt><a class="reference internal" href="../modules/spyne/model/primitive.html#UnsignedInteger64"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.UnsignedInteger64" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedInteger64</tt><a class="headerlink" href="#spyne.model.primitive.UnsignedInteger64" title="Permalink to this definition">¶</a></dt>
 <dd><p>The 64-bit unsigned integer, also known as <tt class="docutils literal"><span class="pre">unsignedLong</span></tt>.</p>
 <p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedUnsignedInteger</span></tt></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="spyne.model.primitive.UnsignedInteger8">
-<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedInteger8</tt><a class="reference internal" href="../modules/spyne/model/primitive.html#UnsignedInteger8"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.UnsignedInteger8" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedInteger8</tt><a class="headerlink" href="#spyne.model.primitive.UnsignedInteger8" title="Permalink to this definition">¶</a></dt>
 <dd><p>The 8-bit unsigned integer, also known as <tt class="docutils literal"><span class="pre">unsignedByte</span></tt>.</p>
 <p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedUnsignedInteger</span></tt></p>
 </dd></dl>
@@ -1283,7 +1320,7 @@ or &#8216;ignore&#8217;.</p>
 <dd><p>Bases: <a class="reference internal" href="#spyne.model.complex.ComplexModelBase" title="spyne.model.complex.ComplexModelBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.ComplexModelBase</span></tt></a></p>
 <p>The main base class for complex types shared by both SQLAlchemy and
 spyne. Classes that inherit from this class should also inherit from
-an sqlalchemy.declarative base class. See the <a class="reference internal" href="../manual/04-01_sqlalchemy.html#manual-sqlalchemy"><em>SQLAlchemy Integration</em></a>
+an sqlalchemy.declarative base class. See the <a class="reference internal" href="../manual/05-01_sqlalchemy.html#manual-sqlalchemy"><em>SQLAlchemy Integration</em></a>
 section for more info.</p>
 </dd></dl>
 

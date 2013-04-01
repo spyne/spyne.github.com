@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Spyne Models and Native Python Types &mdash; spyne 2.10.0 documentation</title>
+    
+    <link rel="stylesheet" href="../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.10.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.10.0 documentation" href="../index.html" />
+    <link rel="up" title="Spyne Manual" href="index.html" />
+    <link rel="next" title="User Manager" href="04_usermanager.html" />
+    <link rel="prev" title="Hello World" href="02_helloworld.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="04_usermanager.html" title="User Manager"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="02_helloworld.html" title="Hello World"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Spyne Manual</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Spyne Models and Native Python Types</a><ul>
+<li><a class="reference internal" href="#customization">Customization</a></li>
+<li><a class="reference internal" href="#primitives">Primitives</a><ul>
+<li><a class="reference internal" href="#numbers">Numbers</a></li>
+<li><a class="reference internal" href="#strings">Strings</a></li>
+<li><a class="reference internal" href="#date-time-types">Date/Time Types</a></li>
+<li><a class="reference internal" href="#spatial-types">Spatial Types</a></li>
+<li><a class="reference internal" href="#miscellanous-types">Miscellanous Types</a></li>
+<li><a class="reference internal" href="#dynamic-types">Dynamic Types</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#enum">Enum</a></li>
+<li><a class="reference internal" href="#binary">Binary</a></li>
+<li><a class="reference internal" href="#complex">Complex</a></li>
+<li><a class="reference internal" href="#fault">Fault</a><ul>
+<li><a class="reference internal" href="#what-s-next">What&#8217;s next?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="02_helloworld.html"
+                        title="previous chapter">Hello World</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="04_usermanager.html"
+                        title="next chapter">User Manager</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../sources/manual/03_types.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="spyne-models-and-native-python-types">
+<span id="manual-types"></span><h1>Spyne Models and Native Python Types<a class="headerlink" href="#spyne-models-and-native-python-types" title="Permalink to this headline">¶</a></h1>
+<p>There are five types of models in Spyne:</p>
+<ul class="simple">
+<li><strong>Primitive:</strong> These are basic models that can contain a single value at a time.
+Primitive types are more-or-less present in any programming language and all
+of them map to a well-defined Python type. Types like <tt class="docutils literal"><span class="pre">Integer</span></tt>,
+<tt class="docutils literal"><span class="pre">Decimal</span></tt>, <tt class="docutils literal"><span class="pre">Float</span></tt>, <tt class="docutils literal"><span class="pre">String</span></tt>, <tt class="docutils literal"><span class="pre">Date</span></tt> are all primitives. See the
+documentation for <a class="reference internal" href="../reference/model.html#module-spyne.model.primitive" title="spyne.model.primitive"><tt class="xref py py-mod docutils literal"><span class="pre">spyne.model.primitive</span></tt></a> for more info.</li>
+<li><strong>Enum:</strong> Custom types that can take only a pre-determined number of values.
+It&#8217;s also possible to get enum-like behavior with primitives as well. Enums
+are defined using the <a class="reference internal" href="../reference/model.html#spyne.model.enum.Enum" title="spyne.model.enum.Enum"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.enum.Enum</span></tt></a> class.</li>
+<li><strong>Binary:</strong> Binary types are used to represent arbitrarily-long byte streams.
+There are two binary types in Spyne: The
+<a class="reference internal" href="../reference/model.html#spyne.model.binary.ByteArray" title="spyne.model.binary.ByteArray"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.binary.ByteArray</span></tt></a> and the
+<a class="reference internal" href="../reference/model.html#spyne.model.binary.File" title="spyne.model.binary.File"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.binary.File</span></tt></a> class. While any sequence of <tt class="docutils literal"><span class="pre">str</span></tt>
+instances can be used as <tt class="docutils literal"><span class="pre">ByteArray</span></tt>, the <tt class="docutils literal"><span class="pre">File</span></tt> only works with a
+<tt class="docutils literal"><span class="pre">File.Value</span></tt> instance. Please see the relevant example below for a more
+thorough explanation.</li>
+<li><strong>Complex:</strong> Complex objects are subclasses of the
+<a class="reference internal" href="../reference/model.html#spyne.model.complex.ComplexModel" title="spyne.model.complex.ComplexModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.ComplexModel</span></tt></a> class. They are hierarchical
+container classes that can contain any type of object. Two well known
+examples are the
+<a class="reference internal" href="../reference/model.html#spyne.model.complex.Array" title="spyne.model.complex.Array"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.Array</span></tt></a> and
+<a class="reference internal" href="../reference/model.html#spyne.model.complex.Iterable" title="spyne.model.complex.Iterable"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.Iterable</span></tt></a> types.
+They are just specialized complex objects.</li>
+<li><strong>Fault:</strong> When an exception is thrown from the user code, it&#8217;s serialized
+and returned to the client as a <a class="reference internal" href="../reference/model.html#spyne.model.fault.Fault" title="spyne.model.fault.Fault"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.fault.Fault</span></tt></a>. If it is
+not a subclass of <tt class="docutils literal"><span class="pre">Fault</span></tt>, the client will probably see this
+as an internal error. Some of the most common exceptions that a web service
+might need to throw can be found in the <a class="reference internal" href="../reference/error.html#module-spyne.error" title="spyne.error"><tt class="xref py py-mod docutils literal"><span class="pre">spyne.error</span></tt></a> module.</li>
+</ul>
+<p>Before going into detail about each category of models, we will first talk
+about an operation that applies to all models: Type Customization.</p>
+<div class="section" id="customization">
+<h2>Customization<a class="headerlink" href="#customization" title="Permalink to this headline">¶</a></h2>
+<p>Model customization is how one adds declarative restrictions and other metadata
+to a Spyne model. This model metadata is stored in a generic object called
+<tt class="docutils literal"><span class="pre">Attributes</span></tt>. Every Spyne model has this object as a class attribute.</p>
+<p>As an example, let&#8217;s customize the vanilla <tt class="docutils literal"><span class="pre">Unicode</span></tt> type to accept only valid
+email strings:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">EmailString</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span>
+    <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;EmailString&#39;</span>
+
+    <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
+        <span class="n">max_length</span> <span class="o">=</span> <span class="mi">128</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="s">&#39;[^@]+@[^@]+&#39;</span>
+</pre></div>
+</div>
+<p>You must consult the reference of the type you want to customize in order to
+learn about which values it supports for its <tt class="docutils literal"><span class="pre">Attributes</span></tt> object.</p>
+<p>As this is a quite verbose way of doing it, Spyne offers an in-line
+customization mechanism for every type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">EmailString</span> <span class="o">=</span> <span class="n">Unicode</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span>
+        <span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+        <span class="n">pattern</span><span class="o">=</span><span class="s">&#39;[^@]+@[^@]+&#39;</span><span class="p">,</span>
+        <span class="n">type_name</span><span class="o">=</span><span class="s">&#39;EmailString&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, <tt class="docutils literal"><span class="pre">type_name</span></tt> is a special argument name that gets assigned to
+<tt class="docutils literal"><span class="pre">__type_name__</span></tt> instead of the <tt class="docutils literal"><span class="pre">Attributes</span></tt> class.</p>
+<p>Calling simple types directly is a shortcut to their customize method:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">EmailString</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span>
+        <span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+        <span class="n">pattern</span><span class="o">=</span><span class="s">&#39;[^@]+@[^@]+&#39;</span><span class="p">,</span>
+        <span class="n">type_name</span><span class="o">=</span><span class="s">&#39;EmailString&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>As restricting the length of a string is very common, the length limit can be
+passed as a positional argument as well:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">EmailString</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span>
+        <span class="n">pattern</span><span class="o">=</span><span class="s">&#39;[^@]+@[^@]+&#39;</span><span class="p">,</span>
+        <span class="n">type_name</span><span class="o">=</span><span class="s">&#39;EmailString&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>It&#8217;s actually also not strictly necessary (yet highly recommended) to pass a
+type name:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">EmailString</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">&#39;[^@]+@[^@]+&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When the <tt class="docutils literal"><span class="pre">type_name</span></tt> is omitted, Spyne auto-generates a type name for the
+new custom type basing on the class it&#8217;s used in.</p>
+<p>Type customizations can also be anonymously tucked inside other class
+definitions:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
+    <span class="n">user_name</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">&#39;[a-z0-9_-]&#39;</span><span class="p">)</span>
+    <span class="n">email_address</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">&#39;[^@]+@[^@]+&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Do note that calling <tt class="docutils literal"><span class="pre">ComplexModel</span></tt> subclasses instantitates them. That&#8217;s why
+you should use the <tt class="docutils literal"><span class="pre">.customize()</span></tt> call, or plain old subclassing to customize
+complex types:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MandatoryUser</span><span class="p">(</span><span class="n">User</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
+        <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span>
+        <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span>
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">MandatoryUser</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="primitives">
+<h2>Primitives<a class="headerlink" href="#primitives" title="Permalink to this headline">¶</a></h2>
+<p>Using primitives in functions are very simple. Here are some examples:</p>
+<div class="highlight-python"><pre>class SomeSampleServices(ServiceBase):
+    @srpc(Decimal, Decimal, _returns=Decimal)
+    def exp(x, y):
+        """Exponentiate arbitrary rationals. A very DoS friendly service!"""
+        return x ** y
+
+    utcnow = @srpc(_returns=DateTime)(datetime.utcnow)
+
+    @srpc(Unicode, _returns=Unicode)
+    def upper(s):
+        return s.upper()
+
+    # etc.</pre>
+</div>
+<p>Let&#8217;s now look at them group by group:</p>
+<div class="section" id="numbers">
+<h3>Numbers<a class="headerlink" href="#numbers" title="Permalink to this headline">¶</a></h3>
+<p>Numbers are organized in a hierarchy, with the
+<a class="reference internal" href="../reference/model.html#spyne.model.primitive.Decimal" title="spyne.model.primitive.Decimal"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Decimal</span></tt></a> type  at the top.
+In its vanilla state, the <tt class="docutils literal"><span class="pre">Decimal</span></tt> class is the arbitrary-precision,
+arbitrary-size generic number type that will accept just <em>any</em> decimal
+number.</p>
+<p>It has three direct subclasses: The arbitrary-size
+<a class="reference internal" href="../reference/model.html#spyne.model.primitive.Integer" title="spyne.model.primitive.Integer"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Integer</span></tt></a> type and the machine-dependent
+<a class="reference internal" href="../reference/model.html#spyne.model.primitive.Double" title="spyne.model.primitive.Double"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Double</span></tt></a> or
+<a class="reference internal" href="../reference/model.html#spyne.model.primitive.Float" title="spyne.model.primitive.Float"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Float</span></tt></a> (which are synonyms as Python does not
+distinguish between floats and doubles) types.</p>
+<p>Unless you are absolutely, positively sure that you need to deal with
+arbitrary-size numbers, (or you&#8217;re implementing an existing API) you
+should not use the arbitrary-size types in their vanilla form.</p>
+<p>You must also refrain from using <a class="reference internal" href="../reference/model.html#spyne.model.primitive.Float" title="spyne.model.primitive.Float"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Float</span></tt></a> and
+<a class="reference internal" href="../reference/model.html#spyne.model.primitive.Double" title="spyne.model.primitive.Double"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Double</span></tt></a> types unless you need your math to
+roll faster as their representation is machine-specific, thus not very
+reliable nor portable.</p>
+<p>For integers, we recommend you to use types like
+<a class="reference internal" href="../reference/model.html#spyne.model.primitive.UnsignedInteger32" title="spyne.model.primitive.UnsignedInteger32"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.UnsignedInteger32</span></tt></a> which can only contain a
+32-bit unsigned integer. (Which is very popular as e.g. a primary key type
+in a relational database.)</p>
+<p>For floating-point numbers, use the <tt class="docutils literal"><span class="pre">Decimal</span></tt> type with a pre-defined scale
+and precision. E.g. <tt class="docutils literal"><span class="pre">Decimal(16,</span> <span class="pre">4)</span></tt> can represent a 16-digit number in total
+which can have up to 4 decimal digits, which could be used e.g. as a nice
+monetary type. By the way, Spyne does not include types like ISO-4217 compliant
+&#8216;currency&#8217; and &#8216;monetary&#8217; types. <a class="footnote-reference" href="#id2" id="id1">[1]</a> They are actually really easy to
+implement. Needless to say, patches are welcome!</p>
+<p>Please see the <a class="reference internal" href="../reference/model.html#module-spyne.model.primitive" title="spyne.model.primitive"><tt class="xref py py-mod docutils literal"><span class="pre">spyne.model.primitive</span></tt></a> documentation for more details
+regarding number handling in Spyne.</p>
+</div>
+<div class="section" id="strings">
+<h3>Strings<a class="headerlink" href="#strings" title="Permalink to this headline">¶</a></h3>
+<p>There are two string types in Spyne: <a class="reference internal" href="../reference/model.html#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a> and
+<tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.String</span></tt> whose native types are <tt class="docutils literal"><span class="pre">unicode</span></tt> and
+<tt class="docutils literal"><span class="pre">str</span></tt> respectively.</p>
+<p>Unlike the Python <tt class="docutils literal"><span class="pre">str</span></tt>, the Spyne <tt class="docutils literal"><span class="pre">String</span></tt> is not for arbitrary byte
+streams.
+You should not use it unless you are absolutely, positively sure that
+you need to deal with text data with an unknown encoding.
+In all other cases, you should just use the <tt class="docutils literal"><span class="pre">Unicode</span></tt> type. They actually
+look the same from outside, this distinction is made just to properly deal
+with the quirks surrounding Python-2&#8217;s <tt class="docutils literal"><span class="pre">unicode</span></tt> type.</p>
+<p>Remember that you have the <tt class="docutils literal"><span class="pre">ByteArray</span></tt> and <tt class="docutils literal"><span class="pre">File</span></tt> types at your disposal
+when you need to deal with arbitrary byte streams.</p>
+<p>The <tt class="docutils literal"><span class="pre">String</span></tt> type will be just an alias for <tt class="docutils literal"><span class="pre">Unicode</span></tt>
+once Spyne gets ported to Python 3. It might even be deprecated and removed in the
+future, so make sure you are using either <tt class="docutils literal"><span class="pre">Unicode</span></tt> or <tt class="docutils literal"><span class="pre">ByteArray</span></tt> in your
+interface definitions.</p>
+<p><tt class="docutils literal"><span class="pre">File</span></tt>, <tt class="docutils literal"><span class="pre">ByteArray</span></tt>, <tt class="docutils literal"><span class="pre">Unicode</span></tt> and <tt class="docutils literal"><span class="pre">String</span></tt> are all arbitrary-size in
+their vanilla versions. Don&#8217;t forget to customize them with additional restrictions
+when implementing public services.</p>
+<p>See also the configuration parameters of your favorite transport for more
+information on request size restriction and other precautions against
+potential abuse.</p>
+</div>
+<div class="section" id="date-time-types">
+<h3>Date/Time Types<a class="headerlink" href="#date-time-types" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.Date" title="spyne.model.primitive.Date"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Date</span></tt></a>, <a class="reference internal" href="../reference/model.html#spyne.model.primitive.Time" title="spyne.model.primitive.Time"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Time</span></tt></a> and
+<a class="reference internal" href="../reference/model.html#spyne.model.primitive.DateTime" title="spyne.model.primitive.DateTime"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.DateTime</span></tt></a> correspond to the native types
+<tt class="docutils literal"><span class="pre">datetime.date</span></tt>, <tt class="docutils literal"><span class="pre">datetime.time</span></tt> and <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> respectively.
+Spyne supports working with both offset-naive and offset-aware datetimes.</p>
+<p>As long as you return the proper native types, you should be fine.</p>
+<p>As a side note, the <a class="reference external" href="http://labix.org/python-dateutil">dateutil</a> package is
+mighty useful for dealing with dates, times and timezones. Highly recommended!</p>
+</div>
+<div class="section" id="spatial-types">
+<h3>Spatial Types<a class="headerlink" href="#spatial-types" title="Permalink to this headline">¶</a></h3>
+<p>Spyne comes with six basic spatial types that are supported by popular packages
+like <a class="reference external" href="http://postgis.refractions.net/">PostGIS</a> and
+<cite>Shapely &lt;`http://toblerity.github.com/shapely/</cite>&gt;_. These are the</p>
+<p>These are provided as <tt class="docutils literal"><span class="pre">Unicode</span></tt> subclasses that just define proper
+constraints to force the incoming string to be WKT-compliant. WKB is not yet
+supported.</p>
+<p>The incoming types are not parsed, but you can use <tt class="docutils literal"><span class="pre">shapely.wkb.loads()</span></tt>
+function to convert them to native geometric types.</p>
+<p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.Point" title="spyne.model.primitive.Point"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Point</span></tt></a>, <a class="reference internal" href="../reference/model.html#spyne.model.primitive.Line" title="spyne.model.primitive.Line"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Line</span></tt></a> and
+<a class="reference internal" href="../reference/model.html#spyne.model.primitive.Polygon" title="spyne.model.primitive.Polygon"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Polygon</span></tt></a> and also their multi-variants, which are</p>
+<p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.MultiPoint" title="spyne.model.primitive.MultiPoint"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.MultiPoint</span></tt></a>, <a class="reference internal" href="../reference/model.html#spyne.model.primitive.MultiLine" title="spyne.model.primitive.MultiLine"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.MultiLine</span></tt></a>
+and <a class="reference internal" href="../reference/model.html#spyne.model.primitive.MultiPolygon" title="spyne.model.primitive.MultiPolygon"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.MultiPolygon</span></tt></a>.</p>
+</div>
+<div class="section" id="miscellanous-types">
+<h3>Miscellanous Types<a class="headerlink" href="#miscellanous-types" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.AnyUri" title="spyne.model.primitive.AnyUri"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.AnyUri</span></tt></a></p>
+<p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.Boolean" title="spyne.model.primitive.Boolean"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Boolean</span></tt></a></p>
+<p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.Uuid" title="spyne.model.primitive.Uuid"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Uuid</span></tt></a></p>
+</div>
+<div class="section" id="dynamic-types">
+<h3>Dynamic Types<a class="headerlink" href="#dynamic-types" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.AnyDict" title="spyne.model.primitive.AnyDict"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.AnyDict</span></tt></a></p>
+<p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.AnyXml" title="spyne.model.primitive.AnyXml"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.AnyXml</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="enum">
+<h2>Enum<a class="headerlink" href="#enum" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="binary">
+<h2>Binary<a class="headerlink" href="#binary" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="complex">
+<h2>Complex<a class="headerlink" href="#complex" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="fault">
+<h2>Fault<a class="headerlink" href="#fault" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="what-s-next">
+<h3>What&#8217;s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h3>
+<p>See the <a class="reference internal" href="04_usermanager.html#manual-user-manager"><em>User Manager</em></a> tutorial that will walk you through
+defining complex objects and using events.</p>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>See <a class="reference external" href="http://www.w3.org/TR/2001/WD-xforms-20010608/slice4.html">http://www.w3.org/TR/2001/WD-xforms-20010608/slice4.html</a> for more
+information.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="04_usermanager.html" title="User Manager"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="02_helloworld.html" title="Hello World"
+             >previous</a> |</li>
+        <li><a href="../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Spyne Manual</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

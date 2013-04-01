@@ -136,6 +136,8 @@
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_string</span><span class="p">:</span>
             <span class="k">pass</span>
 
+        <span class="n">ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
     <span class="k">def</span> <span class="nf">process_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">p_ctx</span><span class="p">,</span> <span class="n">p_error</span><span class="p">):</span></div>
 <div class="viewcode-block" id="AuxProcBase.process_context"><a class="viewcode-back" href="../../../reference/auxproc.html#spyne.auxproc._base.AuxProcBase.process_context">[docs]</a>        <span class="sd">&quot;&quot;&quot;Override this to implement your own auxiliary processor.&quot;&quot;&quot;</span>
 

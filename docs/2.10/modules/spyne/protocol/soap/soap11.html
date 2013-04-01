@@ -88,8 +88,14 @@
 <span class="sd">&quot;&quot;&quot;The ``spyne.protoco.soap.soap11`` module contains the implementation of a</span>
 <span class="sd">subset of the Soap 1.1 standard.</span>
 
-<span class="sd">Except the binary optimizations that mostly **do not work**, this protocol is</span>
-<span class="sd">production quality.</span>
+<span class="sd">Except the binary optimizations (MtoM, attachments, etc) that mostly</span>
+<span class="sd">**do not work**, this protocol is production quality.</span>
+
+<span class="sd">One must specifically enable the debug output for the Xml protocol to see the</span>
+<span class="sd">actual document exchange. That&#39;s because the xml formatting code is run only</span>
+<span class="sd">when explicitly enabled due to performance reasons. ::</span>
+
+<span class="sd">    logging.getLogger(&#39;spyne.protocol.xml&#39;).setLevel(logging.DEBUG)</span>
 
 <span class="sd">Initially released in soaplib-0.8.0.</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -106,16 +112,17 @@
 
 <span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_405</span>
 <span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_500</span>
-<span class="kn">from</span> <span class="nn">spyne.const.ansi_color</span> <span class="kn">import</span> <span class="n">LIGHT_GREEN</span>
-<span class="kn">from</span> <span class="nn">spyne.const.ansi_color</span> <span class="kn">import</span> <span class="n">LIGHT_RED</span>
-<span class="kn">from</span> <span class="nn">spyne.const.ansi_color</span> <span class="kn">import</span> <span class="n">END_COLOR</span>
 <span class="kn">from</span> <span class="nn">spyne.error</span> <span class="kn">import</span> <span class="n">RequestNotAllowed</span>
 <span class="kn">from</span> <span class="nn">spyne.model.fault</span> <span class="kn">import</span> <span class="n">Fault</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Date</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Time</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">DateTime</span>
 <span class="kn">from</span> <span class="nn">spyne.protocol.xml</span> <span class="kn">import</span> <span class="n">XmlDocument</span>
-<span class="kn">from</span> <span class="nn">spyne.protocol.xml.model</span> <span class="kn">import</span> <span class="n">nillable_value</span>
-<span class="kn">from</span> <span class="nn">spyne.protocol.xml.model</span> <span class="kn">import</span> <span class="n">TBaseFromElement</span>
 <span class="kn">from</span> <span class="nn">spyne.protocol.soap.mime</span> <span class="kn">import</span> <span class="n">collapse_swa</span>
+
+<span class="kn">from</span> <span class="nn">spyne.protocol._model</span> <span class="kn">import</span> <span class="n">date_from_string_iso</span>
+<span class="kn">from</span> <span class="nn">spyne.protocol._model</span> <span class="kn">import</span> <span class="n">datetime_from_string_iso</span>
+
 
 <span class="k">def</span> <span class="nf">_from_soap</span><span class="p">(</span><span class="n">in_envelope_xml</span><span class="p">,</span> <span class="n">xmlids</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Parses the xml string into the header and payload.&#39;&#39;&#39;</span>
@@ -199,49 +206,45 @@
     <span class="k">return</span> <span class="n">element</span>
 
 
-<span class="nd">@nillable_value</span></div>
-<span class="k">def</span> <span class="nf">_datetime_to_parent_element</span><span class="p">(</span><span class="n">prot</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tns</span><span class="p">,</span> <span class="n">parent_elt</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;retval&#39;</span><span class="p">):</span>
-    <span class="n">e</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">parent_elt</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tns</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
-    <span class="n">e</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-
-<span class="n">_datetime_from_element</span> <span class="o">=</span> <span class="n">TBaseFromElement</span><span class="p">(</span><span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">cls</span><span class="o">.</span><span class="n">default_parse</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
-
-
-<span class="k">class</span> <span class="nc">Soap11</span><span class="p">(</span><span class="n">XmlDocument</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Soap11</span><span class="p">(</span><span class="n">XmlDocument</span><span class="p">):</span></div>
 <div class="viewcode-block" id="Soap11"><a class="viewcode-back" href="../../../../reference/protocol/soap.html#spyne.protocol.soap.soap11.Soap11">[docs]</a>    <span class="sd">&quot;&quot;&quot;The base implementation of a subset of the Soap 1.1 standard. The</span>
 <span class="sd">    document is available here: http://www.w3.org/TR/soap11/</span>
 
-<span class="sd">    :param app: A spyne.application.Application instance.</span>
-<span class="sd">    :param validator: The validator to use. Currently the only supported</span>
-<span class="sd">        value is &#39;lxml&#39;</span>
-<span class="sd">    :param wrapped: Whether the return type should be wrapped in another</span>
-<span class="sd">        object. Default is &#39;True&#39;.</span>
+<span class="sd">    :param app: The owner application instance.</span>
+<span class="sd">    :param validator: One of (None, &#39;soft&#39;, &#39;lxml&#39;, &#39;schema&#39;,</span>
+<span class="sd">                ProtocolBase.SOFT_VALIDATION, XmlDocument.SCHEMA_VALIDATION).</span>
+<span class="sd">                Both ``&#39;lxml&#39;`` and ``&#39;schema&#39;`` values are equivalent to</span>
+<span class="sd">                ``XmlDocument.SCHEMA_VALIDATION``.</span>
 <span class="sd">    :param xml_declaration: Whether to add xml_declaration to the responses</span>
 <span class="sd">        Default is &#39;True&#39;.</span>
 <span class="sd">    :param cleanup_namespaces: Whether to add clean up namespace declarations</span>
-<span class="sd">        in the response document. Default is &#39;False&#39;.</span>
+<span class="sd">        in the response document. Default is &#39;True&#39;.</span>
+<span class="sd">    :param encoding: The suggested string encoding for the returned xml</span>
+<span class="sd">        documents. The transport can override this.</span>
+<span class="sd">    :param pretty_print: When ``True``, returns the document in a pretty-printed</span>
+<span class="sd">        format.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">allowed_http_verbs</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;POST&#39;</span><span class="p">]</span>
     <span class="n">mime_type</span> <span class="o">=</span> <span class="s">&#39;text/xml; charset=utf-8&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">wrapped</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                                <span class="n">xml_declaration</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cleanup_namespaces</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-        <span class="n">XmlDocument</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">xml_declaration</span><span class="p">,</span>
-                                                             <span class="n">cleanup_namespaces</span><span class="p">)</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">XmlDocument</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+    <span class="nb">type</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="s">&#39;soap&#39;</span><span class="p">,</span> <span class="s">&#39;soap11&#39;</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped</span> <span class="o">=</span> <span class="n">wrapped</span>
+    <span class="c"># SOAP requires DateTime strings to be in iso format. The following</span>
+    <span class="c"># lines make sure custom datetime formatting via DateTime(format=&quot;...&quot;)</span>
+    <span class="c"># string is bypassed.</span>
+    <span class="n">_to_string_handlers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">Time</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+        <span class="n">DateTime</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+    <span class="p">}</span>
 
-        <span class="c"># SOAP requires DateTime strings to be in iso format. This function</span>
-        <span class="c"># bypasses datetime formatting via DateTime(format=&quot;...&quot;) string.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">serialization_handlers</span><span class="p">[</span><span class="n">DateTime</span><span class="p">]</span> <span class="o">=</span> <span class="n">_datetime_to_parent_element</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">deserialization_handlers</span><span class="p">[</span><span class="n">DateTime</span><span class="p">]</span> <span class="o">=</span> <span class="n">_datetime_from_element</span>
+    <span class="n">_from_string_handlers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">Date</span><span class="p">:</span> <span class="n">date_from_string_iso</span><span class="p">,</span>
+        <span class="n">DateTime</span><span class="p">:</span> <span class="n">datetime_from_string_iso</span><span class="p">,</span>
+    <span class="p">}</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<div class="viewcode-block" id="Soap11.wrapped"><a class="viewcode-back" href="../../../../reference/protocol/soap.html#spyne.protocol.soap.soap11.Soap11.wrapped">[docs]</a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped</span>
-
-    <span class="k">def</span> <span class="nf">create_in_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></div>
+    <span class="k">def</span> <span class="nf">create_in_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
 <div class="viewcode-block" id="Soap11.create_in_document"><a class="viewcode-back" href="../../../../reference/protocol/soap.html#spyne.protocol.soap.soap11.Soap11.create_in_document">[docs]</a>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s">&#39;wsgi&#39;</span><span class="p">:</span>
             <span class="c"># according to the soap via http standard, soap requests must only</span>
             <span class="c"># work with proper POST requests.</span>
@@ -300,18 +303,16 @@
 
             <span class="c"># decode header objects</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_header_doc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">header_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">):</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">header_class</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-                    <span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="bp">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">header_class</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">header_doc</span><span class="p">,</span> <span class="n">head_class</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+                <span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="bp">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">header_class</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">header_doc</span><span class="p">,</span> <span class="n">head_class</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
                                           <span class="nb">zip</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_header_doc</span><span class="p">,</span> <span class="n">header_class</span><span class="p">)):</span>
-                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">header_doc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">i</span><span class="p">:</span>
-                            <span class="n">headers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_element</span><span class="p">(</span><span class="n">head_class</span><span class="p">,</span> <span class="n">header_doc</span><span class="p">)</span>
-                    <span class="n">ctx</span><span class="o">.</span><span class="n">in_header</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">header_doc</span><span class="p">):</span>
+                        <span class="n">headers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_element</span><span class="p">(</span><span class="n">head_class</span><span class="p">,</span> <span class="n">header_doc</span><span class="p">)</span>
 
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">ctx</span><span class="o">.</span><span class="n">in_header</span> <span class="o">=</span> <span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_header_doc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="n">ctx</span><span class="o">.</span><span class="n">in_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_element</span><span class="p">(</span><span class="n">header_class</span><span class="p">,</span>
-                                                            <span class="n">ctx</span><span class="o">.</span><span class="n">in_header_doc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">ctx</span><span class="o">.</span><span class="n">in_header</span> <span class="o">=</span> <span class="n">headers</span>
 
             <span class="c"># decode method arguments</span>
             <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -380,51 +381,28 @@
                                 <span class="n">body_message_class</span><span class="o">.</span><span class="n">get_namespace</span><span class="p">(),</span> <span class="n">out_body_doc</span><span class="p">)</span>
 
             <span class="c"># header</span>
-            <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">out_header</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="s">&quot;Skipping soap response header as </span><span class="si">%r</span><span class="s"> method is not &quot;</span>
-                        <span class="s">&quot;declared to have one.&quot;</span> <span class="o">%</span> <span class="n">ctx</span><span class="o">.</span><span class="n">method_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">header_message_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">ctx</span><span class="o">.</span><span class="n">out_header_doc</span> <span class="o">=</span> <span class="n">soap_header_elt</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span>
+                                <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}Header&#39;</span> <span class="o">%</span> <span class="n">ns</span><span class="o">.</span><span class="n">soap_env</span><span class="p">)</span>
 
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">out_header</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                    <span class="n">out_headers</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_header</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">ctx</span><span class="o">.</span><span class="n">out_header_doc</span> <span class="o">=</span> <span class="n">soap_header_elt</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span>
-                                    <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span><span class="p">,</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}Header&#39;</span> <span class="o">%</span> <span class="n">ns</span><span class="o">.</span><span class="n">soap_env</span><span class="p">)</span>
+                    <span class="n">out_headers</span> <span class="o">=</span> <span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">out_header</span><span class="p">,)</span>
 
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">header_message_class</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">out_header</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-                            <span class="n">out_headers</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_header</span>
-                        <span class="k">else</span><span class="p">:</span>
-                            <span class="n">out_headers</span> <span class="o">=</span> <span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">out_header</span><span class="p">,)</span>
-
-
-                        <span class="k">for</span> <span class="n">header_class</span><span class="p">,</span> <span class="n">out_header</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">header_message_class</span><span class="p">,</span>
-                                                                <span class="n">out_headers</span><span class="p">):</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">to_parent_element</span><span class="p">(</span><span class="n">header_class</span><span class="p">,</span>
-                                <span class="n">out_header</span><span class="p">,</span>
-                                <span class="n">header_class</span><span class="o">.</span><span class="n">get_namespace</span><span class="p">(),</span>
-                                <span class="n">soap_header_elt</span><span class="p">,</span>
-                                <span class="n">header_class</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">(),</span>
-                            <span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">to_parent_element</span><span class="p">(</span><span class="n">header_message_class</span><span class="p">,</span>
-                            <span class="n">ctx</span><span class="o">.</span><span class="n">out_header</span><span class="p">,</span>
-                            <span class="n">header_message_class</span><span class="o">.</span><span class="n">get_namespace</span><span class="p">(),</span>
-                            <span class="n">soap_header_elt</span><span class="p">,</span>
-                            <span class="n">header_message_class</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
-                        <span class="p">)</span>
+                <span class="k">for</span> <span class="n">header_class</span><span class="p">,</span> <span class="n">out_header</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">header_message_class</span><span class="p">,</span>
+                                                                   <span class="n">out_headers</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">to_parent_element</span><span class="p">(</span><span class="n">header_class</span><span class="p">,</span>
+                        <span class="n">out_header</span><span class="p">,</span>
+                        <span class="n">header_class</span><span class="o">.</span><span class="n">get_namespace</span><span class="p">(),</span>
+                        <span class="n">soap_header_elt</span><span class="p">,</span>
+                        <span class="n">header_class</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">(),</span>
+                    <span class="p">)</span>
 
             <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">out_body_doc</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleanup_namespaces</span><span class="p">:</span>
             <span class="n">etree</span><span class="o">.</span><span class="n">cleanup_namespaces</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_messages</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">REQUEST</span><span class="p">:</span>
-                <span class="n">line_header</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">Request</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">LIGHT_GREEN</span><span class="p">,</span> <span class="n">END_COLOR</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">message</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">RESPONSE</span><span class="p">:</span>
-                <span class="n">line_header</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">Response</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">LIGHT_RED</span><span class="p">,</span> <span class="n">END_COLOR</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">line_header</span><span class="p">,</span> <span class="n">etree</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span><span class="p">,</span>
-                                        <span class="n">xml_declaration</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">pretty_print</span><span class="o">=</span><span class="bp">True</span><span class="p">)))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">fire_event</span><span class="p">(</span><span class="s">&#39;after_serialize&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
 

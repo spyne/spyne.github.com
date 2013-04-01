@@ -129,7 +129,7 @@ serializes python objects to xml using Xml Schema conventions.</p>
 
 <dl class="class">
 <dt id="spyne.protocol.xml._base.XmlDocument">
-<em class="property">class </em><tt class="descclassname">spyne.protocol.xml._base.</tt><tt class="descname">XmlDocument</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>xml_declaration=True</em>, <em>cleanup_namespaces=True</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/xml/_base.html#XmlDocument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.xml._base.XmlDocument" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">spyne.protocol.xml._base.</tt><tt class="descname">XmlDocument</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>xml_declaration=True</em>, <em>cleanup_namespaces=True</em>, <em>encoding='UTF-8'</em>, <em>pretty_print=False</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/xml/_base.html#XmlDocument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.xml._base.XmlDocument" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base.html#spyne.protocol._base.ProtocolBase" title="spyne.protocol._base.ProtocolBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol._base.ProtocolBase</span></tt></a></p>
 <p>The Xml Schema serialization protocol.</p>
 <p>See the following material for more (much much more!) information.</p>
@@ -145,11 +145,17 @@ serializes python objects to xml using Xml Schema conventions.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>app</strong> &#8211; The owner application instance.</li>
 <li><strong>validator</strong> &#8211; One of (None, &#8216;soft&#8217;, &#8216;lxml&#8217;, &#8216;schema&#8217;,
-ProtocolBase.SOFT_VALIDATION, XmlDocument.SCHEMA_VALIDATION).</li>
+ProtocolBase.SOFT_VALIDATION, XmlDocument.SCHEMA_VALIDATION).
+Both <tt class="docutils literal"><span class="pre">'lxml'</span></tt> and <tt class="docutils literal"><span class="pre">'schema'</span></tt> values are equivalent to
+<tt class="docutils literal"><span class="pre">XmlDocument.SCHEMA_VALIDATION</span></tt>.</li>
 <li><strong>xml_declaration</strong> &#8211; Whether to add xml_declaration to the responses
 Default is &#8216;True&#8217;.</li>
 <li><strong>cleanup_namespaces</strong> &#8211; Whether to add clean up namespace declarations
 in the response document. Default is &#8216;True&#8217;.</li>
+<li><strong>encoding</strong> &#8211; The suggested string encoding for the returned xml
+documents. The transport can override this.</li>
+<li><strong>pretty_print</strong> &#8211; When <tt class="docutils literal"><span class="pre">True</span></tt>, returns the document in a pretty-printed
+format.</li>
 </ul>
 </td>
 </tr>

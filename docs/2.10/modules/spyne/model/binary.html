@@ -91,6 +91,13 @@
 <span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
 
+<span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">b64encode</span>
+<span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">b64decode</span>
+<span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">urlsafe_b64encode</span>
+<span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">urlsafe_b64decode</span>
+<span class="kn">from</span> <span class="nn">binascii</span> <span class="kn">import</span> <span class="n">hexlify</span>
+<span class="kn">from</span> <span class="nn">binascii</span> <span class="kn">import</span> <span class="n">unhexlify</span>
+
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">cStringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span> <span class="c"># Python 3</span>
@@ -102,6 +109,19 @@
 <span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">ModelBase</span>
 <span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">SimpleModel</span>
 
+<span class="n">binary_encoding_handlers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="bp">None</span><span class="p">:</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">,</span>
+    <span class="s">&#39;hex&#39;</span><span class="p">:</span> <span class="n">hexlify</span><span class="p">,</span>
+    <span class="s">&#39;base64&#39;</span><span class="p">:</span> <span class="n">b64encode</span><span class="p">,</span>
+    <span class="s">&#39;urlsafe_base64&#39;</span><span class="p">:</span> <span class="n">urlsafe_b64encode</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">binary_decoding_handlers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="bp">None</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">],</span>
+    <span class="s">&#39;hex&#39;</span><span class="p">:</span> <span class="n">unhexlify</span><span class="p">,</span>
+    <span class="s">&#39;base64&#39;</span><span class="p">:</span> <span class="n">b64decode</span><span class="p">,</span>
+    <span class="s">&#39;urlsafe_base64&#39;</span><span class="p">:</span> <span class="n">urlsafe_b64decode</span><span class="p">,</span>
+<span class="p">}</span>
 
 <span class="k">class</span> <span class="nc">ByteArray</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span>
 <div class="viewcode-block" id="ByteArray"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.binary.ByteArray">[docs]</a>    <span class="sd">&quot;&quot;&quot;Canonical container for arbitrary data. Every protocol has a different</span>
@@ -115,24 +135,28 @@
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;base64Binary&#39;</span>
     <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span>
 
-    <span class="nd">@classmethod</span>
-    <span class="nd">@nillable_string</span>
-    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span>
+    <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">SimpleModel</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
+        <span class="n">encoding</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;The binary encoding to use when the protocol does not enforce an</span>
+<span class="sd">        encoding for binary data.</span>
 
-    <span class="nd">@classmethod</span>
-    <span class="nd">@nillable_string</span>
-    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+<span class="sd">        One of (None, &#39;base64&#39;, &#39;hex&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-    <span class="nd">@classmethod</span>
-    <span class="nd">@nillable_iterable</span>
-    <span class="k">def</span> <span class="nf">to_string_iterable</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">):</span>
-                <span class="k">yield</span> <span class="n">v</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf8&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s">&#39;encoding&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;encoding&#39;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="s">&#39;base64&#39;</span><span class="p">):</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;type_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;base64Binary&#39;</span>
+            <span class="k">elif</span> <span class="n">v</span> <span class="o">==</span> <span class="s">&#39;hex&#39;</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;type_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;hexBinary&#39;</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">yield</span> <span class="n">v</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;encoding&#39; must be one of: </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> \
+                                <span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">ByteArray</span><span class="o">.</span><span class="n">_encoding</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">values</span><span class="p">()),))</span>
+
+
+        <span class="k">return</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
     <span class="nd">@nillable_string</span>
@@ -152,6 +176,14 @@
 
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;base64Binary&#39;</span>
     <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span>
+
+    <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">SimpleModel</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
+        <span class="n">encoding</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;The binary encoding to use when the protocol does not enforce an</span>
+<span class="sd">        encoding for binary data.</span>
+
+<span class="sd">        One of (None, &#39;base64&#39;, &#39;hex&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">class</span> <span class="nc">Value</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s">&#39;application/octet-stream&#39;</span><span class="p">,</span>
@@ -209,31 +241,6 @@
             <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">File</span><span class="o">.</span><span class="n">to_string_iterable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="nd">@nillable_iterable</span>
-    <span class="k">def</span> <span class="nf">to_string_iterable</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="n">value</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s">&quot;You need to write data to persistent storage first &quot;</span> \
-                           <span class="s">&quot;if you want to read it back.&quot;</span>
-
-        <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">handle</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">handle</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
-        <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mh">0x4000</span><span class="p">)</span>
-        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">yield</span> <span class="n">data</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mh">0x4000</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">handle</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="nd">@nillable_string</span>
-    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">File</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">])</span>
 
     <span class="nd">@classmethod</span>
     <span class="nd">@nillable_string</span>
@@ -294,29 +301,6 @@
         <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="nd">@nillable_string</span>
-    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Attachment</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="nd">@nillable_string</span>
-    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
-            <span class="c"># the data has already been loaded, just encode</span>
-            <span class="c"># and return the element</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">data</span>
-
-        <span class="k">elif</span> <span class="ow">not</span> <span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">file_name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
-            <span class="c"># the data hasn&#39;t been loaded, but a file has been</span>
-            <span class="c"># specified</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">file_name</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Neither data nor a file_name has been specified&quot;</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">data</span>
 
     <span class="nd">@classmethod</span>
     <span class="nd">@nillable_string</span>

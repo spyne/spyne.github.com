@@ -94,11 +94,10 @@
 <span class="sd">look at it.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="n">TEMPORARY_DIR</span> <span class="o">=</span> <span class="bp">None</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">simplejson</span> <span class="kn">as</span> <span class="nn">json</span>
@@ -107,35 +106,19 @@
     <span class="kn">import</span> <span class="nn">json</span>
     <span class="n">JSONDecodeError</span> <span class="o">=</span> <span class="ne">ValueError</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">cStringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
-    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span> <span class="c"># Python 3</span>
-        <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
-
-<span class="kn">from</span> <span class="nn">spyne.error</span> <span class="kn">import</span> <span class="n">ValidationError</span>
-
 <span class="kn">from</span> <span class="nn">spyne.model.fault</span> <span class="kn">import</span> <span class="n">Fault</span>
-<span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">ComplexModelBase</span>
-<span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">Array</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">DateTime</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Decimal</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Unicode</span>
-
-<span class="kn">from</span> <span class="nn">spyne.protocol</span> <span class="kn">import</span> <span class="n">ProtocolBase</span>
-<span class="kn">from</span> <span class="nn">spyne.protocol</span> <span class="kn">import</span> <span class="n">unwrap_messages</span>
-<span class="kn">from</span> <span class="nn">spyne.protocol</span> <span class="kn">import</span> <span class="n">unwrap_instance</span>
-<span class="kn">from</span> <span class="nn">spyne.protocol.dictobj</span> <span class="kn">import</span> <span class="n">DictDocument</span>
+<span class="kn">from</span> <span class="nn">spyne.protocol.dictdoc</span> <span class="kn">import</span> <span class="n">HierDictDocument</span>
 
 
-<span class="k">class</span> <span class="nc">JsonDocument</span><span class="p">(</span><span class="n">DictDocument</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">JsonDocument</span><span class="p">(</span><span class="n">HierDictDocument</span><span class="p">):</span>
 <div class="viewcode-block" id="JsonDocument"><a class="viewcode-back" href="../../../reference/protocol/json.html#spyne.protocol.json.JsonDocument">[docs]</a>    <span class="sd">&quot;&quot;&quot;An implementation of the json protocol that uses simplejson package when</span>
 <span class="sd">    available, json package otherwise.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">mime_type</span> <span class="o">=</span> <span class="s">&#39;application/json&#39;</span>
+
+    <span class="nb">type</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">HierDictDocument</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+    <span class="nb">type</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;json&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">create_in_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">in_string_encoding</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
 <div class="viewcode-block" id="JsonDocument.create_in_document"><a class="viewcode-back" href="../../../reference/protocol/json.html#spyne.protocol.json.JsonDocument.create_in_document">[docs]</a>        <span class="sd">&quot;&quot;&quot;Sets ``ctx.in_document``  using ``ctx.in_string``.&quot;&quot;&quot;</span>

@@ -120,8 +120,8 @@ world, you would call them &#8220;Views&#8221;.</p>
 <dt><strong>Transports:</strong></dt>
 <dd><p class="first">Transports, also protocols themselves, encapsulate protocol data in their
 free-form data sections. They are subclasses of either
-<a class="reference internal" href="../reference/client.html#spyne.client._base.ClientBase" title="spyne.client._base.ClientBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.client._base.ClientBase</span></tt></a> or
-<a class="reference internal" href="../reference/server.html#spyne.server._base.ServerBase" title="spyne.server._base.ServerBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.server._base.ServerBase</span></tt></a> classes.</p>
+<tt class="xref py py-class docutils literal"><span class="pre">spyne.client.ClientBase</span></tt> or
+<tt class="xref py py-class docutils literal"><span class="pre">spyne.server.ServerBase</span></tt> classes.</p>
 <p>For example, Http is used as a transport for Soap, by
 tucking a Soap message in the arbitrary byte-stream part of a Http POST
 request. The same Http is exposed as a protocol via the
@@ -168,15 +168,16 @@ dynamic hieararchies of &#8220;dict&#8221;s also fall in this category.</p>
 <div class="section" id="how-your-code-is-wrapped">
 <h2>How your code is wrapped<a class="headerlink" href="#how-your-code-is-wrapped" title="Permalink to this headline">¶</a></h2>
 <p>While the information in the previous section gave you an idea about how Spyne
-code is organized, this section is supposed to give you an idea about how <em>you</em>
-should organize your code using the tools provided by Spyne.</p>
+code is organized, this section should give you an idea about how <em>you</em> should
+organize your code using the tools provided by Spyne.</p>
 <p>Before proceeding further, having good idea about the following four terms used
 throughout Spyne would be very useful:</p>
 <ul>
 <li><dl class="first docutils">
 <dt><strong>User Methods</strong> or <strong>User Code</strong>:</dt>
 <dd><p class="first last">User methods are the code that you wrote and decided to use Spyne to
-expose to the outside world.</p>
+expose to the outside world. They are regular Python functions that don&#8217;t
+need to use to any specific API or adhere to any specific convention.</p>
 </dd>
 </dl>
 </li>
@@ -184,14 +185,18 @@ expose to the outside world.</p>
 <dt><strong>Decorators</strong>:</dt>
 <dd><p class="first last">The <tt class="docutils literal"><span class="pre">&#64;rpc</span></tt> and <tt class="docutils literal"><span class="pre">&#64;srpc</span></tt> decorators from <a class="reference internal" href="../reference/decorator.html#module-spyne.decorator" title="spyne.decorator"><tt class="xref py py-mod docutils literal"><span class="pre">spyne.decorator</span></tt></a> module
 are used to flag methods that will be exposed to the outside world by
-marking their input and output types, as well as other properties.</p>
+marking their input and output types, as well as other properties.
+Functions decorated with <tt class="docutils literal"><span class="pre">&#64;srpc</span></tt> don&#8217;t need to have <tt class="docutils literal"><span class="pre">ctx</span></tt> as their
+first argument. It is meant to decorate functions that are not under your
+direct control. In every other case, you should just use the <tt class="docutils literal"><span class="pre">&#64;rpc</span></tt>
+decorator.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><strong>Service Definition</strong>:</dt>
 <dd><p class="first">The <a class="reference internal" href="../reference/service.html#spyne.service.ServiceBase" title="spyne.service.ServiceBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.service.ServiceBase</span></tt></a> is an abstract base class for
-service definitions, which are the smallest exposable unit in Spyne.
+a service definition, which is the smallest exposable unit in Spyne.
 You can use one service class per method definition or you can use, say, a
 service class for read-only or read/write services or you can cram
 everything into one service class, it&#8217;s up to you.</p>
@@ -212,12 +217,13 @@ class, so you can do more general, application-wide customizations like
 exception management.</p>
 <div class="last admonition note">
 <p class="first admonition-title">Note</p>
-<p>You may know that Spyne is a generalized version of a Soap library.
+<p>You may know that Spyne is a generalized version of a Soap library
+called &#8220;soaplib&#8221;.
 So inevitably, some artifacts of the Soap world creep in from here and
 there.</p>
 <p>One of those artifacts is the namespace feature of Xml. There are
-varying opinions about the usefulness of Xml namespaces, but as we think
-it&#8217;s generally &#8220;A Nice Thing&#8221;, we chose to keep it around.</p>
+varying opinions about the usefulness of Xml namespaces, but as we
+think it generally to be &#8220;A Nice Thing&#8221;, we chose to keep it around.</p>
 <p>When instantiating the <a class="reference internal" href="../reference/application.html#spyne.application.Application" title="spyne.application.Application"><tt class="xref py py-class docutils literal"><span class="pre">spyne.application.Application</span></tt></a> class,
 you should also give it a targetNamespace (the <tt class="docutils literal"><span class="pre">tns</span></tt> argument to its
 constructor) string and an optional application name (the <tt class="docutils literal"><span class="pre">name</span></tt>
@@ -243,13 +249,13 @@ by default.</p>
 </ul>
 <div class="section" id="in-a-nutshell">
 <span id="manual-highlevel-nutshell"></span><h3>In a nutshell<a class="headerlink" href="#in-a-nutshell" title="Permalink to this headline">¶</a></h3>
-<p>Your code is inside &#64;rpc-wrapped methods in <cite>ServiceBase</cite> subclasses. The
+<p>Your code is inside <tt class="docutils literal"><span class="pre">&#64;rpc</span></tt>-wrapped methods in <cite>ServiceBase</cite> subclasses. The
 <cite>ServiceBase</cite> subclasses in turn are wrapped by an Application instance. The
 <cite>Application</cite> instantiation is used to assign input and output protocols to the
 exposed methods. The <cite>Application</cite> instance is finally wrapped by a client or
 server transport that takes the responsibility of moving the bits around.</p>
 <p>In case you&#8217;d like to read about how <em>exactly</em> your code is wrapped, you can
-refer to the relevant part in the <a class="reference internal" href="06_t_and_p.html#manual-t-and-p"><em>Implementing Transports and Protocols</em></a> section.</p>
+refer to the relevant part in the <a class="reference internal" href="07_t_and_p.html#manual-t-and-p"><em>Implementing Transports and Protocols</em></a> section.</p>
 </div>
 </div>
 <div class="section" id="what-s-next">

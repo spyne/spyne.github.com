@@ -89,14 +89,18 @@
 <span class="sd">implementation.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span> <span class="nn">spyne.error</span> <span class="kn">import</span> <span class="n">ResourceNotFoundError</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
+<span class="kn">import</span> <span class="nn">pytz</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
 
-<span class="n">TEMPORARY_DIR</span> <span class="o">=</span> <span class="bp">None</span>
-<span class="n">STREAM_READ_BLOCK_SIZE</span> <span class="o">=</span> <span class="mh">0x4000</span>
-<span class="n">SWAP_DATA_TO_FILE_THRESHOLD</span> <span class="o">=</span> <span class="mi">512</span> <span class="o">*</span> <span class="mi">1024</span>
+<span class="kn">from</span> <span class="nn">Cookie</span> <span class="kn">import</span> <span class="n">SimpleCookie</span>
+
+<span class="kn">from</span> <span class="nn">spyne.model.binary</span> <span class="kn">import</span> <span class="n">ByteArray</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">DateTime</span>
+<span class="kn">from</span> <span class="nn">spyne.protocol.dictdoc</span> <span class="kn">import</span> <span class="n">FlatDictDocument</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">cStringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
@@ -106,7 +110,11 @@
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span> <span class="c"># Python 3</span>
         <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
 
-<span class="kn">from</span> <span class="nn">spyne.protocol.dictobj</span> <span class="kn">import</span> <span class="n">DictDocument</span>
+
+<span class="n">TEMPORARY_DIR</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="n">STREAM_READ_BLOCK_SIZE</span> <span class="o">=</span> <span class="mh">0x4000</span>
+<span class="n">SWAP_DATA_TO_FILE_THRESHOLD</span> <span class="o">=</span> <span class="mi">512</span> <span class="o">*</span> <span class="mi">1024</span>
+
 
 <span class="k">def</span> <span class="nf">get_stream_factory</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
 <div class="viewcode-block" id="get_stream_factory"><a class="viewcode-back" href="../../../reference/protocol/http.html#spyne.protocol.http.get_stream_factory">[docs]</a>    <span class="k">def</span> <span class="nf">stream_factory</span><span class="p">(</span><span class="n">total_content_length</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">content_type</span><span class="p">,</span>
@@ -123,23 +131,64 @@
             <span class="n">retval</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">retval</span>
+
     <span class="k">return</span> <span class="n">stream_factory</span>
 
+<span class="n">_weekday</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;Mon&quot;</span><span class="p">,</span> <span class="s">&quot;Tue&quot;</span><span class="p">,</span> <span class="s">&quot;Wed&quot;</span><span class="p">,</span> <span class="s">&quot;Thu&quot;</span><span class="p">,</span> <span class="s">&quot;Fri&quot;</span><span class="p">,</span> <span class="s">&quot;Sat&quot;</span><span class="p">,</span> <span class="s">&quot;Sun&quot;</span><span class="p">]</span></div>
+<span class="n">_month</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;w00t&#39;</span><span class="p">,</span> <span class="s">&quot;Jan&quot;</span><span class="p">,</span> <span class="s">&quot;Feb&quot;</span><span class="p">,</span> <span class="s">&quot;Mar&quot;</span><span class="p">,</span> <span class="s">&quot;Apr&quot;</span><span class="p">,</span> <span class="s">&quot;May&quot;</span><span class="p">,</span> <span class="s">&quot;Jun&quot;</span><span class="p">,</span> <span class="s">&quot;Jul&quot;</span><span class="p">,</span> <span class="s">&quot;Aug&quot;</span><span class="p">,</span> <span class="s">&quot;Sep&quot;</span><span class="p">,</span>
+             <span class="s">&quot;Oct&quot;</span><span class="p">,</span> <span class="s">&quot;Nov&quot;</span><span class="p">,</span> <span class="s">&quot;Dec&quot;</span><span class="p">]</span>
 
-<span class="k">class</span> <span class="nc">HttpRpc</span><span class="p">(</span><span class="n">DictDocument</span><span class="p">):</span></div>
+<span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="n">prot</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="to_string"><a class="viewcode-back" href="../../../reference/protocol/http.html#spyne.protocol.http.to_string">[docs]</a>    <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">val</span><span class="o">.</span><span class="n">tzinfo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">pytz</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">pytz</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">, </span><span class="si">%02d</span><span class="s"> </span><span class="si">%s</span><span class="s"> </span><span class="si">%04d</span><span class="s"> </span><span class="si">%02d</span><span class="s">:</span><span class="si">%02d</span><span class="s">:</span><span class="si">%02d</span><span class="s"> GMT&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                            <span class="n">_weekday</span><span class="p">[</span><span class="n">val</span><span class="o">.</span><span class="n">weekday</span><span class="p">()],</span> <span class="n">val</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">_month</span><span class="p">[</span><span class="n">val</span><span class="o">.</span><span class="n">month</span><span class="p">],</span>
+                            <span class="n">val</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">val</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">val</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">val</span><span class="o">.</span><span class="n">second</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">ByteArray</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">prot</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">suggested_encoding</span><span class="o">=</span><span class="n">prot</span><span class="o">.</span><span class="n">default_binary_encoding</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">prot</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">HttpRpc</span><span class="p">(</span><span class="n">FlatDictDocument</span><span class="p">):</span></div>
 <div class="viewcode-block" id="HttpRpc"><a class="viewcode-back" href="../../../reference/protocol/http.html#spyne.protocol.http.HttpRpc">[docs]</a>    <span class="sd">&quot;&quot;&quot;The so-called ReST-ish HttpRpc protocol implementation. It only works</span>
 <span class="sd">    with Http (wsgi and twisted) transports.</span>
+
+<span class="sd">    :param app: An :class:&#39;spyne.application.Application` instance.</span>
+<span class="sd">    :param validator: Validation method to use. One of (None, &#39;soft&#39;)</span>
+<span class="sd">    :param mime_type: Default mime type to set. Default is &#39;application/octet-stream&#39;</span>
+<span class="sd">    :param tmp_dir: Temporary directory to store partial file uploads. Default</span>
+<span class="sd">        is to use the OS default.</span>
+<span class="sd">    :param tmp_delete_on_close: The ``delete`` argument to the</span>
+<span class="sd">        :class:`tempfile.NamedTemporaryFile`.</span>
+<span class="sd">        See: http://docs.python.org/2/library/tempfile.html#tempfile.NamedTemporaryFile.</span>
+<span class="sd">    :param ignore_uncap: As HttpRpc can&#39;t serialize complex models, it throws a</span>
+<span class="sd">        server exception when the return type of the user function is Complex.</span>
+<span class="sd">        Passing ``True`` to this argument prevents that by ignoring the return</span>
+<span class="sd">        value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">mime_type</span> <span class="o">=</span> <span class="s">&#39;text/plain&#39;</span>
     <span class="n">allowed_http_verbs</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">default_binary_encoding</span> <span class="o">=</span> <span class="s">&#39;urlsafe_base64&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">tmp_dir</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                                                      <span class="n">tmp_delete_on_close</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
-        <span class="n">DictDocument</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">mime_type</span><span class="p">)</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">FlatDictDocument</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+    <span class="nb">type</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;http&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                    <span class="n">tmp_dir</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">tmp_delete_on_close</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ignore_uncap</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                                            <span class="n">parse_cookie</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="n">FlatDictDocument</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">mime_type</span><span class="p">,</span>
+                                                      <span class="n">ignore_uncap</span><span class="o">=</span><span class="n">ignore_uncap</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span> <span class="o">=</span> <span class="n">tmp_dir</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp_delete_on_close</span> <span class="o">=</span> <span class="n">tmp_delete_on_close</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parse_cookie</span> <span class="o">=</span> <span class="n">parse_cookie</span>
 
     <span class="k">def</span> <span class="nf">get_tmp_delete_on_close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <div class="viewcode-block" id="HttpRpc.get_tmp_delete_on_close"><a class="viewcode-back" href="../../../reference/protocol/http.html#spyne.protocol.http.HttpRpc.get_tmp_delete_on_close">[docs]</a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__tmp_delete_on_close</span>
@@ -162,15 +211,25 @@
 
     <span class="k">def</span> <span class="nf">create_in_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">in_string_encoding</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></div>
 <div class="viewcode-block" id="HttpRpc.create_in_document"><a class="viewcode-back" href="../../../reference/protocol/http.html#spyne.protocol.http.HttpRpc.create_in_document">[docs]</a>        <span class="k">assert</span> <span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;http&#39;</span><span class="p">),</span> \
-            <span class="p">(</span><span class="s">&quot;This protocol only works with an http transport, not: </span><span class="si">%s</span><span class="s">, (in </span><span class="si">%r</span><span class="s">)&quot;</span>
+            <span class="p">(</span><span class="s">&quot;This protocol only works with an http transport, not </span><span class="si">%r</span><span class="s">, (in </span><span class="si">%r</span><span class="s">)&quot;</span>
                                           <span class="o">%</span> <span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="p">))</span>
 
         <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">req</span>
 
     <span class="k">def</span> <span class="nf">decompose_incoming_envelope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span></div>
-<div class="viewcode-block" id="HttpRpc.decompose_incoming_envelope"><a class="viewcode-back" href="../../../reference/protocol/http.html#spyne.protocol.http.HttpRpc.decompose_incoming_envelope">[docs]</a>        <span class="k">assert</span> <span class="n">message</span> <span class="o">==</span> <span class="n">DictDocument</span><span class="o">.</span><span class="n">REQUEST</span>
+<div class="viewcode-block" id="HttpRpc.decompose_incoming_envelope"><a class="viewcode-back" href="../../../reference/protocol/http.html#spyne.protocol.http.HttpRpc.decompose_incoming_envelope">[docs]</a>        <span class="k">assert</span> <span class="n">message</span> <span class="o">==</span> <span class="n">FlatDictDocument</span><span class="o">.</span><span class="n">REQUEST</span>
 
         <span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">itself</span><span class="o">.</span><span class="n">decompose_incoming_envelope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_cookie</span><span class="p">:</span>
+            <span class="n">cookies</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_header_doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;cookie&#39;</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="k">for</span> <span class="n">cookie_string</span> <span class="ow">in</span> <span class="n">cookies</span><span class="p">:</span>
+                <span class="n">cookie</span> <span class="o">=</span> <span class="n">SimpleCookie</span><span class="p">()</span>
+                <span class="n">cookie</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">cookie_string</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">cookie</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">l</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_header_doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">[])</span>
+                    <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">coded_value</span><span class="p">)</span>
+                    <span class="n">ctx</span><span class="o">.</span><span class="n">in_header_doc</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">header : </span><span class="si">%r</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_header_doc</span><span class="p">))</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">body   : </span><span class="si">%r</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span><span class="p">))</span>
@@ -180,10 +239,16 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">fire_event</span><span class="p">(</span><span class="s">&#39;before_deserialize&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">in_header</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ResourceNotFoundError</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">method_request_string</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">in_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c"># HttpRpc supports only one header class</span>
+            <span class="n">in_header_class</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">in_header</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">in_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flat_dict_to_object</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_header_doc</span><span class="p">,</span>
-                                      <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">in_header</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">validator</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">in_message</span><span class="p">:</span>
+                                                <span class="n">in_header_class</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">validator</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">in_message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flat_dict_to_object</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span><span class="p">,</span>
                                       <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">in_message</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">validator</span><span class="p">)</span>
 
@@ -193,28 +258,45 @@
 <div class="viewcode-block" id="HttpRpc.serialize"><a class="viewcode-back" href="../../../reference/protocol/http.html#spyne.protocol.http.HttpRpc.serialize">[docs]</a>        <span class="k">assert</span> <span class="n">message</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">RESPONSE</span><span class="p">,)</span>
 
         <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_error</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">result_message_class</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">out_message</span>
+            <span class="n">result_class</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">out_message</span>
+            <span class="n">header_class</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">out_header</span>
+            <span class="k">if</span> <span class="n">header_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="c"># HttpRpc supports only one header class</span>
+                <span class="n">header_class</span> <span class="o">=</span> <span class="n">header_class</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
             <span class="c"># assign raw result to its wrapper, result_message</span>
-            <span class="n">out_type_info</span> <span class="o">=</span> <span class="n">result_message_class</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span>
-                                                           <span class="n">result_message_class</span><span class="p">)</span>
+            <span class="n">out_type_info</span> <span class="o">=</span> <span class="n">result_class</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span><span class="n">result_class</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_type_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">out_class</span> <span class="o">=</span> <span class="n">out_type_info</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_object</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                     <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">]</span>
+
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span> <span class="o">=</span> <span class="n">out_class</span><span class="o">.</span><span class="n">to_string_iterable</span><span class="p">(</span>
+                        <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_string_iterable</span><span class="p">(</span><span class="n">out_class</span><span class="p">,</span>
                                                               <span class="n">ctx</span><span class="o">.</span><span class="n">out_object</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-                    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;HttpRpc protocol can only serialize &quot;</span>
-                                         <span class="s">&quot;primitives, not </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">out_class</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">),</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_uncap</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;HttpRpc protocol can only &quot;</span>
+                                     <span class="s">&quot;serialize primitives, not </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">out_class</span><span class="p">)</span>
+
             <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_type_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">pass</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;HttpRpc protocol can only serialize simple &quot;</span>
-                                 <span class="s">&quot;return values.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;HttpRpc protocol can only serialize simple &quot;</span>
+                                <span class="s">&quot;return types.&quot;</span><span class="p">)</span>
+
+            <span class="c"># header</span>
+            <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">out_header</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_header</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">out_header</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                    <span class="n">out_header</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_header</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="n">ctx</span><span class="o">.</span><span class="n">out_header_doc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object_to_flat_dict</span><span class="p">(</span><span class="n">header_class</span><span class="p">,</span>
+                                          <span class="n">out_header</span><span class="p">,</span> <span class="n">subvalue_eater</span><span class="o">=</span><span class="n">to_string</span><span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">mime_type</span> <span class="o">=</span> <span class="s">&#39;text/plain&#39;</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_error</span><span class="o">.</span><span class="n">to_string_iterable</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">out_error</span><span class="p">)</span>
@@ -247,7 +329,11 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">methods</span> <span class="o">=</span> <span class="n">invregexp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">verb</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">Rule</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="p">,</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span>
+        <span class="k">if</span> <span class="n">host</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">host</span> <span class="o">=</span> <span class="s">&#39;&lt;__ignored&gt;&#39;</span>  <span class="c"># this is necessary when host_matching is enabled.</span>
+
+        <span class="k">return</span> <span class="n">Rule</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="p">,</span>
                                                                 <span class="n">methods</span><span class="o">=</span><span class="n">methods</span><span class="p">)</span>
 </pre></div></div></div>
 

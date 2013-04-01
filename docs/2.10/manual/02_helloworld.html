@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../static/doctools.js"></script>
     <link rel="top" title="spyne 2.10.0 documentation" href="../index.html" />
     <link rel="up" title="Spyne Manual" href="index.html" />
-    <link rel="next" title="User Manager" href="03_usermanager.html" />
+    <link rel="next" title="Spyne Models and Native Python Types" href="03_types.html" />
     <link rel="prev" title="High-Level Introduction to Spyne" href="01_highlevel.html" /> 
   </head>
   <body>
@@ -41,7 +41,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="03_usermanager.html" title="User Manager"
+          <a href="03_types.html" title="Spyne Models and Native Python Types"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="01_highlevel.html" title="High-Level Introduction to Spyne"
@@ -57,7 +57,7 @@
 <li><a class="reference internal" href="#">Hello World</a><ul>
 <li><a class="reference internal" href="#defining-a-spyne-service">Defining a Spyne Service</a></li>
 <li><a class="reference internal" href="#deploying-the-service-using-soap-via-wsgi">Deploying the service using Soap via Wsgi</a></li>
-<li><a class="reference internal" href="#deploying-service-using-httprpc-via-wsgi">Deploying service using HttpRpc via Wsgi</a><ul>
+<li><a class="reference internal" href="#deploying-the-service-using-httprpc-json">Deploying the service using HttpRpc/Json</a><ul>
 <li><a class="reference internal" href="#what-s-next">What&#8217;s next?</a></li>
 </ul>
 </li>
@@ -69,8 +69,8 @@
   <p class="topless"><a href="01_highlevel.html"
                         title="previous chapter">High-Level Introduction to Spyne</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="03_usermanager.html"
-                        title="next chapter">User Manager</a></p>
+  <p class="topless"><a href="03_types.html"
+                        title="next chapter">Spyne Models and Native Python Types</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../sources/manual/02_helloworld.txt"
@@ -106,38 +106,35 @@ production purposes.</p>
 <h2>Defining a Spyne Service<a class="headerlink" href="#defining-a-spyne-service" title="Permalink to this headline">¶</a></h2>
 <p>Here we introduce the fundamental mechanisms Spyne offers to expose your
 services.</p>
-<p>The simpler version of this example is available here: <a class="reference external" href="http://github.com/arskom/spyne/blob/master/examples/helloworld_soap.py">http://github.com/arskom/spyne/blob/master/examples/helloworld_soap.py</a></p>
-<p>Dissecting this example: Application is the glue between one or more service definitions,
-interface and protocol choices.</p>
+<p>The Soap version of this example is available here: <a class="reference external" href="http://github.com/arskom/spyne/blob/master/examples/helloworld_soap.py">http://github.com/arskom/spyne/blob/master/examples/helloworld_soap.py</a></p>
+<p>Dissecting this example: Application is the glue between one or more service
+definitions, interface and protocol choices.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">spyne.application</span> <span class="kn">import</span> <span class="n">Application</span>
 </pre></div>
 </div>
-<p>The srpc decorator exposes methods as remote procedure calls and declares the
-data types it accepts and returns. The &#8216;s&#8217; prefix is short for static. It means
-no implicit argument will be passed to the function. In the &#64;rpc case, the
-function gets a spyne.MethodContext instance as first argument.</p>
+<p>The <tt class="docutils literal"><span class="pre">&#64;srpc</span></tt> decorator exposes methods as remote procedure calls and declares
+the data types it accepts and returns. The &#8216;s&#8217; prefix is short for &#8216;static&#8217;
+(or stateless, if you will) &#8211; the function receives no implicit arguments.
+By contrast, the <tt class="docutils literal"><span class="pre">&#64;rpc</span></tt> decorator passes a <a class="reference internal" href="../reference/base.html#spyne.MethodContext" title="spyne.MethodContext"><tt class="xref py py-class docutils literal"><span class="pre">spyne.MethodContext</span></tt></a>
+instance as first argument to the user code.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">spyne.decorator</span> <span class="kn">import</span> <span class="n">srpc</span>
 </pre></div>
 </div>
-<p>The methods will use Soap 1.1 protocol to communicate with the outside
-world. They&#8217;re instantiated and passed to the Application constructor. You need
-to pass fresh instances to each application instance.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">spyne.protocol.soap</span> <span class="kn">import</span> <span class="n">Soap11</span>
-</pre></div>
-</div>
-<p>ServiceBase is the base class for all service definitions.</p>
+<p><a class="reference internal" href="../reference/service.html#spyne.service.ServiceBase" title="spyne.service.ServiceBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.service.ServiceBase</span></tt></a> is the base class for all service
+definitions.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">spyne.service</span> <span class="kn">import</span> <span class="n">ServiceBase</span>
 </pre></div>
 </div>
 <p>The names of the needed types for implementing this service should be
 self-explanatory.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">Iterable</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">UnsignedInteger</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">String</span>
 </pre></div>
 </div>
-<p>Our server is going to use HTTP as transport, so we import the WsgiApplication
-from the server.wsgi module. It&#8217;s going to wrap the application instance.</p>
+<p>Our server is going to use HTTP as transport, so we import the
+<tt class="docutils literal"><span class="pre">WsgiApplication</span></tt> from the <cite>:mod:`spyne.server.wsgi</cite> module. It&#8217;s going to
+wrap the <tt class="docutils literal"><span class="pre">Application</span></tt> instance.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">spyne.server.wsgi</span> <span class="kn">import</span> <span class="n">WsgiApplication</span>
 </pre></div>
 </div>
@@ -146,11 +143,11 @@ wsdl document unless explicitly overridden with <cite>__service_name__</cite> cl
 attribute.</p>
 <div class="highlight-python"><pre>class HelloWorldService(ServiceBase):</pre>
 </div>
-<p>The srpc decorator flags each method as a remote procedure call and defines the
-types and order of the soap parameters, as well as the type of the return value.
-This method takes in a string and an integer and returns an iterable of strings,
-just like that:</p>
-<div class="highlight-python"><pre>@srpc(String, Integer, _returns=Iterable(String))</pre>
+<p>The <tt class="docutils literal"><span class="pre">&#64;srpc</span></tt> decorator flags each method as a remote procedure call and
+defines the types and order of the soap parameters, as well as the type of the
+return value. This method takes in a string and an integer and returns an
+iterable of strings, just like that:</p>
+<div class="highlight-python"><pre>@srpc(String, UnsignedInteger, _returns=Iterable(String))</pre>
 </div>
 <p>The method itself has nothing special about it whatsoever. All input variables
 and return types are standard python objects:</p>
@@ -166,37 +163,39 @@ chose to use generators.</p>
 <h2>Deploying the service using Soap via Wsgi<a class="headerlink" href="#deploying-the-service-using-soap-via-wsgi" title="Permalink to this headline">¶</a></h2>
 <p>Now that we have defined our service, we are ready to share it with the outside
 world.</p>
-<p>We are going to use the ubiquitious Http protocol as a transport, using a
-Wsgi-compliant http server. This example uses Python&#8217;s stock simple wsgi web
-server. Spyne has been tested with several other web servers. Any
-WSGI-compliant server should work.</p>
+<p>We are going to use the ubiquitious Http protocol as transport, using a
+Wsgi-compliant http server. This example uses Python&#8217;s stock Wsgi server. Spyne
+has been tested with several other web servers, yet, any Wsgi-compliant server
+should work.</p>
 <p>This is the required import:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">__name__</span><span class="o">==</span><span class="s">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">wsgiref.simple_server</span> <span class="kn">import</span> <span class="n">make_server</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">wsgiref.simple_server</span> <span class="kn">import</span> <span class="n">make_server</span>
 </pre></div>
 </div>
 <p>Here, we configure the python logger to show debugging output. We have to
-specifically enable the debug output from the soap handler. That&#8217;s because the
-xml formatting code is run only when explicitly enabled for performance
-reasons.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
-<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;spyne.protocol.xml&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+specifically enable the debug output from the soap handler because the
+Xml pretty_printing code should be run only when explicitly enabled for
+performance reasons.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">__name__</span><span class="o">==</span><span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;spyne.protocol.xml&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We glue the service definition, input and output protocols
-under the targetNamespace &#8216;spyne.examples.hello.soap&#8217;:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">application</span> <span class="o">=</span> <span class="n">Application</span><span class="p">([</span><span class="n">HelloWorldService</span><span class="p">],</span> <span class="s">&#39;spyne.examples.hello.soap&#39;</span><span class="p">,</span>
-                                <span class="n">in_protocol</span><span class="o">=</span><span class="n">Soap11</span><span class="p">(),</span> <span class="n">out_protocol</span><span class="o">=</span><span class="n">Soap11</span><span class="p">())</span>
+under the &#8220;targetNamespace&#8221; &#8216;spyne.examples.hello.soap&#8217;:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">app</span> <span class="o">=</span> <span class="n">Application</span><span class="p">([</span><span class="n">HelloWorldService</span><span class="p">],</span> <span class="s">&#39;spyne.examples.hello.http&#39;</span><span class="p">,</span>
+        <span class="n">in_protocol</span><span class="o">=</span><span class="n">Soap11</span><span class="p">(</span><span class="n">validator</span><span class="o">=</span><span class="s">&#39;lxml&#39;</span><span class="p">),</span>
+        <span class="n">out_protocol</span><span class="o">=</span><span class="n">Soap11</span><span class="p">(),</span>
+    <span class="p">)</span>
 </pre></div>
 </div>
+<p>In this example, the input validator is on, which means e.g. no negative values
+will be let in for the <tt class="docutils literal"><span class="pre">times</span></tt> argument of the <tt class="docutils literal"><span class="pre">say_hello</span></tt> function,
+because it is marked as <tt class="docutils literal"><span class="pre">UnsignedInteger</span></tt>. For the Soap 1.1 protocol
+(actually, for any XML-based protocol), the recommended validator is
+<tt class="docutils literal"><span class="pre">'lxml'</span></tt> which uses libxml&#8217;s native schema validator. It&#8217;s a fast and robust
+option that won&#8217;t tolerate the slightest anomaly in the request document.</p>
 <p>We then wrap the Spyne application with its wsgi wrapper:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">wsgi_app</span> <span class="o">=</span> <span class="n">WsgiApplication</span><span class="p">(</span><span class="n">application</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The above two lines can be replaced with an easier-to-use function that covers
-this common use case:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">spyne.util.simple</span> <span class="kn">import</span> <span class="n">wsgi_soap_application</span>
-<span class="n">wsgi_app</span> <span class="o">=</span> <span class="n">wsgi_soap_application</span><span class="p">([</span><span class="n">HelloWorldService</span><span class="p">],</span> <span class="s">&#39;spyne.examples.hello.soap&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">wsgi_app</span> <span class="o">=</span> <span class="n">WsgiApplication</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We now register the WSGI application as the handler to the wsgi server, and run
@@ -217,13 +216,16 @@ the http server:</p>
 deploying a Spyne application using Twisted: <a class="reference external" href="http://github.com/arskom/spyne/blob/master/examples/twisted">http://github.com/arskom/spyne/blob/master/examples/twisted</a></li>
 </ul>
 </div>
-<p>You can test your service using suds. Suds is a separate project for implementing
-pure-python soap clients. To learn more visit the project&#8217;s page:
+<p>Now that the server implementation is done, you can run it. Now it&#8217;s time to
+actually make a request to our server to see it working.</p>
+<p>You can test your service using suds. Suds is a separate project for
+implementing pure-python soap clients. To learn more visit the project&#8217;s page:
 <a class="reference external" href="https://fedorahosted.org/suds/">https://fedorahosted.org/suds/</a>. You can simply install it using
 <tt class="docutils literal"><span class="pre">easy_install</span> <span class="pre">suds</span></tt>.</p>
-<p>So here&#8217;s how you can use suds to test your new Spyne service:</p>
+<p>So, here&#8217;s a three-line script that illustrates how you can use suds to test
+your new Spyne service:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">suds.client</span> <span class="kn">import</span> <span class="n">Client</span>
-<span class="n">hello_client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="s">&#39;http://localhost:7789/?wsdl&#39;</span><span class="p">)</span>
+<span class="n">hello_client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="s">&#39;http://localhost:8000/?wsdl&#39;</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">hello_client</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">say_hello</span><span class="p">(</span><span class="s">&quot;Dave&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -237,51 +239,89 @@ pure-python soap clients. To learn more visit the project&#8217;s page:
         "Hello, Dave",
     }</pre>
 </div>
+<p>The corresponding response document would be:</p>
+<div class="highlight-python"><pre>&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;senv:Envelope xmlns:tns="spyne.examples.hello.soap" xmlns:senv="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+  &lt;senv:Body&gt;
+    &lt;tns:say_helloResponse&gt;
+      &lt;tns:say_helloResult&gt;
+        &lt;tns:string&gt;Hello, Dave&lt;/tns:string&gt;
+        &lt;tns:string&gt;Hello, Dave&lt;/tns:string&gt;
+        &lt;tns:string&gt;Hello, Dave&lt;/tns:string&gt;
+        &lt;tns:string&gt;Hello, Dave&lt;/tns:string&gt;
+        &lt;tns:string&gt;Hello, Dave&lt;/tns:string&gt;
+      &lt;/tns:say_helloResult&gt;
+    &lt;/tns:say_helloResponse&gt;
+  &lt;/senv:Body&gt;
+&lt;/senv:Envelope&gt;</pre>
 </div>
-<div class="section" id="deploying-service-using-httprpc-via-wsgi">
-<h2>Deploying service using HttpRpc via Wsgi<a class="headerlink" href="#deploying-service-using-httprpc-via-wsgi" title="Permalink to this headline">¶</a></h2>
-<p>This example is available here: <a class="reference external" href="http://github.com/arskom/spyne/blob/master/examples/helloworld_http.py">http://github.com/arskom/spyne/blob/master/examples/helloworld_http.py</a>.</p>
-<p>For the sake of this tutorial, we are going to use HttpRpc as well. HttpRpc is
-a Rest-like protocol, but it doesn&#8217;t care about HTTP verbs (yet).</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">spyne.protocol.http</span> <span class="kn">import</span> <span class="n">HttpRpc</span>
+</div>
+<div class="section" id="deploying-the-service-using-httprpc-json">
+<h2>Deploying the service using HttpRpc/Json<a class="headerlink" href="#deploying-the-service-using-httprpc-json" title="Permalink to this headline">¶</a></h2>
+<p>This time, we will use a Http as request protocol, and Json as response
+protocol.</p>
+<p>This example is available here: <a class="reference external" href="http://github.com/arskom/spyne/blob/master/examples/helloworld_http.py">http://github.com/arskom/spyne/blob/master/examples/helloworld_http.py</a></p>
+<p>We will just need to change the Application definition as
+follows:</p>
+<div class="highlight-python"><pre>application = Application([HelloWorldService], 'spyne.examples.hello.http',</pre>
+</div>
+<p>For HttpRpc, the only available validator is <tt class="docutils literal"><span class="pre">'soft'</span></tt>. It is Spyne&#8217;s own
+validation engine that works for all protocols that support it (which
+includes every implementation that comes bundled with Spyne).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">in_protocol</span><span class="o">=</span><span class="n">HttpRpc</span><span class="p">(</span><span class="n">validator</span><span class="o">=</span><span class="s">&#39;soft&#39;</span><span class="p">),</span>
 </pre></div>
 </div>
-<p>The HttpRpc serializer does not support complex types. So we will use the
-XmlDocument serializer as the out_protocol to prevent the clients from dealing
-with Soap cruft.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">spyne.protocol.xml</span> <span class="kn">import</span> <span class="n">XmlDocument</span>
+<p>The <tt class="docutils literal"><span class="pre">skip_depth</span></tt> parameter to <tt class="docutils literal"><span class="pre">JsonDocument</span></tt> simplifies the response dict
+by skipping outer response structures that are redundant when the client keeps
+track of which reponse document corresponds to which request.</p>
+<div class="highlight-python"><pre>    out_protocol=JsonDocument(skip_depth=1),
+)</pre>
+</div>
+<p>Same as before, we then wrap the Spyne application with its wsgi wrapper:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">wsgi_app</span> <span class="o">=</span> <span class="n">WsgiApplication</span><span class="p">(</span><span class="n">application</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Besides the imports, the only difference between the SOAP and the HTTP version
-is the application instantiation line:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">application</span> <span class="o">=</span> <span class="n">Application</span><span class="p">([</span><span class="n">HelloWorldService</span><span class="p">],</span> <span class="s">&#39;spyne.examples.hello.http&#39;</span><span class="p">,</span>
-                            <span class="n">in_protocol</span><span class="o">=</span><span class="n">HttpRpc</span><span class="p">(),</span> <span class="n">out_protocol</span><span class="o">=</span><span class="n">XmlDocument</span><span class="p">())</span>
+<p>We now register the WSGI application as the handler to the wsgi server, and run
+the http server:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">server</span> <span class="o">=</span> <span class="n">make_server</span><span class="p">(</span><span class="s">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">8000</span><span class="p">,</span> <span class="n">wsgi_app</span><span class="p">)</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;listening to http://127.0.0.1:8000&quot;</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;wsdl is at: http://localhost:8000/?wsdl&quot;</span><span class="p">)</span>
+
+<span class="n">server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Here&#8217;s how you can test your service using curl:</p>
-<div class="highlight-python"><pre>curl "http://localhost:7789/say_hello?times=5&amp;name=Dave"</pre>
+<p>Once we run our daemon, we can test it using any Http client. Let&#8217;s try:</p>
+<div class="highlight-python"><pre>$ curl -s http://localhost:8000/say_hello?name=Dave\&amp;times=3 | python -m json.tool
+[
+    "Hello, Dave",
+    "Hello, Dave",
+    "Hello, Dave"
+]</pre>
 </div>
-<p>If you have HtmlTidy installed, you can use this command to get a more readable
-output.</p>
-<div class="highlight-python"><pre>curl "http://localhost:7789/say_hello?times=5&amp;name=Dave" | tidy -xml -indent</pre>
+<p>If we had passed <tt class="docutils literal"><span class="pre">skip_depth=0</span></tt> to the output protocol, we&#8217;d have a
+slightly bulkier response:</p>
+<div class="highlight-python"><pre>$ curl -s http://localhost:8000/say_hello?name=Dave\&amp;times=3 | python -m json.tool
+{
+    "say_helloResponse": {
+        "say_helloResult": {
+            "string": [
+                "Hello, Dave",
+                "Hello, Dave",
+                "Hello, Dave"
+            ]
+        }
+    }
+}</pre>
 </div>
-<p>The command&#8217;s output would be as follows:</p>
-<div class="highlight-python"><pre>&lt;?xml version='1.0' encoding='utf8'?&gt;
-&lt;ns1:say_helloResponse xmlns:ns1="spyne.examples.hello.http"
-xmlns:ns0="http://schemas.xmlsoap.org/soap/envelope/"&gt;
-  &lt;ns1:say_helloResult&gt;
-    &lt;ns1:string&gt;Hello, Dave&lt;/ns1:string&gt;
-    &lt;ns1:string&gt;Hello, Dave&lt;/ns1:string&gt;
-    &lt;ns1:string&gt;Hello, Dave&lt;/ns1:string&gt;
-    &lt;ns1:string&gt;Hello, Dave&lt;/ns1:string&gt;
-    &lt;ns1:string&gt;Hello, Dave&lt;/ns1:string&gt;
-  &lt;/ns1:say_helloResult&gt;
-&lt;/ns1:say_helloResponse&gt;</pre>
-</div>
+<p>Note how this corresponds to the structure in the Soap response.</p>
+<p>Spyne tries to make it as easy as possible to work with multiple protocols by
+being as configurable as possible without having to alter user code.</p>
 <div class="section" id="what-s-next">
 <h3>What&#8217;s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h3>
-<p>See the <a class="reference internal" href="03_usermanager.html#manual-user-manager"><em>User Manager</em></a> tutorial that will walk you through
-defining complex objects and using events.</p>
+<p>Now that you know how to put a simple Spyne service together, let&#8217;s continue by
+reading the <a class="reference internal" href="03_types.html#manual-types"><em>Spyne Models and Native Python Types</em></a> tutorial that will walk you through how native
+Python types and Spyne markers interact.</p>
 </div>
 </div>
 </div>
@@ -302,7 +342,7 @@ defining complex objects and using events.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="03_usermanager.html" title="User Manager"
+          <a href="03_types.html" title="Spyne Models and Native Python Types"
              >next</a> |</li>
         <li class="right" >
           <a href="01_highlevel.html" title="High-Level Introduction to Spyne"

@@ -85,47 +85,54 @@
 <span class="c"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301</span>
 <span class="c">#</span>
 
+
 <span class="sd">&quot;&quot;&quot;The ``spyne.error`` module contains various common exceptions that the user</span>
 <span class="sd">code can throw.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+
 <span class="kn">from</span> <span class="nn">spyne.model.fault</span> <span class="kn">import</span> <span class="n">Fault</span>
 <span class="kn">from</span> <span class="nn">spyne.const</span> <span class="kn">import</span> <span class="n">MAX_STRING_FIELD_LENGTH</span>
 
+
 <span class="k">class</span> <span class="nc">ResourceNotFoundError</span><span class="p">(</span><span class="n">Fault</span><span class="p">):</span>
 <div class="viewcode-block" id="ResourceNotFoundError"><a class="viewcode-back" href="../../reference/error.html#spyne.error.ResourceNotFoundError">[docs]</a>    <span class="sd">&quot;&quot;&quot;Raised when requested resource is not found.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">faultstring</span><span class="o">=</span><span class="s">&quot;Requested resource not found&quot;</span><span class="p">):</span>
         <span class="n">Fault</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;Client.ResourceNotFound&#39;</span><span class="p">,</span> <span class="n">faultstring</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">RequestTooLongError</span><span class="p">(</span><span class="n">Fault</span><span class="p">):</span></div>
 <div class="viewcode-block" id="RequestTooLongError"><a class="viewcode-back" href="../../reference/error.html#spyne.error.RequestTooLongError">[docs]</a>    <span class="sd">&quot;&quot;&quot;Raised when request is too long.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">faultstring</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
         <span class="n">Fault</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;Client.RequestTooLong&#39;</span><span class="p">,</span> <span class="n">faultstring</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">RequestNotAllowed</span><span class="p">(</span><span class="n">Fault</span><span class="p">):</span></div>
 <div class="viewcode-block" id="RequestNotAllowed"><a class="viewcode-back" href="../../reference/error.html#spyne.error.RequestNotAllowed">[docs]</a>    <span class="sd">&quot;&quot;&quot;Raised when request is incomplete.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">faultstring</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
         <span class="n">Fault</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;Client.RequestNotAllowed&#39;</span><span class="p">,</span> <span class="n">faultstring</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">ArgumentError</span><span class="p">(</span><span class="n">Fault</span><span class="p">):</span></div>
 <div class="viewcode-block" id="ArgumentError"><a class="viewcode-back" href="../../reference/error.html#spyne.error.ArgumentError">[docs]</a>    <span class="sd">&quot;&quot;&quot;Raised when there is a general problem with input data.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">faultstring</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
         <span class="n">Fault</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;Client.ArgumentError&#39;</span><span class="p">,</span> <span class="n">faultstring</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">ValidationError</span><span class="p">(</span><span class="n">Fault</span><span class="p">):</span></div>
 <div class="viewcode-block" id="ValidationError"><a class="viewcode-back" href="../../reference/error.html#spyne.error.ValidationError">[docs]</a>    <span class="sd">&quot;&quot;&quot;Raised when the input stream does not adhere to type constraints.&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">custom_msg</span><span class="o">=</span><span class="s">&#39;The value </span><span class="si">%r</span><span class="s"> could not be validated.&#39;</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MAX_STRING_FIELD_LENGTH</span><span class="p">:</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[:</span><span class="n">MAX_STRING_FIELD_LENGTH</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;(...)&quot;</span>
 
-        <span class="n">Fault</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;Client.ValidationError&#39;</span><span class="p">,</span>
-                                    <span class="s">&#39;The value </span><span class="si">%r</span><span class="s"> could not be validated.&#39;</span> <span class="o">%</span> <span class="n">s</span><span class="p">)</span>
+        <span class="n">Fault</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;Client.ValidationError&#39;</span><span class="p">,</span> <span class="n">custom_msg</span> <span class="o">%</span> <span class="n">s</span><span class="p">)</span>
 </pre></div></div>
 
           </div>

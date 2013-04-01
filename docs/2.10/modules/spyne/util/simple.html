@@ -88,13 +88,14 @@
 <span class="sd">&quot;&quot;&quot;Contains functions that implement the most common protocol and transport</span>
 <span class="sd">combinations&quot;&quot;&quot;</span>
 
+
 <span class="kn">from</span> <span class="nn">spyne.application</span> <span class="kn">import</span> <span class="n">Application</span>
 
 
 <span class="k">def</span> <span class="nf">wsgi_soap11_application</span><span class="p">(</span><span class="n">services</span><span class="p">,</span> <span class="n">tns</span><span class="o">=</span><span class="s">&#39;spyne.simple.soap&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-<div class="viewcode-block" id="wsgi_soap11_application"><a class="viewcode-back" href="../../../reference/util.html#spyne.util.simple.wsgi_soap11_application">[docs]</a>                                                                    <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Wraps `services` argument inside a WsgiApplication that uses Wsdl 1.1 as</span>
-<span class="sd">    interface document and Soap 1.1 and both input and output protocols.</span>
+<div class="viewcode-block" id="wsgi_soap11_application"><a class="viewcode-back" href="../../../reference/util.html#spyne.util.simple.wsgi_soap11_application">[docs]</a>                                                                     <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wraps `services` argument inside a WsgiApplication that uses Soap 1.1 for</span>
+<span class="sd">    both input and output protocols.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="kn">from</span> <span class="nn">spyne.protocol.soap</span> <span class="kn">import</span> <span class="n">Soap11</span>
@@ -109,10 +110,10 @@
 <span class="sd">&quot;&quot;&quot;DEPRECATED! Use :func:`wsgi_soap11_application` instead.&quot;&quot;&quot;</span>
 
 
-<span class="k">def</span> <span class="nf">pyramid_soap11_application</span><span class="p">(</span><span class="n">services</span><span class="p">,</span> <span class="n">tns</span><span class="o">=</span><span class="s">&#39;spyne.simple.soap&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-<div class="viewcode-block" id="pyramid_soap11_application"><a class="viewcode-back" href="../../../reference/util.html#spyne.util.simple.pyramid_soap11_application">[docs]</a>                                                                    <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Wraps `services` argument inside a PyramidApplication that uses Wsdl 1.1 as</span>
-<span class="sd">    interface document and Soap 1.1 and both input and output protocols.</span>
+<span class="k">def</span> <span class="nf">pyramid_soap11_application</span><span class="p">(</span><span class="n">services</span><span class="p">,</span> <span class="n">tns</span><span class="o">=</span><span class="s">&#39;spyne.simple.soap&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="pyramid_soap11_application"><a class="viewcode-back" href="../../../reference/util.html#spyne.util.simple.pyramid_soap11_application">[docs]</a>                                                     <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wraps `services` argument inside a PyramidApplication that uses Soap 1.1</span>
+<span class="sd">    for both input and output protocols.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="kn">from</span> <span class="nn">spyne.protocol.soap</span> <span class="kn">import</span> <span class="n">Soap11</span>

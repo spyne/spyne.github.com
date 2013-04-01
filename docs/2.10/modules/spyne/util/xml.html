@@ -91,10 +91,13 @@
 <span class="kn">from</span> <span class="nn">spyne.interface.xml_schema</span> <span class="kn">import</span> <span class="n">XmlSchema</span>
 <span class="kn">from</span> <span class="nn">spyne.protocol.xml</span> <span class="kn">import</span> <span class="n">XmlDocument</span>
 
+
 <span class="sd">&quot;&quot;&quot;Module that contains various xml utilities.&quot;&quot;&quot;</span>
+
 
 <span class="k">class</span> <span class="nc">FakeApplication</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">pass</span>
+
 
 <span class="k">def</span> <span class="nf">get_schema_documents</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">default_namespace</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
 <div class="viewcode-block" id="get_schema_documents"><a class="viewcode-back" href="../../../reference/util.html#spyne.util.xml.get_schema_documents">[docs]</a>    <span class="sd">&#39;&#39;&#39;Returns the schema documents in a dict whose keys are namespace prefixes</span>
@@ -121,6 +124,7 @@
     <span class="n">document</span><span class="o">.</span><span class="n">build_interface_document</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">document</span><span class="o">.</span><span class="n">get_interface_document</span><span class="p">()</span>
+
 
 <span class="k">def</span> <span class="nf">get_validation_schema</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">default_namespace</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></div>
 <div class="viewcode-block" id="get_validation_schema"><a class="viewcode-back" href="../../../reference/util.html#spyne.util.xml.get_validation_schema">[docs]</a>    <span class="sd">&#39;&#39;&#39;Returns the validation schema object for the given models.</span>
@@ -152,6 +156,7 @@
         <span class="n">elt</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">elt</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;}&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">_dig</span><span class="p">(</span><span class="n">elt</span><span class="p">)</span>
 
+
 <span class="k">def</span> <span class="nf">get_object_as_xml</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">cls</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">root_tag_name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">no_namespace</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
 <div class="viewcode-block" id="get_object_as_xml"><a class="viewcode-back" href="../../../reference/util.html#spyne.util.xml.get_object_as_xml">[docs]</a>    <span class="sd">&#39;&#39;&#39;Returns an ElementTree representation of a :class:`spyne.model.complex.ComplexModel`</span>
 <span class="sd">    child.</span>
@@ -174,6 +179,7 @@
         <span class="n">etree</span><span class="o">.</span><span class="n">cleanup_namespaces</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
 
 <span class="k">def</span> <span class="nf">get_xml_as_object</span><span class="p">(</span><span class="n">elt</span><span class="p">,</span> <span class="n">cls</span><span class="p">):</span></div>
 <div class="viewcode-block" id="get_xml_as_object"><a class="viewcode-back" href="../../../reference/util.html#spyne.util.xml.get_xml_as_object">[docs]</a>    <span class="sd">&#39;&#39;&#39;Returns a native :class:`spyne.model.complex.ComplexModel` child from an</span>

@@ -99,13 +99,13 @@
 <span class="sd">    implementations. Unlike the client transports, this class does not define</span>
 <span class="sd">    a pure-virtual method that needs to be implemented by all base classes.</span>
 
-<span class="sd">    If there is a call to start the main loop, it&#39;s conventionally called</span>
-<span class="sd">    ``serve_forever()``.</span>
+<span class="sd">    If there needs to be a call to start the main loop, it&#39;s called</span>
+<span class="sd">    ``serve_forever()`` by convention.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">transport</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="sd">&quot;&quot;&quot;The transport type, conventionally defined by the URI string to its</span>
-<span class="sd">    definition.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The transport type, which is a URI string to its definition by</span>
+<span class="sd">    convention.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">app</span>
@@ -136,18 +136,18 @@
             <span class="n">ctx</span><span class="o">.</span><span class="n">in_error</span> <span class="o">=</span> <span class="n">e</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">out_error</span> <span class="o">=</span> <span class="n">e</span>
 
-            <span class="n">retval</span> <span class="o">=</span> <span class="p">[</span><span class="n">ctx</span><span class="p">]</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="p">(</span><span class="n">ctx</span><span class="p">,)</span>
 
         <span class="k">return</span> <span class="n">retval</span>
 
     <span class="k">def</span> <span class="nf">get_in_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span></div>
-<div class="viewcode-block" id="ServerBase.get_in_object"><a class="viewcode-back" href="../../../reference/server.html#spyne.server._base.ServerBase.get_in_object">[docs]</a>        <span class="sd">&quot;&quot;&quot;Uses the ctx.in_string to set ctx.in_body_doc, which in turn is used</span>
-<span class="sd">        to set ctx.in_object.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ServerBase.get_in_object"><a class="viewcode-back" href="../../../reference/server.html#spyne.server._base.ServerBase.get_in_object">[docs]</a>        <span class="sd">&quot;&quot;&quot;Uses the ``ctx.in_string`` to set ``ctx.in_body_doc``, which in turn</span>
+<span class="sd">        is used to set ``ctx.in_object``.&quot;&quot;&quot;</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="c"># sets ctx.in_object and ctx.in_header</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">in_protocol</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span>
-                                        <span class="n">message</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">in_protocol</span><span class="o">.</span><span class="n">REQUEST</span><span class="p">)</span>
+                                           <span class="n">message</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">in_protocol</span><span class="o">.</span><span class="n">REQUEST</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="n">Fault</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
@@ -157,8 +157,8 @@
             <span class="n">ctx</span><span class="o">.</span><span class="n">out_error</span> <span class="o">=</span> <span class="n">e</span>
 
     <span class="k">def</span> <span class="nf">get_out_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span></div>
-<div class="viewcode-block" id="ServerBase.get_out_object"><a class="viewcode-back" href="../../../reference/server.html#spyne.server._base.ServerBase.get_out_object">[docs]</a>        <span class="sd">&quot;&quot;&quot;Calls the matched method using the ctx.in_object to get</span>
-<span class="sd">        ctx.out_object.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ServerBase.get_out_object"><a class="viewcode-back" href="../../../reference/server.html#spyne.server._base.ServerBase.get_out_object">[docs]</a>        <span class="sd">&quot;&quot;&quot;Calls the matched method using the ``ctx.in_object`` to get</span>
+<span class="sd">        ``ctx.out_object``.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_error</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="c"># event firing is done in the spyne.application.Application</span>
@@ -167,13 +167,16 @@
             <span class="k">raise</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_error</span>
 
     <span class="k">def</span> <span class="nf">get_out_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span></div>
-<div class="viewcode-block" id="ServerBase.get_out_string"><a class="viewcode-back" href="../../../reference/server.html#spyne.server._base.ServerBase.get_out_string">[docs]</a>        <span class="sd">&quot;&quot;&quot;Uses the ctx.out_object to set ctx.out_document and later</span>
-<span class="sd">        ctx.out_object.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ServerBase.get_out_string"><a class="viewcode-back" href="../../../reference/server.html#spyne.server._base.ServerBase.get_out_string">[docs]</a>        <span class="sd">&quot;&quot;&quot;Uses the ``ctx.out_object`` to set ``ctx.out_document`` and later</span>
+<span class="sd">        ``ctx.out_string``.&quot;&quot;&quot;</span>
 
-        <span class="k">assert</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span> <span class="ow">is</span> <span class="bp">None</span>
-        <span class="k">assert</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_string</span> <span class="ow">is</span> <span class="bp">None</span>
+        <span class="c"># This means the user wanted to override the way Spyne generates the</span>
+        <span class="c"># outgoing byte stream. So we leave it alone.</span>
+        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_string</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">out_protocol</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span>
+        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">out_protocol</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span>
                                         <span class="n">message</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">out_protocol</span><span class="o">.</span><span class="n">RESPONSE</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">service_class</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
@@ -198,7 +201,7 @@
             <span class="n">ctx</span><span class="o">.</span><span class="n">out_string</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;&quot;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">serve_forever</span><span class="p">():</span></div>
-<div class="viewcode-block" id="ServerBase.serve_forever"><a class="viewcode-back" href="../../../reference/server.html#spyne.server._base.ServerBase.serve_forever">[docs]</a>        <span class="sd">&quot;&quot;&quot;Implement your event loop here.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ServerBase.serve_forever"><a class="viewcode-back" href="../../../reference/server.html#spyne.server._base.ServerBase.serve_forever">[docs]</a>        <span class="sd">&quot;&quot;&quot;Implement your event loop here, if needed.&quot;&quot;&quot;</span>
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 </pre></div></div></div>

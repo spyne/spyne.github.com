@@ -361,6 +361,8 @@ than Spyne&#8217;s Soap client.</li>
 out_protocol is HttpRpc. <a class="reference external" href="https://github.com/arskom/spyne/pull/201">https://github.com/arskom/spyne/pull/201</a></li>
 <li>lxml is not a hard requirement anymore.</li>
 <li>XmlDocument and friends: cleanup_namespaces is now True by default.</li>
+<li>XmlDocument and friends: Added <tt class="docutils literal"><span class="pre">encoding</span></tt> and <tt class="docutils literal"><span class="pre">pretty_print</span></tt> flags that
+are directly passed to <tt class="docutils literal"><span class="pre">lxml.etree.tostring()</span></tt>.</li>
 <li>XmlDocument and friends:&#8217;attribute_of&#8217; added to ModelBase to add attribute
 support for primitives. This is currently ignored by (and mostly irrelevant
 to) other protocols.</li>

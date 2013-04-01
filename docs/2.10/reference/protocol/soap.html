@@ -89,12 +89,18 @@
 <span id="soap-1-1"></span><span id="reference-protocol-soap"></span><h1>Soap 1.1<a class="headerlink" href="#module-spyne.protocol.soap.soap11" title="Permalink to this headline">¶</a></h1>
 <p>The <tt class="docutils literal"><span class="pre">spyne.protoco.soap.soap11</span></tt> module contains the implementation of a
 subset of the Soap 1.1 standard.</p>
-<p>Except the binary optimizations that mostly <strong>do not work</strong>, this protocol is
-production quality.</p>
+<p>Except the binary optimizations (MtoM, attachments, etc) that mostly
+<strong>do not work</strong>, this protocol is production quality.</p>
+<p>One must specifically enable the debug output for the Xml protocol to see the
+actual document exchange. That&#8217;s because the xml formatting code is run only
+when explicitly enabled due to performance reasons.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;spyne.protocol.xml&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Initially released in soaplib-0.8.0.</p>
 <dl class="class">
 <dt id="spyne.protocol.soap.soap11.Soap11">
-<em class="property">class </em><tt class="descclassname">spyne.protocol.soap.soap11.</tt><tt class="descname">Soap11</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>wrapped=True</em>, <em>xml_declaration=True</em>, <em>cleanup_namespaces=True</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/soap/soap11.html#Soap11"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.soap.soap11.Soap11" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">spyne.protocol.soap.soap11.</tt><tt class="descname">Soap11</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>xml_declaration=True</em>, <em>cleanup_namespaces=True</em>, <em>encoding='UTF-8'</em>, <em>pretty_print=False</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/soap/soap11.html#Soap11"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.soap.soap11.Soap11" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="xml.html#spyne.protocol.xml._base.XmlDocument" title="spyne.protocol.xml._base.XmlDocument"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol.xml._base.XmlDocument</span></tt></a></p>
 <p>The base implementation of a subset of the Soap 1.1 standard. The
 document is available here: <a class="reference external" href="http://www.w3.org/TR/soap11/">http://www.w3.org/TR/soap11/</a></p>
@@ -103,15 +109,19 @@ document is available here: <a class="reference external" href="http://www.w3.or
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>app</strong> &#8211; A spyne.application.Application instance.</li>
-<li><strong>validator</strong> &#8211; The validator to use. Currently the only supported
-value is &#8216;lxml&#8217;</li>
-<li><strong>wrapped</strong> &#8211; Whether the return type should be wrapped in another
-object. Default is &#8216;True&#8217;.</li>
+<li><strong>app</strong> &#8211; The owner application instance.</li>
+<li><strong>validator</strong> &#8211; One of (None, &#8216;soft&#8217;, &#8216;lxml&#8217;, &#8216;schema&#8217;,
+ProtocolBase.SOFT_VALIDATION, XmlDocument.SCHEMA_VALIDATION).
+Both <tt class="docutils literal"><span class="pre">'lxml'</span></tt> and <tt class="docutils literal"><span class="pre">'schema'</span></tt> values are equivalent to
+<tt class="docutils literal"><span class="pre">XmlDocument.SCHEMA_VALIDATION</span></tt>.</li>
 <li><strong>xml_declaration</strong> &#8211; Whether to add xml_declaration to the responses
 Default is &#8216;True&#8217;.</li>
 <li><strong>cleanup_namespaces</strong> &#8211; Whether to add clean up namespace declarations
 in the response document. Default is &#8216;True&#8217;.</li>
+<li><strong>encoding</strong> &#8211; The suggested string encoding for the returned xml
+documents. The transport can override this.</li>
+<li><strong>pretty_print</strong> &#8211; When <tt class="docutils literal"><span class="pre">True</span></tt>, returns the document in a pretty-printed
+format.</li>
 </ul>
 </td>
 </tr>
@@ -163,11 +173,6 @@ lxml.etree._Element instance.</p>
 <dl class="attribute">
 <dt id="spyne.protocol.soap.soap11.Soap11.type">
 <tt class="descname">type</tt><em class="property"> = set(['xml', 'soap11', 'soap'])</em><a class="headerlink" href="#spyne.protocol.soap.soap11.Soap11.type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="spyne.protocol.soap.soap11.Soap11.wrapped">
-<tt class="descname">wrapped</tt><a class="reference internal" href="../../modules/spyne/protocol/soap/soap11.html#Soap11.wrapped"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.soap.soap11.Soap11.wrapped" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
