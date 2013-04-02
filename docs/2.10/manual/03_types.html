@@ -67,7 +67,11 @@
 </li>
 <li><a class="reference internal" href="#enum">Enum</a></li>
 <li><a class="reference internal" href="#binary">Binary</a></li>
-<li><a class="reference internal" href="#complex">Complex</a></li>
+<li><a class="reference internal" href="#complex">Complex</a><ul>
+<li><a class="reference internal" href="#arrays">Arrays</a></li>
+<li><a class="reference internal" href="#return-values">Return Values</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#fault">Fault</a><ul>
 <li><a class="reference internal" href="#what-s-next">What&#8217;s next?</a></li>
 </ul>
@@ -258,8 +262,9 @@ in a relational database.)</p>
 <p>For floating-point numbers, use the <tt class="docutils literal"><span class="pre">Decimal</span></tt> type with a pre-defined scale
 and precision. E.g. <tt class="docutils literal"><span class="pre">Decimal(16,</span> <span class="pre">4)</span></tt> can represent a 16-digit number in total
 which can have up to 4 decimal digits, which could be used e.g. as a nice
-monetary type. By the way, Spyne does not include types like ISO-4217 compliant
-&#8216;currency&#8217; and &#8216;monetary&#8217; types. <a class="footnote-reference" href="#id2" id="id1">[1]</a> They are actually really easy to
+monetary type. By the way, Spyne does not include types like
+<a class="reference external" href="http://www.currency-iso.org/">ISO-4217</a>-compliant
+&#8216;currency&#8217; and &#8216;monetary&#8217; types. <a class="footnote-reference" href="#id3" id="id1">[1]</a> They are actually really easy to
 implement. Needless to say, patches are welcome!</p>
 <p>Please see the <a class="reference internal" href="../reference/model.html#module-spyne.model.primitive" title="spyne.model.primitive"><tt class="xref py py-mod docutils literal"><span class="pre">spyne.model.primitive</span></tt></a> documentation for more details
 regarding number handling in Spyne.</p>
@@ -303,49 +308,239 @@ mighty useful for dealing with dates, times and timezones. Highly recommended!</
 <h3>Spatial Types<a class="headerlink" href="#spatial-types" title="Permalink to this headline">¶</a></h3>
 <p>Spyne comes with six basic spatial types that are supported by popular packages
 like <a class="reference external" href="http://postgis.refractions.net/">PostGIS</a> and
-<cite>Shapely &lt;`http://toblerity.github.com/shapely/</cite>&gt;_. These are the</p>
+<a class="reference external" href="`http://toblerity.github.com/shapely/">Shapely</a>.</p>
 <p>These are provided as <tt class="docutils literal"><span class="pre">Unicode</span></tt> subclasses that just define proper
-constraints to force the incoming string to be WKT-compliant. WKB is not yet
-supported.</p>
+constraints to force the incoming string to be compliant with the
+<a class="reference external" href="https://en.wikipedia.org/wiki/Well-known_text">Well known text (WKT)</a>
+format. Well known binary (WKB) format is not (yet?) supported.</p>
 <p>The incoming types are not parsed, but you can use <tt class="docutils literal"><span class="pre">shapely.wkb.loads()</span></tt>
 function to convert them to native geometric types.</p>
-<p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.Point" title="spyne.model.primitive.Point"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Point</span></tt></a>, <a class="reference internal" href="../reference/model.html#spyne.model.primitive.Line" title="spyne.model.primitive.Line"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Line</span></tt></a> and
-<a class="reference internal" href="../reference/model.html#spyne.model.primitive.Polygon" title="spyne.model.primitive.Polygon"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Polygon</span></tt></a> and also their multi-variants, which are</p>
-<p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.MultiPoint" title="spyne.model.primitive.MultiPoint"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.MultiPoint</span></tt></a>, <a class="reference internal" href="../reference/model.html#spyne.model.primitive.MultiLine" title="spyne.model.primitive.MultiLine"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.MultiLine</span></tt></a>
-and <a class="reference internal" href="../reference/model.html#spyne.model.primitive.MultiPolygon" title="spyne.model.primitive.MultiPolygon"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.MultiPolygon</span></tt></a>.</p>
+<p>The spatial types that Spyne suppors are as follows:</p>
+<ul class="simple">
+<li><a class="reference internal" href="../reference/model.html#spyne.model.primitive.Point" title="spyne.model.primitive.Point"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Point</span></tt></a></li>
+<li><a class="reference internal" href="../reference/model.html#spyne.model.primitive.Line" title="spyne.model.primitive.Line"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Line</span></tt></a></li>
+<li><a class="reference internal" href="../reference/model.html#spyne.model.primitive.Polygon" title="spyne.model.primitive.Polygon"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Polygon</span></tt></a></li>
+</ul>
+<p>Also the <tt class="docutils literal"><span class="pre">Multi*</span></tt> variants, which are:</p>
+<ul class="simple">
+<li><a class="reference internal" href="../reference/model.html#spyne.model.primitive.MultiPoint" title="spyne.model.primitive.MultiPoint"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.MultiPoint</span></tt></a></li>
+<li><a class="reference internal" href="../reference/model.html#spyne.model.primitive.MultiLine" title="spyne.model.primitive.MultiLine"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.MultiLine</span></tt></a></li>
+<li><a class="reference internal" href="../reference/model.html#spyne.model.primitive.MultiPolygon" title="spyne.model.primitive.MultiPolygon"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.MultiPolygon</span></tt></a></li>
+</ul>
 </div>
 <div class="section" id="miscellanous-types">
 <h3>Miscellanous Types<a class="headerlink" href="#miscellanous-types" title="Permalink to this headline">¶</a></h3>
+<p>These exist:</p>
 <p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.AnyUri" title="spyne.model.primitive.AnyUri"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.AnyUri</span></tt></a></p>
 <p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.Boolean" title="spyne.model.primitive.Boolean"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Boolean</span></tt></a></p>
 <p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.Uuid" title="spyne.model.primitive.Uuid"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Uuid</span></tt></a></p>
 </div>
 <div class="section" id="dynamic-types">
 <h3>Dynamic Types<a class="headerlink" href="#dynamic-types" title="Permalink to this headline">¶</a></h3>
+<p>These also exist. Somewhat.</p>
 <p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.AnyDict" title="spyne.model.primitive.AnyDict"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.AnyDict</span></tt></a></p>
 <p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.AnyXml" title="spyne.model.primitive.AnyXml"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.AnyXml</span></tt></a></p>
 </div>
 </div>
 <div class="section" id="enum">
 <h2>Enum<a class="headerlink" href="#enum" title="Permalink to this headline">¶</a></h2>
+<p>TBD</p>
 </div>
 <div class="section" id="binary">
 <h2>Binary<a class="headerlink" href="#binary" title="Permalink to this headline">¶</a></h2>
+<p>TBD</p>
 </div>
 <div class="section" id="complex">
 <h2>Complex<a class="headerlink" href="#complex" title="Permalink to this headline">¶</a></h2>
+<p>Complex objects are, by definition, types that can contain other types. They
+must be subclasses of <tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.ComplexModel</span></tt> class.</p>
+<p>Here&#8217;s a sample complex object definition:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Permission</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
+    <span class="n">application</span> <span class="o">=</span> <span class="n">Unicode</span>
+    <span class="n">feature</span> <span class="o">=</span> <span class="n">Unicode</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">ComplexModel</span></tt> metaclass, namely the
+<a class="reference internal" href="../reference/model.html#spyne.model.complex.ComplexModelMeta" title="spyne.model.complex.ComplexModelMeta"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.ComplexModelMeta</span></tt></a> scans the class definition and
+ignores</p>
+<ol class="arabic simple">
+<li>Those that begin with an underscore (<tt class="docutils literal"><span class="pre">_</span></tt>)</li>
+<li>Those that are not subclasses of the <tt class="docutils literal"><span class="pre">ModelBase</span></tt>.</li>
+</ol>
+<p>If you want to use python keywords as field names, or need leading underscores
+in field names, or you just want your Spyne definition and other code to be
+separate, you can do away with the metaclass magic and do this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Permission</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
+    <span class="n">_type_info</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;application&#39;</span><span class="p">:</span> <span class="n">Unicode</span><span class="p">,</span>
+        <span class="s">&#39;feature&#39;</span><span class="p">:</span> <span class="n">Unicode</span><span class="p">,</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>However, you still won&#8217;t get predictable field order, as you&#8217;re just setting a
+<tt class="docutils literal"><span class="pre">dict</span></tt> to the <tt class="docutils literal"><span class="pre">_type_info</span></tt> attribute. If you also need to that, you need
+to pass a sequence of <tt class="docutils literal"><span class="pre">(field_name,</span> <span class="pre">field_type)</span></tt> tuples, like so:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Permission</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
+    <span class="n">_type_info</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s">&#39;application&#39;</span><span class="p">,</span> <span class="n">Unicode</span><span class="p">),</span>
+        <span class="p">(</span><span class="s">&#39;feature&#39;</span><span class="p">,</span> <span class="n">Unicode</span><span class="p">),</span>
+    <span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="arrays">
+<h3>Arrays<a class="headerlink" href="#arrays" title="Permalink to this headline">¶</a></h3>
+<p>If you need to deal with more than one instance of something, the
+<a class="reference internal" href="../reference/model.html#spyne.model.complex.Array" title="spyne.model.complex.Array"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.Array</span></tt></a> is what you need.</p>
+<p>Imagine the following inside the definition of a <tt class="docutils literal"><span class="pre">User</span></tt> object:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">permissions</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="n">Permission</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The User can have an infinite number of permissions. If you need to put a
+limit to that, you can do this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">permissions</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="n">Permission</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="n">max_occurs</span><span class="o">=</span><span class="mi">15</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>It is important to stress once more that Spyne restrictions are only enforced
+for an incoming request when validation is enabled. If you want this
+enforcement for every <em>assignment</em>, you do this the usual way by writing a
+property setter.</p>
+<p>The <tt class="docutils literal"><span class="pre">Array</span></tt> type has two alternatives. The first one is the
+<a class="reference internal" href="../reference/model.html#spyne.model.complex.Iterable" title="spyne.model.complex.Iterable"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.Iterable</span></tt></a> type.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">permissions</span> <span class="o">=</span> <span class="n">Iterable</span><span class="p">(</span><span class="n">Permission</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It is equivalent to the <tt class="docutils literal"><span class="pre">Array</span></tt> type from an interface perspective &#8211; i.e.
+the client will not see any difference between an <tt class="docutils literal"><span class="pre">Iterable</span></tt> and an <tt class="docutils literal"><span class="pre">Array</span></tt>
+as return type.</p>
+<p>It&#8217;s just meant to signal the internediate machinery that the return
+value <em>could</em> be a generator and <strong>must not</strong> be consumed unless returning data
+to the client. This comes in handy for, e.g. custom loggers because they should
+not try to log the return value.</p>
+<p>You could use the <tt class="docutils literal"><span class="pre">Iterable</span></tt> marker in other places instead of <tt class="docutils literal"><span class="pre">Array</span></tt>
+without any problems, but it&#8217;s really meant to be used as return types in
+function definitions.</p>
+<p>The second alternative to the <tt class="docutils literal"><span class="pre">Array</span></tt> notation is the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">permissions</span> <span class="o">=</span> <span class="n">Permission</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="n">max_occurs</span><span class="o">=</span><span class="s">&#39;unbounded&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The native value that you should return for both remain the same: a sequence
+of the designated type. However, the exposed interface is slightly different.</p>
+<p>When you use <tt class="docutils literal"><span class="pre">Array</span></tt>, what really happens is that the <tt class="docutils literal"><span class="pre">customize()</span></tt> function
+of the array type creates an in-place class that is equivalent to the
+following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">PermissionArray</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
+    <span class="n">Permission</span> <span class="o">=</span> <span class="n">Permission</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="n">max_occurs</span><span class="o">=</span><span class="s">&#39;unbounded&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Whereas when you just set <tt class="docutils literal"><span class="pre">max_occurs</span></tt> to a value greater than 1, you just get
+multiple values without the wrapping object.</p>
+<p>As an example, let&#8217;s look at the following array:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">v</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Permission</span><span class="p">(</span><span class="n">application</span><span class="o">=</span><span class="s">&#39;app&#39;</span><span class="p">,</span> <span class="n">feature</span><span class="o">=</span><span class="s">&#39;f1&#39;</span><span class="p">),</span>
+    <span class="n">Permission</span><span class="p">(</span><span class="n">application</span><span class="o">=</span><span class="s">&#39;app&#39;</span><span class="p">,</span> <span class="n">feature</span><span class="o">=</span><span class="s">&#39;f2&#39;</span><span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>Here&#8217;s how it would be serialized to XML with <tt class="docutils literal"><span class="pre">Array(Permission)</span></tt> as return
+type:</p>
+<div class="highlight-python"><pre>&lt;PermissionArray&gt;
+  &lt;Permission&gt;
+    &lt;application&gt;app&lt;/application&gt;
+    &lt;feature&gt;f1&lt;/feature&gt;
+  &lt;/Permission&gt;
+  &lt;Permission&gt;
+    &lt;application&gt;app&lt;/application&gt;
+    &lt;feature&gt;f2&lt;/feature&gt;
+  &lt;/Permission&gt;
+&lt;/PermissionArray&gt;</pre>
+</div>
+<p>The same value-type combination would result in the following json document:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s">&quot;Permission&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s">&quot;application&quot;</span><span class="p">:</span> <span class="s">&quot;app&quot;</span><span class="p">,</span>
+            <span class="s">&quot;feature&quot;</span><span class="p">:</span> <span class="s">&quot;f1&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s">&quot;application&quot;</span><span class="p">:</span> <span class="s">&quot;app&quot;</span><span class="p">,</span>
+            <span class="s">&quot;feature&quot;</span><span class="p">:</span> <span class="s">&quot;f2&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>However, when we serialize the same object to xml using the
+<tt class="docutils literal"><span class="pre">Permission.customize(max_occurs=float('inf'))</span></tt> annotation, we get two
+separate Xml documents, like so:</p>
+<div class="highlight-python"><pre>&lt;Permission&gt;
+  &lt;application&gt;app&lt;/application&gt;
+  &lt;feature&gt;f1&lt;/feature&gt;
+&lt;/Permission&gt;
+&lt;Permission&gt;
+  &lt;application&gt;app&lt;/application&gt;
+  &lt;feature&gt;f2&lt;/feature&gt;
+&lt;/Permission&gt;</pre>
+</div>
+<p>As for Json, we get:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s">&quot;application&quot;</span><span class="p">:</span> <span class="s">&quot;app&quot;</span><span class="p">,</span>
+        <span class="s">&quot;feature&quot;</span><span class="p">:</span> <span class="s">&quot;f1&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s">&quot;application&quot;</span><span class="p">:</span> <span class="s">&quot;app&quot;</span><span class="p">,</span>
+        <span class="s">&quot;feature&quot;</span><span class="p">:</span> <span class="s">&quot;f2&quot;</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>At this point, dear reader, you may be going &#8220;Arrgh! More choices! Just tell
+me what&#8217;s best!&#8221;</p>
+<p>Well, for Xml people, the second way of doing things is wrong, (Xml has a
+one-root-per-document rule) yet it must be done for compatibility reasons.
+And doing it the first way will just annoy JSON people.</p>
+<p>In order to let everbody keep the beautiful <tt class="docutils literal"><span class="pre">Array(Something)</span></tt> syntax,
+<a class="reference internal" href="../reference/protocol/dictdoc.html#spyne.protocol.dictdoc.HierDictDocument" title="spyne.protocol.dictdoc.HierDictDocument"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol.dictdoc.HierDictDocument</span></tt></a>, parent class of Protocols
+that eat <tt class="docutils literal"><span class="pre">dict</span></tt> s including <tt class="docutils literal"><span class="pre">JsonDocument</span></tt>, has a <tt class="docutils literal"><span class="pre">skip_depth</span></tt> argument
+which lets the protocol strip the wrapper objects from response documents.
+In its current form, it&#8217;s a hack. It can be developed into a full-featured
+filter that also works with nested <tt class="docutils literal"><span class="pre">Array</span></tt> setups if there&#8217;s a demand for
+it.</p>
+<p>You can play with the <tt class="docutils literal"><span class="pre">examples/arrays_simple_vs_complex.py</span></tt> in the source
+repository to see the above mechanism at work.</p>
+</div>
+<div class="section" id="return-values">
+<h3>Return Values<a class="headerlink" href="#return-values" title="Permalink to this headline">¶</a></h3>
+<p>When working with functions, you don&#8217;t need to return the CompexModel
+subclasses themselves. Anything that walks and quacks like the designated
+return type will work just fine. Specifically, the returned object should
+return appropriate values on <tt class="docutils literal"><span class="pre">getattr()``s</span> <span class="pre">for</span> <span class="pre">field</span> <span class="pre">names</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">return</span>
+<span class="pre">type.</span> <span class="pre">Any</span> <span class="pre">exceptions</span> <span class="pre">thrown</span> <span class="pre">by</span> <span class="pre">the</span> <span class="pre">object's</span> <span class="pre">``__getattr__</span></tt> method will be
+logged and ignored.</p>
+<p>However, it is important to return <em>instances</em> and not classes themselves. Due
+to the way Spyne serialization works, the classes themselves will also work as
+return values until you actually seeing funky responses under load in
+production. Don&#8217;t do this! <a class="footnote-reference" href="#id4" id="id2">[2]</a></p>
+</div>
 </div>
 <div class="section" id="fault">
 <h2>Fault<a class="headerlink" href="#fault" title="Permalink to this headline">¶</a></h2>
+<p>TBD</p>
 <div class="section" id="what-s-next">
 <h3>What&#8217;s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h3>
 <p>See the <a class="reference internal" href="04_usermanager.html#manual-user-manager"><em>User Manager</em></a> tutorial that will walk you through
 defining complex objects and using events.</p>
-<table class="docutils footnote" frame="void" id="id2" rules="none">
+<table class="docutils footnote" frame="void" id="id3" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>See <a class="reference external" href="http://www.w3.org/TR/2001/WD-xforms-20010608/slice4.html">http://www.w3.org/TR/2001/WD-xforms-20010608/slice4.html</a> for more
 information.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td><a class="reference external" href="http://stackoverflow.com/a/15383191">http://stackoverflow.com/a/15383191</a></td></tr>
 </tbody>
 </table>
 </div>

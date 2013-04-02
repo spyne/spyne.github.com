@@ -94,8 +94,8 @@
             
   <div class="section" id="user-manager">
 <span id="manual-user-manager"></span><h1>User Manager<a class="headerlink" href="#user-manager" title="Permalink to this headline">¶</a></h1>
-<p>This tutorial builds on the <a class="reference internal" href="02_helloworld.html#manual-helloworld"><em>Hello World</em></a> tutorial. If you haven&#8217;t
-done so, we recommended you to read it first.</p>
+<p>This tutorial builds on the <a class="reference internal" href="02_helloworld.html#manual-helloworld"><em>Hello World</em></a> and <a class="reference internal" href="03_types.html#manual-types"><em>Spyne Models and Native Python Types</em></a> tutorial.
+If you haven&#8217;t done so, we recommended you to read them first.</p>
 <p>In this tutorial, we will talk about:</p>
 <ul class="simple">
 <li>Defining complex types.</li>
@@ -105,61 +105,23 @@ done so, we recommended you to read it first.</p>
 <p>The simple example that we are going to be studying here using complex, nested
 data is available here:
 <a class="reference external" href="http://github.com/arskom/spyne/blob/master/examples/user_manager/server_basic.py">http://github.com/arskom/spyne/blob/master/examples/user_manager/server_basic.py</a></p>
-<p>Jumping into what&#8217;s new: Spyne uses <tt class="docutils literal"><span class="pre">ComplexModel</span></tt> as a general type that,
-when subclassed, will produce complex serializable types that can be used in a
-public service. The <tt class="docutils literal"><span class="pre">Permission</span></tt> class is a fairly simple class with just
-two members:</p>
+<p>Here are the definitions for the two complex types that we will use: throughout
+this section:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Permission</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
     <span class="n">application</span> <span class="o">=</span> <span class="n">Unicode</span>
     <span class="n">feature</span> <span class="o">=</span> <span class="n">Unicode</span>
-</pre></div>
-</div>
-<p>Let&#8217;s also look at the <tt class="docutils literal"><span class="pre">User</span></tt> class:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
+
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">Integer</span>
     <span class="n">username</span> <span class="o">=</span> <span class="n">Unicode</span>
     <span class="n">firstname</span> <span class="o">=</span> <span class="n">Unicode</span>
     <span class="n">lastname</span> <span class="o">=</span> <span class="n">Unicode</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s">r&#39;\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[A-Z]{2,4}\b&#39;</span><span class="p">)</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="n">Permission</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Nothing new so far.</p>
-<p>Below, you can see that the <tt class="docutils literal"><span class="pre">email</span></tt> member has a regular expression
-restriction defined. The <tt class="docutils literal"><span class="pre">Unicode</span></tt> type accepts other restrictions, please
-refer to the <a class="reference internal" href="../reference/model.html#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a> documentation for more
-information:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">email</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s">r&#39;\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[A-Z]{2,4}\b&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The <tt class="docutils literal"><span class="pre">permissions</span></tt> attribute is an array, whose native type is a <tt class="docutils literal"><span class="pre">list</span></tt> of
-<tt class="docutils literal"><span class="pre">Permission</span></tt> objects.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">permissions</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="n">Permission</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The following is deserialized as a generator, but looks the same from the
-points of view of protocol and interface documents:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">permissions</span> <span class="o">=</span> <span class="n">Iterable</span><span class="p">(</span><span class="n">Permission</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The following is deserialized as a list of <tt class="docutils literal"><span class="pre">Permission</span></tt> objects, just like with
-the <tt class="docutils literal"><span class="pre">Array</span></tt> example, but is shown and serialized differently in Wsdl and Soap
-representations.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">permissions</span> <span class="o">=</span> <span class="n">Permission</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="n">max_occurs</span><span class="o">=</span><span class="s">&#39;unbounded&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>With the <tt class="docutils literal"><span class="pre">Array</span></tt> and <tt class="docutils literal"><span class="pre">Iterable</span></tt> types, a container class wraps multiple
-occurences of the inner data type. So <tt class="docutils literal"><span class="pre">Array(Permission)</span></tt> is actually
-equivalent to:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">PermissionArray</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
-    <span class="n">Permisstion</span> <span class="o">=</span> <span class="n">Permission</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="n">max_occurs</span><span class="o">=</span><span class="s">&#39;unbounded&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Here, we need to use the <a class="reference internal" href="../reference/model.html#spyne.model._base.ModelBase.customize" title="spyne.model._base.ModelBase.customize"><tt class="xref py py-func docutils literal"><span class="pre">spyne.model._base.ModelBase.customize()</span></tt></a> call
-because calling a <tt class="docutils literal"><span class="pre">ComplexModel</span></tt> subclass instantiates that class, whereas
-calling a <tt class="docutils literal"><span class="pre">SimpleModel</span></tt> child implicitly calls the <tt class="docutils literal"><span class="pre">.customize</span></tt> method of
-that class.</p>
-<p>The <tt class="docutils literal"><span class="pre">customize</span></tt> function just sets given arguments as class attributes to
-<tt class="docutils literal"><span class="pre">cls.Attributes</span></tt> class. You can refer to the documentation of each class to
-see which member of the <tt class="docutils literal"><span class="pre">Attributes</span></tt> class is used for the given object.</p>
 <p>Here, we define a function to be called for every method call. It instantiates
 the <tt class="docutils literal"><span class="pre">UserDefinedContext</span></tt> class and sets it to the context object&#8217;s <tt class="docutils literal"><span class="pre">udc</span></tt>
 attribute, which is in fact short for &#8216;User Defined Context&#8217;.</p>
@@ -206,13 +168,10 @@ in the examples directory in the source distribution for an example on using
 events to measure method performance)</p>
 <div class="section" id="what-s-next">
 <h2>What&#8217;s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
-<p>This tutorial walks you through what you need to know to expose more complex
-services. You can read the <a class="reference internal" href="05-01_sqlalchemy.html#manual-sqlalchemy"><em>SQLAlchemy Integration</em></a> document where the
-<a class="reference internal" href="../reference/model.html#spyne.model.table.TableModel" title="spyne.model.table.TableModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.table.TableModel</span></tt></a> class and its helpers are introduced.
+<p>You can read the <a class="reference internal" href="05-01_sqlalchemy.html#manual-sqlalchemy"><em>SQLAlchemy Integration</em></a> document where the
+<a class="reference internal" href="../reference/model.html#spyne.model.complex.TTableModel" title="spyne.model.complex.TTableModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.TTableModel</span></tt></a> class and its helpers are introduced.
 You can also have look at the <a class="reference internal" href="05-02_validation.html#manual-validation"><em>Input Validation</em></a> section where Spyne&#8217;s
 imperative and declarative input validation features are introduced.</p>
-<p>Otherwise, please refer to the rest of the documentation or the mailing list
-if you have further questions.</p>
 </div>
 </div>
 

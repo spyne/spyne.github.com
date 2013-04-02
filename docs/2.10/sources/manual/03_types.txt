@@ -170,7 +170,8 @@ in a relational database.)
 For floating-point numbers, use the ``Decimal`` type with a pre-defined scale
 and precision. E.g. ``Decimal(16, 4)`` can represent a 16-digit number in total
 which can have up to 4 decimal digits, which could be used e.g. as a nice
-monetary type. By the way, Spyne does not include types like ISO-4217 compliant
+monetary type. By the way, Spyne does not include types like
+`ISO-4217 <http://www.currency-iso.org/>`_-compliant
 'currency' and 'monetary' types. [#]_ They are actually really easy to
 implement. Needless to say, patches are welcome!
 
@@ -226,23 +227,32 @@ Spatial Types
 
 Spyne comes with six basic spatial types that are supported by popular packages
 like `PostGIS <http://postgis.refractions.net/>`_ and
-`Shapely <`http://toblerity.github.com/shapely/`>_. These are the
+`Shapely <`http://toblerity.github.com/shapely/>`_.
 
 These are provided as ``Unicode`` subclasses that just define proper
-constraints to force the incoming string to be WKT-compliant. WKB is not yet
-supported.
+constraints to force the incoming string to be compliant with the
+`Well known text (WKT) <https://en.wikipedia.org/wiki/Well-known_text>`_
+format. Well known binary (WKB) format is not (yet?) supported.
 
 The incoming types are not parsed, but you can use ``shapely.wkb.loads()``
 function to convert them to native geometric types.
 
-:class:`spyne.model.primitive.Point`, :class:`spyne.model.primitive.Line` and
-:class:`spyne.model.primitive.Polygon` and also their multi-variants, which are
+The spatial types that Spyne suppors are as follows:
 
-:class:`spyne.model.primitive.MultiPoint`, :class:`spyne.model.primitive.MultiLine`
-and :class:`spyne.model.primitive.MultiPolygon`.
+* :class:`spyne.model.primitive.Point`
+* :class:`spyne.model.primitive.Line`
+* :class:`spyne.model.primitive.Polygon`
+
+Also the ``Multi*`` variants, which are:
+
+* :class:`spyne.model.primitive.MultiPoint`
+* :class:`spyne.model.primitive.MultiLine`
+* :class:`spyne.model.primitive.MultiPolygon`
 
 Miscellanous Types
 ^^^^^^^^^^^^^^^^^^
+
+These exist:
 
 :class:`spyne.model.primitive.AnyUri`
 
@@ -253,6 +263,8 @@ Miscellanous Types
 Dynamic Types
 ^^^^^^^^^^^^^
 
+These also exist. Somewhat.
+
 :class:`spyne.model.primitive.AnyDict`
 
 :class:`spyne.model.primitive.AnyXml`
@@ -260,16 +272,206 @@ Dynamic Types
 Enum
 ----
 
+TBD
+
 Binary
 ------
+
+TBD
 
 Complex
 -------
 
+Complex objects are, by definition, types that can contain other types. They
+must be subclasses of :class:`spyne.model.primitive.ComplexModel` class.
+
+Here's a sample complex object definition: ::
+
+    class Permission(ComplexModel):
+        application = Unicode
+        feature = Unicode
+
+The ``ComplexModel`` metaclass, namely the
+:class:`spyne.model.complex.ComplexModelMeta` scans the class definition and
+ignores
+
+1. Those that begin with an underscore (``_``)
+2. Those that are not subclasses of the ``ModelBase``.
+
+If you want to use python keywords as field names, or need leading underscores
+in field names, or you just want your Spyne definition and other code to be
+separate, you can do away with the metaclass magic and do this: ::
+
+    class Permission(ComplexModel):
+        _type_info = {
+            'application': Unicode,
+            'feature': Unicode,
+        }
+
+However, you still won't get predictable field order, as you're just setting a
+``dict`` to the ``_type_info`` attribute. If you also need to that, you need
+to pass a sequence of ``(field_name, field_type)`` tuples, like so: ::
+
+    class Permission(ComplexModel):
+        _type_info = [
+            ('application', Unicode),
+            ('feature', Unicode),
+        ]
+
+Arrays
+^^^^^^
+
+If you need to deal with more than one instance of something, the
+:class:`spyne.model.complex.Array` is what you need.
+
+Imagine the following inside the definition of a ``User`` object: ::
+
+        permissions = Array(Permission)
+
+The User can have an infinite number of permissions. If you need to put a
+limit to that, you can do this: ::
+
+        permissions = Array(Permission.customize(max_occurs=15))
+
+It is important to stress once more that Spyne restrictions are only enforced
+for an incoming request when validation is enabled. If you want this
+enforcement for every *assignment*, you do this the usual way by writing a
+property setter.
+
+The ``Array`` type has two alternatives. The first one is the
+:class:`spyne.model.complex.Iterable` type. ::
+
+        permissions = Iterable(Permission)
+
+It is equivalent to the ``Array`` type from an interface perspective -- i.e.
+the client will not see any difference between an ``Iterable`` and an ``Array``
+as return type.
+
+It's just meant to signal the internediate machinery that the return
+value *could* be a generator and **must not** be consumed unless returning data
+to the client. This comes in handy for, e.g. custom loggers because they should
+not try to log the return value.
+
+You could use the ``Iterable`` marker in other places instead of ``Array``
+without any problems, but it's really meant to be used as return types in
+function definitions.
+
+The second alternative to the ``Array`` notation is the following: ::
+
+        permissions = Permission.customize(max_occurs='unbounded')
+
+The native value that you should return for both remain the same: a sequence
+of the designated type. However, the exposed interface is slightly different.
+
+When you use ``Array``, what really happens is that the ``customize()`` function
+of the array type creates an in-place class that is equivalent to the
+following: ::
+
+        class PermissionArray(ComplexModel):
+            Permission = Permission.customize(max_occurs='unbounded')
+
+Whereas when you just set ``max_occurs`` to a value greater than 1, you just get
+multiple values without the wrapping object.
+
+As an example, let's look at the following array: ::
+
+    v = [
+        Permission(application='app', feature='f1'),
+        Permission(application='app', feature='f2')
+    ]
+
+Here's how it would be serialized to XML with ``Array(Permission)`` as return
+type: ::
+
+    <PermissionArray>
+      <Permission>
+        <application>app</application>
+        <feature>f1</feature>
+      </Permission>
+      <Permission>
+        <application>app</application>
+        <feature>f2</feature>
+      </Permission>
+    </PermissionArray>
+
+The same value-type combination would result in the following json document: ::
+
+    {
+        "Permission": [
+            {
+                "application": "app",
+                "feature": "f1"
+            },
+            {
+                "application": "app",
+                "feature": "f2"
+            }
+        ]
+    }
+
+However, when we serialize the same object to xml using the
+``Permission.customize(max_occurs=float('inf'))`` annotation, we get two
+separate Xml documents, like so: ::
+
+    <Permission>
+      <application>app</application>
+      <feature>f1</feature>
+    </Permission>
+    <Permission>
+      <application>app</application>
+      <feature>f2</feature>
+    </Permission>
+
+As for Json, we get: ::
+
+    [
+        {
+            "application": "app", 
+            "feature": "f1"
+        },
+        {
+            "application": "app", 
+            "feature": "f2"
+        }
+    ]
+
+At this point, dear reader, you may be going "Arrgh! More choices! Just tell
+me what's best!"
+
+Well, for Xml people, the second way of doing things is wrong, (Xml has a
+one-root-per-document rule) yet it must be done for compatibility reasons.
+And doing it the first way will just annoy JSON people.
+
+In order to let everbody keep the beautiful ``Array(Something)`` syntax, 
+:class:`spyne.protocol.dictdoc.HierDictDocument`, parent class of Protocols
+that eat ``dict`` s including ``JsonDocument``, has a ``skip_depth`` argument
+which lets the protocol strip the wrapper objects from response documents.
+In its current form, it's a hack. It can be developed into a full-featured
+filter that also works with nested ``Array`` setups if there's a demand for
+it.
+
+You can play with the ``examples/arrays_simple_vs_complex.py`` in the source
+repository to see the above mechanism at work.
+
+Return Values
+^^^^^^^^^^^^^
+
+When working with functions, you don't need to return the CompexModel
+subclasses themselves. Anything that walks and quacks like the designated
+return type will work just fine. Specifically, the returned object should
+return appropriate values on ``getattr()``s for field names in the return
+type. Any exceptions thrown by the object's ``__getattr__`` method will be
+logged and ignored.
+
+However, it is important to return *instances* and not classes themselves. Due
+to the way Spyne serialization works, the classes themselves will also work as
+return values until you actually seeing funky responses under load in
+production. Don't do this! [#]_
+
 Fault
 -----
 
-
+TBD
 
 
 What's next?
@@ -282,4 +484,4 @@ defining complex objects and using events.
 
 .. [#] See http://www.w3.org/TR/2001/WD-xforms-20010608/slice4.html for more
        information.
-
+.. [#] http://stackoverflow.com/a/15383191
