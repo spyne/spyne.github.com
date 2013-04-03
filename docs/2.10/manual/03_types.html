@@ -261,7 +261,7 @@ in a relational database.)</p>
 <p>For floating-point numbers, use the <tt class="docutils literal"><span class="pre">Decimal</span></tt> type with a pre-defined scale
 and precision. E.g. <tt class="docutils literal"><span class="pre">Decimal(16,</span> <span class="pre">4)</span></tt> can represent a 16-digit number in total
 which can have up to 4 decimal digits, which could be used e.g. as a nice
-monetary type. <a class="footnote-reference" href="#id3" id="id1">[1]</a></p>
+monetary type. <a class="footnote-reference" href="#id4" id="id1">[1]</a></p>
 <p>Note that it is your responsibility to make sure that the scale and precision
 constraints are consistent with the values in the context of the decimal
 package. See the <a class="reference external" href="http://docs.python.org/library/decimal.html#decimal.getcontext" title="(in Python v2.7)"><tt class="xref py py-func docutils literal"><span class="pre">decimal.getcontext()</span></tt></a> documentation for more
@@ -407,6 +407,12 @@ probably don&#8217;t need it.</p>
 </div>
 <div class="section" id="binary">
 <h2>Binary<a class="headerlink" href="#binary" title="Permalink to this headline">¶</a></h2>
+<p>Dealing with binary data has traditionally been a weak spot of most of the
+serialization formats in use today. The best XML or mime (email) does is
+either base64-encoding or something similar, Json has no clue about binary
+data (and many other things actually, but let&#8217;s just not go there now) SOAP
+has quite a few binary encoding options available, yet none of them are
+implemented in Spyne <a class="footnote-reference" href="#id5" id="id2">[2]</a> etc.</p>
 <p>TBD</p>
 </div>
 <div class="section" id="complex">
@@ -579,7 +585,7 @@ logged and ignored.</p>
 <p>However, it is important to return <em>instances</em> and not classes themselves. Due
 to the way Spyne serialization works, the classes themselves will also work as
 return values until you actually seeing funky responses under load in
-production. Don&#8217;t do this! <a class="footnote-reference" href="#id5" id="id2">[2]</a></p>
+production. Don&#8217;t do this! <a class="footnote-reference" href="#id6" id="id3">[3]</a></p>
 </div>
 </div>
 <div class="section" id="fault">
@@ -589,12 +595,14 @@ production. Don&#8217;t do this! <a class="footnote-reference" href="#id5" id="i
 <h3>What&#8217;s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h3>
 <p>See the <a class="reference internal" href="04_usermanager.html#manual-user-manager"><em>User Manager</em></a> tutorial that will walk you through
 defining complex objects and using events.</p>
-<table class="docutils footnote" frame="void" id="id3" rules="none">
+<table class="docutils footnote" frame="void" id="id4" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>By the way, Spyne does not include types like
 <a class="reference external" href="http://www.currency-iso.org/">ISO-4217</a>-compliant
-&#8216;currency&#8217; and &#8216;monetary&#8217; types. <a class="footnote-reference" href="#id6" id="id4">[3]</a> They are actually really easy to
+&#8216;currency&#8217; and &#8216;monetary&#8217; types. (See
+<a class="reference external" href="http://www.w3.org/TR/2001/WD-xforms-20010608/slice4.html">http://www.w3.org/TR/2001/WD-xforms-20010608/slice4.html</a> for more
+information.)  They are actually really easy to
 implement. If you&#8217;re looking for a simple way to contribute, this would
 be a nice place to start! Patches are welcome!</td></tr>
 </tbody>
@@ -602,14 +610,15 @@ be a nice place to start! Patches are welcome!</td></tr>
 <table class="docutils footnote" frame="void" id="id5" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>See <a class="reference external" href="http://www.w3.org/TR/2001/WD-xforms-20010608/slice4.html">http://www.w3.org/TR/2001/WD-xforms-20010608/slice4.html</a> for more
-information.</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>Spyne used to have mtom (<a class="reference external" href="http://www.w3.org/Submission/soap11mtom10/">http://www.w3.org/Submission/soap11mtom10/</a>)
+support. But as it was not maintained in a long time, it&#8217;s not
+currently functional. Patches are welcome!</td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id6" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id4">[3]</a></td><td><a class="reference external" href="http://stackoverflow.com/a/15383191">http://stackoverflow.com/a/15383191</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td><a class="reference external" href="http://stackoverflow.com/a/15383191">http://stackoverflow.com/a/15383191</a></td></tr>
 </tbody>
 </table>
 </div>
