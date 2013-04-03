@@ -326,6 +326,11 @@
 <div class="viewcode-block" id="Decimal"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Decimal">[docs]</a>    <span class="sd">&quot;&quot;&quot;The primitive that corresponds to the native python Decimal.</span>
 
 <span class="sd">    This is also the base class for denoting numbers.</span>
+
+<span class="sd">    Note that it is your responsibility to make sure that the scale and</span>
+<span class="sd">    precision constraints set in this type is consistent with the values in the</span>
+<span class="sd">    context of the decimal package. See the :func:`decimal.getcontext`</span>
+<span class="sd">    documentation for more information.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;decimal&#39;</span>
@@ -363,6 +368,14 @@
         <span class="n">fraction_digits</span> <span class="o">=</span> <span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">(</span><span class="s">&#39;inf&#39;</span><span class="p">)</span>
         <span class="sd">&quot;&quot;&quot;Maximum number of digits after the decimal separator.&quot;&quot;&quot;</span>
 
+        <span class="n">min_bound</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;Hardware limit that determines the lowest value this type can</span>
+<span class="sd">        store.&quot;&quot;&quot;</span>
+
+        <span class="n">max_bound</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;Hardware limit that determines the highest value this type can</span>
+<span class="sd">        store.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></div>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2</span>
 
@@ -376,6 +389,12 @@
                                           <span class="s">&quot; or equal to &#39;fraction_digits&#39;.&quot;</span> \
                                           <span class="s">&quot; </span><span class="si">%r</span><span class="s"> ! &lt;= </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
+            <span class="c"># + 1 for decimal separator</span>
+            <span class="c"># + 1 for negative sign</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;max_str_len&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">total_digits</span> <span class="o">+</span>
+                                    <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">fraction_digits</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span>
+                                                   <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;max_str_len&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
         <span class="n">retval</span> <span class="o">=</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span>  <span class="o">**</span> <span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">retval</span>
@@ -388,19 +407,16 @@
                 <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">lt</span> <span class="o">==</span> <span class="n">Decimal</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">lt</span>
                 <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">le</span> <span class="o">==</span> <span class="n">Decimal</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">le</span>
                 <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">total_digits</span> <span class="o">==</span> \
-                                            <span class="n">Decimal</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">total_digits</span>
+                                         <span class="n">Decimal</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">total_digits</span>
                 <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">fraction_digits</span> <span class="o">==</span> \
-                                            <span class="n">Decimal</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">fraction_digits</span>
+                                         <span class="n">Decimal</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">fraction_digits</span>
             <span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">validate_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">validate_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
-            <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="p">(</span>
-                <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">total_digits</span> <span class="o">+</span>
-                                             <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">fraction_digits</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-                                                  <span class="c"># + 1 is for decimal separator</span>
-            <span class="p">))</span>
+            <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_str_len</span><span class="p">))</span>
+        <span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
@@ -476,6 +492,7 @@
 <span class="n">NonNegativeInteger</span> <span class="o">=</span> <span class="n">UnsignedInteger</span></div>
 <span class="sd">&quot;&quot;&quot;The arbitrary-size unsigned integer, alias for UnsignedInteger.&quot;&quot;&quot;</span>
 
+
 <span class="nd">@memoize</span>
 <span class="k">def</span> <span class="nf">TBoundedInteger</span><span class="p">(</span><span class="n">num_bits</span><span class="p">,</span> <span class="n">type_name</span><span class="p">):</span>
     <span class="n">_min_b</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mh">0x8</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">num_bits</span><span class="o">-</span><span class="mi">4</span><span class="p">))</span>     <span class="c"># 0x8 is 4 bits.</span>
@@ -486,8 +503,8 @@
 
         <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Integer</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
             <span class="n">max_str_len</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">num_bits</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-            <span class="n">_min_bound</span> <span class="o">=</span> <span class="n">_min_b</span>
-            <span class="n">_max_bound</span> <span class="o">=</span> <span class="n">_max_b</span>
+            <span class="n">min_bound</span> <span class="o">=</span> <span class="n">_min_b</span>
+            <span class="n">max_bound</span> <span class="o">=</span> <span class="n">_max_b</span>
 
         <span class="nd">@staticmethod</span>
         <span class="k">def</span> <span class="nf">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
@@ -509,8 +526,8 @@
 
         <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">UnsignedInteger</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
             <span class="n">max_str_len</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">num_bits</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-            <span class="n">_min_bound</span> <span class="o">=</span> <span class="n">_min_b</span>
-            <span class="n">_max_bound</span> <span class="o">=</span> <span class="n">_max_b</span>
+            <span class="n">min_bound</span> <span class="o">=</span> <span class="n">_min_b</span>
+            <span class="n">max_bound</span> <span class="o">=</span> <span class="n">_max_b</span>
 
         <span class="nd">@staticmethod</span>
         <span class="k">def</span> <span class="nf">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>

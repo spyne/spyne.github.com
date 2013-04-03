@@ -243,31 +243,33 @@ complex types:</p>
 In its vanilla state, the <tt class="docutils literal"><span class="pre">Decimal</span></tt> class is the arbitrary-precision,
 arbitrary-size generic number type that will accept just <em>any</em> decimal
 number.</p>
-<p>It has three direct subclasses: The arbitrary-size
+<p>It has two direct subclasses: The arbitrary-size
 <a class="reference internal" href="../reference/model.html#spyne.model.primitive.Integer" title="spyne.model.primitive.Integer"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Integer</span></tt></a> type and the machine-dependent
-<a class="reference internal" href="../reference/model.html#spyne.model.primitive.Double" title="spyne.model.primitive.Double"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Double</span></tt></a> or
-<a class="reference internal" href="../reference/model.html#spyne.model.primitive.Float" title="spyne.model.primitive.Float"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Float</span></tt></a> (which are synonyms as Python does not
-distinguish between floats and doubles) types.</p>
-<p>Unless you are absolutely, positively sure that you need to deal with
-arbitrary-size numbers, (or you&#8217;re implementing an existing API) you
+<a class="reference internal" href="../reference/model.html#spyne.model.primitive.Double" title="spyne.model.primitive.Double"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Double</span></tt></a> (<a class="reference internal" href="../reference/model.html#spyne.model.primitive.Float" title="spyne.model.primitive.Float"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Float</span></tt></a>
+is a synonym for <tt class="docutils literal"><span class="pre">Double</span></tt> as Python does not distinguish between
+floats and doubles) types.</p>
+<p>Unless you are <em>sure</em> that you need to deal with arbitrary-size numbers you
 should not use the arbitrary-size types in their vanilla form.</p>
 <p>You must also refrain from using <a class="reference internal" href="../reference/model.html#spyne.model.primitive.Float" title="spyne.model.primitive.Float"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Float</span></tt></a> and
 <a class="reference internal" href="../reference/model.html#spyne.model.primitive.Double" title="spyne.model.primitive.Double"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Double</span></tt></a> types unless you need your math to
 roll faster as their representation is machine-specific, thus not very
 reliable nor portable.</p>
-<p>For integers, we recommend you to use types like
+<p>For integers, we recommend you to use bounded types like
 <a class="reference internal" href="../reference/model.html#spyne.model.primitive.UnsignedInteger32" title="spyne.model.primitive.UnsignedInteger32"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.UnsignedInteger32</span></tt></a> which can only contain a
 32-bit unsigned integer. (Which is very popular as e.g. a primary key type
 in a relational database.)</p>
 <p>For floating-point numbers, use the <tt class="docutils literal"><span class="pre">Decimal</span></tt> type with a pre-defined scale
 and precision. E.g. <tt class="docutils literal"><span class="pre">Decimal(16,</span> <span class="pre">4)</span></tt> can represent a 16-digit number in total
 which can have up to 4 decimal digits, which could be used e.g. as a nice
-monetary type. By the way, Spyne does not include types like
-<a class="reference external" href="http://www.currency-iso.org/">ISO-4217</a>-compliant
-&#8216;currency&#8217; and &#8216;monetary&#8217; types. <a class="footnote-reference" href="#id3" id="id1">[1]</a> They are actually really easy to
-implement. Needless to say, patches are welcome!</p>
-<p>Please see the <a class="reference internal" href="../reference/model.html#module-spyne.model.primitive" title="spyne.model.primitive"><tt class="xref py py-mod docutils literal"><span class="pre">spyne.model.primitive</span></tt></a> documentation for more details
-regarding number handling in Spyne.</p>
+monetary type. <a class="footnote-reference" href="#id3" id="id1">[1]</a></p>
+<p>Note that it is your responsibility to make sure that the scale and precision
+constraints are consistent with the values in the context of the decimal
+package. See the <a class="reference external" href="http://docs.python.org/library/decimal.html#decimal.getcontext" title="(in Python v2.7)"><tt class="xref py py-func docutils literal"><span class="pre">decimal.getcontext()</span></tt></a> documentation for more
+information.</p>
+<p>It&#8217;s also possible to set range constraints (<tt class="docutils literal"><span class="pre">Decimal(gt=4,</span> <span class="pre">lt=10)</span></tt>) or
+discrete values (<tt class="docutils literal"><span class="pre">UnsignedInteger8(values=[2,4,6,8]</span></tt>). Please see the
+<a class="reference internal" href="../reference/model.html#module-spyne.model.primitive" title="spyne.model.primitive"><tt class="xref py py-mod docutils literal"><span class="pre">spyne.model.primitive</span></tt></a> documentation for more details regarding number
+handling in Spyne.</p>
 </div>
 <div class="section" id="strings">
 <h3>Strings<a class="headerlink" href="#strings" title="Permalink to this headline">¶</a></h3>
@@ -284,12 +286,15 @@ with the quirks surrounding Python-2&#8217;s <tt class="docutils literal"><span 
 <p>Remember that you have the <tt class="docutils literal"><span class="pre">ByteArray</span></tt> and <tt class="docutils literal"><span class="pre">File</span></tt> types at your disposal
 when you need to deal with arbitrary byte streams.</p>
 <p>The <tt class="docutils literal"><span class="pre">String</span></tt> type will be just an alias for <tt class="docutils literal"><span class="pre">Unicode</span></tt>
-once Spyne gets ported to Python 3. It might even be deprecated and removed in the
-future, so make sure you are using either <tt class="docutils literal"><span class="pre">Unicode</span></tt> or <tt class="docutils literal"><span class="pre">ByteArray</span></tt> in your
-interface definitions.</p>
+once Spyne gets ported to Python 3. It might even be deprecated and removed in
+the future, so make sure you are using either <tt class="docutils literal"><span class="pre">Unicode</span></tt> or <tt class="docutils literal"><span class="pre">ByteArray</span></tt> in
+your interface definitions.</p>
 <p><tt class="docutils literal"><span class="pre">File</span></tt>, <tt class="docutils literal"><span class="pre">ByteArray</span></tt>, <tt class="docutils literal"><span class="pre">Unicode</span></tt> and <tt class="docutils literal"><span class="pre">String</span></tt> are all arbitrary-size in
-their vanilla versions. Don&#8217;t forget to customize them with additional restrictions
-when implementing public services.</p>
+their vanilla versions. Don&#8217;t forget to customize them with additional
+restrictions when implementing public services.</p>
+<p>Just like numbers, it&#8217;s also possible to place value-based constraints on
+Strings (e.g. <tt class="docutils literal"><span class="pre">String(values=['red',</span> <span class="pre">'green',</span> <span class="pre">'blue'])</span></tt> ) but not lexical
+constraints.</p>
 <p>See also the configuration parameters of your favorite transport for more
 information on request size restriction and other precautions against
 potential abuse.</p>
@@ -330,21 +335,75 @@ function to convert them to native geometric types.</p>
 </div>
 <div class="section" id="miscellanous-types">
 <h3>Miscellanous Types<a class="headerlink" href="#miscellanous-types" title="Permalink to this headline">¶</a></h3>
-<p>These exist:</p>
-<p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.AnyUri" title="spyne.model.primitive.AnyUri"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.AnyUri</span></tt></a></p>
-<p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.Boolean" title="spyne.model.primitive.Boolean"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Boolean</span></tt></a></p>
-<p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.Uuid" title="spyne.model.primitive.Uuid"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Uuid</span></tt></a></p>
+<p>There are types defined for convenience in the Xml Schema standard which are
+just convenience types on top of the text types. They are implemented as they
+are needed by Spyne users. The following are some of the more notable ones.</p>
+<ul class="simple">
+<li><a class="reference internal" href="../reference/model.html#spyne.model.primitive.Boolean" title="spyne.model.primitive.Boolean"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Boolean</span></tt></a>: Life is simple here: Either <tt class="docutils literal"><span class="pre">True</span></tt>
+or <tt class="docutils literal"><span class="pre">False</span></tt>.</li>
+<li><a class="reference internal" href="../reference/model.html#spyne.model.primitive.AnyUri" title="spyne.model.primitive.AnyUri"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.AnyUri</span></tt></a>: An RFC-xxxx compiant URI type.</li>
+<li><a class="reference internal" href="../reference/model.html#spyne.model.primitive.Uuid" title="spyne.model.primitive.Uuid"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Uuid</span></tt></a>: A fancy way of packing a 128-bit
+integer.</li>
+</ul>
+<p>Please consult the <a class="reference internal" href="../reference/model.html#module-spyne.model.primitive" title="spyne.model.primitive"><tt class="xref py py-mod docutils literal"><span class="pre">spyne.model.primitive</span></tt></a> documentation for a more
+complete list.</p>
 </div>
 <div class="section" id="dynamic-types">
 <h3>Dynamic Types<a class="headerlink" href="#dynamic-types" title="Permalink to this headline">¶</a></h3>
-<p>These also exist. Somewhat.</p>
-<p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.AnyDict" title="spyne.model.primitive.AnyDict"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.AnyDict</span></tt></a></p>
-<p><a class="reference internal" href="../reference/model.html#spyne.model.primitive.AnyXml" title="spyne.model.primitive.AnyXml"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.AnyXml</span></tt></a></p>
+<p>While Spyne is all about putting firm restirictions on your input schema,
+it&#8217;s also all about flexibility.</p>
+<p>That&#8217;s why, while highly discouraged, the user can choose to accept
+or return unstructed data using the
+<a class="reference internal" href="../reference/model.html#spyne.model.primitive.AnyDict" title="spyne.model.primitive.AnyDict"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.AnyDict</span></tt></a>, whose native type is a regular
+<tt class="docutils literal"><span class="pre">dict</span></tt> and <a class="reference internal" href="../reference/model.html#spyne.model.primitive.AnyXml" title="spyne.model.primitive.AnyXml"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.AnyXml</span></tt></a> whose native type is a
+regular <tt class="xref py py-class docutils literal"><span class="pre">lxml.etree.Element</span></tt>.</p>
+<p><tt class="docutils literal"><span class="pre">AnyDict</span></tt> and <tt class="docutils literal"><span class="pre">AnyXml</span></tt> are roughly equivalent when the underlying
+protocol is an XML based one &#8211; <tt class="docutils literal"><span class="pre">AnyDict</span></tt> just totally ignores attributes.</p>
 </div>
 </div>
 <div class="section" id="enum">
 <h2>Enum<a class="headerlink" href="#enum" title="Permalink to this headline">¶</a></h2>
-<p>TBD</p>
+<p>The <a class="reference internal" href="../reference/model.html#spyne.model.enum.Enum" title="spyne.model.enum.Enum"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.enum.Enum</span></tt></a> type mimics the <tt class="docutils literal"><span class="pre">enum</span></tt> in C/C++ plus some
+additional type safety. It&#8217;s part of the Spyne&#8217;s SOAP heritage so its being
+there is most for compatibility reasons. If you want to use it, go right ahead,
+it will work. But you can get the same functionality by defining a custom
+<tt class="docutils literal"><span class="pre">Unicode</span></tt> type via:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">SomeUnicode</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="s">&#39;z&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The equivalent Enum-based declaration would be as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">SomeEnum</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="s">&#39;z&#39;</span><span class="p">,</span> <span class="n">type_name</span><span class="o">=</span><span class="s">&quot;SomeEnum&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>These to would be serialized the same, yet their API is different. Lets look at
+the following class definition:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">SomeClass</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">SomeEnum</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">SomeUnicode</span>
+</pre></div>
+</div>
+<p>Also assume the following message comes in:</p>
+<div class="highlight-python"><pre>&lt;SomeClass&gt;
+  &lt;a&gt;x&lt;/a&gt;
+  &lt;b&gt;x&lt;/b&gt;
+&lt;/SomeClass&gt;</pre>
+</div>
+<p>We will have:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">some_class</span><span class="o">.</span><span class="n">a</span> <span class="o">==</span> <span class="s">&#39;x&#39;</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">some_class</span><span class="o">.</span><span class="n">b</span> <span class="o">==</span> <span class="s">&#39;x&#39;</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">some_class</span><span class="o">.</span><span class="n">a</span> <span class="o">==</span> <span class="n">SomeEnum</span><span class="o">.</span><span class="n">x</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">some_class</span><span class="o">.</span><span class="n">b</span> <span class="o">==</span> <span class="n">SomeEnum</span><span class="o">.</span><span class="n">x</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">some_class</span><span class="o">.</span><span class="n">b</span> <span class="ow">is</span> <span class="n">SomeEnum</span><span class="o">.</span><span class="n">x</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>So <tt class="docutils literal"><span class="pre">Enum</span></tt> is just a fancier <tt class="docutils literal"><span class="pre">Unicode</span></tt> with value restriction that has a
+marginally faster (as it doesn&#8217;t do string comparison) comparison option. You
+probably don&#8217;t need it.</p>
 </div>
 <div class="section" id="binary">
 <h2>Binary<a class="headerlink" href="#binary" title="Permalink to this headline">¶</a></h2>
@@ -497,8 +556,8 @@ separate Xml documents, like so:</p>
 <p>At this point, dear reader, you may be going &#8220;Arrgh! More choices! Just tell
 me what&#8217;s best!&#8221;</p>
 <p>Well, for Xml people, the second way of doing things is wrong, (Xml has a
-one-root-per-document rule) yet it must be done for compatibility reasons.
-And doing it the first way will just annoy JSON people.</p>
+one-root-per-document rule) yet sometimes, it must be done for compatibility
+reasons. And doing it the first way will just annoy JSON people.</p>
 <p>In order to let everbody keep the beautiful <tt class="docutils literal"><span class="pre">Array(Something)</span></tt> syntax,
 <a class="reference internal" href="../reference/protocol/dictdoc.html#spyne.protocol.dictdoc.HierDictDocument" title="spyne.protocol.dictdoc.HierDictDocument"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol.dictdoc.HierDictDocument</span></tt></a>, parent class of Protocols
 that eat <tt class="docutils literal"><span class="pre">dict</span></tt> s including <tt class="docutils literal"><span class="pre">JsonDocument</span></tt>, has a <tt class="docutils literal"><span class="pre">skip_depth</span></tt> argument
@@ -514,13 +573,13 @@ repository to see the above mechanism at work.</p>
 <p>When working with functions, you don&#8217;t need to return the CompexModel
 subclasses themselves. Anything that walks and quacks like the designated
 return type will work just fine. Specifically, the returned object should
-return appropriate values on <tt class="docutils literal"><span class="pre">getattr()``s</span> <span class="pre">for</span> <span class="pre">field</span> <span class="pre">names</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">return</span>
-<span class="pre">type.</span> <span class="pre">Any</span> <span class="pre">exceptions</span> <span class="pre">thrown</span> <span class="pre">by</span> <span class="pre">the</span> <span class="pre">object's</span> <span class="pre">``__getattr__</span></tt> method will be
+return appropriate values on <tt class="docutils literal"><span class="pre">getattr()</span></tt> s for field names in the return
+type. Any exceptions thrown by the object&#8217;s <tt class="docutils literal"><span class="pre">__getattr__</span></tt> method will be
 logged and ignored.</p>
 <p>However, it is important to return <em>instances</em> and not classes themselves. Due
 to the way Spyne serialization works, the classes themselves will also work as
 return values until you actually seeing funky responses under load in
-production. Don&#8217;t do this! <a class="footnote-reference" href="#id4" id="id2">[2]</a></p>
+production. Don&#8217;t do this! <a class="footnote-reference" href="#id5" id="id2">[2]</a></p>
 </div>
 </div>
 <div class="section" id="fault">
@@ -533,14 +592,24 @@ defining complex objects and using events.</p>
 <table class="docutils footnote" frame="void" id="id3" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>See <a class="reference external" href="http://www.w3.org/TR/2001/WD-xforms-20010608/slice4.html">http://www.w3.org/TR/2001/WD-xforms-20010608/slice4.html</a> for more
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>By the way, Spyne does not include types like
+<a class="reference external" href="http://www.currency-iso.org/">ISO-4217</a>-compliant
+&#8216;currency&#8217; and &#8216;monetary&#8217; types. <a class="footnote-reference" href="#id6" id="id4">[3]</a> They are actually really easy to
+implement. If you&#8217;re looking for a simple way to contribute, this would
+be a nice place to start! Patches are welcome!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>See <a class="reference external" href="http://www.w3.org/TR/2001/WD-xforms-20010608/slice4.html">http://www.w3.org/TR/2001/WD-xforms-20010608/slice4.html</a> for more
 information.</td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id4" rules="none">
+<table class="docutils footnote" frame="void" id="id6" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td><a class="reference external" href="http://stackoverflow.com/a/15383191">http://stackoverflow.com/a/15383191</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id4">[3]</a></td><td><a class="reference external" href="http://stackoverflow.com/a/15383191">http://stackoverflow.com/a/15383191</a></td></tr>
 </tbody>
 </table>
 </div>
