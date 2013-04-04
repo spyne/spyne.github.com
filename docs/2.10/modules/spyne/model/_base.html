@@ -97,7 +97,7 @@
 
 
 <span class="k">def</span> <span class="nf">nillable_dict</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-<div class="viewcode-block" id="nillable_dict"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.nillable_dict">[docs]</a>    <span class="sd">&quot;&quot;&quot;Decorator that retuns empty dictionary if input is None&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="nillable_dict"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.nillable_dict">[docs]</a>    <span class="sd">&quot;&quot;&quot;Decorator that retuns empty dictionary if input is None&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -108,7 +108,7 @@
 
 
 <span class="k">def</span> <span class="nf">nillable_string</span><span class="p">(</span><span class="n">func</span><span class="p">):</span></div>
-<div class="viewcode-block" id="nillable_string"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.nillable_string">[docs]</a>    <span class="sd">&quot;&quot;&quot;Decorator that retuns None if input is None.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="nillable_string"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.nillable_string">[docs]</a>    <span class="sd">&quot;&quot;&quot;Decorator that retuns None if input is None.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">string</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -119,7 +119,7 @@
 
 
 <span class="k">def</span> <span class="nf">nillable_iterable</span><span class="p">(</span><span class="n">func</span><span class="p">):</span></div>
-<div class="viewcode-block" id="nillable_iterable"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.nillable_iterable">[docs]</a>    <span class="sd">&quot;&quot;&quot;Decorator that retuns [] if input is None.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="nillable_iterable"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.nillable_iterable">[docs]</a>    <span class="sd">&quot;&quot;&quot;Decorator that retuns [] if input is None.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">prot</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">string</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -130,7 +130,7 @@
 
 
 <span class="k">class</span> <span class="nc">AttributesMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="nb">object</span><span class="p">)):</span></div>
-<div class="viewcode-block" id="AttributesMeta"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.AttributesMeta">[docs]</a>    <span class="sd">&quot;&quot;&quot;I hate quirks. This is a 10-minute attempt to get rid of a one-letter</span>
+<div class="viewcode-block" id="AttributesMeta"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.AttributesMeta">[docs]</a>    <span class="sd">&quot;&quot;&quot;I hate quirks. This is a 10-minute attempt to get rid of a one-letter</span>
 <span class="sd">    quirk.&quot;&quot;&quot;</span>
 
 
@@ -165,7 +165,7 @@
 
 
 <span class="k">class</span> <span class="nc">ModelBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></div>
-<div class="viewcode-block" id="ModelBase"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.ModelBase">[docs]</a>    <span class="sd">&quot;&quot;&quot;The base class for type markers. It defines the model interface for the</span>
+<div class="viewcode-block" id="ModelBase"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.ModelBase">[docs]</a>    <span class="sd">&quot;&quot;&quot;The base class for type markers. It defines the model interface for the</span>
 <span class="sd">    interface generators to use and also manages class customizations that are</span>
 <span class="sd">    mainly used for defining constraints on input values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -188,7 +188,7 @@
     <span class="c"># please note that min_occurs and max_occurs must be validated in the</span>
     <span class="c"># ComplexModelBase deserializer.</span>
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<div class="viewcode-block" id="ModelBase.Attributes"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.ModelBase.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;The class that holds the constraints for the given type.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ModelBase.Attributes"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.ModelBase.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;The class that holds the constraints for the given type.&quot;&quot;&quot;</span>
         <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">AttributesMeta</span>
 
         <span class="n">default</span> <span class="o">=</span> <span class="bp">None</span>
@@ -258,7 +258,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">class</span> <span class="nc">Annotations</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></div>
-<div class="viewcode-block" id="ModelBase.Annotations"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.ModelBase.Annotations">[docs]</a>        <span class="sd">&quot;&quot;&quot;The class that holds the annotations for the given type.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ModelBase.Annotations"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.ModelBase.Annotations">[docs]</a>        <span class="sd">&quot;&quot;&quot;The class that holds the annotations for the given type.&quot;&quot;&quot;</span>
 
         <span class="n">__use_parent_doc__</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="sd">&quot;&quot;&quot;If set to True Annotations will use __doc__ from parent,</span>
@@ -281,7 +281,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_namespace_prefix</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">interface</span><span class="p">):</span>
-<div class="viewcode-block" id="ModelBase.get_namespace_prefix"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.ModelBase.get_namespace_prefix">[docs]</a>        <span class="sd">&quot;&quot;&quot;Returns the namespace prefix for the given interface. The</span>
+<div class="viewcode-block" id="ModelBase.get_namespace_prefix"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.ModelBase.get_namespace_prefix">[docs]</a>        <span class="sd">&quot;&quot;&quot;Returns the namespace prefix for the given interface. The</span>
 <span class="sd">        get_namespace_prefix of the interface class generates a prefix if none</span>
 <span class="sd">        is defined.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -294,14 +294,14 @@
 
     <span class="nd">@classmethod</span></div>
     <span class="k">def</span> <span class="nf">get_namespace</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
-<div class="viewcode-block" id="ModelBase.get_namespace"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.ModelBase.get_namespace">[docs]</a>        <span class="sd">&quot;&quot;&quot;Returns the namespace of the class. Defaults to the python module</span>
+<div class="viewcode-block" id="ModelBase.get_namespace"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.ModelBase.get_namespace">[docs]</a>        <span class="sd">&quot;&quot;&quot;Returns the namespace of the class. Defaults to the python module</span>
 <span class="sd">        name.&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">__namespace__</span>
 
     <span class="nd">@staticmethod</span></div>
     <span class="k">def</span> <span class="nf">resolve_namespace</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">default_ns</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-<div class="viewcode-block" id="ModelBase.resolve_namespace"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.ModelBase.resolve_namespace">[docs]</a>        <span class="sd">&quot;&quot;&quot;This call finalizes the namespace assignment. The default namespace</span>
+<div class="viewcode-block" id="ModelBase.resolve_namespace"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.ModelBase.resolve_namespace">[docs]</a>        <span class="sd">&quot;&quot;&quot;This call finalizes the namespace assignment. The default namespace</span>
 <span class="sd">        is not available until the application calls populate_interface method</span>
 <span class="sd">        of the interface generator.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -325,7 +325,7 @@
 
     <span class="nd">@classmethod</span></div>
     <span class="k">def</span> <span class="nf">get_type_name</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
-<div class="viewcode-block" id="ModelBase.get_type_name"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.ModelBase.get_type_name">[docs]</a>        <span class="sd">&quot;&quot;&quot;Returns the class name unless the __type_name__ attribute is defined.</span>
+<div class="viewcode-block" id="ModelBase.get_type_name"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.ModelBase.get_type_name">[docs]</a>        <span class="sd">&quot;&quot;&quot;Returns the class name unless the __type_name__ attribute is defined.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">retval</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">__type_name__</span>
@@ -336,7 +336,7 @@
 
     <span class="nd">@classmethod</span></div>
     <span class="k">def</span> <span class="nf">get_type_name_ns</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">interface</span><span class="p">):</span>
-<div class="viewcode-block" id="ModelBase.get_type_name_ns"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.ModelBase.get_type_name_ns">[docs]</a>        <span class="sd">&quot;&quot;&quot;Returns the type name with a namespace prefix, separated by a column.</span>
+<div class="viewcode-block" id="ModelBase.get_type_name_ns"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.ModelBase.get_type_name_ns">[docs]</a>        <span class="sd">&quot;&quot;&quot;Returns the type name with a namespace prefix, separated by a column.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_namespace</span><span class="p">()</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
@@ -360,7 +360,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">customize</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<div class="viewcode-block" id="ModelBase.customize"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.ModelBase.customize">[docs]</a>        <span class="sd">&quot;&quot;&quot;Duplicates cls and overwrites the values in ``cls.Attributes`` with</span>
+<div class="viewcode-block" id="ModelBase.customize"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.ModelBase.customize">[docs]</a>        <span class="sd">&quot;&quot;&quot;Duplicates cls and overwrites the values in ``cls.Attributes`` with</span>
 <span class="sd">        ``**kwargs`` and returns the new class.&quot;&quot;&quot;</span>
 
         <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_s_customize</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -420,7 +420,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">validate_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<div class="viewcode-block" id="ModelBase.validate_string"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.ModelBase.validate_string">[docs]</a>        <span class="sd">&quot;&quot;&quot;Override this method to do your own input validation on the input</span>
+<div class="viewcode-block" id="ModelBase.validate_string"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.ModelBase.validate_string">[docs]</a>        <span class="sd">&quot;&quot;&quot;Override this method to do your own input validation on the input</span>
 <span class="sd">        string. This is called before converting the incoming string to the</span>
 <span class="sd">        native python value.&quot;&quot;&quot;</span>
 
@@ -428,7 +428,7 @@
 
     <span class="nd">@staticmethod</span></div>
     <span class="k">def</span> <span class="nf">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<div class="viewcode-block" id="ModelBase.validate_native"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.ModelBase.validate_native">[docs]</a>        <span class="sd">&quot;&quot;&quot;Override this method to do your own input validation on the native</span>
+<div class="viewcode-block" id="ModelBase.validate_native"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.ModelBase.validate_native">[docs]</a>        <span class="sd">&quot;&quot;&quot;Override this method to do your own input validation on the native</span>
 <span class="sd">        value. This is called after converting the incoming string to the</span>
 <span class="sd">        native python value.&quot;&quot;&quot;</span>
 
@@ -440,14 +440,14 @@
 
 
 <span class="k">class</span> <span class="nc">SimpleModel</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
-<div class="viewcode-block" id="SimpleModel"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.SimpleModel">[docs]</a>    <span class="sd">&quot;&quot;&quot;The base class for primitives.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SimpleModel"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.SimpleModel">[docs]</a>    <span class="sd">&quot;&quot;&quot;The base class for primitives.&quot;&quot;&quot;</span>
 
     <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span>
     <span class="n">__base_type__</span> <span class="o">=</span> <span class="bp">None</span> <span class="c"># this is different from __orig__ because it&#39;s only set</span>
                          <span class="c"># when cls.is_default(cls) == False</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">ModelBase</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
-<div class="viewcode-block" id="SimpleModel.Attributes"><a class="viewcode-back" href="../../../reference/model.html#spyne.model._base.SimpleModel.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;The class that holds the constraints for the given type.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SimpleModel.Attributes"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.SimpleModel.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;The class that holds the constraints for the given type.&quot;&quot;&quot;</span>
 
         <span class="k">class</span> <span class="nc">__metaclass__</span><span class="p">(</span><span class="n">AttributesMeta</span><span class="p">):</span>
             <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">):</span>

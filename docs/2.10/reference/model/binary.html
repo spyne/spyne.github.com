@@ -1,0 +1,176 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Binary Types &mdash; spyne 2.10.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.10.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.10.0 documentation" href="../../index.html" />
+    <link rel="up" title="Models" href="index.html" />
+    <link rel="next" title="Enum" href="enum.html" />
+    <link rel="prev" title="Primitives" href="primitive.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="enum.html" title="Enum"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="primitive.html" title="Primitives"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Models</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="primitive.html"
+                        title="previous chapter">Primitives</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="enum.html"
+                        title="next chapter">Enum</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../sources/reference/model/binary.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-spyne.model.binary">
+<span id="binary-types"></span><span id="reference-model-binary"></span><h1>Binary Types<a class="headerlink" href="#module-spyne.model.binary" title="Permalink to this headline">¶</a></h1>
+<p>The <tt class="docutils literal"><span class="pre">spyne.model.binary</span></tt> package contains binary type markers.</p>
+<dl class="class">
+<dt id="spyne.model.binary.ByteArray">
+<em class="property">class </em><tt class="descclassname">spyne.model.binary.</tt><tt class="descname">ByteArray</tt><a class="reference internal" href="../../modules/spyne/model/binary.html#ByteArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.binary.ByteArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="index.html#spyne.model._base.SimpleModel" title="spyne.model._base.SimpleModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.SimpleModel</span></tt></a></p>
+<p>Canonical container for arbitrary data. Every protocol has a different
+way of encapsulating this type. E.g. xml-based protocols encode this as
+base64, while HttpRpc just hands it over.</p>
+<p>Its native python format is a sequence of <tt class="docutils literal"><span class="pre">str</span></tt> objects for Python 2.x
+and a sequence of <tt class="docutils literal"><span class="pre">bytes</span></tt> objects for Python 3.x.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.binary.File">
+<em class="property">class </em><tt class="descclassname">spyne.model.binary.</tt><tt class="descname">File</tt><a class="reference internal" href="../../modules/spyne/model/binary.html#File"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.binary.File" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="index.html#spyne.model._base.SimpleModel" title="spyne.model._base.SimpleModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.SimpleModel</span></tt></a></p>
+<p>A compact way of dealing with incoming files for protocols with a
+standard way of encoding file metadata along with binary data. (E.g. Http)</p>
+<dl class="class">
+<dt id="spyne.model.binary.File.Value">
+<em class="property">class </em><tt class="descname">Value</tt><big>(</big><em>name=None</em>, <em>path=None</em>, <em>type='application/octet-stream'</em>, <em>data=None</em>, <em>handle=None</em><big>)</big><a class="reference internal" href="../../modules/spyne/model/binary.html#File.Value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.binary.File.Value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>The class for values marked as <tt class="docutils literal"><span class="pre">File</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> &#8211; Original name of the file</li>
+<li><strong>path</strong> &#8211; Current path to the file.</li>
+<li><strong>type</strong> &#8211; The mime type of the file&#8217;s contents.</li>
+<li><strong>data</strong> &#8211; Optional sequence of <tt class="docutils literal"><span class="pre">str</span></tt> or <tt class="docutils literal"><span class="pre">bytes</span></tt> instances
+that contain the file&#8217;s data.</li>
+<li><strong>handle</strong> &#8211; <tt class="xref py py-class docutils literal"><span class="pre">file</span></tt> object that contains the file&#8217;s data.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>It is ignored unless the <tt class="docutils literal"><span class="pre">path</span></tt> argument is <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+<dl class="method">
+<dt id="spyne.model.binary.File.Value.rollover">
+<tt class="descname">rollover</tt><big>(</big><big>)</big><a class="reference internal" href="../../modules/spyne/model/binary.html#File.Value.rollover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.binary.File.Value.rollover" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method normalizes the file object by making <tt class="docutils literal"><span class="pre">path</span></tt>,
+<tt class="docutils literal"><span class="pre">name</span></tt> and <tt class="docutils literal"><span class="pre">handle</span></tt> properties consistent. It writes
+incoming data to the file object and points the <tt class="docutils literal"><span class="pre">data</span></tt> iterable
+to the contents of this file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="enum.html" title="Enum"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="primitive.html" title="Primitives"
+             >previous</a> |</li>
+        <li><a href="../../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li>
+          <li><a href="index.html" >Models</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

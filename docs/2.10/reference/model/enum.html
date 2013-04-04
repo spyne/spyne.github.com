@@ -1,0 +1,147 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Enum &mdash; spyne 2.10.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.10.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.10.0 documentation" href="../../index.html" />
+    <link rel="up" title="Models" href="index.html" />
+    <link rel="next" title="Complex" href="complex.html" />
+    <link rel="prev" title="Binary Types" href="binary.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="complex.html" title="Complex"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="binary.html" title="Binary Types"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Models</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="binary.html"
+                        title="previous chapter">Binary Types</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="complex.html"
+                        title="next chapter">Complex</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../sources/reference/model/enum.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="enum">
+<span id="reference-model-enum"></span><h1>Enum<a class="headerlink" href="#enum" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="spyne.model.enum.Enum">
+<tt class="descclassname">spyne.model.enum.</tt><tt class="descname">Enum</tt><big>(</big><em>*values</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../../modules/spyne/model/enum.html#Enum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.enum.Enum" title="Permalink to this definition">¶</a></dt>
+<dd><p>The enum type that can only return <tt class="docutils literal"><span class="pre">True</span></tt> when compared to types of
+own type.</p>
+<p>Here&#8217;s how it&#8217;s supposed to work:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">spyne.model.enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SomeEnum</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s">&quot;SomeValue&quot;</span><span class="p">,</span> <span class="s">&quot;SomeOtherValue&quot;</span><span class="p">,</span> <span class="n">type_name</span><span class="o">=</span><span class="s">&quot;SomeEnum&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SomeEnum</span><span class="o">.</span><span class="n">SomeValue</span> <span class="o">==</span> <span class="n">SomeEnum</span><span class="o">.</span><span class="n">SomeOtherValue</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SomeEnum</span><span class="o">.</span><span class="n">SomeValue</span> <span class="o">==</span> <span class="n">SomeEnum</span><span class="o">.</span><span class="n">SomeValue</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SomeEnum</span><span class="o">.</span><span class="n">SomeValue</span> <span class="ow">is</span> <span class="n">SomeEnum</span><span class="o">.</span><span class="n">SomeValue</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SomeEnum</span><span class="o">.</span><span class="n">SomeValue</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SomeEnum2</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s">&quot;SomeValue&quot;</span><span class="p">,</span> <span class="s">&quot;SomeOtherValue&quot;</span><span class="p">,</span> <span class="n">type_name</span><span class="o">=</span><span class="s">&quot;SomeEnum&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SomeEnum2</span><span class="o">.</span><span class="n">SomeValue</span> <span class="o">==</span> <span class="n">SomeEnum</span><span class="o">.</span><span class="n">SomeValue</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>In the above example, <tt class="docutils literal"><span class="pre">SomeEnum</span></tt> can be used as a regular Spyne model.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="complex.html" title="Complex"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="binary.html" title="Binary Types"
+             >previous</a> |</li>
+        <li><a href="../../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li>
+          <li><a href="index.html" >Models</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

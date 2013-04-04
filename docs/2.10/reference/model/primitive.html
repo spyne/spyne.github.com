@@ -1,0 +1,738 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Primitives &mdash; spyne 2.10.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.10.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.10.0 documentation" href="../../index.html" />
+    <link rel="up" title="Models" href="index.html" />
+    <link rel="next" title="Binary Types" href="binary.html" />
+    <link rel="prev" title="Models" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="binary.html" title="Binary Types"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Models"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Models</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Models</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="binary.html"
+                        title="next chapter">Binary Types</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../sources/reference/model/primitive.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-spyne.model.primitive">
+<span id="primitives"></span><span id="reference-model-primitive"></span><h1>Primitives<a class="headerlink" href="#module-spyne.model.primitive" title="Permalink to this headline">¶</a></h1>
+<p>The <tt class="docutils literal"><span class="pre">spyne.model.primitive</span></tt> package contains types with values that fit
+in a single field.</p>
+<dl class="class">
+<dt id="spyne.model.primitive.AnyDict">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">AnyDict</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#AnyDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.AnyDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="index.html#spyne.model._base.SimpleModel" title="spyne.model._base.SimpleModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.SimpleModel</span></tt></a></p>
+<p>A dict instance that can contain other dicts, iterables or primitive
+types. Its serialization is protocol-dependent.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.AnyUri">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">AnyUri</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#AnyUri"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.AnyUri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a></p>
+<p>A special kind of String type designed to hold an uri.</p>
+<dl class="class">
+<dt id="spyne.model.primitive.AnyUri.Value">
+<em class="property">class </em><tt class="descname">Value</tt><big>(</big><em>href</em>, <em>text=None</em>, <em>content=None</em><big>)</big><a class="reference internal" href="../../modules/spyne/model/primitive.html#AnyUri.Value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.AnyUri.Value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A special object that is just a better way of carrying the
+information carried with a link.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>href</strong> &#8211; The uri string.</li>
+<li><strong>text</strong> &#8211; The text data that goes with the link. This is a
+<tt class="docutils literal"><span class="pre">str</span></tt> or a <tt class="docutils literal"><span class="pre">unicode</span></tt> instance.</li>
+<li><strong>content</strong> &#8211; The structured data that goes with the link. This is an
+<cite>lxml.etree.Element</cite> instance.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.AnyXml">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">AnyXml</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#AnyXml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.AnyXml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="index.html#spyne.model._base.SimpleModel" title="spyne.model._base.SimpleModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.SimpleModel</span></tt></a></p>
+<p>An xml node that can contain any number of sub nodes. It&#8217;s represented by
+an ElementTree object.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.Boolean">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Boolean</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Boolean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Boolean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="index.html#spyne.model._base.SimpleModel" title="spyne.model._base.SimpleModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.SimpleModel</span></tt></a></p>
+<p>Life is simple here. Just true or false.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Byte">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Byte</tt><a class="headerlink" href="#spyne.model.primitive.Byte" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 8-bit signed integer, alias for <a class="reference internal" href="#spyne.model.primitive.Integer8" title="spyne.model.primitive.Integer8"><tt class="xref py py-class docutils literal"><span class="pre">Integer8</span></tt></a>.</p>
+<p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.Date">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Date</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.DateTime" title="spyne.model.primitive.DateTime"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.DateTime</span></tt></a></p>
+<p>Just that, Date. No time zone support.</p>
+<p>Native type is <a class="reference external" href="http://docs.python.org/library/datetime.html#datetime.date" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">datetime.date</span></tt></a>.</p>
+<dl class="class">
+<dt id="spyne.model.primitive.Date.Attributes">
+<em class="property">class </em><tt class="descname">Attributes</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Date.Attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Date.Attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Attributes</span></tt></p>
+<p>Customizable attributes of the <a class="reference internal" href="#spyne.model.primitive.Date" title="spyne.model.primitive.Date"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Date</span></tt></a>
+type.</p>
+<dl class="attribute">
+<dt id="spyne.model.primitive.Date.Attributes.format">
+<tt class="descname">format</tt><em class="property"> = '%Y-%m-%d'</em><a class="headerlink" href="#spyne.model.primitive.Date.Attributes.format" title="Permalink to this definition">¶</a></dt>
+<dd><p>DateTime format fed to the <tt class="docutils literal"><span class="pre">strftime</span></tt> function. See:
+<a class="reference external" href="http://docs.python.org/library/datetime.html?highlight=strftime#strftime-strptime-behavior">http://docs.python.org/library/datetime.html?highlight=strftime#strftime-strptime-behavior</a>
+Ignored by protocols like SOAP which have their own ideas about how
+Date objects should be serialized.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Date.Attributes.ge">
+<tt class="descname">ge</tt><em class="property"> = datetime.date(1, 1, 1)</em><a class="headerlink" href="#spyne.model.primitive.Date.Attributes.ge" title="Permalink to this definition">¶</a></dt>
+<dd><p>The date should be greater than or equal to this date.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Date.Attributes.gt">
+<tt class="descname">gt</tt><em class="property"> = datetime.date(1, 1, 1)</em><a class="headerlink" href="#spyne.model.primitive.Date.Attributes.gt" title="Permalink to this definition">¶</a></dt>
+<dd><p>The date should be greater than this date.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Date.Attributes.le">
+<tt class="descname">le</tt><em class="property"> = datetime.date(9999, 12, 31)</em><a class="headerlink" href="#spyne.model.primitive.Date.Attributes.le" title="Permalink to this definition">¶</a></dt>
+<dd><p>The date should be lower than or equal to this date.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Date.Attributes.lt">
+<tt class="descname">lt</tt><em class="property"> = datetime.date(9999, 12, 31)</em><a class="headerlink" href="#spyne.model.primitive.Date.Attributes.lt" title="Permalink to this definition">¶</a></dt>
+<dd><p>The date should be lower than this date.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Date.Attributes.pattern">
+<tt class="descname">pattern</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.primitive.Date.Attributes.pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>A regular expression that matches the whole date. See here for more
+info: <a class="reference external" href="http://www.regular-expressions.info/xml.html">http://www.regular-expressions.info/xml.html</a></p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.DateTime">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">DateTime</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#DateTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.DateTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="index.html#spyne.model._base.SimpleModel" title="spyne.model._base.SimpleModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.SimpleModel</span></tt></a></p>
+<p>A compact way to represent dates and times together. Supports time zones.</p>
+<p>Native type is <a class="reference external" href="http://docs.python.org/library/datetime.html#datetime.datetime" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt></a>.</p>
+<dl class="class">
+<dt id="spyne.model.primitive.DateTime.Attributes">
+<em class="property">class </em><tt class="descname">Attributes</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#DateTime.Attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.DateTime.Attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.Attributes</span></tt></p>
+<p>Customizable attributes of the <a class="reference internal" href="#spyne.model.primitive.DateTime" title="spyne.model.primitive.DateTime"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.DateTime</span></tt></a>
+type.</p>
+<dl class="attribute">
+<dt id="spyne.model.primitive.DateTime.Attributes.as_time_zone">
+<tt class="descname">as_time_zone</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.primitive.DateTime.Attributes.as_time_zone" title="Permalink to this definition">¶</a></dt>
+<dd><p>When not None, converts incoming and outgoing values to the given
+time zone (by calling <tt class="docutils literal"><span class="pre">astimezone()</span></tt>) and strips time zone information
+from the native value (by calling <tt class="docutils literal"><span class="pre">replace(tzinfo=None)</span></tt>).</p>
+<p>Either None or a return value of pytz.timezone()</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.DateTime.Attributes.format">
+<tt class="descname">format</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.primitive.DateTime.Attributes.format" title="Permalink to this definition">¶</a></dt>
+<dd><p>DateTime format fed to the <tt class="docutils literal"><span class="pre">strftime</span></tt> function. See:
+<a class="reference external" href="http://docs.python.org/library/datetime.html?highlight=strftime#strftime-strptime-behavior">http://docs.python.org/library/datetime.html?highlight=strftime#strftime-strptime-behavior</a>
+Ignored by protocols like SOAP which have their own ideas about how
+DateTime objects should be serialized.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.DateTime.Attributes.ge">
+<tt class="descname">ge</tt><em class="property"> = datetime.datetime(1, 1, 1, 0, 0, tzinfo=&lt;UTC&gt;)</em><a class="headerlink" href="#spyne.model.primitive.DateTime.Attributes.ge" title="Permalink to this definition">¶</a></dt>
+<dd><p>The datetime should be greater than or equal to this datetime.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.DateTime.Attributes.gt">
+<tt class="descname">gt</tt><em class="property"> = datetime.datetime(1, 1, 1, 0, 0, tzinfo=&lt;UTC&gt;)</em><a class="headerlink" href="#spyne.model.primitive.DateTime.Attributes.gt" title="Permalink to this definition">¶</a></dt>
+<dd><p>The datetime should be greater than this datetime.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.DateTime.Attributes.le">
+<tt class="descname">le</tt><em class="property"> = datetime.datetime(9999, 12, 31, 23, 59, 59, 999999, tzinfo=&lt;UTC&gt;)</em><a class="headerlink" href="#spyne.model.primitive.DateTime.Attributes.le" title="Permalink to this definition">¶</a></dt>
+<dd><p>The datetime should be lower than or equal to this datetime.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.DateTime.Attributes.lt">
+<tt class="descname">lt</tt><em class="property"> = datetime.datetime(9999, 12, 31, 23, 59, 59, 999999, tzinfo=&lt;UTC&gt;)</em><a class="headerlink" href="#spyne.model.primitive.DateTime.Attributes.lt" title="Permalink to this definition">¶</a></dt>
+<dd><p>The datetime should be lower than this datetime.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.DateTime.Attributes.pattern">
+<tt class="descname">pattern</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.primitive.DateTime.Attributes.pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>A regular expression that matches the whole datetime. See here for more
+info: <a class="reference external" href="http://www.regular-expressions.info/xml.html">http://www.regular-expressions.info/xml.html</a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.DateTime.Attributes.string_format">
+<tt class="descname">string_format</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.primitive.DateTime.Attributes.string_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>A regular python string formatting string. %s will contain the date
+string. See here for more info:
+<a class="reference external" href="http://docs.python.org/library/stdtypes.html#string-formatting">http://docs.python.org/library/stdtypes.html#string-formatting</a></p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.Decimal">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Decimal</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Decimal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Decimal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="index.html#spyne.model._base.SimpleModel" title="spyne.model._base.SimpleModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.SimpleModel</span></tt></a></p>
+<p>The primitive that corresponds to the native python Decimal.</p>
+<p>This is also the base class for denoting numbers.</p>
+<p>Note that it is your responsibility to make sure that the scale and
+precision constraints set in this type is consistent with the values in the
+context of the decimal package. See the <a class="reference external" href="http://docs.python.org/library/decimal.html#decimal.getcontext" title="(in Python v2.7)"><tt class="xref py py-func docutils literal"><span class="pre">decimal.getcontext()</span></tt></a>
+documentation for more information.</p>
+<dl class="class">
+<dt id="spyne.model.primitive.Decimal.Attributes">
+<em class="property">class </em><tt class="descname">Attributes</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Decimal.Attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Decimal.Attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.Attributes</span></tt></p>
+<p>Customizable attributes of the <a class="reference internal" href="#spyne.model.primitive.Decimal" title="spyne.model.primitive.Decimal"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Decimal</span></tt></a>
+type.</p>
+<dl class="attribute">
+<dt id="spyne.model.primitive.Decimal.Attributes.format">
+<tt class="descname">format</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.primitive.Decimal.Attributes.format" title="Permalink to this definition">¶</a></dt>
+<dd><p>A regular python string formatting string. See here:
+<a class="reference external" href="http://docs.python.org/library/stdtypes.html#string-formatting">http://docs.python.org/library/stdtypes.html#string-formatting</a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Decimal.Attributes.fraction_digits">
+<tt class="descname">fraction_digits</tt><em class="property"> = Decimal('Infinity')</em><a class="headerlink" href="#spyne.model.primitive.Decimal.Attributes.fraction_digits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of digits after the decimal separator.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Decimal.Attributes.ge">
+<tt class="descname">ge</tt><em class="property"> = Decimal('-Infinity')</em><a class="headerlink" href="#spyne.model.primitive.Decimal.Attributes.ge" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value should be greater than or equal to this number.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Decimal.Attributes.gt">
+<tt class="descname">gt</tt><em class="property"> = Decimal('-Infinity')</em><a class="headerlink" href="#spyne.model.primitive.Decimal.Attributes.gt" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value should be greater than this number.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Decimal.Attributes.le">
+<tt class="descname">le</tt><em class="property"> = Decimal('Infinity')</em><a class="headerlink" href="#spyne.model.primitive.Decimal.Attributes.le" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value should be lower than or equal to this number.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Decimal.Attributes.lt">
+<tt class="descname">lt</tt><em class="property"> = Decimal('Infinity')</em><a class="headerlink" href="#spyne.model.primitive.Decimal.Attributes.lt" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value should be lower than this number.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Decimal.Attributes.max_bound">
+<tt class="descname">max_bound</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.primitive.Decimal.Attributes.max_bound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hardware limit that determines the highest value this type can
+store.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Decimal.Attributes.max_str_len">
+<tt class="descname">max_str_len</tt><em class="property"> = 1024</em><a class="headerlink" href="#spyne.model.primitive.Decimal.Attributes.max_str_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximum length of string to be attempted to convert to number.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Decimal.Attributes.min_bound">
+<tt class="descname">min_bound</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.primitive.Decimal.Attributes.min_bound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hardware limit that determines the lowest value this type can
+store.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Decimal.Attributes.pattern">
+<tt class="descname">pattern</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.primitive.Decimal.Attributes.pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>A regular expression that matches the whole field. See here for more
+info: <a class="reference external" href="http://www.regular-expressions.info/xml.html">http://www.regular-expressions.info/xml.html</a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Decimal.Attributes.total_digits">
+<tt class="descname">total_digits</tt><em class="property"> = Decimal('Infinity')</em><a class="headerlink" href="#spyne.model.primitive.Decimal.Attributes.total_digits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of digits.</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.Double">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Double</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Double"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Double" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.Decimal" title="spyne.model.primitive.Decimal"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Decimal</span></tt></a></p>
+<p>This is serialized as the python <tt class="docutils literal"><span class="pre">float</span></tt>. So this type comes with its
+gotchas. Unless you really know what you&#8217;re doing, you should use a
+<a class="reference internal" href="#spyne.model.primitive.Decimal" title="spyne.model.primitive.Decimal"><tt class="xref py py-class docutils literal"><span class="pre">Decimal</span></tt></a> with a pre-defined number of integer and decimal digits.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.Duration">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Duration</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Duration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="index.html#spyne.model._base.SimpleModel" title="spyne.model._base.SimpleModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.SimpleModel</span></tt></a></p>
+<p>Native type is <a class="reference external" href="http://docs.python.org/library/datetime.html#datetime.timedelta" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">datetime.timedelta</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.Float">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Float</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.Double" title="spyne.model.primitive.Double"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Double</span></tt></a></p>
+<p>Synonym for Double (as far as python side of things are concerned).
+It&#8217;s here for compatibility reasons.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.ImageUri">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">ImageUri</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#ImageUri"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.ImageUri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.AnyUri" title="spyne.model.primitive.AnyUri"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.AnyUri</span></tt></a></p>
+<p>A special kind of String that holds the uri of an image.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Int">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Int</tt><a class="headerlink" href="#spyne.model.primitive.Int" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 32-bit signed integer, alias for <a class="reference internal" href="#spyne.model.primitive.Integer32" title="spyne.model.primitive.Integer32"><tt class="xref py py-class docutils literal"><span class="pre">Integer32</span></tt></a>.</p>
+<p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.Integer">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Integer</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.Decimal" title="spyne.model.primitive.Decimal"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Decimal</span></tt></a></p>
+<p>The arbitrary-size signed integer.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Integer16">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Integer16</tt><a class="headerlink" href="#spyne.model.primitive.Integer16" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 16-bit signed integer, also known as <tt class="docutils literal"><span class="pre">short</span></tt>.</p>
+<p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Integer32">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Integer32</tt><a class="headerlink" href="#spyne.model.primitive.Integer32" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 64-bit signed integer, also known as <tt class="docutils literal"><span class="pre">int</span></tt>.</p>
+<p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Integer64">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Integer64</tt><a class="headerlink" href="#spyne.model.primitive.Integer64" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 64-bit signed integer, also known as <tt class="docutils literal"><span class="pre">long</span></tt>.</p>
+<p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Integer8">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Integer8</tt><a class="headerlink" href="#spyne.model.primitive.Integer8" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 8-bit signed integer, also known as <tt class="docutils literal"><span class="pre">byte</span></tt>.</p>
+<p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.Line">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Line</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a></p>
+<p>A point type whose native format is a WKT string. You can use
+<tt class="xref py py-func docutils literal"><span class="pre">shapely.wkt.loads()</span></tt> to get a proper point type.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.LineString">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">LineString</tt><a class="headerlink" href="#spyne.model.primitive.LineString" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#spyne.model.primitive.Line" title="spyne.model.primitive.Line"><tt class="xref py py-class docutils literal"><span class="pre">Line</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Long">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Long</tt><a class="headerlink" href="#spyne.model.primitive.Long" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 64-bit signed integer, alias for <a class="reference internal" href="#spyne.model.primitive.Integer64" title="spyne.model.primitive.Integer64"><tt class="xref py py-class docutils literal"><span class="pre">Integer64</span></tt></a>.</p>
+<p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.Mandatory">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Mandatory</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Mandatory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Mandatory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class that contains mandatory variants of primitives.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.MultiLine">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">MultiLine</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#MultiLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.MultiLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a></p>
+<p>A Multipolygon type whose native format is a WKT string. You can use
+<tt class="xref py py-func docutils literal"><span class="pre">shapely.wkt.loads()</span></tt> to get a proper multipolygon type.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.MultiLineString">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">MultiLineString</tt><a class="headerlink" href="#spyne.model.primitive.MultiLineString" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#spyne.model.primitive.MultiLine" title="spyne.model.primitive.MultiLine"><tt class="xref py py-class docutils literal"><span class="pre">MultiLine</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.MultiPoint">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">MultiPoint</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#MultiPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.MultiPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a></p>
+<p>A Multipolygon type whose native format is a WKT string. You can use
+<tt class="xref py py-func docutils literal"><span class="pre">shapely.wkt.loads()</span></tt> to get a proper multipolygon type.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.MultiPolygon">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">MultiPolygon</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#MultiPolygon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.MultiPolygon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a></p>
+<p>A Multipolygon type whose native format is a WKT string. You can use
+<tt class="xref py py-func docutils literal"><span class="pre">shapely.wkt.loads()</span></tt> to get a proper multipolygon type.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.NonNegativeInteger">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">NonNegativeInteger</tt><a class="headerlink" href="#spyne.model.primitive.NonNegativeInteger" title="Permalink to this definition">¶</a></dt>
+<dd><p>The arbitrary-size unsigned integer, alias for UnsignedInteger.</p>
+<p>alias of <a class="reference internal" href="#spyne.model.primitive.UnsignedInteger" title="spyne.model.primitive.UnsignedInteger"><tt class="xref py py-class docutils literal"><span class="pre">UnsignedInteger</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.Point">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Point</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a></p>
+<p>A point type whose native format is a WKT string. You can use
+<tt class="xref py py-func docutils literal"><span class="pre">shapely.wkt.loads()</span></tt> to get a proper point type.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.Polygon">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Polygon</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Polygon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Polygon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a></p>
+<p>A Polygon type whose native format is a WKT string. You can use
+<tt class="xref py py-func docutils literal"><span class="pre">shapely.wkt.loads()</span></tt> to get a proper polygon type.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Short">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Short</tt><a class="headerlink" href="#spyne.model.primitive.Short" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 16-bit signed integer, alias for <a class="reference internal" href="#spyne.model.primitive.Integer16" title="spyne.model.primitive.Integer16"><tt class="xref py py-class docutils literal"><span class="pre">Integer16</span></tt></a>.</p>
+<p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.Time">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Time</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="index.html#spyne.model._base.SimpleModel" title="spyne.model._base.SimpleModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.SimpleModel</span></tt></a></p>
+<p>Just that, Time. No time zone support.</p>
+<p>Native type is <a class="reference external" href="http://docs.python.org/library/datetime.html#datetime.time" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">datetime.time</span></tt></a>.</p>
+<dl class="class">
+<dt id="spyne.model.primitive.Time.Attributes">
+<em class="property">class </em><tt class="descname">Attributes</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Time.Attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Time.Attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.Attributes</span></tt></p>
+<p>Customizable attributes of the <a class="reference internal" href="#spyne.model.primitive.Time" title="spyne.model.primitive.Time"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Time</span></tt></a>
+type.</p>
+<dl class="attribute">
+<dt id="spyne.model.primitive.Time.Attributes.ge">
+<tt class="descname">ge</tt><em class="property"> = datetime.time(0, 0)</em><a class="headerlink" href="#spyne.model.primitive.Time.Attributes.ge" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time should be greater than or equal to this time.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Time.Attributes.gt">
+<tt class="descname">gt</tt><em class="property"> = datetime.time(0, 0)</em><a class="headerlink" href="#spyne.model.primitive.Time.Attributes.gt" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time should be greater than this time.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Time.Attributes.le">
+<tt class="descname">le</tt><em class="property"> = datetime.time(23, 59, 59, 999999)</em><a class="headerlink" href="#spyne.model.primitive.Time.Attributes.le" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time should be lower than or equal to this time.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Time.Attributes.lt">
+<tt class="descname">lt</tt><em class="property"> = datetime.time(23, 59, 59, 999999)</em><a class="headerlink" href="#spyne.model.primitive.Time.Attributes.lt" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time should be lower than this time.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Time.Attributes.pattern">
+<tt class="descname">pattern</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.primitive.Time.Attributes.pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>A regular expression that matches the whole time. See here for more
+info: <a class="reference external" href="http://www.regular-expressions.info/xml.html">http://www.regular-expressions.info/xml.html</a></p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.Unicode">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Unicode</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Unicode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Unicode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="index.html#spyne.model._base.SimpleModel" title="spyne.model._base.SimpleModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.SimpleModel</span></tt></a></p>
+<p>The type to represent human-readable data. Its native format is <cite>unicode</cite>
+or <cite>str</cite> with given encoding.</p>
+<dl class="class">
+<dt id="spyne.model.primitive.Unicode.Attributes">
+<em class="property">class </em><tt class="descname">Attributes</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Unicode.Attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Unicode.Attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.Attributes</span></tt></p>
+<p>Customizable attributes of the <a class="reference internal" href="#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a>
+type.</p>
+<dl class="attribute">
+<dt id="spyne.model.primitive.Unicode.Attributes.encoding">
+<tt class="descname">encoding</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.primitive.Unicode.Attributes.encoding" title="Permalink to this definition">¶</a></dt>
+<dd><p>The encoding of <cite>str</cite> objects this class may have to deal with.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Unicode.Attributes.format">
+<tt class="descname">format</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.primitive.Unicode.Attributes.format" title="Permalink to this definition">¶</a></dt>
+<dd><p>A regular python string formatting string. See here:
+<a class="reference external" href="http://docs.python.org/library/stdtypes.html#string-formatting">http://docs.python.org/library/stdtypes.html#string-formatting</a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Unicode.Attributes.max_len">
+<tt class="descname">max_len</tt><em class="property"> = Decimal('Infinity')</em><a class="headerlink" href="#spyne.model.primitive.Unicode.Attributes.max_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum length of string. Can be set to <tt class="docutils literal"><span class="pre">decimal.Decimal('inf')</span></tt> to
+accept strings of arbitrary length. You may also need to adjust
+<tt class="xref py py-const docutils literal"><span class="pre">spyne.server.wsgi.MAX_CONTENT_LENGTH</span></tt>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Unicode.Attributes.min_len">
+<tt class="descname">min_len</tt><em class="property"> = 0</em><a class="headerlink" href="#spyne.model.primitive.Unicode.Attributes.min_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum length of string. Can be set to any positive integer</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Unicode.Attributes.pattern">
+<tt class="descname">pattern</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.primitive.Unicode.Attributes.pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>A regular expression that matches the whole string. See here for more
+info: <a class="reference external" href="http://www.regular-expressions.info/xml.html">http://www.regular-expressions.info/xml.html</a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.Unicode.Attributes.unicode_errors">
+<tt class="descname">unicode_errors</tt><em class="property"> = 'strict'</em><a class="headerlink" href="#spyne.model.primitive.Unicode.Attributes.unicode_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>The argument to the <tt class="docutils literal"><span class="pre">unicode</span></tt> builtin; one of &#8216;strict&#8217;, &#8216;replace&#8217;
+or &#8216;ignore&#8217;.</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.UnsignedByte">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedByte</tt><a class="headerlink" href="#spyne.model.primitive.UnsignedByte" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 8-bit unsigned integer, alias for <a class="reference internal" href="#spyne.model.primitive.UnsignedInteger8" title="spyne.model.primitive.UnsignedInteger8"><tt class="xref py py-class docutils literal"><span class="pre">UnsignedInteger8</span></tt></a>.</p>
+<p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedUnsignedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.UnsignedInt">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedInt</tt><a class="headerlink" href="#spyne.model.primitive.UnsignedInt" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 32-bit unsigned integer, alias for <a class="reference internal" href="#spyne.model.primitive.UnsignedInteger32" title="spyne.model.primitive.UnsignedInteger32"><tt class="xref py py-class docutils literal"><span class="pre">UnsignedInteger32</span></tt></a>.</p>
+<p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedUnsignedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.UnsignedInteger">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedInteger</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#UnsignedInteger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.UnsignedInteger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model.primitive.Integer" title="spyne.model.primitive.Integer"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Integer</span></tt></a></p>
+<p>The arbitrary-size unsigned integer, also known as nonNegativeInteger.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.UnsignedInteger16">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedInteger16</tt><a class="headerlink" href="#spyne.model.primitive.UnsignedInteger16" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 16-bit unsigned integer, also known as <tt class="docutils literal"><span class="pre">unsignedShort</span></tt>.</p>
+<p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedUnsignedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.UnsignedInteger32">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedInteger32</tt><a class="headerlink" href="#spyne.model.primitive.UnsignedInteger32" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 64-bit unsigned integer, also known as <tt class="docutils literal"><span class="pre">unsignedInt</span></tt>.</p>
+<p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedUnsignedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.UnsignedInteger64">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedInteger64</tt><a class="headerlink" href="#spyne.model.primitive.UnsignedInteger64" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 64-bit unsigned integer, also known as <tt class="docutils literal"><span class="pre">unsignedLong</span></tt>.</p>
+<p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedUnsignedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.UnsignedInteger8">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedInteger8</tt><a class="headerlink" href="#spyne.model.primitive.UnsignedInteger8" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 8-bit unsigned integer, also known as <tt class="docutils literal"><span class="pre">unsignedByte</span></tt>.</p>
+<p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedUnsignedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.UnsignedLong">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedLong</tt><a class="headerlink" href="#spyne.model.primitive.UnsignedLong" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 64-bit unsigned integer, alias for <a class="reference internal" href="#spyne.model.primitive.UnsignedInteger64" title="spyne.model.primitive.UnsignedInteger64"><tt class="xref py py-class docutils literal"><span class="pre">UnsignedInteger64</span></tt></a>.</p>
+<p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedUnsignedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.primitive.UnsignedShort">
+<tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">UnsignedShort</tt><a class="headerlink" href="#spyne.model.primitive.UnsignedShort" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 16-bit unsigned integer, alias for <a class="reference internal" href="#spyne.model.primitive.UnsignedInteger16" title="spyne.model.primitive.UnsignedInteger16"><tt class="xref py py-class docutils literal"><span class="pre">UnsignedInteger16</span></tt></a>.</p>
+<p>alias of <tt class="xref py py-class docutils literal"><span class="pre">_BoundedUnsignedInteger</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model.primitive.Uuid">
+<em class="property">class </em><tt class="descclassname">spyne.model.primitive.</tt><tt class="descname">Uuid</tt><a class="reference internal" href="../../modules/spyne/model/primitive.html#Uuid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.primitive.Uuid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.Unicode</span></tt></p>
+<p>Unicode subclass for Universially-Unique Identifiers.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="binary.html" title="Binary Types"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Models"
+             >previous</a> |</li>
+        <li><a href="../../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li>
+          <li><a href="index.html" >Models</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

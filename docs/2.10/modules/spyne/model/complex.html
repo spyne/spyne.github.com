@@ -125,7 +125,7 @@
 
 
 <span class="k">class</span> <span class="nc">xml</span><span class="p">:</span>
-<div class="viewcode-block" id="xml"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.xml">[docs]</a>    <span class="sd">&quot;&quot;&quot;Complex argument to ``ComplexModelBase.Attributes.store_as`` for xml</span>
+<div class="viewcode-block" id="xml"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.xml">[docs]</a>    <span class="sd">&quot;&quot;&quot;Complex argument to ``ComplexModelBase.Attributes.store_as`` for xml</span>
 <span class="sd">    serialization.</span>
 
 <span class="sd">    :param root_tag: Root tag of the xml element that contains the field values.</span>
@@ -139,7 +139,7 @@
 
 
 <span class="k">class</span> <span class="nc">table</span><span class="p">:</span></div>
-<div class="viewcode-block" id="table"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.table">[docs]</a>    <span class="sd">&quot;&quot;&quot;Complex argument to ``ComplexModelBase.Attributes.store_as`` for storing</span>
+<div class="viewcode-block" id="table"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.table">[docs]</a>    <span class="sd">&quot;&quot;&quot;Complex argument to ``ComplexModelBase.Attributes.store_as`` for storing</span>
 <span class="sd">    the class instance as a row in a table in a relational database.</span>
 
 <span class="sd">    :param multi: When False, configures a one-to-many relationship where the</span>
@@ -162,7 +162,7 @@
 
 
 <span class="k">class</span> <span class="nc">json</span><span class="p">:</span></div>
-<div class="viewcode-block" id="json"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.json">[docs]</a>    <span class="sd">&quot;&quot;&quot;Complex argument to ``ComplexModelBase.Attributes.store_as`` for storing</span>
+<div class="viewcode-block" id="json"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.json">[docs]</a>    <span class="sd">&quot;&quot;&quot;Complex argument to ``ComplexModelBase.Attributes.store_as`` for storing</span>
 <span class="sd">    the class instance as a json document.</span>
 
 <span class="sd">    Make sure you don&#39;t mix this with the json package when importing.</span>
@@ -211,7 +211,7 @@
 
 
 <span class="k">class</span> <span class="nc">XmlAttribute</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
-<div class="viewcode-block" id="XmlAttribute"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.XmlAttribute">[docs]</a>    <span class="sd">&quot;&quot;&quot;Items which are marshalled as attributes of the parent element, unless</span>
+<div class="viewcode-block" id="XmlAttribute"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.XmlAttribute">[docs]</a>    <span class="sd">&quot;&quot;&quot;Items which are marshalled as attributes of the parent element, unless</span>
 <span class="sd">    ``attribute_of`` is passed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -254,7 +254,7 @@
 
 
 <span class="k">class</span> <span class="nc">XmlAttributeRef</span><span class="p">(</span><span class="n">XmlAttribute</span><span class="p">):</span></div>
-<div class="viewcode-block" id="XmlAttributeRef"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.XmlAttributeRef">[docs]</a>    <span class="sd">&quot;&quot;&quot;Reference to an Xml attribute.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="XmlAttributeRef"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.XmlAttributeRef">[docs]</a>    <span class="sd">&quot;&quot;&quot;Reference to an Xml attribute.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">use</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ref</span> <span class="o">=</span> <span class="n">ref</span>
@@ -267,7 +267,7 @@
 
 
 <span class="k">class</span> <span class="nc">SelfReference</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></div>
-<div class="viewcode-block" id="SelfReference"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.SelfReference">[docs]</a>    <span class="sd">&#39;&#39;&#39;Use this as a placeholder type in classes that contain themselves. See</span>
+<div class="viewcode-block" id="SelfReference"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.SelfReference">[docs]</a>    <span class="sd">&#39;&#39;&#39;Use this as a placeholder type in classes that contain themselves. See</span>
 <span class="sd">    :func:`spyne.test.model.test_complex.TestComplexModel.test_self_reference`.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
@@ -310,7 +310,7 @@
 
 
 <span class="k">class</span> <span class="nc">ComplexModelMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">)):</span>
-<div class="viewcode-block" id="ComplexModelMeta"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelMeta">[docs]</a>    <span class="sd">&#39;&#39;&#39;This metaclass sets ``_type_info``, ``__type_name__`` and ``__extends__``</span>
+<div class="viewcode-block" id="ComplexModelMeta"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.ComplexModelMeta">[docs]</a>    <span class="sd">&#39;&#39;&#39;This metaclass sets ``_type_info``, ``__type_name__`` and ``__extends__``</span>
 <span class="sd">    which are going to be used for (de)serialization and schema generation.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
@@ -454,7 +454,7 @@
 
 
 <span class="k">class</span> <span class="nc">ComplexModelBase</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span></div>
-<div class="viewcode-block" id="ComplexModelBase"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase">[docs]</a>    <span class="sd">&quot;&quot;&quot;If you want to make a better class type, this is what you should inherit</span>
+<div class="viewcode-block" id="ComplexModelBase"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.ComplexModelBase">[docs]</a>    <span class="sd">&quot;&quot;&quot;If you want to make a better class type, this is what you should inherit</span>
 <span class="sd">    from.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -462,7 +462,7 @@
     <span class="n">__extends__</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">ModelBase</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
-<div class="viewcode-block" id="ComplexModelBase.Attributes"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;ComplexModel-specific attributes&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ComplexModelBase.Attributes"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.ComplexModelBase.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;ComplexModel-specific attributes&quot;&quot;&quot;</span>
 
         <span class="n">store_as</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="sd">&quot;&quot;&quot;Method for serializing to persistent storage. One of %r. It makes</span>
@@ -527,7 +527,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_serialization_instance</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<div class="viewcode-block" id="ComplexModelBase.get_serialization_instance"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase.get_serialization_instance">[docs]</a>        <span class="sd">&quot;&quot;&quot;Returns the native object corresponding to the serialized form passed</span>
+<div class="viewcode-block" id="ComplexModelBase.get_serialization_instance"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.ComplexModelBase.get_serialization_instance">[docs]</a>        <span class="sd">&quot;&quot;&quot;Returns the native object corresponding to the serialized form passed</span>
 <span class="sd">        in the ``value`` argument.</span>
 
 <span class="sd">        :param value: This argument can be:</span>
@@ -566,7 +566,7 @@
 
     <span class="nd">@classmethod</span></div>
     <span class="k">def</span> <span class="nf">get_deserialization_instance</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
-<div class="viewcode-block" id="ComplexModelBase.get_deserialization_instance"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase.get_deserialization_instance">[docs]</a>        <span class="sd">&quot;&quot;&quot;Get an empty native type so that the deserialization logic can set</span>
+<div class="viewcode-block" id="ComplexModelBase.get_deserialization_instance"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.ComplexModelBase.get_deserialization_instance">[docs]</a>        <span class="sd">&quot;&quot;&quot;Get an empty native type so that the deserialization logic can set</span>
 <span class="sd">        its attributes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">__orig__</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -607,7 +607,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_simple_type_info</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">hier_delim</span><span class="o">=</span><span class="s">&quot;_&quot;</span><span class="p">,</span> <span class="n">retval</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-<div class="viewcode-block" id="ComplexModelBase.get_simple_type_info"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase.get_simple_type_info">[docs]</a>                                                    <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">is_array</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ComplexModelBase.get_simple_type_info"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.ComplexModelBase.get_simple_type_info">[docs]</a>                                                    <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">is_array</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a _type_info dict that includes members from all base classes</span>
 <span class="sd">        and whose types are only primitives. It will prefix field names in</span>
 <span class="sd">        non-top-level complex objects with field name of its parent.</span>
@@ -687,7 +687,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">produce</span><span class="p">(</span><span class="n">namespace</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">members</span><span class="p">):</span>
-<div class="viewcode-block" id="ComplexModelBase.produce"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase.produce">[docs]</a>        <span class="sd">&quot;&quot;&quot;Lets you create a class programmatically.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ComplexModelBase.produce"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.ComplexModelBase.produce">[docs]</a>        <span class="sd">&quot;&quot;&quot;Lets you create a class programmatically.&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">ComplexModelMeta</span><span class="p">(</span><span class="n">type_name</span><span class="p">,</span> <span class="p">(</span><span class="n">ComplexModel</span><span class="p">,),</span> <span class="p">{</span>
             <span class="s">&#39;__namespace__&#39;</span><span class="p">:</span> <span class="n">namespace</span><span class="p">,</span>
@@ -697,7 +697,7 @@
 
     <span class="nd">@staticmethod</span></div>
     <span class="k">def</span> <span class="nf">alias</span><span class="p">(</span><span class="n">type_name</span><span class="p">,</span> <span class="n">namespace</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
-<div class="viewcode-block" id="ComplexModelBase.alias"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase.alias">[docs]</a>        <span class="sd">&quot;&quot;&quot;Return an alias class for the given target class.</span>
+<div class="viewcode-block" id="ComplexModelBase.alias"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.ComplexModelBase.alias">[docs]</a>        <span class="sd">&quot;&quot;&quot;Return an alias class for the given target class.</span>
 
 <span class="sd">        This function is a variation on &#39;ComplexModel.produce&#39;. The alias will</span>
 <span class="sd">        borrow the target&#39;s _type_info.</span>
@@ -713,7 +713,7 @@
 
     <span class="nd">@classmethod</span></div>
     <span class="k">def</span> <span class="nf">customize</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<div class="viewcode-block" id="ComplexModelBase.customize"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModelBase.customize">[docs]</a>        <span class="sd">&quot;&quot;&quot;Duplicates cls and overwrites the values in ``cls.Attributes`` with</span>
+<div class="viewcode-block" id="ComplexModelBase.customize"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.ComplexModelBase.customize">[docs]</a>        <span class="sd">&quot;&quot;&quot;Duplicates cls and overwrites the values in ``cls.Attributes`` with</span>
 <span class="sd">        ``**kwargs`` and returns the new class.&quot;&quot;&quot;</span>
 
         <span class="n">store_as</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;store_as&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
@@ -759,7 +759,7 @@
 
 
 <span class="k">class</span> <span class="nc">ComplexModel</span><span class="p">(</span><span class="n">ComplexModelBase</span><span class="p">):</span></div>
-<div class="viewcode-block" id="ComplexModel"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.ComplexModel">[docs]</a>    <span class="sd">&quot;&quot;&quot;The general complexType factory. The __call__ method of this class will</span>
+<div class="viewcode-block" id="ComplexModel"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.ComplexModel">[docs]</a>    <span class="sd">&quot;&quot;&quot;The general complexType factory. The __call__ method of this class will</span>
 <span class="sd">    return instances, contrary to primivites where the same call will result in</span>
 <span class="sd">    customized duplicates of the original class definition.</span>
 <span class="sd">    Those who&#39;d like to customize the class should use the customize method.</span>
@@ -770,7 +770,7 @@
 
 
 <span class="k">class</span> <span class="nc">Array</span><span class="p">(</span><span class="n">ComplexModelBase</span><span class="p">):</span></div>
-<div class="viewcode-block" id="Array"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.Array">[docs]</a>    <span class="sd">&quot;&quot;&quot;This class generates a ComplexModel child that has one attribute that has</span>
+<div class="viewcode-block" id="Array"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.Array">[docs]</a>    <span class="sd">&quot;&quot;&quot;This class generates a ComplexModel child that has one attribute that has</span>
 <span class="sd">    the same name as the serialized class. It&#39;s contained in a Python list.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -847,7 +847,7 @@
 
 
 <span class="k">class</span> <span class="nc">Iterable</span><span class="p">(</span><span class="n">Array</span><span class="p">):</span></div>
-<div class="viewcode-block" id="Iterable"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.Iterable">[docs]</a>    <span class="sd">&quot;&quot;&quot;This class generates a ``ComplexModel`` child that has one attribute that</span>
+<div class="viewcode-block" id="Iterable"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.Iterable">[docs]</a>    <span class="sd">&quot;&quot;&quot;This class generates a ``ComplexModel`` child that has one attribute that</span>
 <span class="sd">    has the same name as the serialized class. It&#39;s contained in a Python</span>
 <span class="sd">    iterable. The distinction with the ``Array`` is made in the protocol</span>
 <span class="sd">    implementation, this is just a marker.</span>
@@ -863,13 +863,13 @@
 
 
 <span class="k">class</span> <span class="nc">Alias</span><span class="p">(</span><span class="n">ComplexModelBase</span><span class="p">):</span></div>
-<div class="viewcode-block" id="Alias"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.Alias">[docs]</a>    <span class="sd">&quot;&quot;&quot;Different type_name, same _type_info.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Alias"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.Alias">[docs]</a>    <span class="sd">&quot;&quot;&quot;Different type_name, same _type_info.&quot;&quot;&quot;</span>
 
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ComplexModelMeta</span>
 
 
 <span class="k">def</span> <span class="nf">log_repr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">cls</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">given_len</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></div>
-<div class="viewcode-block" id="log_repr"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.log_repr">[docs]</a>    <span class="sd">&quot;&quot;&quot;Use this function if you want to echo a ComplexModel subclass. It will</span>
+<div class="viewcode-block" id="log_repr"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.log_repr">[docs]</a>    <span class="sd">&quot;&quot;&quot;Use this function if you want to echo a ComplexModel subclass. It will</span>
 <span class="sd">    limit output size of the String types, making your logs smaller.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -945,7 +945,7 @@
 
 
 <span class="k">def</span> <span class="nf">TTableModel</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-<div class="viewcode-block" id="TTableModel"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.complex.TTableModel">[docs]</a>    <span class="sd">&quot;&quot;&quot;A TableModel template that generates a new TableModel class for each</span>
+<div class="viewcode-block" id="TTableModel"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.TTableModel">[docs]</a>    <span class="sd">&quot;&quot;&quot;A TableModel template that generates a new TableModel class for each</span>
 <span class="sd">    call. If metadata is not supplied, a new one is instantiated.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 

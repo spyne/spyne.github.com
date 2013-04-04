@@ -124,7 +124,7 @@
 <span class="p">}</span>
 
 <span class="k">class</span> <span class="nc">ByteArray</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span>
-<div class="viewcode-block" id="ByteArray"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.binary.ByteArray">[docs]</a>    <span class="sd">&quot;&quot;&quot;Canonical container for arbitrary data. Every protocol has a different</span>
+<div class="viewcode-block" id="ByteArray"><a class="viewcode-back" href="../../../reference/model/binary.html#spyne.model.binary.ByteArray">[docs]</a>    <span class="sd">&quot;&quot;&quot;Canonical container for arbitrary data. Every protocol has a different</span>
 <span class="sd">    way of encapsulating this type. E.g. xml-based protocols encode this as</span>
 <span class="sd">    base64, while HttpRpc just hands it over.</span>
 
@@ -170,7 +170,7 @@
 
 
 <span class="k">class</span> <span class="nc">File</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span></div>
-<div class="viewcode-block" id="File"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.binary.File">[docs]</a>    <span class="sd">&quot;&quot;&quot;A compact way of dealing with incoming files for protocols with a</span>
+<div class="viewcode-block" id="File"><a class="viewcode-back" href="../../../reference/model/binary.html#spyne.model.binary.File">[docs]</a>    <span class="sd">&quot;&quot;&quot;A compact way of dealing with incoming files for protocols with a</span>
 <span class="sd">    standard way of encoding file metadata along with binary data. (E.g. Http)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -186,18 +186,19 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">class</span> <span class="nc">Value</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="File.Value"><a class="viewcode-back" href="../../../reference/model/binary.html#spyne.model.binary.File.Value">[docs]</a>        <span class="sd">&quot;&quot;&quot;The class for values marked as ``File``.</span>
+
+<span class="sd">        :param name: Original name of the file</span>
+<span class="sd">        :param path: Current path to the file.</span>
+<span class="sd">        :param type: The mime type of the file&#39;s contents.</span>
+<span class="sd">        :param data: Optional sequence of ``str`` or ``bytes`` instances</span>
+<span class="sd">            that contain the file&#39;s data.</span>
+<span class="sd">        :param handle: :class:`file` object that contains the file&#39;s data.</span>
+<span class="sd">        It is ignored unless the ``path`` argument is ``None``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s">&#39;application/octet-stream&#39;</span><span class="p">,</span>
                                                             <span class="n">data</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">handle</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;The class for values marked as ``File``.</span>
-
-<span class="sd">            :param name: Original name of the file</span>
-<span class="sd">            :param path: Current path to the file.</span>
-<span class="sd">            :param type: The mime type of the file&#39;s contents.</span>
-<span class="sd">            :param data: Optional sequence of ``str`` or ``bytes`` instances</span>
-<span class="sd">            that contain the file&#39;s data.</span>
-<span class="sd">            :param handle: :class:`file` object that contains the file&#39;s data.</span>
-<span class="sd">            It is ignored unless the ``path`` argument is ``None``.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -217,7 +218,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">handle</span> <span class="o">=</span> <span class="n">handle</span>
 
         <span class="k">def</span> <span class="nf">rollover</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;This method normalizes the file object by making ``path``,</span>
+<div class="viewcode-block" id="File.Value.rollover"><a class="viewcode-back" href="../../../reference/model/binary.html#spyne.model.binary.File.Value.rollover">[docs]</a>            <span class="sd">&quot;&quot;&quot;This method normalizes the file object by making ``path``,</span>
 <span class="sd">            ``name`` and ``handle`` properties consistent. It writes</span>
 <span class="sd">            incoming data to the file object and points the ``data`` iterable</span>
 <span class="sd">            to the contents of this file.</span>
@@ -242,7 +243,7 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">File</span><span class="o">.</span><span class="n">to_string_iterable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="nd">@classmethod</span>
+    <span class="nd">@classmethod</span></div></div>
     <span class="nd">@nillable_string</span>
     <span class="k">def</span> <span class="nf">to_base64</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">assert</span> <span class="n">value</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s">&quot;You need to write data to persistent storage first &quot;</span> \

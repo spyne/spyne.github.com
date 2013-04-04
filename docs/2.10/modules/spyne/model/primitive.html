@@ -191,7 +191,7 @@
 
 
 <span class="k">class</span> <span class="nc">AnyXml</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span>
-<div class="viewcode-block" id="AnyXml"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.AnyXml">[docs]</a>    <span class="sd">&quot;&quot;&quot;An xml node that can contain any number of sub nodes. It&#39;s represented by</span>
+<div class="viewcode-block" id="AnyXml"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.AnyXml">[docs]</a>    <span class="sd">&quot;&quot;&quot;An xml node that can contain any number of sub nodes. It&#39;s represented by</span>
 <span class="sd">    an ElementTree object.&quot;&quot;&quot;</span>
 
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;anyType&#39;</span>
@@ -209,7 +209,7 @@
     <span class="k">pass</span>
 
 <span class="k">class</span> <span class="nc">AnyDict</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span>
-<div class="viewcode-block" id="AnyDict"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.AnyDict">[docs]</a>    <span class="sd">&quot;&quot;&quot;A dict instance that can contain other dicts, iterables or primitive</span>
+<div class="viewcode-block" id="AnyDict"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.AnyDict">[docs]</a>    <span class="sd">&quot;&quot;&quot;A dict instance that can contain other dicts, iterables or primitive</span>
 <span class="sd">    types. Its serialization is protocol-dependent.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -217,14 +217,14 @@
 
 
 <span class="k">class</span> <span class="nc">Unicode</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span></div>
-<div class="viewcode-block" id="Unicode"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Unicode">[docs]</a>    <span class="sd">&quot;&quot;&quot;The type to represent human-readable data. Its native format is `unicode`</span>
+<div class="viewcode-block" id="Unicode"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Unicode">[docs]</a>    <span class="sd">&quot;&quot;&quot;The type to represent human-readable data. Its native format is `unicode`</span>
 <span class="sd">    or `str` with given encoding.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;string&#39;</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">SimpleModel</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
-<div class="viewcode-block" id="Unicode.Attributes"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Unicode.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;Customizable attributes of the :class:`spyne.model.primitive.Unicode`</span>
+<div class="viewcode-block" id="Unicode.Attributes"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Unicode.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;Customizable attributes of the :class:`spyne.model.primitive.Unicode`</span>
 <span class="sd">        type.&quot;&quot;&quot;</span>
 
         <span class="n">min_len</span> <span class="o">=</span> <span class="mi">0</span>
@@ -293,7 +293,7 @@
 
 
 <span class="k">class</span> <span class="nc">AnyUri</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span>
-<div class="viewcode-block" id="AnyUri"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.AnyUri">[docs]</a>    <span class="sd">&quot;&quot;&quot;A special kind of String type designed to hold an uri.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AnyUri"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.AnyUri">[docs]</a>    <span class="sd">&quot;&quot;&quot;A special kind of String type designed to hold an uri.&quot;&quot;&quot;</span>
 
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;anyURI&#39;</span>
 
@@ -302,7 +302,7 @@
         <span class="sd">&quot;&quot;&quot;The text shown in link. This is an object-wide constant.&quot;&quot;&quot;</span>
 
     <span class="k">class</span> <span class="nc">Value</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<div class="viewcode-block" id="AnyUri.Value"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.AnyUri.Value">[docs]</a>        <span class="sd">&quot;&quot;&quot;A special object that is just a better way of carrying the</span>
+<div class="viewcode-block" id="AnyUri.Value"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.AnyUri.Value">[docs]</a>        <span class="sd">&quot;&quot;&quot;A special object that is just a better way of carrying the</span>
 <span class="sd">        information carried with a link.</span>
 
 <span class="sd">        :param href: The uri string.</span>
@@ -319,11 +319,11 @@
 
 
 <span class="k">class</span> <span class="nc">ImageUri</span><span class="p">(</span><span class="n">AnyUri</span><span class="p">):</span></div></div>
-<div class="viewcode-block" id="ImageUri"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.ImageUri">[docs]</a>    <span class="sd">&quot;&quot;&quot;A special kind of String that holds the uri of an image.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ImageUri"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.ImageUri">[docs]</a>    <span class="sd">&quot;&quot;&quot;A special kind of String that holds the uri of an image.&quot;&quot;&quot;</span>
 
 
 <span class="k">class</span> <span class="nc">Decimal</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span></div>
-<div class="viewcode-block" id="Decimal"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Decimal">[docs]</a>    <span class="sd">&quot;&quot;&quot;The primitive that corresponds to the native python Decimal.</span>
+<div class="viewcode-block" id="Decimal"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Decimal">[docs]</a>    <span class="sd">&quot;&quot;&quot;The primitive that corresponds to the native python Decimal.</span>
 
 <span class="sd">    This is also the base class for denoting numbers.</span>
 
@@ -336,7 +336,7 @@
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;decimal&#39;</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">SimpleModel</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
-<div class="viewcode-block" id="Decimal.Attributes"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Decimal.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;Customizable attributes of the :class:`spyne.model.primitive.Decimal`</span>
+<div class="viewcode-block" id="Decimal.Attributes"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Decimal.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;Customizable attributes of the :class:`spyne.model.primitive.Decimal`</span>
 <span class="sd">        type.&quot;&quot;&quot;</span>
 
         <span class="n">gt</span> <span class="o">=</span> <span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">(</span><span class="s">&#39;-inf&#39;</span><span class="p">)</span> <span class="c"># minExclusive</span>
@@ -430,7 +430,7 @@
 
 
 <span class="k">class</span> <span class="nc">Double</span><span class="p">(</span><span class="n">Decimal</span><span class="p">):</span></div>
-<div class="viewcode-block" id="Double"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Double">[docs]</a>    <span class="sd">&quot;&quot;&quot;This is serialized as the python ``float``. So this type comes with its</span>
+<div class="viewcode-block" id="Double"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Double">[docs]</a>    <span class="sd">&quot;&quot;&quot;This is serialized as the python ``float``. So this type comes with its</span>
 <span class="sd">     gotchas. Unless you really know what you&#39;re doing, you should use a</span>
 <span class="sd">     :class:`Decimal` with a pre-defined number of integer and decimal digits.</span>
 <span class="sd">     &quot;&quot;&quot;</span>
@@ -467,19 +467,19 @@
 
 
 <span class="k">class</span> <span class="nc">Float</span><span class="p">(</span><span class="n">Double</span><span class="p">):</span></div>
-<div class="viewcode-block" id="Float"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Float">[docs]</a>    <span class="sd">&quot;&quot;&quot;Synonym for Double (as far as python side of things are concerned).</span>
+<div class="viewcode-block" id="Float"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Float">[docs]</a>    <span class="sd">&quot;&quot;&quot;Synonym for Double (as far as python side of things are concerned).</span>
 <span class="sd">    It&#39;s here for compatibility reasons.&quot;&quot;&quot;</span>
 
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;float&#39;</span>
 
 
 <span class="k">class</span> <span class="nc">Integer</span><span class="p">(</span><span class="n">Decimal</span><span class="p">):</span></div>
-<div class="viewcode-block" id="Integer"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Integer">[docs]</a>    <span class="sd">&quot;&quot;&quot;The arbitrary-size signed integer.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Integer"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Integer">[docs]</a>    <span class="sd">&quot;&quot;&quot;The arbitrary-size signed integer.&quot;&quot;&quot;</span>
 
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;integer&#39;</span>
 
 <span class="k">class</span> <span class="nc">UnsignedInteger</span><span class="p">(</span><span class="n">Integer</span><span class="p">):</span></div>
-<div class="viewcode-block" id="UnsignedInteger"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.UnsignedInteger">[docs]</a>    <span class="sd">&quot;&quot;&quot;The arbitrary-size unsigned integer, also known as nonNegativeInteger.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="UnsignedInteger"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.UnsignedInteger">[docs]</a>    <span class="sd">&quot;&quot;&quot;The arbitrary-size unsigned integer, also known as nonNegativeInteger.&quot;&quot;&quot;</span>
 
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;nonNegativeInteger&#39;</span>
 
@@ -596,7 +596,7 @@
 
 
 <span class="k">class</span> <span class="nc">Time</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span>
-<div class="viewcode-block" id="Time"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Time">[docs]</a>    <span class="sd">&quot;&quot;&quot;Just that, Time. No time zone support.</span>
+<div class="viewcode-block" id="Time"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Time">[docs]</a>    <span class="sd">&quot;&quot;&quot;Just that, Time. No time zone support.</span>
 
 <span class="sd">    Native type is :class:`datetime.time`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -604,7 +604,7 @@
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;time&#39;</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">SimpleModel</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
-<div class="viewcode-block" id="Time.Attributes"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Time.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;Customizable attributes of the :class:`spyne.model.primitive.Time`</span>
+<div class="viewcode-block" id="Time.Attributes"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Time.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;Customizable attributes of the :class:`spyne.model.primitive.Time`</span>
 <span class="sd">        type.&quot;&quot;&quot;</span>
 
         <span class="n">gt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c"># minExclusive</span>
@@ -645,7 +645,7 @@
 
 
 <span class="k">class</span> <span class="nc">DateTime</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span></div>
-<div class="viewcode-block" id="DateTime"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.DateTime">[docs]</a>    <span class="sd">&quot;&quot;&quot;A compact way to represent dates and times together. Supports time zones.</span>
+<div class="viewcode-block" id="DateTime"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.DateTime">[docs]</a>    <span class="sd">&quot;&quot;&quot;A compact way to represent dates and times together. Supports time zones.</span>
 
 <span class="sd">    Native type is :class:`datetime.datetime`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -656,7 +656,7 @@
     <span class="n">_offset_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">DATETIME_PATTERN</span> <span class="o">+</span> <span class="n">OFFSET_PATTERN</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">SimpleModel</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
-<div class="viewcode-block" id="DateTime.Attributes"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.DateTime.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;Customizable attributes of the :class:`spyne.model.primitive.DateTime`</span>
+<div class="viewcode-block" id="DateTime.Attributes"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.DateTime.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;Customizable attributes of the :class:`spyne.model.primitive.DateTime`</span>
 <span class="sd">        type.&quot;&quot;&quot;</span>
 
         <span class="n">gt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">MINYEAR</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pytz</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span> <span class="c"># minExclusive</span>
@@ -734,7 +734,7 @@
 
 
 <span class="k">class</span> <span class="nc">Date</span><span class="p">(</span><span class="n">DateTime</span><span class="p">):</span></div>
-<div class="viewcode-block" id="Date"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Date">[docs]</a>    <span class="sd">&quot;&quot;&quot;Just that, Date. No time zone support.</span>
+<div class="viewcode-block" id="Date"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Date">[docs]</a>    <span class="sd">&quot;&quot;&quot;Just that, Date. No time zone support.</span>
 
 <span class="sd">    Native type is :class:`datetime.date`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -742,7 +742,7 @@
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;date&#39;</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">DateTime</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
-<div class="viewcode-block" id="Date.Attributes"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Date.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;Customizable attributes of the :class:`spyne.model.primitive.Date`</span>
+<div class="viewcode-block" id="Date.Attributes"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Date.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;Customizable attributes of the :class:`spyne.model.primitive.Date`</span>
 <span class="sd">        type.&quot;&quot;&quot;</span>
 
         <span class="n">gt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c"># minExclusive</span>
@@ -781,23 +781,23 @@
 
 <span class="c"># this object tries to follow ISO 8601 standard.</span>
 <span class="k">class</span> <span class="nc">Duration</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span></div>
-<div class="viewcode-block" id="Duration"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Duration">[docs]</a>    <span class="sd">&quot;&quot;&quot;Native type is :class:`datetime.timedelta`.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Duration"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Duration">[docs]</a>    <span class="sd">&quot;&quot;&quot;Native type is :class:`datetime.timedelta`.&quot;&quot;&quot;</span>
 
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;duration&#39;</span>
 
 
 <span class="k">class</span> <span class="nc">Boolean</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span></div>
-<div class="viewcode-block" id="Boolean"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Boolean">[docs]</a>    <span class="sd">&quot;&quot;&quot;Life is simple here. Just true or false.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Boolean"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Boolean">[docs]</a>    <span class="sd">&quot;&quot;&quot;Life is simple here. Just true or false.&quot;&quot;&quot;</span>
 
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;boolean&#39;</span>
 
 
 <span class="k">class</span> <span class="nc">Uuid</span><span class="p">(</span><span class="n">Unicode</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="n">UUID_PATTERN</span><span class="p">,</span> <span class="n">type_name</span><span class="o">=</span><span class="s">&#39;uuid&#39;</span><span class="p">)):</span></div>
-<div class="viewcode-block" id="Uuid"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Uuid">[docs]</a>    <span class="sd">&quot;&quot;&quot;Unicode subclass for Universially-Unique Identifiers.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Uuid"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Uuid">[docs]</a>    <span class="sd">&quot;&quot;&quot;Unicode subclass for Universially-Unique Identifiers.&quot;&quot;&quot;</span>
 
 
 <span class="k">class</span> <span class="nc">Point</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span></div>
-<div class="viewcode-block" id="Point"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Point">[docs]</a>    <span class="sd">&quot;&quot;&quot;A point type whose native format is a WKT string. You can use</span>
+<div class="viewcode-block" id="Point"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Point">[docs]</a>    <span class="sd">&quot;&quot;&quot;A point type whose native format is a WKT string. You can use</span>
 <span class="sd">    :func:`shapely.wkt.loads` to get a proper point type.&quot;&quot;&quot;</span>
 
     <span class="n">__base_type__</span> <span class="o">=</span> <span class="n">Unicode</span>
@@ -816,7 +816,7 @@
 
 
 <span class="k">class</span> <span class="nc">Line</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span></div>
-<div class="viewcode-block" id="Line"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Line">[docs]</a>    <span class="sd">&quot;&quot;&quot;A point type whose native format is a WKT string. You can use</span>
+<div class="viewcode-block" id="Line"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Line">[docs]</a>    <span class="sd">&quot;&quot;&quot;A point type whose native format is a WKT string. You can use</span>
 <span class="sd">    :func:`shapely.wkt.loads` to get a proper point type.&quot;&quot;&quot;</span>
 
     <span class="n">__base_type__</span> <span class="o">=</span> <span class="n">Unicode</span>
@@ -836,7 +836,7 @@
 <span class="n">LineString</span><span class="o">=</span><span class="n">Line</span></div>
 
 <span class="k">class</span> <span class="nc">Polygon</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span>
-<div class="viewcode-block" id="Polygon"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Polygon">[docs]</a>    <span class="sd">&quot;&quot;&quot;A Polygon type whose native format is a WKT string. You can use</span>
+<div class="viewcode-block" id="Polygon"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Polygon">[docs]</a>    <span class="sd">&quot;&quot;&quot;A Polygon type whose native format is a WKT string. You can use</span>
 <span class="sd">    :func:`shapely.wkt.loads` to get a proper polygon type.&quot;&quot;&quot;</span>
 
     <span class="n">__base_type__</span> <span class="o">=</span> <span class="n">Unicode</span>
@@ -855,7 +855,7 @@
 
 
 <span class="k">class</span> <span class="nc">MultiPoint</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span></div>
-<div class="viewcode-block" id="MultiPoint"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.MultiPoint">[docs]</a>    <span class="sd">&quot;&quot;&quot;A Multipolygon type whose native format is a WKT string. You can use</span>
+<div class="viewcode-block" id="MultiPoint"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.MultiPoint">[docs]</a>    <span class="sd">&quot;&quot;&quot;A Multipolygon type whose native format is a WKT string. You can use</span>
 <span class="sd">    :func:`shapely.wkt.loads` to get a proper multipolygon type.&quot;&quot;&quot;</span>
 
     <span class="n">__base_type__</span> <span class="o">=</span> <span class="n">Unicode</span>
@@ -874,7 +874,7 @@
 
 
 <span class="k">class</span> <span class="nc">MultiLine</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span></div>
-<div class="viewcode-block" id="MultiLine"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.MultiLine">[docs]</a>    <span class="sd">&quot;&quot;&quot;A Multipolygon type whose native format is a WKT string. You can use</span>
+<div class="viewcode-block" id="MultiLine"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.MultiLine">[docs]</a>    <span class="sd">&quot;&quot;&quot;A Multipolygon type whose native format is a WKT string. You can use</span>
 <span class="sd">    :func:`shapely.wkt.loads` to get a proper multipolygon type.&quot;&quot;&quot;</span>
 
     <span class="n">__base_type__</span> <span class="o">=</span> <span class="n">Unicode</span>
@@ -913,7 +913,7 @@
 
 
 <span class="k">class</span> <span class="nc">MultiPolygon</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span>
-<div class="viewcode-block" id="MultiPolygon"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.MultiPolygon">[docs]</a>    <span class="sd">&quot;&quot;&quot;A Multipolygon type whose native format is a WKT string. You can use</span>
+<div class="viewcode-block" id="MultiPolygon"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.MultiPolygon">[docs]</a>    <span class="sd">&quot;&quot;&quot;A Multipolygon type whose native format is a WKT string. You can use</span>
 <span class="sd">    :func:`shapely.wkt.loads` to get a proper multipolygon type.&quot;&quot;&quot;</span>
 
     <span class="n">__base_type__</span> <span class="o">=</span> <span class="n">Unicode</span>
@@ -933,7 +933,7 @@
 
 <span class="c"># a class that is really a namespace</span>
 <span class="k">class</span> <span class="nc">Mandatory</span><span class="p">:</span></div>
-<div class="viewcode-block" id="Mandatory"><a class="viewcode-back" href="../../../reference/model.html#spyne.model.primitive.Mandatory">[docs]</a>    <span class="sd">&quot;&quot;&quot;Class that contains mandatory variants of primitives.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Mandatory"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Mandatory">[docs]</a>    <span class="sd">&quot;&quot;&quot;Class that contains mandatory variants of primitives.&quot;&quot;&quot;</span>
 
     <span class="n">Unicode</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="n">type_name</span><span class="o">=</span><span class="s">&quot;MandatoryString&quot;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nillable</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">min_len</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">String</span> <span class="o">=</span> <span class="n">String</span><span class="p">(</span><span class="n">type_name</span><span class="o">=</span><span class="s">&quot;MandatoryString&quot;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nillable</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">min_len</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>

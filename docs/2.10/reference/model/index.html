@@ -1,0 +1,386 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Models &mdash; spyne 2.10.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.10.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.10.0 documentation" href="../../index.html" />
+    <link rel="up" title="Spyne API Reference" href="../index.html" />
+    <link rel="next" title="Primitives" href="primitive.html" />
+    <link rel="prev" title="Common Exceptions" href="../error.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="primitive.html" title="Primitives"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../error.html" title="Common Exceptions"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Spyne API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Models</a><ul>
+<li><a class="reference internal" href="#module-spyne.model._base">Base Classes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../error.html"
+                        title="previous chapter">Common Exceptions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="primitive.html"
+                        title="next chapter">Primitives</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../sources/reference/model/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="models">
+<span id="reference-model"></span><h1>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h1>
+<p>The <cite>spyne.model</cite> package contains the Spyne type markers to denote primitive
+and complex types in object and method definitions.</p>
+<p>Spyne has built-in support for most common data types and provides an API for
+those who&#8217;d like to implement their own.</p>
+<p>There are five types of models in Spyne:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="primitive.html">Primitives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="binary.html">Binary Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enum.html">Enum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="complex.html">Complex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault.html">Fault</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sql.html">Persisting Objects</a></li>
+</ul>
+</div>
+<div class="section" id="module-spyne.model._base">
+<span id="base-classes"></span><h2>Base Classes<a class="headerlink" href="#module-spyne.model._base" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="spyne.model._base.AttributesMeta">
+<em class="property">class </em><tt class="descclassname">spyne.model._base.</tt><tt class="descname">AttributesMeta</tt><big>(</big><em>cls_name</em>, <em>cls_bases</em>, <em>cls_dict</em><big>)</big><a class="reference internal" href="../../modules/spyne/model/_base.html#AttributesMeta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.AttributesMeta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">type</span></tt></p>
+<p>I hate quirks. This is a 10-minute attempt to get rid of a one-letter
+quirk.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model._base.ModelBase">
+<em class="property">class </em><tt class="descclassname">spyne.model._base.</tt><tt class="descname">ModelBase</tt><a class="reference internal" href="../../modules/spyne/model/_base.html#ModelBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.ModelBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>The base class for type markers. It defines the model interface for the
+interface generators to use and also manages class customizations that are
+mainly used for defining constraints on input values.</p>
+<dl class="class">
+<dt id="spyne.model._base.ModelBase.Annotations">
+<em class="property">class </em><tt class="descname">Annotations</tt><a class="reference internal" href="../../modules/spyne/model/_base.html#ModelBase.Annotations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.ModelBase.Annotations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>The class that holds the annotations for the given type.</p>
+<dl class="attribute">
+<dt id="spyne.model._base.ModelBase.Annotations.appinfo">
+<tt class="descname">appinfo</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model._base.ModelBase.Annotations.appinfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Any object that carries app-specific info.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model._base.ModelBase.Annotations.doc">
+<tt class="descname">doc</tt><em class="property"> = ''</em><a class="headerlink" href="#spyne.model._base.ModelBase.Annotations.doc" title="Permalink to this definition">¶</a></dt>
+<dd><p>The public documentation for the given type.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model._base.ModelBase.Attributes">
+<em class="property">class </em><tt class="descclassname">ModelBase.</tt><tt class="descname">Attributes</tt><a class="reference internal" href="../../modules/spyne/model/_base.html#ModelBase.Attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.ModelBase.Attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>The class that holds the constraints for the given type.</p>
+<dl class="attribute">
+<dt id="spyne.model._base.ModelBase.Attributes.default">
+<tt class="descname">default</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model._base.ModelBase.Attributes.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>The default value if the input is None</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model._base.ModelBase.Attributes.exc_interface">
+<tt class="descname">exc_interface</tt><em class="property"> = False</em><a class="headerlink" href="#spyne.model._base.ModelBase.Attributes.exc_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>If true, this field will be excluded from the interface document.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model._base.ModelBase.Attributes.exc_mapper">
+<tt class="descname">exc_mapper</tt><em class="property"> = False</em><a class="headerlink" href="#spyne.model._base.ModelBase.Attributes.exc_mapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>If true, this field will be excluded from the table mapper of the
+parent class.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model._base.ModelBase.Attributes.exc_table">
+<tt class="descname">exc_table</tt><em class="property"> = False</em><a class="headerlink" href="#spyne.model._base.ModelBase.Attributes.exc_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>If true, this field will be excluded from the table of the parent
+class.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model._base.ModelBase.Attributes.index">
+<tt class="descname">index</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model._base.ModelBase.Attributes.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Can be <tt class="docutils literal"><span class="pre">True</span></tt>, a string, or a tuple of two strings.</p>
+<ul class="simple">
+<li>If True, this object will be set as indexed in the database schema
+with default options.</li>
+<li>If the value is a string, the value will denote the indexing method
+used by the database. See: <a class="reference external" href="http://www.postgresql.org/docs/9.2/static/indexes-types.html">http://www.postgresql.org/docs/9.2/static/indexes-types.html</a></li>
+<li>If the vale is a tuple of two strings, the first value will denote the
+index name and the second value will denote the indexing method as
+above.</li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model._base.ModelBase.Attributes.logged">
+<tt class="descname">logged</tt><em class="property"> = True</em><a class="headerlink" href="#spyne.model._base.ModelBase.Attributes.logged" title="Permalink to this definition">¶</a></dt>
+<dd><p>If false, this object will be ignored in <tt class="docutils literal"><span class="pre">log_repr</span></tt>, mostly used
+for logging purposes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model._base.ModelBase.Attributes.max_occurs">
+<tt class="descname">max_occurs</tt><em class="property"> = 1</em><a class="headerlink" href="#spyne.model._base.ModelBase.Attributes.max_occurs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Can be set to any strictly positive integer. Values greater than 1
+will imply an iterable of objects as native python type. Can be set to
+<tt class="docutils literal"><span class="pre">decimal.Decimal(&quot;inf&quot;)</span></tt> for arbitrary number of arguments.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model._base.ModelBase.Attributes.min_occurs">
+<tt class="descname">min_occurs</tt><em class="property"> = 0</em><a class="headerlink" href="#spyne.model._base.ModelBase.Attributes.min_occurs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set this to 1 to make this object mandatory. Can be set to any
+positive integer. Note that an object can still be null or empty, even
+if it&#8217;s there.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model._base.ModelBase.Attributes.nillable">
+<tt class="descname">nillable</tt><em class="property"> = True</em><a class="headerlink" href="#spyne.model._base.ModelBase.Attributes.nillable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set this to false to reject null values. Synonyms with
+<tt class="docutils literal"><span class="pre">nullable</span></tt>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model._base.ModelBase.Attributes.schema_tag">
+<tt class="descname">schema_tag</tt><em class="property"> = '{http://www.w3.org/2001/XMLSchema}element'</em><a class="headerlink" href="#spyne.model._base.ModelBase.Attributes.schema_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>The tag used to add a primitives as child to a complex type in the
+xml schema.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model._base.ModelBase.Attributes.sqla_column_args">
+<tt class="descname">sqla_column_args</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model._base.ModelBase.Attributes.sqla_column_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dict that will be passed to SQLAlchemy&#8217;s <tt class="docutils literal"><span class="pre">Column</span></tt> constructor as
+<tt class="docutils literal"><span class="pre">**kwargs</span></tt>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model._base.ModelBase.Attributes.translations">
+<tt class="descname">translations</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model._base.ModelBase.Attributes.translations" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dict that contains locale codes as keys and translations of field
+names to that language as values.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model._base.ModelBase.Attributes.unique">
+<tt class="descname">unique</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model._base.ModelBase.Attributes.unique" title="Permalink to this definition">¶</a></dt>
+<dd><p>If True, this object will be set as unique in the database schema
+with default indexing options. If the value is a string, it will be used
+as the indexing method to create the unique index.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="spyne.model._base.ModelBase.customize">
+<em class="property">classmethod </em><tt class="descclassname">ModelBase.</tt><tt class="descname">customize</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="../../modules/spyne/model/_base.html#ModelBase.customize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.ModelBase.customize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duplicates cls and overwrites the values in <tt class="docutils literal"><span class="pre">cls.Attributes</span></tt> with
+<tt class="docutils literal"><span class="pre">**kwargs</span></tt> and returns the new class.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="spyne.model._base.ModelBase.get_namespace">
+<em class="property">classmethod </em><tt class="descclassname">ModelBase.</tt><tt class="descname">get_namespace</tt><big>(</big><big>)</big><a class="reference internal" href="../../modules/spyne/model/_base.html#ModelBase.get_namespace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.ModelBase.get_namespace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the namespace of the class. Defaults to the python module
+name.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="spyne.model._base.ModelBase.get_namespace_prefix">
+<em class="property">classmethod </em><tt class="descclassname">ModelBase.</tt><tt class="descname">get_namespace_prefix</tt><big>(</big><em>interface</em><big>)</big><a class="reference internal" href="../../modules/spyne/model/_base.html#ModelBase.get_namespace_prefix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.ModelBase.get_namespace_prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the namespace prefix for the given interface. The
+get_namespace_prefix of the interface class generates a prefix if none
+is defined.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="spyne.model._base.ModelBase.get_type_name">
+<em class="property">classmethod </em><tt class="descclassname">ModelBase.</tt><tt class="descname">get_type_name</tt><big>(</big><big>)</big><a class="reference internal" href="../../modules/spyne/model/_base.html#ModelBase.get_type_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.ModelBase.get_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the class name unless the __type_name__ attribute is defined.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="spyne.model._base.ModelBase.get_type_name_ns">
+<em class="property">classmethod </em><tt class="descclassname">ModelBase.</tt><tt class="descname">get_type_name_ns</tt><big>(</big><em>interface</em><big>)</big><a class="reference internal" href="../../modules/spyne/model/_base.html#ModelBase.get_type_name_ns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.ModelBase.get_type_name_ns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the type name with a namespace prefix, separated by a column.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="spyne.model._base.ModelBase.resolve_namespace">
+<em class="property">static </em><tt class="descclassname">ModelBase.</tt><tt class="descname">resolve_namespace</tt><big>(</big><em>default_ns</em>, <em>tags=None</em><big>)</big><a class="reference internal" href="../../modules/spyne/model/_base.html#ModelBase.resolve_namespace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.ModelBase.resolve_namespace" title="Permalink to this definition">¶</a></dt>
+<dd><p>This call finalizes the namespace assignment. The default namespace
+is not available until the application calls populate_interface method
+of the interface generator.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="spyne.model._base.ModelBase.validate_native">
+<em class="property">static </em><tt class="descclassname">ModelBase.</tt><tt class="descname">validate_native</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../../modules/spyne/model/_base.html#ModelBase.validate_native"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.ModelBase.validate_native" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this method to do your own input validation on the native
+value. This is called after converting the incoming string to the
+native python value.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="spyne.model._base.ModelBase.validate_string">
+<em class="property">static </em><tt class="descclassname">ModelBase.</tt><tt class="descname">validate_string</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../../modules/spyne/model/_base.html#ModelBase.validate_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.ModelBase.validate_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this method to do your own input validation on the input
+string. This is called before converting the incoming string to the
+native python value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.model._base.SimpleModel">
+<em class="property">class </em><tt class="descclassname">spyne.model._base.</tt><tt class="descname">SimpleModel</tt><a class="reference internal" href="../../modules/spyne/model/_base.html#SimpleModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.SimpleModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.model._base.ModelBase" title="spyne.model._base.ModelBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.ModelBase</span></tt></a></p>
+<p>The base class for primitives.</p>
+<dl class="class">
+<dt id="spyne.model._base.SimpleModel.Attributes">
+<em class="property">class </em><tt class="descname">Attributes</tt><a class="reference internal" href="../../modules/spyne/model/_base.html#SimpleModel.Attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.SimpleModel.Attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.Attributes</span></tt></p>
+<p>The class that holds the constraints for the given type.</p>
+<dl class="attribute">
+<dt id="spyne.model._base.SimpleModel.Attributes.values">
+<tt class="descname">values</tt><em class="property"> = set([])</em><a class="headerlink" href="#spyne.model._base.SimpleModel.Attributes.values" title="Permalink to this definition">¶</a></dt>
+<dd><p>The set of possible values for this type.</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="spyne.model._base.nillable_dict">
+<tt class="descclassname">spyne.model._base.</tt><tt class="descname">nillable_dict</tt><big>(</big><em>func</em><big>)</big><a class="reference internal" href="../../modules/spyne/model/_base.html#nillable_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.nillable_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator that retuns empty dictionary if input is None</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="spyne.model._base.nillable_iterable">
+<tt class="descclassname">spyne.model._base.</tt><tt class="descname">nillable_iterable</tt><big>(</big><em>func</em><big>)</big><a class="reference internal" href="../../modules/spyne/model/_base.html#nillable_iterable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.nillable_iterable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator that retuns [] if input is None.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="spyne.model._base.nillable_string">
+<tt class="descclassname">spyne.model._base.</tt><tt class="descname">nillable_string</tt><big>(</big><em>func</em><big>)</big><a class="reference internal" href="../../modules/spyne/model/_base.html#nillable_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model._base.nillable_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator that retuns None if input is None.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="primitive.html" title="Primitives"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../error.html" title="Common Exceptions"
+             >previous</a> |</li>
+        <li><a href="../../index.html">spyne 2.10.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

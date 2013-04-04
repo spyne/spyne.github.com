@@ -137,7 +137,7 @@ in its base64-encoded ByteArray container.</p>
 <dt><strong>Models:</strong></dt>
 <dd><p class="first">Models are used to define schemas. They are mere magic cookies that contain
 very little amount of serialization logic. They are subclasses of
-<a class="reference internal" href="../reference/model.html#spyne.model._base.ModelBase" title="spyne.model._base.ModelBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.ModelBase</span></tt></a>.</p>
+<a class="reference internal" href="../reference/model/index.html#spyne.model._base.ModelBase" title="spyne.model._base.ModelBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model._base.ModelBase</span></tt></a>.</p>
 <p class="last">Types like <tt class="docutils literal"><span class="pre">Unicode</span></tt>, <tt class="docutils literal"><span class="pre">Integer</span></tt> or <tt class="docutils literal"><span class="pre">ByteArray</span></tt> are all models. They
 reside in the <tt class="xref py py-mod docutils literal"><span class="pre">spyne.model</span></tt> package.</p>
 </dd>
@@ -158,8 +158,17 @@ subclasses of <tt class="xref py py-class docutils literal"><span class="pre">sp
 <dd><p class="first">Serializers are currently not distinguished in Spyne code. They are the
 protocol-specific representations of a serialized Python object.</p>
 <p class="last">They can be anything between an lxml.etree.Element instance to a gzipped
-byte stream. Apis around pickle, simplejson, YaML and the like that serialize
-dynamic hieararchies of &#8220;dict&#8221;s also fall in this category.</p>
+byte stream. Apis around pickle, simplejson, YaML and the like that
+serialize dynamic hieararchies of &#8220;dict&#8221;s also fall in this category.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Native Values:</strong></dt>
+<dd><p class="first last">The term &#8220;native value&#8221; is used to denote Python types that Spyne models
+correspond to. For example, we say that the native value of
+<a class="reference internal" href="../reference/model/primitive.html#spyne.model.primitive.Unicode" title="spyne.model.primitive.Unicode"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.Unicode</span></tt></a> is <tt class="docutils literal"><span class="pre">unicode</span></tt>, or the native value
+of <a class="reference internal" href="../reference/model/binary.html#spyne.model.binary.ByteArray" title="spyne.model.binary.ByteArray"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.binary.ByteArray</span></tt></a> is a sequence of <tt class="docutils literal"><span class="pre">str</span></tt> objects.</p>
 </dd>
 </dl>
 </li>
@@ -234,7 +243,7 @@ generally distinguish your application from other applications
 application, you can put <tt class="docutils literal"><span class="pre">tns=&quot;Hogwarts&quot;,</span> <span class="pre">name=&quot;Harry&quot;</span></tt> there and
 just be done with it.</p>
 <p class="last">Every object in the Spyne world has a name and belongs to a namespace.
-Public functions (and the implicit <a class="reference internal" href="../reference/model.html#spyne.model.complex.ComplexModel" title="spyne.model.complex.ComplexModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.ComplexModel</span></tt></a>
+Public functions (and the implicit <a class="reference internal" href="../reference/model/complex.html#spyne.model.complex.ComplexModel" title="spyne.model.complex.ComplexModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.ComplexModel</span></tt></a>
 subclasses that are created for the input and output types of the
 functions you defined) are forced to be in the tns of the <cite>Application</cite>
 and have whatever you give them as <cite>public_name</cite> in the
