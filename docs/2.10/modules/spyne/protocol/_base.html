@@ -384,8 +384,8 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fault</span><span class="p">,</span> <span class="n">Fault</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">fault</span><span class="o">.</span><span class="n">faultcode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;Client.&#39;</span><span class="p">)</span>
                                                 <span class="ow">or</span> <span class="n">fault</span><span class="o">.</span><span class="n">faultcode</span> <span class="o">==</span> <span class="s">&#39;Client&#39;</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">HTTP_400</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">HTTP_500</span>
+
+        <span class="k">return</span> <span class="n">HTTP_500</span>
 
     <span class="k">def</span> <span class="nf">set_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">validator</span><span class="p">):</span></div>
 <div class="viewcode-block" id="ProtocolBase.set_validator"><a class="viewcode-back" href="../../../reference/protocol/base.html#spyne.protocol._base.ProtocolBase.set_validator">[docs]</a>        <span class="sd">&quot;&quot;&quot;You must override this function if you want your protocol to support</span>
