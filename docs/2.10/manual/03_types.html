@@ -63,6 +63,7 @@
 <li><a class="reference internal" href="#spatial-types">Spatial Types</a></li>
 <li><a class="reference internal" href="#miscellanous-types">Miscellanous Types</a></li>
 <li><a class="reference internal" href="#dynamic-types">Dynamic Types</a></li>
+<li><a class="reference internal" href="#mandatory-variants">Mandatory Variants</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#enum">Enum</a></li>
@@ -72,10 +73,8 @@
 <li><a class="reference internal" href="#complex-models-as-return-values">Complex Models as Return Values</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#fault">Fault</a><ul>
+<li><a class="reference internal" href="#fault">Fault</a></li>
 <li><a class="reference internal" href="#what-s-next">What&#8217;s next?</a></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -182,8 +181,8 @@ customization mechanism for every type:</p>
     <span class="p">)</span>
 </pre></div>
 </div>
-<p>As restricting the length of a string is very common, the length limit can be
-passed as a positional argument as well:</p>
+<p>As restricting the length of a string is very common (not all types have such
+shortcuts), the length limit can be passed as a positional argument as well:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">EmailString</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span>
         <span class="n">pattern</span><span class="o">=</span><span class="s">&#39;[^@]+@[^@]+&#39;</span><span class="p">,</span>
         <span class="n">type_name</span><span class="o">=</span><span class="s">&#39;EmailString&#39;</span><span class="p">,</span>
@@ -261,7 +260,7 @@ in a relational database.)</p>
 <p>For floating-point numbers, use the <tt class="docutils literal"><span class="pre">Decimal</span></tt> type with a pre-defined scale
 and precision. E.g. <tt class="docutils literal"><span class="pre">Decimal(16,</span> <span class="pre">4)</span></tt> can represent a 16-digit number in total
 which can have up to 4 decimal digits, which could be used e.g. as a nice
-monetary type. <a class="footnote-reference" href="#id7" id="id1">[1]</a></p>
+monetary type. <a class="footnote-reference" href="#id6" id="id1">[1]</a></p>
 <p>Note that it is your responsibility to make sure that the scale and precision
 constraints are consistent with the values in the context of the decimal
 package. See the <a class="reference external" href="http://docs.python.org/library/decimal.html#decimal.getcontext" title="(in Python v2.7)"><tt class="xref py py-func docutils literal"><span class="pre">decimal.getcontext()</span></tt></a> documentation for more
@@ -365,6 +364,10 @@ regular <tt class="xref py py-class docutils literal"><span class="pre">lxml.etr
 <p><tt class="docutils literal"><span class="pre">AnyDict</span></tt> and <tt class="docutils literal"><span class="pre">AnyXml</span></tt> are roughly equivalent when the underlying
 protocol is an XML based one &#8211; <tt class="docutils literal"><span class="pre">AnyDict</span></tt> just totally ignores attributes.</p>
 </div>
+<div class="section" id="mandatory-variants">
+<h3>Mandatory Variants<a class="headerlink" href="#mandatory-variants" title="Permalink to this headline">¶</a></h3>
+<p>TBD</p>
+</div>
 </div>
 <div class="section" id="enum">
 <h2>Enum<a class="headerlink" href="#enum" title="Permalink to this headline">¶</a></h2>
@@ -415,48 +418,48 @@ probably don&#8217;t need it.</p>
 <p>Dealing with binary data has traditionally been a weak spot of most of the
 serialization formats in use today. The best XML or MIME (email) does is
 either base64 encoding or something similar, Json has no clue about binary
-data (and many other things actually, but let&#8217;s just not go there now) SOAP
-has quite a few binary encoding options available, yet none of the &#8220;optimized&#8221;
-ones are implemented in Spyne <a class="footnote-reference" href="#id8" id="id2">[2]</a> etc.</p>
+data (and many other things actually, but let&#8217;s just not go there now) and
+SOAP, in all its bloatiness, has quite a few binary encoding options
+available, yet none of the &#8220;optimized&#8221; ones are implemented in Spyne <a class="footnote-reference" href="#id7" id="id2">[2]</a>.</p>
 <p>Spyne supports binary data on all of the protocols it implements, falling back
 to base64 encoding where necessary. In terms of message size, the efficient
 protocols are <a class="reference external" href="http://msgpack.org">MessagePack</a> and good old Http. But, as
-MessagePack does not offer an incremental parsing API in its Python wrapper,
-(in other words, it&#8217;s not possible to parse the message without having it all
-in memory) it&#8217;s best to use the <a class="reference internal" href="../reference/protocol/http.html#spyne.protocol.http.HttpRpc" title="spyne.protocol.http.HttpRpc"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol.http.HttpRpc</span></tt></a> protocol
-when dealing with arbitrary-size binary data.</p>
+MessagePack does not offer an incremental parsing/generation API in its Python
+wrapper, (in other words, it&#8217;s not possible to parse the message without
+having it all in memory) it&#8217;s best to use the
+<a class="reference internal" href="../reference/protocol/http.html#spyne.protocol.http.HttpRpc" title="spyne.protocol.http.HttpRpc"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol.http.HttpRpc</span></tt></a> protocol when dealing with arbitrary-size
+binary data.</p>
 <p>A few points to consider:</p>
 <ol class="arabic simple">
 <li><tt class="docutils literal"><span class="pre">HttpRpc</span></tt> only works with a Http transport.</li>
 <li><tt class="docutils literal"><span class="pre">HttpRpc</span></tt> supports only one file per request.</li>
 <li>Not every http transport supports incremental parsing of incoming data.
-(e.g. Twisted). (Partial reconstruction of outgoing data is generally
-well-supported.)</li>
+(e.g. Twisted). Make sure to test your stack end-to-end to see how it
+handles huge messages <a class="footnote-reference" href="#id8" id="id3">[3]</a>.</li>
 </ol>
-<p>Before deploying solutions that have to deal with huge files, make sure to
-carefully study how your stack behaves when dealing with huge files <a class="footnote-reference" href="#id9" id="id3">[3]</a>.</p>
 <p>Now that all that is said, let&#8217;s look at the API that Spyne provides for
 dealing with binary data.</p>
 <p>Spyne offers two types:</p>
 <ol class="arabic simple">
 <li><a class="reference internal" href="../reference/model/binary.html#spyne.model.binary.ByteArray" title="spyne.model.binary.ByteArray"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.binary.ByteArray</span></tt></a> is a simple type that contains
 arbitrary data. It&#8217;s similar to Python&#8217;s own <tt class="docutils literal"><span class="pre">str</span></tt> in terms of
-functionality, but it&#8217;s a sequence of <tt class="docutils literal"><span class="pre">str</span></tt> values instead of just a big
-<tt class="docutils literal"><span class="pre">str</span></tt> to be able to handle data in chunks using methods like generators when needed.</li>
+functionality, but it&#8217;s a sequence of <tt class="docutils literal"><span class="pre">str</span></tt> instances instead of just a
+big <tt class="docutils literal"><span class="pre">str</span></tt> to be able to handle data in chunks using generators when
+needed <a class="footnote-reference" href="#id9" id="id4">[4]</a>.</li>
 <li><a class="reference internal" href="../reference/model/binary.html#spyne.model.binary.File" title="spyne.model.binary.File"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.binary.File</span></tt></a> is a quirkier type that is mainly used to
 deal with Http way of dealing with file uploads. Its native value is the
 <tt class="docutils literal"><span class="pre">File.Value</span></tt> instance in <a class="reference internal" href="../reference/model/binary.html#spyne.model.binary.File" title="spyne.model.binary.File"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.binary.File</span></tt></a>. See its
-documentation for more information about it.</li>
+documentation for more information.</li>
 </ol>
 <p>Dealing with binary data with Spyne is not that hard &#8211; you just need to make
 sure your data is parsed incrementally when you&#8217;re preparing to deal with
-arbitrary-size binary data, which means you need to do a lot of testing as
+arbitrary-size binary data, which means you need to do careful testing as
 different WSGI implementations behave differently.</p>
 </div>
 <div class="section" id="complex">
 <h2>Complex<a class="headerlink" href="#complex" title="Permalink to this headline">¶</a></h2>
 <p>Types that can contain other types are termed &#8220;complex objects&#8221;. They must be
-subclasses of <tt class="xref py py-class docutils literal"><span class="pre">spyne.model.primitive.ComplexModel</span></tt> class.</p>
+subclasses of <a class="reference internal" href="../reference/model/complex.html#spyne.model.complex.ComplexModel" title="spyne.model.complex.ComplexModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.ComplexModel</span></tt></a> class.</p>
 <p>Here&#8217;s a sample complex object definition:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Permission</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
     <span class="n">application</span> <span class="o">=</span> <span class="n">Unicode</span>
@@ -470,7 +473,7 @@ ignores</p>
 <li>Those that begin with an underscore (<tt class="docutils literal"><span class="pre">_</span></tt>)</li>
 <li>Those that are not subclasses of the <tt class="docutils literal"><span class="pre">ModelBase</span></tt>.</li>
 </ol>
-<p>If you want to use python keywords as field names, or need leading underscores
+<p>If you want to use Python keywords as field names, or need leading underscores
 in field names, or you just want your Spyne definition and other code to be
 separate, you can do away with the metaclass magic and do this:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Permission</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
@@ -480,8 +483,9 @@ separate, you can do away with the metaclass magic and do this:</p>
     <span class="p">}</span>
 </pre></div>
 </div>
-<p>However, you still won&#8217;t get predictable field order, as you&#8217;re just setting a
-<tt class="docutils literal"><span class="pre">dict</span></tt> to the <tt class="docutils literal"><span class="pre">_type_info</span></tt> attribute. If you also need to that, you need
+<p>However, you still won&#8217;t get predictable field order, as you&#8217;re just assigning
+a <tt class="docutils literal"><span class="pre">dict</span></tt> to the <tt class="docutils literal"><span class="pre">_type_info</span></tt> attribute. If you also need that, (which
+becomes handy when you serialize your return value directly to HTML) you need
 to pass a sequence of <tt class="docutils literal"><span class="pre">(field_name,</span> <span class="pre">field_type)</span></tt> tuples, like so:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Permission</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
     <span class="n">_type_info</span> <span class="o">=</span> <span class="p">[</span>
@@ -491,8 +495,8 @@ to pass a sequence of <tt class="docutils literal"><span class="pre">(field_name
 </pre></div>
 </div>
 <p>If you want to set some defaults (e.g. namespace) with your objects, you can
-define your own <tt class="docutils literal"><span class="pre">CompexModelBase</span></tt> as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyComplexModel</span><span class="p">(</span><span class="n">ComplexModelBase</span><span class="p">):</span>
+define your own <tt class="docutils literal"><span class="pre">CompexModel</span></tt> base class as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyAppComplexModel</span><span class="p">(</span><span class="n">ComplexModelBase</span><span class="p">):</span>
     <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&quot;http://example.com/myapp&quot;</span>
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ComplexModelMeta</span>
 </pre></div>
@@ -605,13 +609,13 @@ separate Xml documents, like so:</p>
 </pre></div>
 </div>
 <p>At this point, dear reader, you may be going &#8220;Arrgh! More quirks! Why don&#8217;t
-you just do what&#8217;s best for everyone and spare us all the trouble!&#8221;</p>
-<p>Well, for Xml people, the second way of doing things is wrong, (Xml has a
-one-root-per-document rule) yet sometimes, it must be done for compatibility
-reasons. And doing it the first way will just annoy JSON people.</p>
+you just do what&#8217;s best for everyone and spare us the trouble!&#8221;</p>
+<p>Well, for Xml people, the second way of doing things is just wrong (Xml has
+a one-root-per-document rule). Yet sometimes, it must be done for
+compatibility reasons. And doing it the first way will just annoy JSON people.</p>
 <p>In order to let everbody keep the beautiful <tt class="docutils literal"><span class="pre">Array(Something)</span></tt> syntax,
 <a class="reference internal" href="../reference/protocol/dictdoc.html#spyne.protocol.dictdoc.HierDictDocument" title="spyne.protocol.dictdoc.HierDictDocument"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol.dictdoc.HierDictDocument</span></tt></a>, parent class of Protocols
-that eat <tt class="docutils literal"><span class="pre">dict</span></tt> s including <tt class="docutils literal"><span class="pre">JsonDocument</span></tt>, has a <tt class="docutils literal"><span class="pre">skip_depth</span></tt> argument
+that eat <tt class="docutils literal"><span class="pre">dict</span></tt>s including <tt class="docutils literal"><span class="pre">JsonDocument</span></tt>, has a <tt class="docutils literal"><span class="pre">skip_depth</span></tt> argument
 which lets the protocol strip the wrapper objects from response documents.
 In its current form, it&#8217;s a hack. It can be developed into a full-featured
 filter that also works with nested <tt class="docutils literal"><span class="pre">Array</span></tt> setups if there&#8217;s a demand for
@@ -624,13 +628,13 @@ repository to see the above mechanism at work.</p>
 <p>When working with functions, you don&#8217;t need to return instances of the
 CompexModel subclasses themselves. Anything that walks and quacks like the
 designated return type will work just fine. Specifically, the returned object
-should return appropriate values on <tt class="docutils literal"><span class="pre">getattr()</span></tt> s for field names in the
+should return appropriate values on <tt class="docutils literal"><span class="pre">getattr()</span></tt>s for field names in the
 return type. Any exceptions thrown by the object&#8217;s <tt class="docutils literal"><span class="pre">__getattr__</span></tt> method will
 be logged and ignored.</p>
 <p>However, it is important to return <em>instances</em> and not classes themselves. Due
 to the way Spyne serialization works, the classes themselves will also work as
 return values until you actually seeing funky responses under load in
-production. Don&#8217;t do this! <a class="footnote-reference" href="#id10" id="id4">[4]</a></p>
+production. Don&#8217;t do this! <a class="footnote-reference" href="#id10" id="id5">[5]</a></p>
 </div>
 </div>
 <div class="section" id="fault">
@@ -638,46 +642,50 @@ production. Don&#8217;t do this! <a class="footnote-reference" href="#id10" id="
 <p><a class="reference internal" href="../reference/model/fault.html#spyne.model.fault.Fault" title="spyne.model.fault.Fault"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.fault.Fault</span></tt></a> a special kind of <tt class="docutils literal"><span class="pre">ComplexModel</span></tt> that is
 also the subclass of Python&#8217;s own <tt class="xref py py-class docutils literal"><span class="pre">Exception</span></tt>.</p>
 <p>When implementing public Spyne services, the recommendation is to raise
-<tt class="docutils literal"><span class="pre">Fault</span></tt> subclasses for client errors, and let other exceptions bubble up
-until they get logged and re-raised as server-side errors.</p>
+instances of <tt class="docutils literal"><span class="pre">Fault</span></tt> subclasses for client errors, and let other exceptions
+bubble up until they get logged and re-raised as server-side errors by the
+protocol handlers.</p>
 <p>Not all protocols and transports care about distinguishing client and server
 exceptions. Http has 4xx codes for client-side (invalid request case) errors
 and 5xx codes for server-side (legitimate request case) errors. SOAP uses
 &#8220;Client.&#8221; and &#8220;Server.&#8221; prefixes in error codes to make this distinction.</p>
 <p>To integrate common transport and protocol behavior easily to Spyne, some
-common exceptions are defined in the <a href="#id5"><span class="problematic" id="id6">:mode:`spyne.error`</span></a> module. These are
-then hardwired to some common Http response codes to make a
-<tt class="docutils literal"><span class="pre">raise</span> <span class="pre">ResourceNotFoundError(&quot;resource_name&quot;)</span></tt> correspond return a HTTP 404.</p>
-<p>See the <tt class="xref py py-func docutils literal"><span class="pre">spyne.protocol.ProtocolBase.fault_to_http_response_code()</span></tt> to see
-which exceptions correspond to which return codes. This can be extended easily
-by subclassing your transport and overriding the
-<tt class="docutils literal"><span class="pre">fault_to_http_response_code</span></tt> function with your own version.</p>
+common exceptions are defined in the <a class="reference internal" href="../reference/error.html#module-spyne.error" title="spyne.error"><tt class="xref py py-mod docutils literal"><span class="pre">spyne.error</span></tt></a> module. These are
+then hardwired to some common Http response codes so that e.g. raising a
+<tt class="docutils literal"><span class="pre">ResourceNotFoundError</span></tt> ends up setting the response code to 404.</p>
+<p>You can look at the source code of the
+<tt class="xref py py-func docutils literal"><span class="pre">spyne.protocol.ProtocolBase.fault_to_http_response_code()</span></tt> to see which
+exceptions correspond to which return codes. This can be extended easily by
+subclassing your transport and overriding the <tt class="docutils literal"><span class="pre">fault_to_http_response_code</span></tt>
+function with your own version.</p>
 <p>Note that, while using an Exception sink to re-raise non-Fault based
 exceptions as <tt class="docutils literal"><span class="pre">InternalError</span></tt>s is recommended, it&#8217;s not Spyne&#8217;s default
 behavior &#8211; you need to subclass the <a class="reference internal" href="../reference/application.html#spyne.application.Application" title="spyne.application.Application"><tt class="xref py py-class docutils literal"><span class="pre">spyne.application.Application</span></tt></a>
 and override the <a class="reference internal" href="../reference/application.html#spyne.application.Application.call_wrapper" title="spyne.application.Application.call_wrapper"><tt class="xref py py-func docutils literal"><span class="pre">spyne.application.Application.call_wrapper()</span></tt></a> function
 like this:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">call_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">ctx</span><span class="o">.</span><span class="n">service_class</span><span class="o">.</span><span class="n">call_wrapper</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyApplication</span><span class="p">(</span><span class="n">Application</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">call_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ctx</span><span class="o">.</span><span class="n">service_class</span><span class="o">.</span><span class="n">call_wrapper</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
 
-    <span class="k">except</span> <span class="n">error</span><span class="o">.</span><span class="n">Fault</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">sc</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">service_class</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Client Error: </span><span class="si">%r</span><span class="s"> | Request: </span><span class="si">%r</span><span class="s">&quot;</span><span class="p">,</span>
-                                        <span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span><span class="p">))</span>
-        <span class="k">raise</span>
+        <span class="k">except</span> <span class="n">error</span><span class="o">.</span><span class="n">Fault</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">sc</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">service_class</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Client Error: </span><span class="si">%r</span><span class="s"> | Request: </span><span class="si">%r</span><span class="s">&quot;</span><span class="p">,</span>
+                                            <span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span><span class="p">))</span>
+            <span class="k">raise</span>
 
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">sc</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">service_class</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="n">InternalError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">sc</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">service_class</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">InternalError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
 <div class="section" id="what-s-next">
-<h3>What&#8217;s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h3>
+<h2>What&#8217;s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
 <p>See the <a class="reference internal" href="04_usermanager.html#manual-user-manager"><em>User Manager</em></a> tutorial that will walk you through
 defining complex objects and using events.</p>
-<table class="docutils footnote" frame="void" id="id7" rules="none">
+<table class="docutils footnote" frame="void" id="id6" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>By the way, Spyne does not include types like
@@ -689,7 +697,7 @@ implement. If you&#8217;re looking for a simple way to contribute, this would
 be a nice place to start! Patches are welcome!</td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id8" rules="none">
+<table class="docutils footnote" frame="void" id="id7" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>Spyne used to have mtom (<a class="reference external" href="http://www.w3.org/Submission/soap11mtom10/">http://www.w3.org/Submission/soap11mtom10/</a>)
@@ -697,7 +705,7 @@ support. But as it was not maintained in a long time, it&#8217;s not
 currently functional. Patches are welcome!</td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id9" rules="none">
+<table class="docutils footnote" frame="void" id="id8" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>Not every browser or http daemon supports huge file uploads due to
@@ -705,13 +713,21 @@ issues around 32-bit integers. E.g. Firefox &lt; 18.0 can&#8217;t handle big
 files: <a class="reference external" href="https://bugzilla.mozilla.org/show_bug.cgi?id=215450">https://bugzilla.mozilla.org/show_bug.cgi?id=215450</a></td></tr>
 </tbody>
 </table>
+<table class="docutils footnote" frame="void" id="id9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>Technically, a simple <tt class="docutils literal"><span class="pre">str</span></tt> instance is also a sequence of <tt class="docutils literal"><span class="pre">str</span></tt>
+instances. However, using a <tt class="docutils literal"><span class="pre">str</span></tt> as the value to <tt class="docutils literal"><span class="pre">ctx.out_string</span></tt>
+would cause sending data in one-byte chunks, which is very inefficient.
+See e.g. how HTTP&#8217;s chunked encoding works.</td></tr>
+</tbody>
+</table>
 <table class="docutils footnote" frame="void" id="id10" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td><a class="reference external" href="http://stackoverflow.com/a/15383191">http://stackoverflow.com/a/15383191</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td><a class="reference external" href="http://stackoverflow.com/a/15383191">http://stackoverflow.com/a/15383191</a></td></tr>
 </tbody>
 </table>
-</div>
 </div>
 </div>
 

@@ -54,9 +54,10 @@
 <li><a class="reference internal" href="#comparison-with-other-rpc-frameworks">Comparison with other rpc frameworks</a><ul>
 <li><a class="reference internal" href="#ladon">Ladon</a></li>
 <li><a class="reference internal" href="#wsme">WSME</a></li>
+<li><a class="reference internal" href="#suds">Suds</a></li>
+<li><a class="reference internal" href="#pysimplesoap">PySimpleSoap</a></li>
 <li><a class="reference internal" href="#rpyc">RPyC</a></li>
 <li><a class="reference internal" href="#rfoo">rfoo</a></li>
-<li><a class="reference internal" href="#suds">Suds</a></li>
 <li><a class="reference internal" href="#zsi">ZSI</a></li>
 <li><a class="reference internal" href="#soapy">SOAPy</a></li>
 <li><a class="reference internal" href="#rsl">rsl</a></li>
@@ -221,8 +222,8 @@ of information:</p>
 </ul>
 <div class="section" id="ladon">
 <h3>Ladon<a class="headerlink" href="#ladon" title="Permalink to this headline">¶</a></h3>
-<p>The Ladon project has almost the same goals and same approach to the rpc-related
-issues as Spyne.</p>
+<p>The Ladon project has almost the same goals and same approach to the
+rpc-related issues as Spyne.</p>
 <p>Discussion thread: <a class="reference external" href="https://answers.launchpad.net/ladon/+question/171664">https://answers.launchpad.net/ladon/+question/171664</a></p>
 <ul>
 <li><p class="first">Supports JsonWSP protocol, which is JsonRpc with interface description. Spyne
@@ -252,12 +253,12 @@ events.</p>
 <li><p class="first">Does not have a Soap client. Spyne does, but it&#8217;s not that useful as it does
 not parse Wsdl documents.</p>
 <blockquote>
-<div><p>In fact, Ladon is pure server-side software - the whole idea of supporting a
-standard protocol like SOAP is that clients are already out there.</p>
+<div><p>In fact, Ladon is pure server-side software - the whole idea of supporting
+a standard protocol like SOAP is that clients are already out there.</p>
 </div></blockquote>
 </li>
-<li><p class="first">Spyne uses own classes for denoting types, whereas ladon uses Python
-callables. This lets ladon api to be simpler, but gives the Spyne api the
+<li><p class="first">Spyne uses own classes for denoting types, whereas Ladon uses Python
+callables. This lets Ladon api to be simpler, but gives the Spyne api the
 power to have declarative restrictions on input types.</p>
 </li>
 <li><p class="first">Does not test against ws-i.org deliverables for testing soap compatibility.</p>
@@ -269,9 +270,9 @@ power to have declarative restrictions on input types.</p>
 <div class="section" id="wsme">
 <h3>WSME<a class="headerlink" href="#wsme" title="Permalink to this headline">¶</a></h3>
 <p>&#8220;&#8221;&#8221;
-Web Service Made Easy (WSME) is a very easy way to implement webservices in your
-python web application. It is originally a rewrite of TGWebServices with focus
-on extensibility, framework-independance and better type handling.
+Web Service Made Easy (WSME) is a very easy way to implement webservices in
+your python web application. It is originally a rewrite of TGWebServices with
+focus on extensibility, framework-independance and better type handling.
 &#8220;&#8221;&#8220;</p>
 <ul class="simple">
 <li>Supports TurboGears</li>
@@ -279,8 +280,27 @@ on extensibility, framework-independance and better type handling.
 <li>Supports type validation.</li>
 <li>No client support.</li>
 <li>Does not test against ws-i.org deliverables for testing soap compatibility.</li>
-<li>Only supports http as transport.</li>
+<li>Only supports HTTP as transport.</li>
 <li>Uses genshi for Xml support.</li>
+</ul>
+</div>
+<div class="section" id="suds">
+<h3>Suds<a class="headerlink" href="#suds" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Soap 1.1 / Wsdl 1.1 Client only.</li>
+<li>Excellent wsdl parser, very easy to use.</li>
+<li>Recommended way to interface with Spyne&#8217;s Soap services.</li>
+<li>Uses own pure-python xml implementation, so it&#8217;s roughly 10 times slower
+than Spyne&#8217;s Soap client.</li>
+<li>Pure-python library, so relatively easier to deploy.</li>
+</ul>
+</div>
+<div class="section" id="pysimplesoap">
+<h3>PySimpleSoap<a class="headerlink" href="#pysimplesoap" title="Permalink to this headline">¶</a></h3>
+<p>This is preliminary. Please correct these points if you spot any error.</p>
+<ul class="simple">
+<li>Small, ~2kloc library.</li>
+<li>See here: <a class="reference external" href="https://code.google.com/p/pysimplesoap/wiki/FAQ">https://code.google.com/p/pysimplesoap/wiki/FAQ</a></li>
 </ul>
 </div>
 <div class="section" id="rpyc">
@@ -305,26 +325,15 @@ on extensibility, framework-independance and better type handling.
 <li>Not designed for public servers. ??</li>
 </ul>
 </div>
-<div class="section" id="suds">
-<h3>Suds<a class="headerlink" href="#suds" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li>Soap 1.1 / Wsdl 1.1 Client only.</li>
-<li>Excellent wsdl parser, very easy to use.</li>
-<li>Recommended way to interface with Spyne&#8217;s Soap services.</li>
-<li>Uses own pure-python xml implementation, so it&#8217;s roughly 10 times slower
-than Spyne&#8217;s Soap client.</li>
-<li>Pure-python library, so relatively easier to deploy.</li>
-</ul>
-</div>
 <div class="section" id="zsi">
 <h3>ZSI<a class="headerlink" href="#zsi" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Unmaintained, although still works with recent Python versions</li>
 <li>Contains SOAPpy, which is not the same as SOAPy (notice the extra P)</li>
-<li>Supports attachments</li>
+<li>Supports attachments.</li>
 <li>Requires code generation (wsdl2py) for complex data structures</li>
-<li>Almost complete lack of user-friendliness</li>
-<li>Lack of WSDL generator</li>
+<li>Almost complete lack of user-friendliness. (&lt;= um, citation needed???)</li>
+<li>Lack of WSDL generator.</li>
 </ul>
 </div>
 <div class="section" id="soapy">

@@ -98,14 +98,16 @@
 <span class="k">class</span> <span class="nc">ResourceNotFoundError</span><span class="p">(</span><span class="n">Fault</span><span class="p">):</span>
 <div class="viewcode-block" id="ResourceNotFoundError"><a class="viewcode-back" href="../../reference/error.html#spyne.error.ResourceNotFoundError">[docs]</a>    <span class="sd">&quot;&quot;&quot;Raised when requested resource is not found.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">faultstring</span><span class="o">=</span><span class="s">&quot;Requested resource not found&quot;</span><span class="p">):</span>
-        <span class="n">Fault</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;Client.ResourceNotFound&#39;</span><span class="p">,</span> <span class="n">faultstring</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fault_object</span><span class="p">,</span>
+                                <span class="n">fault_string</span><span class="o">=</span><span class="s">&quot;Requested resource </span><span class="si">%r</span><span class="s"> not found&quot;</span><span class="p">):</span>
+        <span class="n">Fault</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;Client.ResourceNotFound&#39;</span><span class="p">,</span>
+                                                    <span class="n">fault_string</span> <span class="o">%</span> <span class="n">fault_object</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">RequestTooLongError</span><span class="p">(</span><span class="n">Fault</span><span class="p">):</span></div>
 <div class="viewcode-block" id="RequestTooLongError"><a class="viewcode-back" href="../../reference/error.html#spyne.error.RequestTooLongError">[docs]</a>    <span class="sd">&quot;&quot;&quot;Raised when request is too long.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">faultstring</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">faultstring</span><span class="o">=</span><span class="s">&quot;Request too long&quot;</span><span class="p">):</span>
         <span class="n">Fault</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;Client.RequestTooLong&#39;</span><span class="p">,</span> <span class="n">faultstring</span><span class="p">)</span>
 
 

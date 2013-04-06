@@ -130,24 +130,25 @@
 <span class="sd">    :param interface:    Ignored. Kept for backwards-compatibility purposes.</span>
 
 <span class="sd">    Supported events:</span>
-<span class="sd">        * method_call:</span>
-<span class="sd">            Called right before the service method is executed</span>
 
-<span class="sd">        * method_return_object:</span>
-<span class="sd">            Called right after the service method is executed</span>
+<span class="sd">    * method_call:</span>
+<span class="sd">        Called right before the service method is executed</span>
 
-<span class="sd">        * method_exception_object:</span>
-<span class="sd">            Called when an exception occurred in a service method, before the</span>
-<span class="sd">            exception is serialized.</span>
+<span class="sd">    * method_return_object:</span>
+<span class="sd">        Called right after the service method is executed</span>
 
-<span class="sd">        * method_context_created:</span>
-<span class="sd">            Called from the constructor of the MethodContext instance.</span>
+<span class="sd">    * method_exception_object:</span>
+<span class="sd">        Called when an exception occurred in a service method, before the</span>
+<span class="sd">        exception is serialized.</span>
 
-<span class="sd">        * method_context_closed:</span>
-<span class="sd">            Called from the ``close()`` function of the MethodContext instance,</span>
-<span class="sd">            which in turn is called by the transport when the response is fully</span>
-<span class="sd">            sent to the client (or in the client case, the response is fully</span>
-<span class="sd">            received from server).</span>
+<span class="sd">    * method_context_created:</span>
+<span class="sd">        Called from the constructor of the MethodContext instance.</span>
+
+<span class="sd">    * method_context_closed:</span>
+<span class="sd">        Called from the ``close()`` function of the MethodContext instance,</span>
+<span class="sd">        which in turn is called by the transport when the response is fully</span>
+<span class="sd">        sent to the client (or in the client case, the response is fully</span>
+<span class="sd">        received from server).</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">transport</span> <span class="o">=</span> <span class="bp">None</span>

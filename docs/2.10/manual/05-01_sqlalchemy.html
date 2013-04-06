@@ -94,12 +94,12 @@
             
   <div class="section" id="sqlalchemy-integration">
 <span id="manual-sqlalchemy"></span><h1>SQLAlchemy Integration<a class="headerlink" href="#sqlalchemy-integration" title="Permalink to this headline">¶</a></h1>
-<p>This tutorial builds on the <a class="reference internal" href="04_usermanager.html#manual-user-manager"><em>User Manager</em></a> tutorial. If you haven&#8217;t
-done so, we recommend you to read it first.</p>
-<p>In this tutorial, we talk about using Spyne tools that make it easy to deal with
-database-related operations. We will show how to integrate SQLAlchemy and Spyne
-object definitions, and how to do painless transaction management using Spyne
-events.</p>
+<p>This tutorial builds on the <a class="reference internal" href="04_usermanager.html#manual-user-manager"><em>User Manager</em></a> tutorial. If you
+haven&#8217;t done so, we recommend you to read it first.</p>
+<p>In this tutorial, we talk about using Spyne tools that make it easy to deal
+with database-related operations. We will show how to integrate SQLAlchemy and
+Spyne object definitions, and how to do painless transaction management using
+Spyne events.</p>
 <p>The full example is available here: <a class="reference external" href="http://github.com/arskom/spyne/blob/master/examples/user_manager/server_sqlalchemy.py">http://github.com/arskom/spyne/blob/master/examples/user_manager/server_sqlalchemy.py</a></p>
 <p>Again, focusing on what&#8217;s different from previous <a class="reference internal" href="04_usermanager.html#manual-user-manager"><em>User Manager</em></a>
 example:</p>
@@ -113,9 +113,10 @@ example:</p>
     <span class="n">last_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">256</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>Defined this way, SQLAlchemy objects are regular Spyne objects that can be used
-anywhere the regular Spyne types go. The definition for the <cite>User</cite> object is
-quite similar to vanilla SQLAlchemy declarative syntax, save for two elements:</p>
+<p>Defined this way, SQLAlchemy objects are regular Spyne objects that can be
+used anywhere the regular Spyne types go. The definition for the <cite>User</cite> object
+is quite similar to vanilla SQLAlchemy declarative syntax, save for two
+elements:</p>
 <blockquote>
 <div><ol class="arabic simple">
 <li>The object also bases on <a class="reference internal" href="../reference/model/sql.html#spyne.model.table.TableModel" title="spyne.model.table.TableModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.table.TableModel</span></tt></a>, which
@@ -129,8 +130,8 @@ on wsdl.</li>
 <div><ul class="simple">
 <li>SQL constraints are not reflected to the interface document.</li>
 <li>It&#8217;s not possible to define additional constraints for the Spyne schema.</li>
-<li>Object attributes defined by mechanisms other than Column and limited uses
-of <cite>relationship</cite> (no string arguments) are not supported.</li>
+<li>Object attributes defined by mechanisms other than Column and limited
+uses of <cite>relationship</cite> (no string arguments) are not supported.</li>
 </ul>
 </div></blockquote>
 <p>If you need any of the above features, you need to separate the Spyne and
@@ -143,9 +144,9 @@ sqlalchemy object definitions.</p>
 </div>
 <p>Here, The AlternativeUser object is automatically populated using columns from
 the table definition.</p>
-<p>The context object is also a little bit different &#8211; we start a transaction for
-every call in the constructor of the UserDefinedContext object, and close it in
-its destructor:</p>
+<p>The context object is also a little bit different &#8211; we start a transaction
+for every call in the constructor of the UserDefinedContext object, and close
+it in its destructor:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">UserDefinedContext</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
@@ -160,24 +161,26 @@ for every method call:</p>
     <span class="n">ctx</span><span class="o">.</span><span class="n">udc</span> <span class="o">=</span> <span class="n">UserDefinedContext</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>We also implement an event handler that commits the transaction once the method
-call is complete.</p>
+<p>We also implement an event handler that commits the transaction once the
+method call is complete.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">_on_method_return_object</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
     <span class="n">ctx</span><span class="o">.</span><span class="n">udc</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>We register those handlers to the application&#8217;s &#8216;method_call&#8217; handler:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">application</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">add_listener</span><span class="p">(</span><span class="s">&#39;method_call&#39;</span><span class="p">,</span> <span class="n">_on_method_call</span><span class="p">)</span>
-<span class="n">application</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">add_listener</span><span class="p">(</span><span class="s">&#39;method_return_object&#39;</span><span class="p">,</span> <span class="n">_on_method_return_object</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">application</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">add_listener</span><span class="p">(</span>
+            <span class="s">&#39;method_call&#39;</span><span class="p">,</span> <span class="n">_on_method_call</span><span class="p">)</span>
+<span class="n">application</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">add_listener</span><span class="p">(</span>
+            <span class="s">&#39;method_return_object&#39;</span><span class="p">,</span> <span class="n">_on_method_return_object</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Note that the <tt class="docutils literal"><span class="pre">method_return_object</span></tt> event is only fired when the method call
-completes without throwing any exceptions.</p>
+<p>Note that the <tt class="docutils literal"><span class="pre">method_return_object</span></tt> event is only fired when the method
+call completes without throwing any exceptions.</p>
 <div class="section" id="what-s-next">
 <h2>What&#8217;s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
 <p>This tutorial walks you through most of what you need to know to expose your
-services. You can read the <a class="reference internal" href="06_metadata.html#manual-metadata"><em>Working with RPC Metadata</em></a> section where service metadata
-management apis are introduced.</p>
+services. You can read the <a class="reference internal" href="06_metadata.html#manual-metadata"><em>Working with RPC Metadata</em></a> section where service
+metadata management apis are introduced.</p>
 <p>Otherwise, you can refer to the reference of the documentation or the mailing
 list if you have further questions.</p>
 </div>
