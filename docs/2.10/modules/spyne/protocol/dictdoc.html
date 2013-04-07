@@ -106,6 +106,7 @@
 <span class="kn">from</span> <span class="nn">spyne.model.fault</span> <span class="kn">import</span> <span class="n">Fault</span>
 <span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">ComplexModelBase</span>
 <span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">Array</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Double</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">DateTime</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Decimal</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">String</span>
@@ -518,6 +519,8 @@
         <span class="c"># strip the wrappers if asked for</span>
         <span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">skips_left</span> <span class="o">=</span> <span class="n">unwrap_instance</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">skip_depth</span><span class="p">)</span>
 
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;skips_left: </span><span class="si">%d</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">skips_left</span><span class="p">)</span>
+
         <span class="c"># arrays get wrapped in [], whereas other objects get wrapped in</span>
         <span class="c"># {wrapper_name: ...}</span>
         <span class="k">if</span> <span class="n">wrapper_name</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">Array</span><span class="p">):</span>
@@ -525,7 +528,7 @@
 
         <span class="c"># transform the results into a dict:</span>
         <span class="k">if</span> <span class="n">class_</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">retval</span> <span class="o">=</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">_to_value</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">inst</span><span class="p">,</span> <span class="n">wrapper_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">value</span><span class="p">)</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="p">[(</span><span class="n">cls</span><span class="o">.</span><span class="n">_to_value</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">inst</span><span class="p">,</span> <span class="n">wrapper_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">value</span><span class="p">)]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">retval</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_to_value</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">wrapper_name</span><span class="p">)</span>
 
@@ -577,7 +580,8 @@
             <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">class_</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">format</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">class_</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_bound</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> \
+                                            <span class="n">class_</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">format</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">value</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>

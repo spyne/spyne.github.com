@@ -126,8 +126,8 @@
 
 
 <span class="k">class</span> <span class="nc">xml</span><span class="p">:</span>
-<div class="viewcode-block" id="xml"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.xml">[docs]</a>    <span class="sd">&quot;&quot;&quot;Complex argument to ``ComplexModelBase.Attributes.store_as`` for xml</span>
-<span class="sd">    serialization.</span>
+<div class="viewcode-block" id="xml"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.xml">[docs]</a>    <span class="sd">&quot;&quot;&quot;Compound option object for xml serialization. It&#39;s meant to be passed to</span>
+<span class="sd">    :func:`ComplexModelBase.Attributes.store_as`.</span>
 
 <span class="sd">    :param root_tag: Root tag of the xml element that contains the field values.</span>
 <span class="sd">    :param no_ns: When true, the xml document is stripped from namespace</span>
@@ -140,8 +140,9 @@
 
 
 <span class="k">class</span> <span class="nc">table</span><span class="p">:</span></div>
-<div class="viewcode-block" id="table"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.table">[docs]</a>    <span class="sd">&quot;&quot;&quot;Complex argument to ``ComplexModelBase.Attributes.store_as`` for storing</span>
-<span class="sd">    the class instance as a row in a table in a relational database.</span>
+<div class="viewcode-block" id="table"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.table">[docs]</a>    <span class="sd">&quot;&quot;&quot;Compound option object for for storing the class instance as in row in a</span>
+<span class="sd">    table in a relational database. It&#39;s meant to be passed to</span>
+<span class="sd">    :func:`ComplexModelBase.Attributes.store_as`.</span>
 
 <span class="sd">    :param multi: When False, configures a one-to-many relationship where the</span>
 <span class="sd">        child table has a foreign key to the parent. When not ``False``,</span>
@@ -163,8 +164,8 @@
 
 
 <span class="k">class</span> <span class="nc">json</span><span class="p">:</span></div>
-<div class="viewcode-block" id="json"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.json">[docs]</a>    <span class="sd">&quot;&quot;&quot;Complex argument to ``ComplexModelBase.Attributes.store_as`` for storing</span>
-<span class="sd">    the class instance as a json document.</span>
+<div class="viewcode-block" id="json"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.json">[docs]</a>    <span class="sd">&quot;&quot;&quot;Compound option object for json serialization. It&#39;s meant to be passed to</span>
+<span class="sd">    :func:`ComplexModelBase.Attributes.store_as`.</span>
 
 <span class="sd">    Make sure you don&#39;t mix this with the json package when importing.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -178,8 +179,8 @@
 <span class="k">class</span> <span class="nc">msgpack</span><span class="p">:</span></div>
     <span class="k">pass</span>  <span class="c"># TODO: not implemented</span>
 
-    <span class="sd">&quot;&quot;&quot;Complex argument to ``ComplexModelBase.Attributes.store_as`` for storing</span>
-<span class="sd">    the class instance as a MessagePack document.</span>
+    <span class="sd">&quot;&quot;&quot;Compound option object for msgpack serialization. It&#39;s meant to be passed</span>
+<span class="sd">    to :func:`ComplexModelBase.Attributes.store_as`.</span>
 
 <span class="sd">    Make sure you don&#39;t mix this with the msgpack package when importing.</span>
 <span class="sd">    &quot;&quot;&quot;</span>

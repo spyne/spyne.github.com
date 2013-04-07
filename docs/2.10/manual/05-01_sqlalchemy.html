@@ -55,6 +55,11 @@
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">SQLAlchemy Integration</a><ul>
+<li><a class="reference internal" href="#the-spyne-way">The Spyne Way</a><ul>
+<li><a class="reference internal" href="#using-sql-databases-as-hybrid-document-stores">Using SQL Databases as Hybrid Document Stores</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#integrating-with-existing-sqlalchemy-objects">Integrating with Existing SQLAlchemy objects</a></li>
 <li><a class="reference internal" href="#what-s-next">What&#8217;s next?</a></li>
 </ul>
 </li>
@@ -97,92 +102,257 @@
 <p>This tutorial builds on the <a class="reference internal" href="04_usermanager.html#manual-user-manager"><em>User Manager</em></a> tutorial. If you
 haven&#8217;t done so, we recommend you to read it first.</p>
 <p>In this tutorial, we talk about using Spyne tools that make it easy to deal
-with database-related operations. We will show how to integrate SQLAlchemy and
-Spyne object definitions, and how to do painless transaction management using
-Spyne events.</p>
-<p>The full example is available here: <a class="reference external" href="http://github.com/arskom/spyne/blob/master/examples/user_manager/server_sqlalchemy.py">http://github.com/arskom/spyne/blob/master/examples/user_manager/server_sqlalchemy.py</a></p>
-<p>Again, focusing on what&#8217;s different from previous <a class="reference internal" href="04_usermanager.html#manual-user-manager"><em>User Manager</em></a>
-example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">TableModel</span><span class="p">,</span> <span class="n">DeclarativeBase</span><span class="p">):</span>
-    <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;spyne.examples.user_manager&#39;</span>
+with database-related operations using <a class="reference external" href="http://sqlalchemy.org">SQLAlchemy</a>.
+SQLAlchemy is a well-established and mature SQL generation and ORM library
+that is well worth the time invested in climbing its learning curve.</p>
+<p>We will show how to integrate SQLAlchemy and Spyne object definitions, and
+how to do painless transaction management using Spyne events.</p>
+<p>There are two ways of integrating with SQLAlchemy:</p>
+<ol class="arabic">
+<li><p class="first">The first and supported method is to use the output of the
+<tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.TTableModel</span></tt>.</p>
+<p>The <tt class="docutils literal"><span class="pre">TTableModel</span></tt> class is a templated callable that produces a
+<tt class="docutils literal"><span class="pre">ComplexModel</span></tt> that has enough information except table name to be mapped
+with a SQL table. It takes an optional <tt class="docutils literal"><span class="pre">metadata</span></tt> argument and creates a
+new one when one isn&#8217;t supplied.</p>
+<p><strong>WARNING:</strong> While the machinery around <tt class="docutils literal"><span class="pre">TTableModel</span></tt> is in production
+use in a few places, it should be considered <em>experimental</em> as it&#8217;s a
+relatively new feature which is not as battle-tested as the rest of the
+Spyne code.</p>
+<p>Also, this is only tested with <a class="reference external" href="http://postgresql.org">PostgreSQL</a> and
+to some extent, <a class="reference external" href="http://sqlite.org">SQLite</a>.
+We&#8217;re looking for volunteers to test and integrate other RDBMSs, please
+open an issue and chime in.</p>
+</li>
+<li><p class="first">The second method is to use <a class="reference internal" href="../reference/model/sql.html#spyne.model.table.TableModel" title="spyne.model.table.TableModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.table.TableModel</span></tt></a> as a
+second base class together with the declarative base class (output of the
+<tt class="xref py py-func docutils literal"><span class="pre">sqlalchemy.orm.declarative_base()</span></tt> callable). This is deprecated <a class="footnote-reference" href="#id2" id="id1">[1]</a>
+and won&#8217;t be developed any further, yet it also won&#8217;t be removed in the
+foreseeable feature as apparently there are people who are quite fine with
+its quirks and would prefer to have it shipped within the Spyne package.</p>
+</li>
+</ol>
+<p>This document will cover only the first method. The documentation for the
+second method can be found in the <a class="reference internal" href="../reference/model/sql.html#module-spyne.model.table" title="spyne.model.table"><tt class="xref py py-mod docutils literal"><span class="pre">spyne.model.table</span></tt></a> documentation or in
+the Spyne 2.9 documentation.</p>
+<p>The semantics of SQLAlchemy&#8217;s and Spyne&#8217;s object definition are almost the
+same, except a few small differences:</p>
+<ol class="arabic">
+<li><p class="first">SQLAlchemy&#8217;s <tt class="docutils literal"><span class="pre">Integer</span></tt> maps to Spyne&#8217;s <tt class="docutils literal"><span class="pre">Integer32</span></tt> or <tt class="docutils literal"><span class="pre">Integer64</span></tt>,
+depending on the RDBMS. Spyne&#8217;s <tt class="docutils literal"><span class="pre">Integer</span></tt>, as it&#8217;s an arbitrary-size
+number, is converted to <tt class="xref py py-class docutils literal"><span class="pre">sqlalchemy.Decimal</span></tt> type as it&#8217;s the only
+type that can acommodate arbitrary-size numbers. So it&#8217;s important to use a
+bounded integer type like <tt class="docutils literal"><span class="pre">Integer32</span></tt> or <tt class="docutils literal"><span class="pre">Integer64</span></tt>, especially as
+primary key.</p>
+</li>
+<li><p class="first">SQLAlchemy&#8217;s <tt class="docutils literal"><span class="pre">UnicodeText</span></tt> is Spyne&#8217;s <tt class="docutils literal"><span class="pre">Unicode</span></tt> with no <tt class="docutils literal"><span class="pre">max_len</span></tt>
+restriction. If you need a length-limited <tt class="docutils literal"><span class="pre">UnicodeText</span></tt>, you can use
+Spyne&#8217;s <tt class="docutils literal"><span class="pre">Unicode</span></tt> object as follows:</p>
+<div class="highlight-python"><pre>class(TableModel):
+    __tablename__ = "some_table"
+
+    # text
+    some_text = Unicode(2048, db_type=sqlalchemy.UnicodeText)
+
+    # varchar
+    some_varchar = Unicode(2048)
+
+    # text
+    some_more_text = Unicode</pre>
+</div>
+<p>Default mapping for text types is <tt class="docutils literal"><span class="pre">varchar</span></tt>. Note that the limit is only
+enforced to incoming data, in this case the database type is bounded only
+by the limits of the database system.</p>
+</li>
+<li><p class="first">Spyne does not reflect all restrictions to the database &#8211; some are only
+enforced to incoming data when validation is enabled. These include range
+and value restrictions for numbers, and <tt class="docutils literal"><span class="pre">min_len</span></tt> and <tt class="docutils literal"><span class="pre">pattern</span></tt>
+restrictions for Spyne types.</p>
+</li>
+</ol>
+<p>Okay, enough with the introductory &amp; disclaimatory stuff, let&#8217;s get coding :)</p>
+<p>There&#8217;s a fully functional example at
+<a class="reference download internal" href="../downloads/server_sqlalchemy.py"><tt class="xref download docutils literal"><span class="pre">examples/user_manager/server_sqlalchemy.py</span></tt></a>.
+in the source distribution.</p>
+<p>First, we need a database handle:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">db</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s">&#39;sqlite:///:memory:&#39;</span><span class="p">)</span>
+<span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">db</span><span class="p">)</span>
+<span class="n">metadata</span> <span class="o">=</span> <span class="n">MetaData</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">db</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now, we must define our own <tt class="docutils literal"><span class="pre">TableModel</span></tt> base class. This must be defined
+for every <tt class="docutils literal"><span class="pre">MetaData</span></tt> instance.</p>
+<blockquote>
+<div>TableModel = TTableModel(metadata)</div></blockquote>
+<p>Doing this is also possible:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">TableModel</span> <span class="o">==</span> <span class="n">TTableModel</span><span class="p">()</span>
+<span class="n">TableModel</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">sqla_metadata</span><span class="o">.</span><span class="n">bind</span> <span class="o">=</span> <span class="n">db</span>
+</pre></div>
+</div>
+<p>... but the first method looks cleaner.</p>
+<p>We&#8217;re finally ready to define Spyne types mapped to SQLAlchemy tables. At this
+point, we have two options: Do everything with the Spyne markers, or re-use
+existing SQLAlchemy code we might already have.</p>
+<div class="section" id="the-spyne-way">
+<h2>The Spyne Way<a class="headerlink" href="#the-spyne-way" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s consider the following two class definitions:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Permission</span><span class="p">(</span><span class="n">TableModel</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;permission&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">UnsignedInteger32</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">application</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;usermgr&#39;</span><span class="p">,</span> <span class="s">&#39;accountmgr&#39;</span><span class="p">))</span>
+    <span class="n">operation</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;read&#39;</span><span class="p">,</span> <span class="s">&#39;modify&#39;</span><span class="p">,</span> <span class="s">&#39;delete&#39;</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">TableModel</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;user&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">UnsignedInteger32</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">user_name</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">min_len</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">&#39;[a-z0-9.]+&#39;</span><span class="p">)</span>
+    <span class="n">full_name</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">&#39;\w+( \w+)+&#39;</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">r&#39;[a-z0-9._%+-]+@[a-z0-9.-]+\.[A-Z]{2,4}&#39;</span><span class="p">)</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="n">Permission</span><span class="p">)</span><span class="o">.</span><span class="n">store_as</span><span class="p">(</span><span class="s">&#39;table&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A couple of points about the above block:</p>
+<p>A <tt class="docutils literal"><span class="pre">TableModel</span></tt> subclass won&#8217;t be mapped to a database table if it&#8217;s missing
+both the <tt class="docutils literal"><span class="pre">__table__</span></tt> and <tt class="docutils literal"><span class="pre">__tablename__</span></tt> attributes. As we&#8217;re defining the
+table in this object, we just pass the <tt class="docutils literal"><span class="pre">__tablename__</span></tt> attribute &#8211; the
+<tt class="docutils literal"><span class="pre">__table__</span></tt> object (which is a <tt class="xref py py-class docutils literal"><span class="pre">sqlalchemy.schema.Table</span></tt> instance)
+will be generated automatically.</p>
+<p>The definitions of the <tt class="docutils literal"><span class="pre">id</span></tt>, <tt class="docutils literal"><span class="pre">user_name</span></tt>, <tt class="docutils literal"><span class="pre">full_name</span></tt> and <tt class="docutils literal"><span class="pre">email</span></tt>
+fields should be self-explanatory.</p>
+<p>As for the <tt class="docutils literal"><span class="pre">permissions</span></tt> field, thanks to the <tt class="docutils literal"><span class="pre">store_as('table')</span></tt> call,
+it will be stored using a one-to-many relationship. Spyne automatically
+generates a foreign key column inside the <tt class="docutils literal"><span class="pre">permission</span></tt> table with &#8216;user_id&#8217;
+as default value.</p>
+<p>If we&#8217;d let the <tt class="docutils literal"><span class="pre">store_as()</span></tt> call out:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">permissions</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="n">Permission</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>... the permissions field would not exist as far as SQLAlchemy is concerned.</p>
+<p>Calling <tt class="docutils literal"><span class="pre">store_as()</span></tt> is just a shortcut for calling
+<tt class="docutils literal"><span class="pre">customize(store_as='table')</span></tt>.</p>
+<p>While the default is what appears to make most sense when defining such
+relations, it might not always be appropriate. Spyne offers the so-called
+&#8220;compound option object&#8221;s to make it easy to configure persistance options.</p>
+<p>Using the <a class="reference internal" href="../reference/model/complex.html#spyne.model.complex.table" title="spyne.model.complex.table"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.table</span></tt></a> object, we change the
+<tt class="docutils literal"><span class="pre">permissions</span></tt> field to be serialized using the many-to-many pattern:</p>
+<dl class="docutils">
+<dt>::</dt>
+<dd><p class="first">from spyne.model.complex import table</p>
+<p class="last">permissions = Array(Permission).store_as(table(multi=True))</p>
+</dd>
+</dl>
+<p>In this case, Spyne takes care of creating a relation table with appropriate
+foreign key columns.</p>
+<p>We can also alter column names or the relation table name:</p>
+<dl class="docutils">
+<dt>::</dt>
+<dd><p class="first">from spyne.model.complex import table</p>
+<dl class="last docutils">
+<dt>permissions = Array(Permission).store_as(table(</dt>
+<dd><blockquote class="first">
+<div>multi=&#8217;user_perm_rel&#8217;,
+left=&#8217;u_id&#8217;, right=&#8217;perm_id&#8217;,</div></blockquote>
+<p class="last">))</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>See the <a class="reference internal" href="../reference/model/complex.html#spyne.model.complex.table" title="spyne.model.complex.table"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.table</span></tt></a> reference for more details on
+configuring object relations.</p>
+<div class="section" id="using-sql-databases-as-hybrid-document-stores">
+<h3>Using SQL Databases as Hybrid Document Stores<a class="headerlink" href="#using-sql-databases-as-hybrid-document-stores" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">'table'</span></tt> is not the only option for persisting objects to a database. Other
+options are <tt class="docutils literal"><span class="pre">'json'</span></tt> and <tt class="docutils literal"><span class="pre">'xml'</span></tt>. These use the relevant column types to
+store the object serialized to JSON or XML.</p>
+<p>Let&#8217;s modify the previous example to store the <tt class="docutils literal"><span class="pre">Permission</span></tt> entity in a JSON
+column.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Permission</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">UnsignedInteger32</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">application</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;usermgr&#39;</span><span class="p">,</span> <span class="s">&#39;accountmgr&#39;</span><span class="p">))</span>
+    <span class="n">operation</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;read&#39;</span><span class="p">,</span> <span class="s">&#39;modify&#39;</span><span class="p">,</span> <span class="s">&#39;delete&#39;</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">TableModel</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;user&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">UnsignedInteger32</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">user_name</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">min_len</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">&#39;[a-z0-9.]+&#39;</span><span class="p">)</span>
+    <span class="n">full_name</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">&#39;\w+( \w+)+&#39;</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">r&#39;[a-z0-9._%+-]+@[a-z0-9.-]+\.[A-Z]{2,4}&#39;</span><span class="p">)</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="n">Permission</span><span class="p">)</span><span class="o">.</span><span class="n">store_as</span><span class="p">(</span><span class="s">&#39;json&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As the <tt class="docutils literal"><span class="pre">Array(Permission)</span></tt> is now stored in a document store, it&#8217;s possible
+to make arbitrary changes to the schema of the <tt class="docutils literal"><span class="pre">Permission</span></tt> object without
+worrying about schema migrations &#8211; If the changes are backwards-compatible,
+everything will work flawlessly. If not, attributes in older version documents
+will just be ignored.</p>
+<p>You can play with the example at <a class="reference external" href="http://spyne.io/#s=sql">spyne.io</a> to
+experiment and fully understand how Spyne&#8217;s model generator works.</p>
+<p>To make the case with non-backwards-compatible changes, an implicit versioning
+support must be added. Assuming that everybody agrees that this is a good
+idea, add this feature would be another interesting project.</p>
+<p>Feedback is welcome!</p>
+</div>
+</div>
+<div class="section" id="integrating-with-existing-sqlalchemy-objects">
+<h2>Integrating with Existing SQLAlchemy objects<a class="headerlink" href="#integrating-with-existing-sqlalchemy-objects" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s consider the following fairly ordinary SQLAlchemy object:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">DeclarativeBase</span><span class="p">):</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;spyne_user&#39;</span>
 
-    <span class="n">user_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">user_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">256</span><span class="p">))</span>
     <span class="n">first_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">256</span><span class="p">))</span>
     <span class="n">last_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">256</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>Defined this way, SQLAlchemy objects are regular Spyne objects that can be
-used anywhere the regular Spyne types go. The definition for the <cite>User</cite> object
-is quite similar to vanilla SQLAlchemy declarative syntax, save for two
-elements:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li>The object also bases on <a class="reference internal" href="../reference/model/sql.html#spyne.model.table.TableModel" title="spyne.model.table.TableModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.table.TableModel</span></tt></a>, which
-bridges SQLAlchemy and Spyne types.</li>
-<li>It has a namespace declaration, which is just so the service looks good
-on wsdl.</li>
-</ol>
-</div></blockquote>
-<p>The SQLAlchemy integration is far from perfect at the moment:</p>
-<blockquote>
-<div><ul class="simple">
-<li>SQL constraints are not reflected to the interface document.</li>
-<li>It&#8217;s not possible to define additional constraints for the Spyne schema.</li>
-<li>Object attributes defined by mechanisms other than Column and limited
-uses of <cite>relationship</cite> (no string arguments) are not supported.</li>
-</ul>
-</div></blockquote>
-<p>If you need any of the above features, you need to separate the Spyne and
-sqlalchemy object definitions.</p>
-<p>Spyne makes it easy (to an extent) with the following syntax:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">AlternativeUser</span><span class="p">(</span><span class="n">TableModel</span><span class="p">,</span> <span class="n">DeclarativeBase</span><span class="p">):</span>
-    <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;spyne.examples.user_manager&#39;</span>
+<p>Assigning an existing SQLAlchemy table to the <tt class="docutils literal"><span class="pre">__table__</span></tt> attribute of the
+<tt class="docutils literal"><span class="pre">TableModel</span></tt> ...</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">TableModel</span><span class="p">):</span>
     <span class="n">__table__</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">__table__</span>
 </pre></div>
 </div>
-<p>Here, The AlternativeUser object is automatically populated using columns from
-the table definition.</p>
-<p>The context object is also a little bit different &#8211; we start a transaction
-for every call in the constructor of the UserDefinedContext object, and close
-it in its destructor:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">UserDefinedContext</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+<p>... creates the corresponding Spyne object. This conversion works for simple
+column types, but for complex ORM constructs like <tt class="docutils literal"><span class="pre">relationship</span></tt>.</p>
+<p>If you want to override this, you must set everything manually:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">TableModel</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">__table__</span>
 
-    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">UnsignedInteger32</span>
+    <span class="n">user_name</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">min_len</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">&#39;[a-z0-9.]+&#39;</span><span class="p">)</span>
+    <span class="n">full_name</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">&#39;\w+( \w+)+&#39;</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">r&#39;[a-z0-9._%+-]+@[a-z0-9.-]+\.[A-Z]{2,4}&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We implement an event handler that instantiates the UserDefinedContext object
-for every method call:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">_on_method_call</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
-    <span class="n">ctx</span><span class="o">.</span><span class="n">udc</span> <span class="o">=</span> <span class="n">UserDefinedContext</span><span class="p">()</span>
-</pre></div>
+<p>Of course, it&#8217;s possible to leave fields out.</p>
+<p>This is still one of the weaker spots of SQLAlchemy integration, please chime
+in with your ideas on how we should handle different cases!</p>
 </div>
-<p>We also implement an event handler that commits the transaction once the
-method call is complete.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">_on_method_return_object</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
-    <span class="n">ctx</span><span class="o">.</span><span class="n">udc</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>We register those handlers to the application&#8217;s &#8216;method_call&#8217; handler:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">application</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">add_listener</span><span class="p">(</span>
-            <span class="s">&#39;method_call&#39;</span><span class="p">,</span> <span class="n">_on_method_call</span><span class="p">)</span>
-<span class="n">application</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">add_listener</span><span class="p">(</span>
-            <span class="s">&#39;method_return_object&#39;</span><span class="p">,</span> <span class="n">_on_method_return_object</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Note that the <tt class="docutils literal"><span class="pre">method_return_object</span></tt> event is only fired when the method
-call completes without throwing any exceptions.</p>
 <div class="section" id="what-s-next">
 <h2>What&#8217;s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
-<p>This tutorial walks you through most of what you need to know to expose your
-services. You can read the <a class="reference internal" href="06_metadata.html#manual-metadata"><em>Working with RPC Metadata</em></a> section where service
-metadata management apis are introduced.</p>
-<p>Otherwise, you can refer to the reference of the documentation or the mailing
-list if you have further questions.</p>
+<p>This tutorial walks you through most of what you need to know to implement
+complex, real-world services. You can read the <a class="reference internal" href="06_metadata.html#manual-metadata"><em>Working with RPC Metadata</em></a> section
+where service metadata management APIs are introduced, but otherwise, you&#8217;re
+mostly set.</p>
+<p>You also refer to the reference of the documentation or the mailing list if
+you have further questions.</p>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><p class="first">The reasons for its depreciation are as follows:</p>
+<ol class="last arabic simple">
+<li>The old way of trying to fuse metaclasses was a nightmare to
+maintain.</li>
+<li>The new API can handle existing SQLAlchemy objects via the
+<tt class="docutils literal"><span class="pre">__table__</span></tt> attribute trick.</li>
+<li>It&#8217;s not easy to add arbitrary restrictions (like pattern) when
+using the SQLAlchemy API.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
 </div>
 </div>
 

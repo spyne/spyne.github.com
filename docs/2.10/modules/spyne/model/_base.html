@@ -189,6 +189,7 @@
     <span class="c"># ComplexModelBase deserializer.</span>
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <div class="viewcode-block" id="ModelBase.Attributes"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.ModelBase.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;The class that holds the constraints for the given type.&quot;&quot;&quot;</span>
+
         <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">AttributesMeta</span>
 
         <span class="n">default</span> <span class="o">=</span> <span class="bp">None</span>
@@ -245,13 +246,20 @@
 <span class="sd">        as the indexing method to create the unique index.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="n">db_type</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;When not None, it overrides Spyne&#39;s own mapping from Spyne types to</span>
+<span class="sd">        SQLAlchemy types.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">index</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="sd">&quot;&quot;&quot;Can be ``True``, a string, or a tuple of two strings.</span>
 
 <span class="sd">        * If True, this object will be set as indexed in the database schema</span>
 <span class="sd">          with default options.</span>
+
 <span class="sd">        * If the value is a string, the value will denote the indexing method</span>
 <span class="sd">          used by the database. See: http://www.postgresql.org/docs/9.2/static/indexes-types.html</span>
+
 <span class="sd">        * If the vale is a tuple of two strings, the first value will denote the</span>
 <span class="sd">          index name and the second value will denote the indexing method as</span>
 <span class="sd">          above.</span>

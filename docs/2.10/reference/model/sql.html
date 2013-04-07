@@ -89,6 +89,44 @@
 <span id="persisting-objects"></span><span id="reference-model-persistance"></span><h1>Persisting Objects<a class="headerlink" href="#module-spyne.model.table" title="Permalink to this headline">¶</a></h1>
 <p>This module is DEPRECATED. Create your own TableModel using
 <tt class="xref py py-func docutils literal"><span class="pre">spyne.model.complex.TTableModel()</span></tt></p>
+<p>Here&#8217;s an example way of using the :class:<a href="#id1"><span class="problematic" id="id2">`</span></a>spyne.model.table.TableModel:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">TableModel</span><span class="p">,</span> <span class="n">DeclarativeBase</span><span class="p">):</span>
+    <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;spyne.examples.user_manager&#39;</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;spyne_user&#39;</span>
+
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">user_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">256</span><span class="p">))</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">256</span><span class="p">))</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">256</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Defined this way, SQLAlchemy objects are regular Spyne objects that can be
+used anywhere the regular Spyne types go. The definition for the <cite>User</cite> object
+is quite similar to vanilla SQLAlchemy declarative syntax, save for two
+elements:</p>
+<ol class="arabic simple">
+<li>The object also bases on <a class="reference internal" href="#spyne.model.table.TableModel" title="spyne.model.table.TableModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.table.TableModel</span></tt></a>, which
+bridges SQLAlchemy and Spyne types.</li>
+<li>It has a namespace declaration, which is just so the service looks good
+on wsdl.</li>
+</ol>
+<p>The SQLAlchemy integration is far from perfect at the moment:</p>
+<ul class="simple">
+<li>SQL constraints are not reflected to the interface document.</li>
+<li>It&#8217;s not possible to define additional constraints for the Spyne schema.</li>
+<li>Object attributes defined by mechanisms other than Column and limited
+uses of <cite>relationship</cite> (no string arguments) are not supported.</li>
+</ul>
+<p>If you need any of the above features, you need to separate the Spyne and
+SQLAlchemy object definitions.</p>
+<p>Spyne makes it easy (to an extent) with the following syntax:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">AlternativeUser</span><span class="p">(</span><span class="n">TableModel</span><span class="p">,</span> <span class="n">DeclarativeBase</span><span class="p">):</span>
+    <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;spyne.examples.user_manager&#39;</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">__table__</span>
+</pre></div>
+</div>
+<p>Here, The AlternativeUser object is automatically populated using columns from
+the table definition.</p>
 <dl class="class">
 <dt id="spyne.model.table.TableModel">
 <em class="property">class </em><tt class="descclassname">spyne.model.table.</tt><tt class="descname">TableModel</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="../../modules/spyne/model/table.html#TableModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.table.TableModel" title="Permalink to this definition">¶</a></dt>

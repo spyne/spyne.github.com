@@ -87,6 +87,46 @@
 
 <span class="sd">&quot;&quot;&quot;This module is DEPRECATED. Create your own TableModel using</span>
 <span class="sd">:func:`spyne.model.complex.TTableModel`</span>
+
+<span class="sd">Here&#39;s an example way of using the :class:`spyne.model.table.TableModel: ::</span>
+
+<span class="sd">    class User(TableModel, DeclarativeBase):</span>
+<span class="sd">        __namespace__ = &#39;spyne.examples.user_manager&#39;</span>
+<span class="sd">        __tablename__ = &#39;spyne_user&#39;</span>
+
+<span class="sd">        user_id = Column(sqlalchemy.Integer, primary_key=True)</span>
+<span class="sd">        user_name = Column(sqlalchemy.String(256))</span>
+<span class="sd">        first_name = Column(sqlalchemy.String(256))</span>
+<span class="sd">        last_name = Column(sqlalchemy.String(256))</span>
+
+<span class="sd">Defined this way, SQLAlchemy objects are regular Spyne objects that can be</span>
+<span class="sd">used anywhere the regular Spyne types go. The definition for the `User` object</span>
+<span class="sd">is quite similar to vanilla SQLAlchemy declarative syntax, save for two</span>
+<span class="sd">elements:</span>
+
+<span class="sd">#. The object also bases on :class:`spyne.model.table.TableModel`, which</span>
+<span class="sd">   bridges SQLAlchemy and Spyne types.</span>
+<span class="sd">#. It has a namespace declaration, which is just so the service looks good</span>
+<span class="sd">   on wsdl.</span>
+
+<span class="sd">The SQLAlchemy integration is far from perfect at the moment:</span>
+
+<span class="sd">* SQL constraints are not reflected to the interface document.</span>
+<span class="sd">* It&#39;s not possible to define additional constraints for the Spyne schema.</span>
+<span class="sd">* Object attributes defined by mechanisms other than Column and limited</span>
+<span class="sd">  uses of `relationship` (no string arguments) are not supported.</span>
+
+<span class="sd">If you need any of the above features, you need to separate the Spyne and</span>
+<span class="sd">SQLAlchemy object definitions.</span>
+
+<span class="sd">Spyne makes it easy (to an extent) with the following syntax: ::</span>
+
+<span class="sd">    class AlternativeUser(TableModel, DeclarativeBase):</span>
+<span class="sd">        __namespace__ = &#39;spyne.examples.user_manager&#39;</span>
+<span class="sd">        __table__ = User.__table__</span>
+
+<span class="sd">Here, The AlternativeUser object is automatically populated using columns from</span>
+<span class="sd">the table definition.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
