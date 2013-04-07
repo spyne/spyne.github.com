@@ -986,7 +986,7 @@ $(document).ready(function(){
 
     s_map={'rpc':1, 'sql': 2, 'aux': 3}
     if (params.s && s_map[params.s]) {
-      $("#tabs").tabs("option", "active", s_map[params.s-1]);
+      $("#tabs").tabs("option", "active", s_map[params.s] -1);
     }
     if (params.s && s_map[params.s] && params.s == 'rpc') {
       if (params.inprot) {
