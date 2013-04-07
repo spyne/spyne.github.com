@@ -191,26 +191,26 @@
 <span class="sd">    compliant callable class.</span>
 
 <span class="sd">    Supported events:</span>
-<span class="sd">        * ``wsdl``</span>
-<span class="sd">            Called right before the wsdl data is returned to the client.</span>
+<span class="sd">    * ``wsdl``</span>
+<span class="sd">        Called right before the wsdl data is returned to the client.</span>
 
-<span class="sd">        * ``wsdl_exception``</span>
-<span class="sd">            Called right after an exception is thrown during wsdl generation.</span>
-<span class="sd">            The exception object is stored in ctx.transport.wsdl_error attribute.</span>
+<span class="sd">    * ``wsdl_exception``</span>
+<span class="sd">        Called right after an exception is thrown during wsdl generation.</span>
+<span class="sd">        The exception object is stored in ctx.transport.wsdl_error attribute.</span>
 
-<span class="sd">        * ``wsgi_call``</span>
-<span class="sd">            Called first when the incoming http request is identified as a rpc</span>
-<span class="sd">            request.</span>
+<span class="sd">    * ``wsgi_call``</span>
+<span class="sd">        Called first when the incoming http request is identified as a rpc</span>
+<span class="sd">        request.</span>
 
-<span class="sd">        * ``wsgi_return``</span>
-<span class="sd">            Called right before the output stream is returned to the WSGI handler.</span>
+<span class="sd">    * ``wsgi_return``</span>
+<span class="sd">        Called right before the output stream is returned to the WSGI handler.</span>
 
-<span class="sd">        * ``wsgi_error``</span>
-<span class="sd">            Called right before returning the exception to the client.</span>
+<span class="sd">    * ``wsgi_error``</span>
+<span class="sd">        Called right before returning the exception to the client.</span>
 
-<span class="sd">        * ``wsgi_close``</span>
-<span class="sd">            Called after the whole data has been returned to the client. It&#39;s</span>
-<span class="sd">            called both from success and error cases.</span>
+<span class="sd">    * ``wsgi_close``</span>
+<span class="sd">        Called after the whole data has been returned to the client. It&#39;s</span>
+<span class="sd">        called both from success and error cases.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">chunked</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>

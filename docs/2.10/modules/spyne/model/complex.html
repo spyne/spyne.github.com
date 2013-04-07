@@ -99,6 +99,7 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
 <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">isclass</span>
 
+<span class="kn">from</span> <span class="nn">spyne.util</span> <span class="kn">import</span> <span class="n">memoize_id</span>
 <span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">ModelBase</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">NATIVE_MAP</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Unicode</span>
@@ -496,8 +497,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></div>
-        <span class="nb">super</span><span class="p">(</span><span class="n">ComplexModelBase</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
-
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">d</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">default</span>
             <span class="n">kv</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
@@ -944,8 +943,9 @@
     <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">(</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">(),</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">retval</span><span class="p">))</span>
 
 
+<span class="nd">@memoize_id</span>
 <span class="k">def</span> <span class="nf">TTableModel</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-<div class="viewcode-block" id="TTableModel"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.TTableModel">[docs]</a>    <span class="sd">&quot;&quot;&quot;A TableModel template that generates a new TableModel class for each</span>
+    <span class="sd">&quot;&quot;&quot;A TableModel template that generates a new TableModel class for each</span>
 <span class="sd">    call. If metadata is not supplied, a new one is instantiated.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -962,7 +962,7 @@
 
 <span class="c">### You should not use this and always instantiate explicitly your own</span>
 <span class="c">### TTableModel.</span>
-<span class="k">try</span><span class="p">:</span></div>
+<span class="k">try</span><span class="p">:</span>
     <span class="n">TableModel</span> <span class="o">=</span> <span class="n">TTableModel</span><span class="p">()</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="k">pass</span>

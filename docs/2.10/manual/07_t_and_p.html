@@ -101,24 +101,25 @@
 <p>Some preliminary information would be handy before delving into details:</p>
 <div class="section" id="how-exactly-is-user-code-wrapped">
 <h2>How Exactly is User Code Wrapped?<a class="headerlink" href="#how-exactly-is-user-code-wrapped" title="Permalink to this headline">¶</a></h2>
-<p>Here&#8217;s what happens when a request arrives to a Spyne server:</p>
-<p>The server transport decides whether this is a simple interface document request
-or a remote procedure call request. Every transport has its own way of dealing
-with this.</p>
-<p>If the incoming request was for the interface document, it&#8217;s easy: The interface
-document needs to be generated and returned as a nice chunk of strings to the
-client.
-The server transport first calls
+<p>The following is a more detailed discussion of the concepts introduced in the
+<a class="reference internal" href="01_highlevel.html#manual-highlevel"><em>High-Level Introduction to Spyne</em></a> chapter.</p>
+<p>So, when a request arrives to a Spyne server, the server transport decides
+whether this is a simple interface document request or a RPC request. Every
+transport has its own way of dealing with this.</p>
+<p>If the incoming request was for the interface document, it&#8217;s easy: The
+interface document needs to be generated and returned as a nice chunk of
+strings to the client.</p>
+<p>The server transport first calls
 <tt class="xref py py-func docutils literal"><span class="pre">spyne.interface._base.InterfaceBase.build_interface_document()</span></tt>
 which builds and caches the document and later calls the
-<tt class="xref py py-func docutils literal"><span class="pre">spyne.interface._base.InterfaceBase.get_interface_document()</span></tt> that returns
-the cached document.</p>
+<tt class="xref py py-func docutils literal"><span class="pre">spyne.interface._base.InterfaceBase.get_interface_document()</span></tt> that
+returns the cached document.</p>
 <p>If it was an RPC request, here&#8217;s what happens:</p>
 <ol class="arabic simple">
-<li>The server must set the <tt class="docutils literal"><span class="pre">ctx.in_string</span></tt> attribute to an iterable of
+<li>The server must set the <tt class="docutils literal"><span class="pre">ctx.in_string</span></tt> attribute to a sequence of
 strings. This will contain the incoming byte stream.</li>
-<li>The server calls the <a class="reference internal" href="../reference/server.html#spyne.server._base.ServerBase.get_in_object" title="spyne.server._base.ServerBase.get_in_object"><tt class="xref py py-class docutils literal"><span class="pre">spyne.server._base.ServerBase.get_in_object</span></tt></a>
-function from its parent class.</li>
+<li>The server calls the <a class="reference internal" href="../reference/server.html#spyne.server._base.ServerBase.get_in_object" title="spyne.server._base.ServerBase.get_in_object"><tt class="xref py py-func docutils literal"><span class="pre">spyne.server._base.ServerBase.get_in_object()</span></tt></a>
+function from its parent class, <tt class="docutils literal"><span class="pre">ServerBase</span></tt>.</li>
 <li>The server then calls the <tt class="docutils literal"><span class="pre">create_in_document</span></tt>,
 <tt class="docutils literal"><span class="pre">decompose_incoming_envelope</span></tt>
 and <tt class="docutils literal"><span class="pre">deserialize</span></tt> functions from the protocol class in the <tt class="docutils literal"><span class="pre">in_protocol</span></tt>
@@ -146,44 +147,40 @@ response as an iterable of strings in <tt class="docutils literal"><span class="
 <li>The server pushes the stream from ctx.out_string back to the client.</li>
 </ol>
 <p>The same logic applies to client transports, in reverse.</p>
-<p>So if you want to implement a new transport or protocol, all you need to do is
-to subclass the relevant base class and implement the missing methods.</p>
+<p>So if you want to implement a new transport or protocol, you need to subclass
+the relevant base class and implement the missing methods.</p>
 </div>
 <div class="section" id="a-transport-example-a-db-backed-fan-out-queue">
 <h2>A Transport Example: A DB-Backed Fan-Out Queue<a class="headerlink" href="#a-transport-example-a-db-backed-fan-out-queue" title="Permalink to this headline">¶</a></h2>
 <p>Here&#8217;s the source code in one file:
 <a class="reference external" href="https://github.com/arskom/spyne/blob/master/examples/queue.py">https://github.com/arskom/spyne/blob/master/examples/queue.py</a></p>
-<p>The following block of code is SQLAlchemy boilerplate for creating the database
-and other related machinery. Under normal conditions, you should pass the
-sqlalchemy url to the Producer and Consumer instances instead of the connection
-object itself, but here as we deal with an in-memory database, global variable
-ugliness is just a nicer way to pass database handles.</p>
+<p>The following block of code is SQLAlchemy boilerplate for creating the
+database and other related machinery. Under normal conditions, you should pass
+the sqlalchemy url to the Producer and Consumer instances instead of the
+connection object itself, but here as we deal with an in-memory database,
+global variable ugliness is just a nicer way to pass database handles.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">db</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s">&#39;sqlite:///:memory:&#39;</span><span class="p">)</span>
-<span class="n">metadata</span> <span class="o">=</span> <span class="n">MetaData</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">db</span><span class="p">)</span>
-<span class="n">DeclarativeBase</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">)</span>
+<span class="n">TableModel</span> <span class="o">=</span> <span class="n">TTableModel</span><span class="p">(</span><span class="n">MetaData</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">db</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>This is the table where queued messages are stored. Note that it&#8217;s a vanilla
-SQLAlchemy object:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">TaskQueue</span><span class="p">(</span><span class="n">DeclarativeBase</span><span class="p">):</span>
+<p>This is the table where queued messages are stored:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">TaskQueue</span><span class="p">(</span><span class="n">TableModel</span><span class="p">):</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;task_queue&#39;</span>
 
-    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">LargeBinary</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Integer32</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">ByteArray</span><span class="p">(</span><span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This is the table where the task id of the last processed task for each worker
 is stored. Workers are identified by an integer.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">WorkerStatus</span><span class="p">(</span><span class="n">DeclarativeBase</span><span class="p">):</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">WorkerStatus</span><span class="p">(</span><span class="n">TableModel</span><span class="p">):</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;worker_status&#39;</span>
 
-    <span class="n">worker_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                                                        <span class="n">autoincrement</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    <span class="n">task_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">TaskQueue</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
-                                                             <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">worker_id</span> <span class="o">=</span> <span class="n">Integer32</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">autoincrement</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">TaskQueue</span><span class="o">.</span><span class="n">store_as</span><span class="p">(</span><span class="s">&#39;table&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The consumer is a <a class="reference internal" href="../reference/server.html#spyne.server._base.ServerBase" title="spyne.server._base.ServerBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.server._base.ServerBase</span></tt></a> child that receives
+<p>The consumer is a <tt class="xref py py-class docutils literal"><span class="pre">spyne.server.ServerBase</span></tt> child that receives
 requests by polling the database.</p>
 <p>The transport is for displaying it in the Wsdl. While it&#8217;s irrelevant here, it&#8217;s
 nice to put it in:</p>
@@ -202,11 +199,9 @@ nice to put it in:</p>
 </div>
 <p>We also query the worker status table and get the id for the first task. If
 there is no record for own worker id, the server bootstraps its state:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">try</span><span class="p">:</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">WorkerStatus</span><span class="p">)</span> \
-                <span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">worker_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
-<span class="k">except</span> <span class="n">NoResultFound</span><span class="p">:</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">WorkerStatus</span><span class="p">(</span><span class="n">worker_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">task_id</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">WorkerStatus</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">WorkerStatus</span><span class="p">(</span>
+                           <span class="n">worker_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">task_id</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -215,13 +210,18 @@ there is no record for own worker id, the server bootstraps its state:</p>
     while True:</pre>
 </div>
 <p>We first get the id of the last processed task:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">last</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">WorkerStatus</span><span class="p">)</span><span class="o">.</span><span class="n">with_lockmode</span><span class="p">(</span><span class="s">&quot;update&quot;</span><span class="p">)</span> \
+<div class="highlight-python"><div class="highlight"><pre><span class="n">last</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">WorkerStatus</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">with_lockmode</span><span class="p">(</span><span class="s">&quot;update&quot;</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">worker_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Which is used to get the next tasks to process:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">task_queue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">TaskQueue</span><span class="p">)</span> \
-        <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">TaskQueue</span><span class="o">.</span><span class="n">id</span> <span class="o">&gt;</span> <span class="n">last</span><span class="o">.</span><span class="n">task_id</span><span class="p">)</span> \
+<div class="highlight-python"><div class="highlight"><pre><span class="n">task_id</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">if</span> <span class="n">last</span><span class="o">.</span><span class="n">task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">task_id</span> <span class="o">=</span> <span class="n">last</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">id</span>
+
+<span class="n">task_queue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">TaskQueue</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">TaskQueue</span><span class="o">.</span><span class="n">id</span> <span class="o">&gt;</span> <span class="n">task_id</span><span class="p">)</span> \
         <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">TaskQueue</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -263,16 +263,17 @@ queue.</p>
     <span class="k">continue</span>
 </pre></div>
 </div>
-<p>If task processing went fine, the server serializes the out object and logs that
-instead.</p>
+<p>If task processing went fine, the server serializes the out object and logs
+that instead.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">get_out_string</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
 <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">out_string</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Finally, the task is marked as processed.</p>
-<blockquote>
-<div>last.task_id = task.id
-self.session.commit()</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">last</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">task</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
 <p>Once all tasks in queue are consumed, the server waits a pre-defined amount of
 time before polling the database for new tasks:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
@@ -326,7 +327,7 @@ callable factory.</p>
 </div>
 <p>This is the worker service that will process the tasks.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">AsyncService</span><span class="p">(</span><span class="n">ServiceBase</span><span class="p">):</span>
-    <span class="nd">@rpc</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="nd">@rpc</span><span class="p">(</span><span class="n">UnsignedInteger</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">sleep</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">integer</span><span class="p">):</span>
         <span class="k">print</span> <span class="s">&quot;Sleeping for </span><span class="si">%d</span><span class="s"> seconds...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">integer</span><span class="p">)</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">integer</span><span class="p">)</span>
@@ -335,7 +336,7 @@ callable factory.</p>
 <p>And this event is here to do some logging.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">_on_method_call</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
     <span class="k">print</span> <span class="s">&quot;This is worker id </span><span class="si">%d</span><span class="s">, processing task id </span><span class="si">%d</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="p">(</span>
-                           <span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">consumer_id</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">task_id</span><span class="p">)</span>
+                      <span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">consumer_id</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">task_id</span><span class="p">)</span>
 
 <span class="n">AsyncService</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">add_listener</span><span class="p">(</span><span class="s">&#39;method_call&#39;</span><span class="p">,</span> <span class="n">_on_method_call</span><span class="p">)</span>
 </pre></div>
@@ -351,7 +352,9 @@ creating the necessary sql tables:</p>
 </div>
 <p>We then initialize our application:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">application</span> <span class="o">=</span> <span class="n">Application</span><span class="p">([</span><span class="n">AsyncService</span><span class="p">],</span> <span class="s">&#39;spyne.async&#39;</span><span class="p">,</span>
-        <span class="n">interface</span><span class="o">=</span><span class="n">Wsdl11</span><span class="p">(),</span> <span class="n">in_protocol</span><span class="o">=</span><span class="n">Soap11</span><span class="p">(),</span> <span class="n">out_protocol</span><span class="o">=</span><span class="n">Soap11</span><span class="p">())</span>
+        <span class="n">in_protocol</span><span class="o">=</span><span class="n">Soap11</span><span class="p">(</span><span class="n">validator</span><span class="o">=</span><span class="s">&#39;lxml&#39;</span><span class="p">),</span>
+        <span class="n">out_protocol</span><span class="o">=</span><span class="n">Soap11</span><span class="p">()</span>
+    <span class="p">)</span>
 </pre></div>
 </div>
 <p>And queue some tasks:</p>
@@ -365,14 +368,14 @@ creating the necessary sql tables:</p>
 <span class="n">consumer</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>That&#8217;s about it! You can switch to another database engine that accepts multiple
-connections and insert tasks from another connection to see the consumer in
-action. You could also start other workers in other processes to see the pub-sub
-functionality.</p>
+<p>That&#8217;s about it! You can switch to another database engine that accepts
+multiple connections and insert tasks from another connection to see the
+consumer in action. You could also start other workers in other processes to
+see the pub-sub functionality.</p>
 <div class="section" id="what-s-next">
 <h3>What&#8217;s Next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h3>
-<p>Start hacking! Good luck, and be sure to pop out to the mailing list if you have
-questions.</p>
+<p>Start hacking! Good luck, and be sure to pop out to the mailing list if you
+have questions.</p>
 </div>
 </div>
 </div>

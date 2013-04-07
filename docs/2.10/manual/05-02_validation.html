@@ -61,8 +61,8 @@
 <li><a class="reference internal" href="#strings">Strings</a></li>
 <li><a class="reference internal" href="#possible-values">Possible values</a></li>
 <li><a class="reference internal" href="#advanced-validation">Advanced validation</a></li>
-<li><a class="reference internal" href="#a-practical-example">A practical example</a></li>
-<li><a class="reference internal" href="#a-slightly-more-complicated-example">A slightly more complicated example</a></li>
+<li><a class="reference internal" href="#a-string-validation">A string validation</a></li>
+<li><a class="reference internal" href="#a-native-validation-example">A native validation example</a></li>
 <li><a class="reference internal" href="#summary">Summary</a></li>
 <li><a class="reference internal" href="#what-s-next">What&#8217;s next?</a></li>
 </ul>
@@ -108,21 +108,21 @@
 <p>The input validation features of Spyne are also mostly inherited from the Soap
 world and follows the behavior of Xml validation operations as closely as
 possible.</p>
-<p>Input validation is an essential component of any distributed system exposed to
-a non-trusted environment. Examples of validation constraints that Spyne can
-apply are as follows:</p>
+<p>Input validation is an essential component of any distributed system exposed
+to a non-trusted environment. Examples of validation constraints that Spyne
+can apply are as follows:</p>
 <ul class="simple">
 <li>A number that must be within a certain range,</li>
-<li>A string that must contain a specific character,</li>
+<li>A string that must match with a given regular expression.</li>
 <li>A string that can only take certain values.</li>
 </ul>
 <p>Currently, data validation can be handled by two subsystems:</p>
 <dl class="docutils">
 <dt>Xml schema validation:</dt>
-<dd>Such rules are enforced by <em>lxml</em>&#8216;s schema validation feature. This is of
+<dd>Such rules are enforced by lxml&#8217;s schema validation feature. This is of
 course only useful for Xml-based protocols.</dd>
 <dt>&#8220;Soft&#8221; validation:</dt>
-<dd><em>Spyne</em> itself implements enforcing a subset of the XmlSchema-type
+<dd>Spyne itself implements enforcing a subset of the XmlSchema-type
 constraints in a protocol-independent way. When using this mode, it&#8217;s also
 possible to use Spyne&#8217;s imperative validation hooks.</dd>
 </dl>
@@ -171,10 +171,10 @@ validation are as follows:</p>
 </table>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p>The two validation sybsystems operate independently, you can use either one,
-but not both at the same time. The validator is indicated when instantiating
-the protocol, by passing either <tt class="docutils literal"><span class="pre">validator='soft'</span></tt> or <tt class="docutils literal"><span class="pre">validator='lxml'</span></tt>
-to the constructor.</p>
+<p>The two validation sybsystems operate independently, you can use either
+one, but not both at the same time. The validator is indicated when
+instantiating the protocol, by passing either <tt class="docutils literal"><span class="pre">validator='soft'</span></tt> or
+<tt class="docutils literal"><span class="pre">validator='lxml'</span></tt> to the constructor.</p>
 <div class="last highlight-python"><div class="highlight"><pre><span class="c">#using &#39;soft&#39; validation with HttpRpc</span>
 <span class="n">application</span> <span class="o">=</span> <span class="n">Application</span><span class="p">([</span><span class="n">NameOfMonthService</span><span class="p">],</span>
         <span class="n">tns</span><span class="o">=</span><span class="s">&#39;spyne.examples.multiprot&#39;</span><span class="p">,</span>
@@ -194,8 +194,8 @@ to the constructor.</p>
 </div>
 <div class="section" id="simple-validation-at-the-xml-schema-level">
 <h2>Simple validation at the Xml schema level<a class="headerlink" href="#simple-validation-at-the-xml-schema-level" title="Permalink to this headline">¶</a></h2>
-<p>This applies to all the primitive data types, and is suitable for simple logical
-conditions.</p>
+<p>This applies to all the primitive data types, and is suitable for simple
+logical conditions.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Constraints applied at this level are reflected in the XML schema itself,
@@ -204,8 +204,8 @@ what the constraints are.</p>
 </div>
 <div class="section" id="any-primitive-type">
 <h3>Any primitive type<a class="headerlink" href="#any-primitive-type" title="Permalink to this headline">¶</a></h3>
-<p>Certain generic restrictions can be applied to any type. They are listed below,
-along with their default values</p>
+<p>Certain generic restrictions can be applied to any type. They are listed
+below, along with their default values</p>
 <ul>
 <li><p class="first"><tt class="docutils literal"><span class="pre">default</span> <span class="pre">=</span> <span class="pre">None</span></tt> - default value if the input is <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
 </li>
@@ -235,13 +235,14 @@ with infinitely many elements.</p>
 </ul>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">You should not use float(&#8216;inf&#8217;) as its behavior has inconsistencies between
-platforms and Python versions. See: <a class="reference external" href="https://github.com/arskom/spyne/pull/155">https://github.com/arskom/spyne/pull/155</a></p>
+<p class="last">You should not use float(&#8216;inf&#8217;) as its behavior has inconsistencies
+between platforms and Python versions. See:
+<a class="reference external" href="https://github.com/arskom/spyne/pull/155">https://github.com/arskom/spyne/pull/155</a></p>
 </div>
 <p>These rules can be combined, the example below illustrates how to create a
 mandatory string:</p>
 <blockquote>
-<div>String(min_occurs=1, min_len=1, nillable=False)</div></blockquote>
+<div>Unicode(min_occurs=1, min_len=1, nillable=False)</div></blockquote>
 </div>
 <div class="section" id="numbers">
 <h3>Numbers<a class="headerlink" href="#numbers" title="Permalink to this headline">¶</a></h3>
@@ -255,11 +256,11 @@ Double) can be compared with specific values, using the following keywords:
 <div class="section" id="strings">
 <h3>Strings<a class="headerlink" href="#strings" title="Permalink to this headline">¶</a></h3>
 <p>Strings can be validated against a regular expression:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">Unicode</span><span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s">&quot;[0-9]+&quot;</span><span class="p">)</span> <span class="c">#must contain at least one digit, digits only</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Unicode</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s">&quot;[0-9]+&quot;</span><span class="p">)</span> <span class="c">#must contain one or more digits</span>
 </pre></div>
 </div>
 <p>Length checks can be enforced as well:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">Unicode</span><span class="p">(</span><span class="n">min_len</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">max_len</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Unicode</span><span class="p">(</span><span class="n">min_len</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">max_len</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If you want to keep an incoming bytestream as a <tt class="docutils literal"><span class="pre">str</span></tt> with a known encoding,
@@ -293,9 +294,8 @@ can explicitly indicate the set:</p>
 </div>
 <div class="section" id="advanced-validation">
 <h3>Advanced validation<a class="headerlink" href="#advanced-validation" title="Permalink to this headline">¶</a></h3>
-<p><em>Spyne</em> offers several primitives for this purpose, they are defined in the
-<strong>ModelBase</strong> class, from which all the types are derived:
-<a class="reference external" href="https://github.com/arskom/spyne/blob/master/src/spyne/model/_base.py">https://github.com/arskom/spyne/blob/master/src/spyne/model/_base.py</a></p>
+<p>Spyne offers several primitives for this purpose. Please see the
+<tt class="xref py py-class docutils literal"><span class="pre">spyne.model.ModelBase</span></tt> reference for more information.</p>
 <p>These primitives are:</p>
 <ul class="simple">
 <li><em>validate_string</em> - invoked when the variable is extracted from the input XML
@@ -303,65 +303,47 @@ data.</li>
 <li><em>validate_native</em> - invoked after the string is converted to a specific Python
 value.</li>
 </ul>
-<p>Since all data comes in as a byte stream, when you read it you get a string. So
-the <em>validate_string</em> hook is your first line of defense against invalid data.</p>
-<p>At a later stage, the data can be converted to its native type.
-Once that conversion occurs, you can apply some additional checks. Validation in
-this stage is handled by the <em>validate_native</em> hook.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">stringNumber</span> <span class="o">=</span> <span class="s">&#39;123&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">stringNumber</span>
-<span class="go">&#39;123&#39;        # note the quotes, it is a string.</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">stringNumber</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">number</span>
-<span class="go">123          # note the absence of quotes, it is a number.</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">stringNumber</span> <span class="o">==</span> <span class="mi">123</span>
-<span class="go">False        # makes sense.</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">number</span> <span class="o">==</span> <span class="mi">123</span>
-<span class="go">True</span>
-</pre></div>
+<p>Since all data comes in as a byte stream, when you read it you get a <tt class="docutils literal"><span class="pre">str</span></tt>
+instance. So the <tt class="docutils literal"><span class="pre">validate_string</span></tt> hook is your first line of defense
+against invalid data.</p>
+<p>After the string validation passes, the data is converted to its native type.
+You can then do some additional checks. Validation in this stage is handled by
+the <tt class="docutils literal"><span class="pre">validate_native</span></tt> hook.</p>
 </div>
-<p>In the example above, <em>number</em> is an actual number and can be validated with
-<em>validate_native</em>, whereas <em>stringNumber</em> is a byte stream and should be
-validated by <em>validate_string</em>.</p>
-</div>
-<div class="section" id="a-practical-example">
-<h3>A practical example<a class="headerlink" href="#a-practical-example" title="Permalink to this headline">¶</a></h3>
-<p>A custom string type that can not contain the colon symbol &#8216;:&#8217;.</p>
-<p>We&#8217;ll have to declare our own class, derived from <em>Unicode</em> (which, in turn, is
-derived from <em>SimpleModel</em>, which inherits from <em>ModelBase</em>).</p>
+<div class="section" id="a-string-validation">
+<h3>A string validation<a class="headerlink" href="#a-string-validation" title="Permalink to this headline">¶</a></h3>
+<p>A custom string type that can not contain the colon symbol (<tt class="docutils literal"><span class="pre">':'</span></tt>).</p>
+<p>We&#8217;ll have to declare our own class as a subclass of <tt class="docutils literal"><span class="pre">Unicode</span></tt>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">SpecialString</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Custom string type that prohibits the use of colons&quot;&quot;&quot;</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">validate_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="s">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">False</span>
-        <span class="k">return</span> <span class="bp">True</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="p">(</span>
+                <span class="n">Unicode</span><span class="o">.</span><span class="n">validate_string</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">and</span> <span class="n">retval</span>
+            <span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="a-slightly-more-complicated-example">
-<h3>A slightly more complicated example<a class="headerlink" href="#a-slightly-more-complicated-example" title="Permalink to this headline">¶</a></h3>
-<p>A custom numerical type that verifies if the number is prime.</p>
-<p>This time both flavours of validation are combined: <em>validate_string</em> to see if
-it is a number, and then <em>validate_native</em> to see if it is prime.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">re</span>
+<div class="section" id="a-native-validation-example">
+<h3>A native validation example<a class="headerlink" href="#a-native-validation-example" title="Permalink to this headline">¶</a></h3>
+<p>A custom numerical type that verifies whether the number is prime.</p>
+<p>This time both flavours of validation are combined: <em>validate_string</em> to see
+if it is a number, and then <tt class="docutils literal"><span class="pre">validate_native</span></tt> to see if it is prime.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">floor</span>
 
-<span class="k">class</span> <span class="nc">Prime</span><span class="p">(</span><span class="n">Integer</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Prime</span><span class="p">(</span><span class="n">UnsignedInteger</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Custom integer type that only accepts primes.&quot;&quot;&quot;</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">validate_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;See if it is an integer.&quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s">&quot;-?[0-9]+&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
-
-    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;See if it is prime.&quot;&quot;&quot;</span>
-
-        <span class="c">#calling a hypothetical function that checks if it is prime</span>
-        <span class="k">return</span> <span class="n">is_prime</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">UnsignedInteger</span><span class="o">.</span><span class="n">validate_native</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="nb">all</span><span class="p">(</span><span class="n">a</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">floor</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="p">))))</span>
+        <span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -373,10 +355,11 @@ that are not visible in the XML schema are documented elsewhere.</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">When overriding <tt class="docutils literal"><span class="pre">validate_string</span></tt> or <tt class="docutils literal"><span class="pre">validate_native</span></tt> in a custom type
-class, the validation functions from the parent class are <strong>not invoked</strong>.
-If you wish to apply those validation functions as well, you must call them
-explicitly.</p>
+<p>When overriding <tt class="docutils literal"><span class="pre">validate_string</span></tt> or <tt class="docutils literal"><span class="pre">validate_native</span></tt> in a custom
+type class, the validation functions from the parent class are
+<strong>not invoked</strong>.</p>
+<p class="last">If you wish to apply those validation functions as well, you must call
+them explicitly.</p>
 </div>
 </div>
 <div class="section" id="summary">
