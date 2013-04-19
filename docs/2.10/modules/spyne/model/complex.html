@@ -155,7 +155,8 @@
 <span class="sd">    :param right: Name of the right join column.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">multi</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">backref</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">id_backref</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">multi</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">backref</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                                              <span class="n">id_backref</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">multi</span> <span class="o">=</span> <span class="n">multi</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
@@ -170,10 +171,13 @@
 <span class="sd">    Make sure you don&#39;t mix this with the json package when importing.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip_depth</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">skip_depth</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;skip_depth &gt; 0&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">skip_depth</span> <span class="o">=</span> <span class="n">skip_depth</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ignore_wrappers</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">complex_as</span><span class="o">=</span><span class="nb">list</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ignore_wrappers</span> <span class="o">!=</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;ignore_wrappers != True&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">complex_as</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;complex_as != list&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignore_wrappers</span> <span class="o">=</span> <span class="n">ignore_wrappers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">complex_as</span> <span class="o">=</span> <span class="n">complex_as</span>
 
 
 <span class="k">class</span> <span class="nc">msgpack</span><span class="p">:</span></div>
@@ -676,7 +680,19 @@
 
             <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">__type_name__</span> <span class="ow">is</span> <span class="n">ModelBase</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
                 <span class="n">v</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_namespace</span><span class="p">()</span>
-                <span class="n">v</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">_</span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">(),</span> <span class="n">k</span><span class="p">,</span> <span class="n">TYPE_SUFFIX</span><span class="p">)</span>
+                <span class="n">tn</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">_</span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">(),</span> <span class="n">k</span><span class="p">,</span> <span class="n">TYPE_SUFFIX</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Array</span><span class="p">):</span>
+                    <span class="n">child_v</span><span class="p">,</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                    <span class="n">child_v</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="n">tn</span>
+
+                    <span class="n">v</span><span class="o">.</span><span class="n">_type_info</span> <span class="o">=</span> <span class="n">TypeInfo</span><span class="p">({</span><span class="n">tn</span><span class="p">:</span> <span class="n">child_v</span><span class="p">})</span>
+                    <span class="n">v</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s%s%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ARRAY_PREFIX</span><span class="p">,</span><span class="n">tn</span><span class="p">,</span><span class="n">ARRAY_SUFFIX</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">v</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">_</span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">(),</span> <span class="n">k</span><span class="p">,</span>
+                                                                   <span class="n">TYPE_SUFFIX</span><span class="p">)</span>
+
 
             <span class="n">v</span><span class="o">.</span><span class="n">resolve_namespace</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">default_ns</span><span class="p">,</span> <span class="n">tags</span><span class="p">)</span>
 
@@ -776,6 +792,9 @@
 
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ComplexModelMeta</span>
 
+    <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">ComplexModelBase</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
+        <span class="n">_wrapper</span> <span class="o">=</span> <span class="bp">True</span>
+
     <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">serializer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">retval</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -798,21 +817,21 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_set_serializer</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">serializer</span><span class="p">):</span>
-        <span class="c"># hack to default to unbounded arrays when the user didn&#39;t specify</span>
-        <span class="c"># max_occurs. We should find a better way.</span>
-        <span class="k">if</span> <span class="n">serializer</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="n">max_occurs</span><span class="o">=</span><span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">(</span><span class="s">&#39;inf&#39;</span><span class="p">))</span>
-
-        <span class="k">if</span> <span class="n">serializer</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span> <span class="ow">is</span> <span class="n">ModelBase</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
-            <span class="n">member_name</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">__base_type__</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">==</span> <span class="n">cls</span><span class="o">.</span><span class="n">__type_name__</span><span class="p">:</span>
-                <span class="n">cls</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="n">ModelBase</span><span class="o">.</span><span class="n">Empty</span> <span class="c"># to be resolved later</span>
+        <span class="k">if</span> <span class="n">serializer</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span> <span class="ow">is</span> <span class="n">ModelBase</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span> <span class="c"># A customized class</span>
+            <span class="n">member_name</span> <span class="o">=</span> <span class="s">&quot;OhNoes&quot;</span>
+            <span class="c"># mark array type name as &quot;to be resolved later&quot;.</span>
+            <span class="n">cls</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="n">ModelBase</span><span class="o">.</span><span class="n">Empty</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">member_name</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">==</span> <span class="n">cls</span><span class="o">.</span><span class="n">__type_name__</span><span class="p">:</span>
                 <span class="n">cls</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s%s%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ARRAY_PREFIX</span><span class="p">,</span> <span class="n">member_name</span><span class="p">,</span>
                                                                    <span class="n">ARRAY_SUFFIX</span><span class="p">)</span>
+
+        <span class="c"># hack to default to unbounded arrays when the user didn&#39;t specify</span>
+        <span class="c"># max_occurs.</span>
+        <span class="k">if</span> <span class="n">serializer</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="n">max_occurs</span><span class="o">=</span><span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">(</span><span class="s">&#39;inf&#39;</span><span class="p">))</span>
 
         <span class="n">cls</span><span class="o">.</span><span class="n">_type_info</span> <span class="o">=</span> <span class="p">{</span><span class="n">member_name</span><span class="p">:</span> <span class="n">serializer</span><span class="p">}</span>
 

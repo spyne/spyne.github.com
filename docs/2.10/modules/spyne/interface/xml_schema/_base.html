@@ -126,6 +126,7 @@
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Date</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Time</span>
 
+
 <span class="n">_add_handlers</span> <span class="o">=</span> <span class="n">cdict</span><span class="p">({</span>
     <span class="nb">object</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">interface</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">tags</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
     <span class="n">Alias</span><span class="p">:</span> <span class="n">alias_add</span><span class="p">,</span>
@@ -211,10 +212,11 @@
             <span class="c"># append import tags</span>
             <span class="k">for</span> <span class="n">namespace</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">imports</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">nsmap</span><span class="p">[</span><span class="n">pref</span><span class="p">]]:</span>
                 <span class="n">import_</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="s">&quot;{</span><span class="si">%s</span><span class="s">}import&quot;</span> <span class="o">%</span> <span class="n">_ns_xsd</span><span class="p">)</span>
+
                 <span class="n">import_</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;namespace&quot;</span><span class="p">,</span> <span class="n">namespace</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">with_schema_location</span><span class="p">:</span>
                     <span class="n">import_</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;schemaLocation&#39;</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">.xsd&quot;</span> <span class="o">%</span>
-                                   <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">get_namespace_prefix</span><span class="p">(</span><span class="n">namespace</span><span class="p">))</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">get_namespace_prefix</span><span class="p">(</span><span class="n">namespace</span><span class="p">))</span>
 
                 <span class="n">sl</span> <span class="o">=</span> <span class="n">spyne</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">xml_ns</span><span class="o">.</span><span class="n">schema_location</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">namespace</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">sl</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
@@ -237,7 +239,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">build_schema_nodes</span><span class="p">(</span><span class="n">with_schema_location</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
         <span class="n">pref_tns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">get_namespace_prefix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">tns</span><span class="p">)</span>
-        <span class="n">tmp_dir_name</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">()</span>
+        <span class="n">tmp_dir_name</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s">&#39;spyne&#39;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;generating schema for targetNamespace=</span><span class="si">%r</span><span class="s">, prefix: </span><span class="si">%r</span><span class="s"> in dir </span><span class="si">%r</span><span class="s">&quot;</span>
                                    <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">tns</span><span class="p">,</span> <span class="n">pref_tns</span><span class="p">,</span> <span class="n">tmp_dir_name</span><span class="p">))</span>
 

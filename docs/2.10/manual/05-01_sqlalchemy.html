@@ -126,7 +126,7 @@ open an issue and chime in.</p>
 </li>
 <li><p class="first">The second method is to use <a class="reference internal" href="../reference/model/sql.html#spyne.model.table.TableModel" title="spyne.model.table.TableModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.table.TableModel</span></tt></a> as a
 second base class together with the declarative base class (output of the
-<tt class="xref py py-func docutils literal"><span class="pre">sqlalchemy.orm.declarative_base()</span></tt> callable). This is deprecated <a class="footnote-reference" href="#id2" id="id1">[1]</a>
+<tt class="xref py py-func docutils literal"><span class="pre">sqlalchemy.orm.declarative_base()</span></tt> callable). This is deprecated <a class="footnote-reference" href="#id4" id="id1">[1]</a>
 and won&#8217;t be developed any further, yet it also won&#8217;t be removed in the
 foreseeable feature as apparently there are people who are quite fine with
 its quirks and would prefer to have it shipped within the Spyne package.</p>
@@ -189,7 +189,7 @@ for every <tt class="docutils literal"><span class="pre">MetaData</span></tt> in
 <span class="n">TableModel</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">sqla_metadata</span><span class="o">.</span><span class="n">bind</span> <span class="o">=</span> <span class="n">db</span>
 </pre></div>
 </div>
-<p>... but the first method looks cleaner.</p>
+<p>... but the first method is arguably cleaner.</p>
 <p>We&#8217;re finally ready to define Spyne types mapped to SQLAlchemy tables. At this
 point, we have two options: Do everything with the Spyne markers, or re-use
 existing SQLAlchemy code we might already have.</p>
@@ -207,9 +207,10 @@ existing SQLAlchemy code we might already have.</p>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;user&#39;</span>
 
     <span class="nb">id</span> <span class="o">=</span> <span class="n">UnsignedInteger32</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">user_name</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">min_len</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">&#39;[a-z0-9.]+&#39;</span><span class="p">)</span>
+    <span class="n">user_name</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">min_len</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">&#39;[a-z0-9.]+&#39;</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">full_name</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">&#39;\w+( \w+)+&#39;</span><span class="p">)</span>
     <span class="n">email</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">r&#39;[a-z0-9._%+-]+@[a-z0-9.-]+\.[A-Z]{2,4}&#39;</span><span class="p">)</span>
+    <span class="n">last_pos</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s">&#39;gist&#39;</span><span class="p">)</span>
     <span class="n">permissions</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="n">Permission</span><span class="p">)</span><span class="o">.</span><span class="n">store_as</span><span class="p">(</span><span class="s">&#39;table&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -220,9 +221,14 @@ table in this object, we just pass the <tt class="docutils literal"><span class=
 <tt class="docutils literal"><span class="pre">__table__</span></tt> object (which is a <tt class="xref py py-class docutils literal"><span class="pre">sqlalchemy.schema.Table</span></tt> instance)
 will be generated automatically.</p>
 <p>The definitions of the <tt class="docutils literal"><span class="pre">id</span></tt>, <tt class="docutils literal"><span class="pre">user_name</span></tt>, <tt class="docutils literal"><span class="pre">full_name</span></tt> and <tt class="docutils literal"><span class="pre">email</span></tt>
-fields should be self-explanatory.</p>
-<p>As for the <tt class="docutils literal"><span class="pre">permissions</span></tt> field, thanks to the <tt class="docutils literal"><span class="pre">store_as('table')</span></tt> call,
-it will be stored using a one-to-many relationship. Spyne automatically
+fields should be self-explanatory. There are other database-specific arguments
+that can be passed to the column definition, see the
+<tt class="xref py py-class docutils literal"><span class="pre">spyne.model.ModelBase</span></tt> reference for more information.</p>
+<p>The <tt class="docutils literal"><span class="pre">last_pos</span></tt> field is a spatial type &#8211; a 2D point, to be
+exact. PostGIS docs suggest to use &#8216;gin&#8217; or &#8216;gist&#8217; indexes with spatial
+fields. Here we chose to use the &#8216;gist&#8217; index <a class="footnote-reference" href="#id5" id="id2">[2]</a>.</p>
+<p>As for the <tt class="docutils literal"><span class="pre">permissions</span></tt> field, due to the <tt class="docutils literal"><span class="pre">store_as('table')</span></tt> call, it
+will be stored using a one-to-many relationship. Spyne automatically
 generates a foreign key column inside the <tt class="docutils literal"><span class="pre">permission</span></tt> table with &#8216;user_id&#8217;
 as default value.</p>
 <p>If we&#8217;d let the <tt class="docutils literal"><span class="pre">store_as()</span></tt> call out:</p>
@@ -231,7 +237,7 @@ as default value.</p>
 </div>
 <p>... the permissions field would not exist as far as SQLAlchemy is concerned.</p>
 <p>Calling <tt class="docutils literal"><span class="pre">store_as()</span></tt> is just a shortcut for calling
-<tt class="docutils literal"><span class="pre">customize(store_as='table')</span></tt>.</p>
+<tt class="docutils literal"><span class="pre">.customize(store_as='table')</span></tt>.</p>
 <p>While the default is what appears to make most sense when defining such
 relations, it might not always be appropriate. Spyne offers the so-called
 &#8220;compound option object&#8221;s to make it easy to configure persistance options.</p>
@@ -290,13 +296,12 @@ the table, it&#8217;s possible to make arbitrary changes to the schema of the
 <tt class="docutils literal"><span class="pre">Permission</span></tt> object without worrying about schema migrations &#8211; If the
 changes are backwards-compatible, everything will work flawlessly. If not,
 attributes in that are not defined in the latest object definition will just
-be ignored.</p>
+be ignored <a class="footnote-reference" href="#id6" id="id3">[3]</a>.</p>
+<p>Such changes are never reflected to the schema. In other words, your clients
+will never know how your objects are persisted just by looking at your schema
+alone.</p>
 <p>You can play with the example at <a class="reference external" href="http://spyne.io/#s=sql">spyne.io</a> to
-experiment and fully understand how Spyne&#8217;s model generator works.</p>
-<p>To make the case with non-backwards-compatible changes work, an implicit
-versioning support must be added. Assuming that everybody agrees that this is
-a good idea, adding this feature would be another interesting project.</p>
-<p>Feedback is welcome!</p>
+experiment how Spyne&#8217;s model engine interacts with SQLAlchemy.</p>
 </div>
 </div>
 <div class="section" id="integrating-with-existing-sqlalchemy-objects">
@@ -318,8 +323,10 @@ a good idea, adding this feature would be another interesting project.</p>
 </pre></div>
 </div>
 <p>... creates the corresponding Spyne object. This conversion works for simple
-column types, but for complex ORM constructs like <tt class="docutils literal"><span class="pre">relationship</span></tt>.</p>
-<p>If you want to override this, you must set everything manually:</p>
+column types, but complex ORM constructs like <tt class="docutils literal"><span class="pre">relationship</span></tt>are not
+converted.</p>
+<p>If you want to override which columns are exposed, you must set everything
+manually:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">TableModel</span><span class="p">):</span>
     <span class="n">__table__</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">__table__</span>
 
@@ -329,7 +336,7 @@ column types, but for complex ORM constructs like <tt class="docutils literal"><
     <span class="n">email</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s">r&#39;[a-z0-9._%+-]+@[a-z0-9.-]+\.[A-Z]{2,4}&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Of course, it&#8217;s possible to leave fields out.</p>
+<p>Any field not listed here does not exist as far as Spyne is concerned.</p>
 <p>This is still one of the weaker spots of SQLAlchemy integration, please chime
 in with your ideas on how we should handle different cases!</p>
 </div>
@@ -341,7 +348,7 @@ where service metadata management APIs are introduced, but otherwise, you&#8217;
 mostly set.</p>
 <p>You also refer to the reference of the documentation or the mailing list if
 you have further questions.</p>
-<table class="docutils footnote" frame="void" id="id2" rules="none">
+<table class="docutils footnote" frame="void" id="id4" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><p class="first">The reasons for its depreciation are as follows:</p>
@@ -353,6 +360,25 @@ maintain.</li>
 <li>It&#8217;s not easy to add arbitrary restrictions (like pattern) when
 using the SQLAlchemy API.</li>
 </ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>It&#8217;s not possible to use an Array of primitives directly for
+<tt class="docutils literal"><span class="pre">'table'</span></tt> storage &#8211; create a ComplexModel with a primary key field
+as a workaround. (or, you guessed it, send a patch!...)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td><p class="first">To make the case with non-backwards-compatible changes work, an
+implicit versioning support must be added. Assuming that everybody
+agrees that this is a good idea, adding this feature would be another
+interesting project.</p>
+<p class="last">Feedback is welcome!</p>
 </td></tr>
 </tbody>
 </table>

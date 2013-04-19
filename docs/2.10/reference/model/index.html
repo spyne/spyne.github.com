@@ -154,7 +154,8 @@ mainly used for defining constraints on input values.</p>
 <dt id="spyne.model._base.ModelBase.Attributes.db_type">
 <tt class="descname">db_type</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model._base.ModelBase.Attributes.db_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>When not None, it overrides Spyne&#8217;s own mapping from Spyne types to
-SQLAlchemy types.</p>
+SQLAlchemy types. It&#8217;s a standard SQLAlchemy type marker, e.g.
+<tt class="docutils literal"><span class="pre">sqlalchemy.Integer</span></tt>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -253,8 +254,9 @@ names to that language as values.</p>
 <dt id="spyne.model._base.ModelBase.Attributes.unique">
 <tt class="descname">unique</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model._base.ModelBase.Attributes.unique" title="Permalink to this definition">¶</a></dt>
 <dd><p>If True, this object will be set as unique in the database schema
-with default indexing options. If the value is a string, it will be used
-as the indexing method to create the unique index.</p>
+with default indexing options. If the value is a string, it will be
+used as the indexing method to create the unique index. See sqlalchemy
+documentation on how to create multi-column unique constraints.</p>
 </dd></dl>
 
 </dd></dl>

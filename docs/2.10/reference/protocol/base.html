@@ -89,7 +89,7 @@
 <span id="protocol-base-class"></span><span id="reference-protocol-base"></span><h1>Protocol Base Class<a class="headerlink" href="#module-spyne.protocol._base" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="spyne.protocol._base.ProtocolBase">
-<em class="property">class </em><tt class="descclassname">spyne.protocol._base.</tt><tt class="descname">ProtocolBase</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>skip_depth=0</em>, <em>ignore_uncap=False</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/_base.html#ProtocolBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol._base.ProtocolBase" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">spyne.protocol._base.</tt><tt class="descname">ProtocolBase</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>ignore_uncap=False</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/_base.html#ProtocolBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol._base.ProtocolBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>This is the abstract base class for all protocol implementations. Child
 classes can implement only the required subset of the public methods.</p>
@@ -120,9 +120,6 @@ incoming data.</li>
 <li><strong>mime_type</strong> &#8211; The mime_type this protocol should set for transports
 that support this. This is a quick way to override the mime_type by
 default instead of subclassing the releavant protocol implementation.</li>
-<li><strong>skip_depth</strong> &#8211; Number of wrapper classes to ignore. This is
-typically one of (0, 1, 2) but higher numbers may also work for your
-case.</li>
 <li><strong>ignore_uncap</strong> &#8211; Silently ignore cases when the protocol is not capable
 of serializing return values instead of raising a TypeError.</li>
 </ul>

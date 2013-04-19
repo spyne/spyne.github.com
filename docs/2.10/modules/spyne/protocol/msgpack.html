@@ -263,12 +263,12 @@
             <span class="c"># transform the results into a dict:</span>
             <span class="k">if</span> <span class="n">out_type</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MessagePackRpc</span><span class="o">.</span><span class="n">MSGPACK_RESPONSE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
-                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_to_value</span><span class="p">(</span><span class="n">out_type</span><span class="p">,</span> <span class="n">inst</span><span class="p">,</span> <span class="n">wrapper_name</span><span class="p">)</span>
-                                                       <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">out_instance</span><span class="p">)</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_to_value</span><span class="p">(</span><span class="n">out_type</span><span class="p">,</span> <span class="n">inst</span><span class="p">)</span>
+                                                      <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">out_instance</span><span class="p">)</span>
                     <span class="p">]]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MessagePackRpc</span><span class="o">.</span><span class="n">MSGPACK_RESPONSE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">_to_value</span><span class="p">(</span><span class="n">out_type</span><span class="p">,</span> <span class="n">out_instance</span><span class="p">,</span> <span class="n">wrapper_name</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_to_value</span><span class="p">(</span><span class="n">out_type</span><span class="p">,</span> <span class="n">out_instance</span><span class="p">)</span>
                     <span class="p">]]</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">fire_event</span><span class="p">(</span><span class="s">&#39;after_serialize&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>

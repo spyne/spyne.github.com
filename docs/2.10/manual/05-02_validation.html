@@ -171,7 +171,7 @@ validation are as follows:</p>
 </table>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p>The two validation sybsystems operate independently, you can use either
+<p>The two validation subsystems operate independently, you can use either
 one, but not both at the same time. The validator is indicated when
 instantiating the protocol, by passing either <tt class="docutils literal"><span class="pre">validator='soft'</span></tt> or
 <tt class="docutils literal"><span class="pre">validator='lxml'</span></tt> to the constructor.</p>
@@ -210,10 +210,11 @@ below, along with their default values</p>
 <li><p class="first"><tt class="docutils literal"><span class="pre">default</span> <span class="pre">=</span> <span class="pre">None</span></tt> - default value if the input is <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
 </li>
 <li><dl class="first docutils">
-<dt><tt class="docutils literal"><span class="pre">nillable</span> <span class="pre">=</span> <span class="pre">True</span></tt> - if True, the item can be null when provided. Note that</dt>
-<dd><p class="first last">this constraint only applies when the variable is actually provided in the
-input document and is ignored if it&#8217;s not. You should set <tt class="docutils literal"><span class="pre">min_occurs=1</span></tt>
-if you want to force this variable to be present in incoming documents.</p>
+<dt><tt class="docutils literal"><span class="pre">nillable</span> <span class="pre">=</span> <span class="pre">True</span></tt> - if <tt class="docutils literal"><span class="pre">True</span></tt>, the item can be null when provided. Note</dt>
+<dd><p class="first last">that this constraint only applies when the variable is actually provided
+in the input document and is ignored if it&#8217;s not. You should set
+<tt class="docutils literal"><span class="pre">min_occurs=1</span></tt> if you want to force this variable to be present in
+incoming documents.</p>
 </dd>
 </dl>
 </li>
@@ -297,12 +298,12 @@ can explicitly indicate the set:</p>
 <p>Spyne offers several primitives for this purpose. Please see the
 <tt class="xref py py-class docutils literal"><span class="pre">spyne.model.ModelBase</span></tt> reference for more information.</p>
 <p>These primitives are:</p>
-<ul class="simple">
-<li><em>validate_string</em> - invoked when the variable is extracted from the input XML
-data.</li>
-<li><em>validate_native</em> - invoked after the string is converted to a specific Python
-value.</li>
-</ul>
+<dl class="docutils">
+<dt><strong>validate_string</strong></dt>
+<dd>invoked when the variable is extracted from the input XML data.</dd>
+<dt><strong>validate_native</strong></dt>
+<dd>invoked after the string is converted to a specific Python value.</dd>
+</dl>
 <p>Since all data comes in as a byte stream, when you read it you get a <tt class="docutils literal"><span class="pre">str</span></tt>
 instance. So the <tt class="docutils literal"><span class="pre">validate_string</span></tt> hook is your first line of defense
 against invalid data.</p>

@@ -128,36 +128,6 @@
 <span class="kn">from</span> <span class="nn">spyne.protocol._model</span> <span class="kn">import</span> <span class="o">*</span>
 
 
-<span class="k">def</span> <span class="nf">unwrap_messages</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">skip_depth</span><span class="p">):</span>
-    <span class="n">out_type</span> <span class="o">=</span> <span class="n">cls</span>
-    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">skip_depth</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">out_type</span><span class="p">,</span> <span class="s">&quot;_type_info&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_type</span><span class="o">.</span><span class="n">_type_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">out_type</span> <span class="o">=</span> <span class="n">out_type</span><span class="o">.</span><span class="n">_type_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">break</span>
-
-    <span class="k">return</span> <span class="n">out_type</span>
-
-
-<span class="k">def</span> <span class="nf">unwrap_instance</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">inst</span><span class="p">,</span> <span class="n">skip_depth</span><span class="p">):</span>
-    <span class="n">out_type</span> <span class="o">=</span> <span class="n">cls</span>
-    <span class="n">out_instance</span> <span class="o">=</span> <span class="n">inst</span>
-
-    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">skip_depth</span><span class="p">):</span>
-        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">out_type</span><span class="p">,</span> <span class="s">&quot;_type_info&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_type</span><span class="o">.</span><span class="n">_type_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">t</span><span class="p">),</span> <span class="o">=</span> <span class="n">out_type</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">out_type</span><span class="p">,</span> <span class="n">Array</span><span class="p">):</span>
-                <span class="n">out_instance</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">out_instance</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-            <span class="n">out_type</span> <span class="o">=</span> <span class="n">t</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">break</span>
-
-    <span class="k">return</span> <span class="n">out_type</span><span class="p">,</span> <span class="n">out_instance</span><span class="p">,</span> <span class="p">(</span><span class="n">skip_depth</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span>
-
-
 <span class="k">class</span> <span class="nc">ProtocolBaseMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="nb">object</span><span class="p">)):</span>
     <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">dkey</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&quot;_to_string_handlers&quot;</span><span class="p">,</span> <span class="s">&quot;_to_string_iterable_handlers&quot;</span><span class="p">,</span>
@@ -206,9 +176,6 @@
 <span class="sd">    :param mime_type: The mime_type this protocol should set for transports</span>
 <span class="sd">        that support this. This is a quick way to override the mime_type by</span>
 <span class="sd">        default instead of subclassing the releavant protocol implementation.</span>
-<span class="sd">    :param skip_depth: Number of wrapper classes to ignore. This is</span>
-<span class="sd">        typically one of (0, 1, 2) but higher numbers may also work for your</span>
-<span class="sd">        case.</span>
 <span class="sd">    :param ignore_uncap: Silently ignore cases when the protocol is not capable</span>
 <span class="sd">        of serializing return values instead of raising a TypeError.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -276,15 +243,15 @@
         <span class="n">Fault</span><span class="p">:</span> <span class="n">fault_to_dict</span><span class="p">,</span>
     <span class="p">})</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">skip_depth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ignore_uncap</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                                            <span class="n">ignore_uncap</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__app</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">validator</span> <span class="o">=</span> <span class="bp">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">set_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">event_manager</span> <span class="o">=</span> <span class="n">EventManager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_validator</span><span class="p">(</span><span class="n">validator</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">skip_depth</span> <span class="o">=</span> <span class="n">skip_depth</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ignore_uncap</span><span class="o">=</span><span class="n">ignore_uncap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignore_uncap</span> <span class="o">=</span> <span class="n">ignore_uncap</span>
         <span class="k">if</span> <span class="n">mime_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mime_type</span> <span class="o">=</span> <span class="n">mime_type</span>
 

@@ -133,7 +133,6 @@
 <div class="viewcode-block" id="AttributesMeta"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.AttributesMeta">[docs]</a>    <span class="sd">&quot;&quot;&quot;I hate quirks. This is a 10-minute attempt to get rid of a one-letter</span>
 <span class="sd">    quirk.&quot;&quot;&quot;</span>
 
-
     <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">):</span>
         <span class="c"># Mapper args should not be inherited.</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="s">&#39;sqla_mapper_args&#39;</span> <span class="ow">in</span> <span class="n">cls_dict</span><span class="p">:</span>
@@ -173,6 +172,11 @@
     <span class="n">__orig__</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="sd">&quot;&quot;&quot;This holds the original class the class .customize()d from. &quot;&quot;&quot;</span>
 
+    <span class="n">__extends__</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="sd">&quot;&quot;&quot;This holds the original class the class inherited or .customize()d from.</span>
+<span class="sd">    This is different from __orig__ because it&#39;s only set when</span>
+<span class="sd">    ``cls.is_default(cls) == False``&quot;&quot;&quot;</span>
+
     <span class="n">__namespace__</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="sd">&quot;&quot;&quot;The public namespace of this class. Use ``get_namespace()`` instead of</span>
 <span class="sd">    accessing it directly.&quot;&quot;&quot;</span>
@@ -182,15 +186,19 @@
 <span class="sd">    accessing it directly.&quot;&quot;&quot;</span>
 
     <span class="c"># These are not the xml schema defaults. The xml schema defaults are</span>
-    <span class="c"># considered in ComplexModel&#39;s add_to_schema method. the defaults here</span>
-    <span class="c"># are to reflect what people seem to want most.</span>
+    <span class="c"># considered in XmlSchema&#39;s add() method. the defaults here are to reflect</span>
+    <span class="c"># what people seem to want most.</span>
     <span class="c">#</span>
-    <span class="c"># please note that min_occurs and max_occurs must be validated in the</span>
+    <span class="c"># Please note that min_occurs and max_occurs must be validated in the</span>
     <span class="c"># ComplexModelBase deserializer.</span>
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <div class="viewcode-block" id="ModelBase.Attributes"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.ModelBase.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;The class that holds the constraints for the given type.&quot;&quot;&quot;</span>
 
         <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">AttributesMeta</span>
+
+        <span class="n">_wrapper</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="c"># when skip_wrappers=True is passed to a protocol, these objects</span>
+        <span class="c"># are skipped. just for internal use.</span>
 
         <span class="n">default</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="sd">&quot;&quot;&quot;The default value if the input is None&quot;&quot;&quot;</span>
@@ -242,13 +250,15 @@
 
         <span class="n">unique</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="sd">&quot;&quot;&quot;If True, this object will be set as unique in the database schema</span>
-<span class="sd">        with default indexing options. If the value is a string, it will be used</span>
-<span class="sd">        as the indexing method to create the unique index.</span>
+<span class="sd">        with default indexing options. If the value is a string, it will be</span>
+<span class="sd">        used as the indexing method to create the unique index. See sqlalchemy</span>
+<span class="sd">        documentation on how to create multi-column unique constraints.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">db_type</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="sd">&quot;&quot;&quot;When not None, it overrides Spyne&#39;s own mapping from Spyne types to</span>
-<span class="sd">        SQLAlchemy types.</span>
+<span class="sd">        SQLAlchemy types. It&#39;s a standard SQLAlchemy type marker, e.g.</span>
+<span class="sd">        ``sqlalchemy.Integer``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">index</span> <span class="o">=</span> <span class="bp">None</span>
@@ -451,8 +461,6 @@
 <div class="viewcode-block" id="SimpleModel"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.SimpleModel">[docs]</a>    <span class="sd">&quot;&quot;&quot;The base class for primitives.&quot;&quot;&quot;</span>
 
     <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span>
-    <span class="n">__base_type__</span> <span class="o">=</span> <span class="bp">None</span> <span class="c"># this is different from __orig__ because it&#39;s only set</span>
-                         <span class="c"># when cls.is_default(cls) == False</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">ModelBase</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
 <div class="viewcode-block" id="SimpleModel.Attributes"><a class="viewcode-back" href="../../../reference/model/index.html#spyne.model._base.SimpleModel.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;The class that holds the constraints for the given type.&quot;&quot;&quot;</span>
@@ -460,7 +468,7 @@
         <span class="k">class</span> <span class="nc">__metaclass__</span><span class="p">(</span><span class="n">AttributesMeta</span><span class="p">):</span>
             <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">):</span>
                 <span class="n">AttributesMeta</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">__pattern</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__pattern</span> <span class="o">=</span> <span class="n">cls_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;pattern&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
             <span class="k">def</span> <span class="nf">get_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pattern</span>
             <span class="k">def</span> <span class="nf">set_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
@@ -484,7 +492,7 @@
         <span class="n">retval</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">retval</span><span class="o">.</span><span class="n">is_default</span><span class="p">(</span><span class="n">retval</span><span class="p">):</span>
-            <span class="n">retval</span><span class="o">.</span><span class="n">__base_type__</span> <span class="o">=</span> <span class="n">cls</span>
+            <span class="n">retval</span><span class="o">.</span><span class="n">__extends__</span> <span class="o">=</span> <span class="n">cls</span>
             <span class="n">retval</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;type_name&quot;</span><span class="p">,</span> <span class="n">ModelBase</span><span class="o">.</span><span class="n">Empty</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">retval</span>

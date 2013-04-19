@@ -95,20 +95,8 @@ decorator is a simple example of this.</p>
 <dl class="function">
 <dt id="spyne.decorator.rpc">
 <tt class="descclassname">spyne.decorator.</tt><tt class="descname">rpc</tt><big>(</big><em>*params</em>, <em>**kparams</em><big>)</big><a class="reference internal" href="../modules/spyne/decorator.html#rpc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.decorator.rpc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method decorator to tag a method as a remote procedure call. See
-<a class="reference internal" href="#spyne.decorator.srpc" title="spyne.decorator.srpc"><tt class="xref py py-func docutils literal"><span class="pre">spyne.decorator.srpc()</span></tt></a> for detailed information.</p>
-<p>This decorator enables passing <a class="reference internal" href="base.html#spyne.MethodContext" title="spyne.MethodContext"><tt class="xref py py-class docutils literal"><span class="pre">spyne.MethodContext</span></tt></a> instance as an
-implicit first argument to the user callable.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="spyne.decorator.srpc">
-<tt class="descclassname">spyne.decorator.</tt><tt class="descname">srpc</tt><big>(</big><em>*params</em>, <em>**kparams</em><big>)</big><a class="reference internal" href="../modules/spyne/decorator.html#srpc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.decorator.srpc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method decorator to tag a method as a remote procedure call.</p>
-<p>The methods tagged with this decorator do not behave like a normal python
-method but return &#8216;MethodDescriptor&#8217; object when called.</p>
-<p>The initial &#8220;s&#8221; stands for &#8220;static&#8221;. In Spyne&#8217;s context, that means no
-implicit first argument is passed to the user callable.</p>
+<dd><p>Method decorator to tag a method as a remote procedure call in a
+<a class="reference internal" href="service.html#spyne.service.ServiceBase" title="spyne.service.ServiceBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.service.ServiceBase</span></tt></a> subclass.</p>
 <p>You should use the <a class="reference internal" href="server.html#spyne.server.null.NullServer" title="spyne.server.null.NullServer"><tt class="xref py py-class docutils literal"><span class="pre">spyne.server.null.NullServer</span></tt></a> transport if you
 want to call the methods directly. You can also use the &#8216;function&#8217; attribute
 of the returned object to call the function itself.</p>
@@ -117,6 +105,8 @@ of the returned object to call the function itself.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>_returns</strong> &#8211; Denotes The return type of the function. It can be a type or
+a sequence of types for functions that have multiple return values.</li>
 <li><strong>_in_header</strong> &#8211; A type or an iterable of types that that this method
 accepts as incoming header.</li>
 <li><strong>_out_header</strong> &#8211; A type or an iterable of types that that this method
@@ -150,6 +140,17 @@ documents.</li>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="function">
+<dt id="spyne.decorator.srpc">
+<tt class="descclassname">spyne.decorator.</tt><tt class="descname">srpc</tt><big>(</big><em>*params</em>, <em>**kparams</em><big>)</big><a class="reference internal" href="../modules/spyne/decorator.html#srpc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.decorator.srpc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method decorator to tag a method as a remote procedure call. See
+<a class="reference internal" href="#spyne.decorator.rpc" title="spyne.decorator.rpc"><tt class="xref py py-func docutils literal"><span class="pre">spyne.decorator.rpc()</span></tt></a> for detailed information.</p>
+<p>The initial &#8220;s&#8221; stands for &#8220;static&#8221;. In Spyne terms, that means no implicit
+first argument is passed to the user callable, which really means the
+method is &#8220;stateless&#8221; rather than static. It&#8217;s meant to be used for
+existing functions that can&#8217;t be changed.</p>
 </dd></dl>
 
 </div>
