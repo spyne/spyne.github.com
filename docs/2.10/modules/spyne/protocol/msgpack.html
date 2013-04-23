@@ -101,15 +101,31 @@
 
 <span class="kn">import</span> <span class="nn">msgpack</span>
 
-<span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">Array</span>
 <span class="kn">from</span> <span class="nn">spyne.model.fault</span> <span class="kn">import</span> <span class="n">Fault</span>
 <span class="kn">from</span> <span class="nn">spyne.protocol.dictdoc</span> <span class="kn">import</span> <span class="n">HierDictDocument</span>
+<span class="kn">from</span> <span class="nn">spyne.protocol._model</span> <span class="kn">import</span> <span class="n">integer_to_string</span>
+<span class="kn">from</span> <span class="nn">spyne.protocol._model</span> <span class="kn">import</span> <span class="n">integer_from_string</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Double</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Boolean</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Integer</span>
 
 
 <span class="k">class</span> <span class="nc">MessagePackDecodeError</span><span class="p">(</span><span class="n">Fault</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="n">Fault</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;Client.MessagePackDecodeError&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 
+
+<span class="k">def</span> <span class="nf">_integer_from_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">integer_from_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+<span class="k">def</span> <span class="nf">_integer_to_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="o">-</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">63</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">64</span><span class="p">:</span> <span class="c"># if it&#39;s inside the range msgpack can deal with</span>
+        <span class="k">return</span> <span class="n">value</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">integer_to_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">MessagePackDocument</span><span class="p">(</span><span class="n">HierDictDocument</span><span class="p">):</span>
 <div class="viewcode-block" id="MessagePackDocument"><a class="viewcode-back" href="../../../reference/protocol/msgpack.html#spyne.protocol.msgpack.MessagePackDocument">[docs]</a>    <span class="sd">&quot;&quot;&quot;An integration class for the msgpack protocol.&quot;&quot;&quot;</span>
@@ -118,6 +134,28 @@
 
     <span class="nb">type</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">HierDictDocument</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
     <span class="nb">type</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;msgpack&#39;</span><span class="p">)</span>
+
+    <span class="c"># flags to be used in tests</span>
+    <span class="n">_decimal_as_string</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">_huge_numbers_as_string</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                        <span class="n">ignore_uncap</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                        <span class="c"># DictDocument specific</span>
+                                        <span class="n">ignore_wrappers</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                        <span class="n">complex_as</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
+                                        <span class="n">ordered</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+
+        <span class="n">HierDictDocument</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">mime_type</span><span class="p">,</span> <span class="n">ignore_uncap</span><span class="p">,</span>
+                                           <span class="n">ignore_wrappers</span><span class="p">,</span> <span class="n">complex_as</span><span class="p">,</span> <span class="n">ordered</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from_string_handlers</span><span class="p">[</span><span class="n">Double</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from_string_handlers</span><span class="p">[</span><span class="n">Boolean</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from_string_handlers</span><span class="p">[</span><span class="n">Integer</span><span class="p">]</span> <span class="o">=</span> <span class="n">_integer_from_string</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">Double</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">Boolean</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">Integer</span><span class="p">]</span> <span class="o">=</span> <span class="n">_integer_to_string</span>
 
     <span class="k">def</span> <span class="nf">create_in_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">in_string_encoding</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
 <div class="viewcode-block" id="MessagePackDocument.create_in_document"><a class="viewcode-back" href="../../../reference/protocol/msgpack.html#spyne.protocol.msgpack.MessagePackDocument.create_in_document">[docs]</a>        <span class="sd">&quot;&quot;&quot;Sets ``ctx.in_document``,  using ``ctx.in_string``.</span>
@@ -255,10 +293,6 @@
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out_type_info</span><span class="p">)):</span>
                 <span class="n">attr_name</span> <span class="o">=</span> <span class="n">out_type_info</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">out_instance</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_object</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-
-            <span class="n">wrapper_name</span> <span class="o">=</span> <span class="bp">None</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">out_type</span><span class="p">,</span> <span class="n">Array</span><span class="p">):</span>
-                <span class="n">wrapper_name</span> <span class="o">=</span> <span class="n">out_type</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
 
             <span class="c"># transform the results into a dict:</span>
             <span class="k">if</span> <span class="n">out_type</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>

@@ -805,8 +805,6 @@
 <div class="viewcode-block" id="Point"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Point">[docs]</a>    <span class="sd">&quot;&quot;&quot;A point type whose native format is a WKT string. You can use</span>
 <span class="sd">    :func:`shapely.wkt.loads` to get a proper point type.&quot;&quot;&quot;</span>
 
-    <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
-
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="bp">None</span>
 
@@ -817,14 +815,14 @@
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_point_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;type_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;point</span><span class="si">%d</span><span class="s">d&#39;</span> <span class="o">%</span> <span class="n">dim</span>
 
-        <span class="k">return</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span>  <span class="o">**</span> <span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
+        <span class="k">return</span> <span class="n">retval</span>
 
 
 <span class="k">class</span> <span class="nc">Line</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span></div>
 <div class="viewcode-block" id="Line"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Line">[docs]</a>    <span class="sd">&quot;&quot;&quot;A point type whose native format is a WKT string. You can use</span>
 <span class="sd">    :func:`shapely.wkt.loads` to get a proper point type.&quot;&quot;&quot;</span>
-
-    <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="bp">None</span>
@@ -833,18 +831,18 @@
         <span class="k">assert</span> <span class="n">dim</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;dim&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dim</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_line_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_linestring_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;type_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;line</span><span class="si">%d</span><span class="s">d&#39;</span> <span class="o">%</span> <span class="n">dim</span>
 
-        <span class="k">return</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span>  <span class="o">**</span> <span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
+        <span class="k">return</span> <span class="n">retval</span>
 
 <span class="n">LineString</span><span class="o">=</span><span class="n">Line</span></div>
 
 <span class="k">class</span> <span class="nc">Polygon</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span>
 <div class="viewcode-block" id="Polygon"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Polygon">[docs]</a>    <span class="sd">&quot;&quot;&quot;A Polygon type whose native format is a WKT string. You can use</span>
 <span class="sd">    :func:`shapely.wkt.loads` to get a proper polygon type.&quot;&quot;&quot;</span>
-
-    <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="bp">None</span>
@@ -856,14 +854,14 @@
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_polygon_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;type_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;polygon</span><span class="si">%d</span><span class="s">d&#39;</span> <span class="o">%</span> <span class="n">dim</span>
 
-        <span class="k">return</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span>  <span class="o">**</span> <span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
+        <span class="k">return</span> <span class="n">retval</span>
 
 
 <span class="k">class</span> <span class="nc">MultiPoint</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span></div>
 <div class="viewcode-block" id="MultiPoint"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.MultiPoint">[docs]</a>    <span class="sd">&quot;&quot;&quot;A Multipolygon type whose native format is a WKT string. You can use</span>
 <span class="sd">    :func:`shapely.wkt.loads` to get a proper multipolygon type.&quot;&quot;&quot;</span>
-
-    <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="bp">None</span>
@@ -875,14 +873,14 @@
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_multipoint_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;type_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;multipoint</span><span class="si">%d</span><span class="s">d&#39;</span> <span class="o">%</span> <span class="n">dim</span>
 
-        <span class="k">return</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span>  <span class="o">**</span> <span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
+        <span class="k">return</span> <span class="n">retval</span>
 
 
 <span class="k">class</span> <span class="nc">MultiLine</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span></div>
 <div class="viewcode-block" id="MultiLine"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.MultiLine">[docs]</a>    <span class="sd">&quot;&quot;&quot;A Multipolygon type whose native format is a WKT string. You can use</span>
 <span class="sd">    :func:`shapely.wkt.loads` to get a proper multipolygon type.&quot;&quot;&quot;</span>
-
-    <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="bp">None</span>
@@ -891,18 +889,18 @@
         <span class="k">assert</span> <span class="n">dim</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;dim&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dim</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_multiline_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_multilinestring_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;type_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;multiline</span><span class="si">%d</span><span class="s">d&#39;</span> <span class="o">%</span> <span class="n">dim</span>
 
-        <span class="k">return</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span>  <span class="o">**</span> <span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
+        <span class="k">return</span> <span class="n">retval</span>
 
 <span class="n">MultiLineString</span> <span class="o">=</span> <span class="n">MultiLine</span></div>
 
 <span class="k">class</span> <span class="nc">MultiPolygon</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span>
 <div class="viewcode-block" id="MultiPolygon"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.MultiPolygon">[docs]</a>    <span class="sd">&quot;&quot;&quot;A Multipolygon type whose native format is a WKT string. You can use</span>
 <span class="sd">    :func:`shapely.wkt.loads` to get a proper multipolygon type.&quot;&quot;&quot;</span>
-
-    <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="bp">None</span>
@@ -914,7 +912,9 @@
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_multipolygon_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;type_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;multipolygon</span><span class="si">%d</span><span class="s">d&#39;</span> <span class="o">%</span> <span class="n">dim</span>
 
-        <span class="k">return</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span>  <span class="o">**</span> <span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
+        <span class="k">return</span> <span class="n">retval</span>
 
 
 <span class="c"># a class that is really a namespace</span>

@@ -697,9 +697,9 @@
         <span class="n">retval</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">__type_name__</span>
         <span class="n">retval</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">__namespace__</span>
 
-        <span class="n">e</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">retval</span><span class="p">,</span> <span class="s">&#39;__extends__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">e</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">retval</span><span class="o">.</span><span class="n">__extends__</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s">&#39;__extends__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">orig</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">retval</span><span class="p">,</span> <span class="s">&#39;__orig__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">orig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">retval</span><span class="o">.</span><span class="n">__extends__</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">orig</span><span class="p">,</span> <span class="s">&#39;__extends__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">retval</span>
 

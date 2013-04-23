@@ -367,7 +367,7 @@ than Spyne&#8217;s Soap client.</li>
 <blockquote>
 <div><ul class="simple">
 <li>Returning twisted&#8217;s Deferred from user code is now supported.</li>
-<li>You can now set Http response headers via ctx.out_object when
+<li>You can now set Http response headers via ctx.out_header when
 out_protocol is HttpRpc. <a class="reference external" href="https://github.com/arskom/spyne/pull/201">https://github.com/arskom/spyne/pull/201</a></li>
 <li>lxml is not a hard requirement anymore.</li>
 <li>XmlDocument and friends: cleanup_namespaces is now True by default.</li>
@@ -383,15 +383,16 @@ to the srpc decorator. See the existing_api example for usage examples.</li>
 <li>Remove destructor from <tt class="docutils literal"><span class="pre">MethodContext</span></tt>. Now transports need to call
 <tt class="docutils literal"><span class="pre">.close()</span></tt> explicitly to close object and fire relevant events.</li>
 <li>Application event &#8216;method_context_constructed&#8217; was renamed to
-<tt class="docutils literal"><span class="pre">'method_context_created'</span></tt></li>
+<tt class="docutils literal"><span class="pre">'method_context_created'</span></tt>.</li>
 <li>Application event &#8216;method_context_destroyed&#8217; was removed. The
 <tt class="docutils literal"><span class="pre">'method_context_closed'</span></tt> event can be used instead.</li>
 <li>SQLAlchemy integration now supports advanced features like specifying
 indexing methods.</li>
 <li>The object composition graph can now be cyclic.</li>
 <li>Integers were overhauled. Now boundary values of limited-size types are
-accessible via <tt class="docutils literal"><span class="pre">Attributes._{min,max}_bounds</span></tt></li>
-<li>Added <tt class="docutils literal"><span class="pre">MultiPolygon</span></tt> spatial type.</li>
+accessible via <tt class="docutils literal"><span class="pre">Attributes._{min,max}_bounds</span></tt>.</li>
+<li>We now have six spatial types, <tt class="docutils literal"><span class="pre">Point</span></tt>, <tt class="docutils literal"><span class="pre">LineString</span></tt> and <tt class="docutils literal"><span class="pre">Polygon</span></tt>
+along with their <tt class="docutils literal"><span class="pre">Multi*</span></tt> variants.</li>
 <li>The deprecated <tt class="docutils literal"><span class="pre">ProtocolBase.set_method_descriptor</span></tt> function was removed.</li>
 <li>It&#8217;s now possible to override serialization in service implementations.
 You can set <tt class="docutils literal"><span class="pre">ctx.out_document</span></tt> to have the return value from user funtion
@@ -402,11 +403,17 @@ ignored as well.</li>
 <li>Added YAML support via PyYaml.</li>
 <li>Split dict logic in DictDocument as <tt class="docutils literal"><span class="pre">HierDictDocument</span></tt> and
 <tt class="docutils literal"><span class="pre">FlatDictDocument</span></tt>.</li>
+<li>Complete revamp of how DictDocument family work. skip_depth is replaced by
+richer functionalty that is enabled by two flags: <tt class="docutils literal"><span class="pre">ignore_wrappers</span></tt> and
+<tt class="docutils literal"><span class="pre">complex_as</span></tt>.</li>
 <li>Added cookie parsing support to HttpRpc via <tt class="docutils literal"><span class="pre">Cookie.SimpleCookie</span></tt>.</li>
 <li>Moved <tt class="docutils literal"><span class="pre">{to,from}_string</span></tt> logic from data models to ProtocolBase.
 This gives us the ability to have more complex fault messages
 with other fault subelements that are namespace-qualified without
 circular dependency problems - Stefan Andersson &lt;<a class="reference external" href="mailto:norox81&#37;&#52;&#48;gmail&#46;com">norox81<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</li>
+<li>DictDocument and friends: <tt class="docutils literal"><span class="pre">ignore_wrappers</span></tt> and <tt class="docutils literal"><span class="pre">complex_as</span></tt> options
+added as a way to customize protocol output without hindering other parts
+of the interface.</li>
 </ul>
 </div></blockquote>
 </div>
@@ -415,6 +422,8 @@ circular dependency problems - Stefan Andersson &lt;<a class="reference external
 <blockquote>
 <div><ul class="simple">
 <li>Fix restriction bases of simple types not being imported.</li>
+<li>Fix for customized subclasses forgetting about their empty base classes.</li>
+<li>Fix Attributes.nullable not surviving customization.</li>
 </ul>
 </div></blockquote>
 </div>
@@ -422,8 +431,8 @@ circular dependency problems - Stefan Andersson &lt;<a class="reference external
 <h3>spyne-2.9.4<a class="headerlink" href="#spyne-2-9-4" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li>Fix for Python 2.6 quirk where any decimal.Decimal() is always less than
-any <tt class="docutils literal"><span class="pre">float()</span></tt></li>
+<li>Fix for Python 2.6 quirk where any <tt class="docutils literal"><span class="pre">decimal.Decimal()</span></tt> is always less than
+any <tt class="docutils literal"><span class="pre">float()</span></tt>. Where did that come from?!</li>
 <li>Fix missing &#8216;/&#8217; in WsgiMounter.</li>
 <li>Fix confusion in <tt class="docutils literal"><span class="pre">spyne.model.primitive.Decimal</span></tt>&#8216;s parameter order.</li>
 <li>Add forgotten <tt class="docutils literal"><span class="pre">HttpBase</span></tt> parameters to <tt class="docutils literal"><span class="pre">WsgiApplication</span></tt>.</li>
@@ -466,10 +475,10 @@ ComplexModel!</li>
 <li>First-class integration with Pyramid.</li>
 <li>First geospatial types: Point and Polygon.</li>
 <li>Initial revision of the http request pattern matching support via
-<tt class="docutils literal"><span class="pre">werkzeug.routing</span></tt></li>
+<tt class="docutils literal"><span class="pre">werkzeug.routing</span></tt>.</li>
 <li><tt class="docutils literal"><span class="pre">XmlObject</span></tt> -&gt; <tt class="docutils literal"><span class="pre">XmlDocument</span></tt>, <tt class="docutils literal"><span class="pre">JsonObject</span></tt> -&gt; <tt class="docutils literal"><span class="pre">JsonDocument</span></tt>,
 <tt class="docutils literal"><span class="pre">MessagePackObject</span></tt> -&gt; <tt class="docutils literal"><span class="pre">MessagePackDocument</span></tt>,
-<tt class="docutils literal"><span class="pre">DictObject</span> <span class="pre">-&gt;</span> <span class="pre">DictDocument</span></tt>.</li>
+<tt class="docutils literal"><span class="pre">DictObject</span></tt> -&gt; <tt class="docutils literal"><span class="pre">DictDocument</span></tt>.</li>
 </ul>
 </div></blockquote>
 </div>

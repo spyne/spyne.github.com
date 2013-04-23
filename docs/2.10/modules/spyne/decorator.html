@@ -123,11 +123,13 @@
             <span class="n">argcount</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_argcount</span>
             <span class="n">param_names</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_varnames</span><span class="p">[</span><span class="n">arg_start</span><span class="p">:</span><span class="n">argcount</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">,</span><span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;It&#39;s not possible to instrospect builtins. You &quot;</span>
-                            <span class="s">&quot;must pass a sequence of argument names as the &quot;</span>
-                            <span class="s">&quot;&#39;_args&#39; argument to the rpc decorator to manually &quot;</span>
-                            <span class="s">&quot;denote the arguments that this function accepts.&quot;</span>
-                        <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s">&quot;It&#39;s not possible to instrospect builtins. You must pass a &quot;</span>
+                <span class="s">&quot;sequence of argument names as the &#39;_args&#39; argument to the &quot;</span>
+                <span class="s">&quot;rpc decorator to manually denote the arguments that this &quot;</span>
+                <span class="s">&quot;function accepts.&quot;</span>
+            <span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
         <span class="n">argcount</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
         <span class="n">param_names</span> <span class="o">=</span> <span class="n">args</span>
@@ -160,8 +162,8 @@
         <span class="n">message</span> <span class="o">=</span> <span class="n">ComplexModel</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="n">_in_message_name</span><span class="p">,</span> <span class="n">ns</span><span class="p">,</span> <span class="n">in_param</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="n">ComplexModel</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">type_name</span><span class="o">=</span><span class="n">_in_message_name</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="n">ns</span><span class="p">,</span>
-                                                              <span class="n">members</span><span class="o">=</span><span class="n">in_params</span><span class="p">)</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">ComplexModel</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">type_name</span><span class="o">=</span><span class="n">_in_message_name</span><span class="p">,</span>
+                                               <span class="n">namespace</span><span class="o">=</span><span class="n">ns</span><span class="p">,</span> <span class="n">members</span><span class="o">=</span><span class="n">in_params</span><span class="p">)</span>
         <span class="n">message</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="n">ns</span>
 
 

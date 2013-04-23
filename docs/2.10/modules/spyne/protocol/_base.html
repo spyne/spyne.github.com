@@ -112,8 +112,8 @@
 <span class="kn">from</span> <span class="nn">spyne.model.binary</span> <span class="kn">import</span> <span class="n">File</span>
 <span class="kn">from</span> <span class="nn">spyne.model.binary</span> <span class="kn">import</span> <span class="n">Attachment</span>
 <span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">ComplexModelBase</span>
-<span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">Array</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">AnyXml</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">AnyHtml</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Unicode</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">String</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Decimal</span>
@@ -121,27 +121,12 @@
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Integer</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Time</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">DateTime</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Uuid</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Date</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Duration</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Boolean</span>
 
 <span class="kn">from</span> <span class="nn">spyne.protocol._model</span> <span class="kn">import</span> <span class="o">*</span>
-
-
-<span class="k">class</span> <span class="nc">ProtocolBaseMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="nb">object</span><span class="p">)):</span>
-    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">dkey</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&quot;_to_string_handlers&quot;</span><span class="p">,</span> <span class="s">&quot;_to_string_iterable_handlers&quot;</span><span class="p">,</span>
-                                 <span class="s">&quot;_from_string_handlers&quot;</span><span class="p">,</span> <span class="s">&#39;_to_dict_handlers&#39;</span><span class="p">):</span>
-
-            <span class="n">d</span> <span class="o">=</span> <span class="n">cdict</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">cls_bases</span><span class="p">:</span>
-                <span class="n">d_base</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">dkey</span><span class="p">,</span> <span class="n">cdict</span><span class="p">())</span>
-                <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">d_base</span><span class="p">)</span> 
-
-            <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cdict</span><span class="p">(</span><span class="n">cls_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dkey</span><span class="p">,</span> <span class="p">{})))</span>
-            <span class="n">cls_dict</span><span class="p">[</span><span class="n">dkey</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
-
-        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">ProtocolBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -180,8 +165,6 @@
 <span class="sd">        of serializing return values instead of raising a TypeError.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ProtocolBaseMeta</span>
-
     <span class="n">allowed_http_verbs</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="n">mime_type</span> <span class="o">=</span> <span class="s">&#39;application/octet-stream&#39;</span>
 
@@ -194,55 +177,6 @@
 
     <span class="n">default_binary_encoding</span> <span class="o">=</span> <span class="bp">None</span>
 
-    <span class="n">_to_string_handlers</span> <span class="o">=</span> <span class="n">cdict</span><span class="p">({</span>
-        <span class="n">ModelBase</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">cls</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
-        <span class="n">Null</span><span class="p">:</span> <span class="n">null_to_string</span><span class="p">,</span>
-        <span class="n">AnyXml</span><span class="p">:</span> <span class="n">any_xml_to_string</span><span class="p">,</span>
-        <span class="n">Unicode</span><span class="p">:</span> <span class="n">unicode_to_string</span><span class="p">,</span>
-        <span class="n">Decimal</span><span class="p">:</span> <span class="n">decimal_to_string</span><span class="p">,</span>
-        <span class="n">Double</span><span class="p">:</span> <span class="n">double_to_string</span><span class="p">,</span>
-        <span class="n">Integer</span><span class="p">:</span> <span class="n">integer_to_string</span><span class="p">,</span>
-        <span class="n">Time</span><span class="p">:</span> <span class="n">time_to_string</span><span class="p">,</span>
-        <span class="n">DateTime</span><span class="p">:</span> <span class="n">datetime_to_string</span><span class="p">,</span>
-        <span class="n">Duration</span><span class="p">:</span> <span class="n">duration_to_string</span><span class="p">,</span>
-        <span class="n">Boolean</span><span class="p">:</span> <span class="n">boolean_to_string</span><span class="p">,</span>
-        <span class="n">ByteArray</span><span class="p">:</span> <span class="n">byte_array_to_string</span><span class="p">,</span>
-        <span class="n">Attachment</span><span class="p">:</span> <span class="n">attachment_to_string</span><span class="p">,</span>
-        <span class="n">ComplexModelBase</span><span class="p">:</span> <span class="n">complex_model_base_to_string</span><span class="p">,</span>
-    <span class="p">})</span>
-
-    <span class="n">_to_string_iterable_handlers</span> <span class="o">=</span> <span class="n">cdict</span><span class="p">({</span>
-        <span class="n">ModelBase</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">prot</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">cls</span><span class="o">.</span><span class="n">to_string_iterable</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
-        <span class="n">SimpleModel</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">prot</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="p">(</span><span class="n">prot</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">cls</span><span class="p">](</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">),),</span>
-        <span class="n">ByteArray</span><span class="p">:</span> <span class="n">byte_array_to_string_iterable</span><span class="p">,</span>
-        <span class="n">File</span><span class="p">:</span> <span class="n">file_to_string_iterable</span><span class="p">,</span>
-    <span class="p">})</span>
-
-    <span class="n">_from_string_handlers</span> <span class="o">=</span> <span class="n">cdict</span><span class="p">({</span>
-        <span class="n">Null</span><span class="p">:</span> <span class="n">null_from_string</span><span class="p">,</span>
-        <span class="n">AnyXml</span><span class="p">:</span> <span class="n">any_xml_from_string</span><span class="p">,</span>
-        <span class="n">Unicode</span><span class="p">:</span> <span class="n">unicode_from_string</span><span class="p">,</span>
-        <span class="n">String</span><span class="p">:</span> <span class="n">string_from_string</span><span class="p">,</span>
-        <span class="n">Decimal</span><span class="p">:</span> <span class="n">decimal_from_string</span><span class="p">,</span>
-        <span class="n">Double</span><span class="p">:</span> <span class="n">double_from_string</span><span class="p">,</span>
-        <span class="n">Integer</span><span class="p">:</span> <span class="n">integer_from_string</span><span class="p">,</span>
-        <span class="n">Time</span><span class="p">:</span> <span class="n">time_from_string</span><span class="p">,</span>
-        <span class="n">DateTime</span><span class="p">:</span> <span class="n">datetime_from_string</span><span class="p">,</span>
-        <span class="n">Date</span><span class="p">:</span> <span class="n">date_from_string</span><span class="p">,</span>
-        <span class="n">Duration</span><span class="p">:</span> <span class="n">duration_from_string</span><span class="p">,</span>
-        <span class="n">Boolean</span><span class="p">:</span> <span class="n">boolean_from_string</span><span class="p">,</span>
-        <span class="n">ByteArray</span><span class="p">:</span> <span class="n">byte_array_from_string</span><span class="p">,</span>
-        <span class="n">File</span><span class="p">:</span> <span class="n">file_from_string</span><span class="p">,</span>
-        <span class="n">Attachment</span><span class="p">:</span> <span class="n">attachment_from_string</span><span class="p">,</span>
-        <span class="n">ComplexModelBase</span><span class="p">:</span> <span class="n">complex_model_base_from_string</span>
-    <span class="p">})</span>
-
-    <span class="n">_to_dict_handlers</span> <span class="o">=</span> <span class="n">cdict</span><span class="p">({</span>
-        <span class="n">ModelBase</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">cls</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
-        <span class="n">ComplexModelBase</span><span class="p">:</span> <span class="n">complex_model_base_to_dict</span><span class="p">,</span>
-        <span class="n">Fault</span><span class="p">:</span> <span class="n">fault_to_dict</span><span class="p">,</span>
-    <span class="p">})</span>
-
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                                                             <span class="n">ignore_uncap</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__app</span> <span class="o">=</span> <span class="bp">None</span>
@@ -254,6 +188,60 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ignore_uncap</span> <span class="o">=</span> <span class="n">ignore_uncap</span>
         <span class="k">if</span> <span class="n">mime_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mime_type</span> <span class="o">=</span> <span class="n">mime_type</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_handlers</span> <span class="o">=</span> <span class="n">cdict</span><span class="p">({</span>
+            <span class="n">ModelBase</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">cls</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
+            <span class="n">Null</span><span class="p">:</span> <span class="n">null_to_string</span><span class="p">,</span>
+            <span class="n">AnyXml</span><span class="p">:</span> <span class="n">any_xml_to_string</span><span class="p">,</span>
+            <span class="n">AnyHtml</span><span class="p">:</span> <span class="n">any_html_to_string</span><span class="p">,</span>
+            <span class="n">Unicode</span><span class="p">:</span> <span class="n">unicode_to_string</span><span class="p">,</span>
+            <span class="n">Decimal</span><span class="p">:</span> <span class="n">decimal_to_string</span><span class="p">,</span>
+            <span class="n">Double</span><span class="p">:</span> <span class="n">double_to_string</span><span class="p">,</span>
+            <span class="n">Integer</span><span class="p">:</span> <span class="n">integer_to_string</span><span class="p">,</span>
+            <span class="n">Time</span><span class="p">:</span> <span class="n">time_to_string</span><span class="p">,</span>
+            <span class="n">DateTime</span><span class="p">:</span> <span class="n">datetime_to_string</span><span class="p">,</span>
+            <span class="n">Uuid</span><span class="p">:</span> <span class="n">uuid_to_string</span><span class="p">,</span>
+            <span class="n">Duration</span><span class="p">:</span> <span class="n">duration_to_string</span><span class="p">,</span>
+            <span class="n">Boolean</span><span class="p">:</span> <span class="n">boolean_to_string</span><span class="p">,</span>
+            <span class="n">ByteArray</span><span class="p">:</span> <span class="n">byte_array_to_string</span><span class="p">,</span>
+            <span class="n">Attachment</span><span class="p">:</span> <span class="n">attachment_to_string</span><span class="p">,</span>
+            <span class="n">ComplexModelBase</span><span class="p">:</span> <span class="n">complex_model_base_to_string</span><span class="p">,</span>
+        <span class="p">})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_iterable_handlers</span> <span class="o">=</span> <span class="n">cdict</span><span class="p">({</span>
+            <span class="n">ModelBase</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">prot</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">cls</span><span class="o">.</span><span class="n">to_string_iterable</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
+            <span class="n">SimpleModel</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">prot</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="p">(</span><span class="n">prot</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">cls</span><span class="p">](</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">),),</span>
+            <span class="n">ByteArray</span><span class="p">:</span> <span class="n">byte_array_to_string_iterable</span><span class="p">,</span>
+            <span class="n">File</span><span class="p">:</span> <span class="n">file_to_string_iterable</span><span class="p">,</span>
+        <span class="p">})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from_string_handlers</span> <span class="o">=</span> <span class="n">cdict</span><span class="p">({</span>
+            <span class="n">Null</span><span class="p">:</span> <span class="n">null_from_string</span><span class="p">,</span>
+            <span class="n">AnyXml</span><span class="p">:</span> <span class="n">any_xml_from_string</span><span class="p">,</span>
+            <span class="n">AnyHtml</span><span class="p">:</span> <span class="n">any_html_from_string</span><span class="p">,</span>
+            <span class="n">Unicode</span><span class="p">:</span> <span class="n">unicode_from_string</span><span class="p">,</span>
+            <span class="n">String</span><span class="p">:</span> <span class="n">string_from_string</span><span class="p">,</span>
+            <span class="n">Decimal</span><span class="p">:</span> <span class="n">decimal_from_string</span><span class="p">,</span>
+            <span class="n">Double</span><span class="p">:</span> <span class="n">double_from_string</span><span class="p">,</span>
+            <span class="n">Integer</span><span class="p">:</span> <span class="n">integer_from_string</span><span class="p">,</span>
+            <span class="n">Time</span><span class="p">:</span> <span class="n">time_from_string</span><span class="p">,</span>
+            <span class="n">DateTime</span><span class="p">:</span> <span class="n">datetime_from_string</span><span class="p">,</span>
+            <span class="n">Date</span><span class="p">:</span> <span class="n">date_from_string</span><span class="p">,</span>
+            <span class="n">Uuid</span><span class="p">:</span> <span class="n">uuid_from_string</span><span class="p">,</span>
+            <span class="n">Duration</span><span class="p">:</span> <span class="n">duration_from_string</span><span class="p">,</span>
+            <span class="n">Boolean</span><span class="p">:</span> <span class="n">boolean_from_string</span><span class="p">,</span>
+            <span class="n">ByteArray</span><span class="p">:</span> <span class="n">byte_array_from_string</span><span class="p">,</span>
+            <span class="n">File</span><span class="p">:</span> <span class="n">file_from_string</span><span class="p">,</span>
+            <span class="n">Attachment</span><span class="p">:</span> <span class="n">attachment_from_string</span><span class="p">,</span>
+            <span class="n">ComplexModelBase</span><span class="p">:</span> <span class="n">complex_model_base_from_string</span>
+        <span class="p">})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to_dict_handlers</span> <span class="o">=</span> <span class="n">cdict</span><span class="p">({</span>
+            <span class="n">ModelBase</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">cls</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
+            <span class="n">ComplexModelBase</span><span class="p">:</span> <span class="n">complex_model_base_to_dict</span><span class="p">,</span>
+            <span class="n">Fault</span><span class="p">:</span> <span class="n">fault_to_dict</span><span class="p">,</span>
+        <span class="p">})</span>
+
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -363,24 +351,20 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">validator</span> <span class="o">=</span> <span class="bp">None</span>
 
-    <span class="nd">@classmethod</span></div>
-    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">handler</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_from_string_handlers</span><span class="p">[</span><span class="n">class_</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></div>
+        <span class="n">handler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_from_string_handlers</span><span class="p">[</span><span class="n">class_</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">handler</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="n">handler</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">class_</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">handler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">class_</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">handler</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">to_string_iterable</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="n">handler</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_to_string_iterable_handlers</span><span class="p">[</span><span class="n">class_</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">handler</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">to_string_iterable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">handler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_iterable_handlers</span><span class="p">[</span><span class="n">class_</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="n">handler</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_to_dict_handlers</span><span class="p">[</span><span class="n">class_</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">handler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_dict_handlers</span><span class="p">[</span><span class="n">class_</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">handler</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 </pre></div></div>
 

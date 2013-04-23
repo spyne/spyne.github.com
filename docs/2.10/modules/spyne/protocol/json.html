@@ -99,6 +99,8 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
+<span class="kn">import</span> <span class="nn">decimal</span>
+
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">simplejson</span> <span class="kn">as</span> <span class="nn">json</span>
     <span class="kn">from</span> <span class="nn">simplejson.decoder</span> <span class="kn">import</span> <span class="n">JSONDecodeError</span>
@@ -106,8 +108,32 @@
     <span class="kn">import</span> <span class="nn">json</span>
     <span class="n">JSONDecodeError</span> <span class="o">=</span> <span class="ne">ValueError</span>
 
+<span class="kn">from</span> <span class="nn">spyne.protocol._model</span> <span class="kn">import</span> <span class="n">integer_from_string</span>
+<span class="kn">from</span> <span class="nn">spyne.protocol._model</span> <span class="kn">import</span> <span class="n">decimal_from_string</span>
+<span class="kn">from</span> <span class="nn">spyne.protocol._model</span> <span class="kn">import</span> <span class="n">double_from_string</span>
+<span class="kn">from</span> <span class="nn">spyne.error</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Date</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Time</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">DateTime</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Decimal</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Double</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Boolean</span>
 <span class="kn">from</span> <span class="nn">spyne.model.fault</span> <span class="kn">import</span> <span class="n">Fault</span>
 <span class="kn">from</span> <span class="nn">spyne.protocol.dictdoc</span> <span class="kn">import</span> <span class="n">HierDictDocument</span>
+
+
+<span class="k">class</span> <span class="nc">JsonEncoder</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">JsonEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c"># if it&#39;s not a Decimal and json still can&#39;t serialize it,</span>
+            <span class="c"># it&#39;s possibly a generator. If not, additional hacks are welcome :)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">JsonDocument</span><span class="p">(</span><span class="n">HierDictDocument</span><span class="p">):</span>
@@ -120,6 +146,36 @@
     <span class="nb">type</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">HierDictDocument</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
     <span class="nb">type</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;json&#39;</span><span class="p">)</span>
 
+    <span class="n">_decimal_as_string</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                        <span class="n">ignore_uncap</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                        <span class="c"># DictDocument specific</span>
+                                        <span class="n">ignore_wrappers</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                        <span class="n">complex_as</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
+                                        <span class="n">ordered</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+
+        <span class="n">HierDictDocument</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">mime_type</span><span class="p">,</span> <span class="n">ignore_uncap</span><span class="p">,</span>
+                                           <span class="n">ignore_wrappers</span><span class="p">,</span> <span class="n">complex_as</span><span class="p">,</span> <span class="n">ordered</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from_string_handlers</span><span class="p">[</span><span class="n">Double</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from_string_handlers</span><span class="p">[</span><span class="n">Boolean</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from_string_handlers</span><span class="p">[</span><span class="n">Integer</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">val</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">Double</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">Boolean</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">Integer</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">val</span>
+
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">JsonDocument</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">Date</span><span class="p">,</span> <span class="n">Time</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span>
+                                    <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">)</span> <span class="ow">and</span>
+                                                 <span class="n">cls</span><span class="o">.</span><span class="n">validate_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+
+
     <span class="k">def</span> <span class="nf">create_in_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">in_string_encoding</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
 <div class="viewcode-block" id="JsonDocument.create_in_document"><a class="viewcode-back" href="../../../reference/protocol/json.html#spyne.protocol.json.JsonDocument.create_in_document">[docs]</a>        <span class="sd">&quot;&quot;&quot;Sets ``ctx.in_document``  using ``ctx.in_string``.&quot;&quot;&quot;</span>
 
@@ -127,14 +183,17 @@
             <span class="n">in_string_encoding</span> <span class="o">=</span> <span class="s">&#39;UTF-8&#39;</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_string</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span>
-                                                            <span class="n">in_string_encoding</span><span class="p">))</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span>
+                            <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_string</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">in_string_encoding</span><span class="p">),</span>
+                        <span class="p">)</span>
+
         <span class="k">except</span> <span class="n">JSONDecodeError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">Fault</span><span class="p">(</span><span class="s">&#39;Client.JsonDecodeError&#39;</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">create_out_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">out_string_encoding</span><span class="o">=</span><span class="s">&#39;utf8&#39;</span><span class="p">):</span></div>
 <div class="viewcode-block" id="JsonDocument.create_out_string"><a class="viewcode-back" href="../../../reference/protocol/json.html#spyne.protocol.json.JsonDocument.create_out_string">[docs]</a>        <span class="sd">&quot;&quot;&quot;Sets ``ctx.out_string`` using ``ctx.out_document``.&quot;&quot;&quot;</span>
-        <span class="n">ctx</span><span class="o">.</span><span class="n">out_string</span> <span class="o">=</span> <span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">out_string</span> <span class="o">=</span> <span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">cls</span><span class="o">=</span><span class="n">JsonEncoder</span><span class="p">)</span>
+                                                      <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span><span class="p">)</span>
 
 <span class="n">JsonObject</span> <span class="o">=</span> <span class="n">JsonDocument</span></div></div>
 <span class="sd">&quot;&quot;&quot;DEPRECATED. Use :class:`spyne.protocol.json.JsonDocument` instead&quot;&quot;&quot;</span>

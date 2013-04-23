@@ -94,7 +94,7 @@ that use MessagePack as serializer.</p>
 look at it.</p>
 <dl class="class">
 <dt id="spyne.protocol.msgpack.MessagePackDocument">
-<em class="property">class </em><tt class="descclassname">spyne.protocol.msgpack.</tt><tt class="descname">MessagePackDocument</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>ignore_uncap=False</em>, <em>ignore_wrappers=False</em>, <em>complex_as=&lt;type 'dict'&gt;</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/msgpack.html#MessagePackDocument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.msgpack.MessagePackDocument" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">spyne.protocol.msgpack.</tt><tt class="descname">MessagePackDocument</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>ignore_uncap=False</em>, <em>ignore_wrappers=True</em>, <em>complex_as=&lt;type 'dict'&gt;</em>, <em>ordered=False</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/msgpack.html#MessagePackDocument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.msgpack.MessagePackDocument" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="dictdoc.html#spyne.protocol.dictdoc.HierDictDocument" title="spyne.protocol.dictdoc.HierDictDocument"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol.dictdoc.HierDictDocument</span></tt></a></p>
 <p>An integration class for the msgpack protocol.</p>
 <dl class="method">
@@ -127,7 +127,7 @@ argument is ignored.</li>
 
 <dl class="class">
 <dt id="spyne.protocol.msgpack.MessagePackRpc">
-<em class="property">class </em><tt class="descclassname">spyne.protocol.msgpack.</tt><tt class="descname">MessagePackRpc</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>ignore_uncap=False</em>, <em>ignore_wrappers=False</em>, <em>complex_as=&lt;type 'dict'&gt;</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/msgpack.html#MessagePackRpc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.msgpack.MessagePackRpc" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">spyne.protocol.msgpack.</tt><tt class="descname">MessagePackRpc</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>ignore_uncap=False</em>, <em>ignore_wrappers=True</em>, <em>complex_as=&lt;type 'dict'&gt;</em>, <em>ordered=False</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/msgpack.html#MessagePackRpc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.msgpack.MessagePackRpc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#spyne.protocol.msgpack.MessagePackDocument" title="spyne.protocol.msgpack.MessagePackDocument"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol.msgpack.MessagePackDocument</span></tt></a></p>
 <p>An integration class for the msgpack-rpc protocol.</p>
 <dl class="method">

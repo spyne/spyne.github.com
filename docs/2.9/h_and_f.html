@@ -357,6 +357,8 @@ than Spyne&#8217;s Soap client.</li>
 <blockquote>
 <div><ul class="simple">
 <li>Fix restriction bases of simple types not being imported.</li>
+<li>Fix for customized subclasses forgetting about their empty base classes.</li>
+<li>Fix Attributes.nullable not surviving customization.</li>
 </ul>
 </div></blockquote>
 </div>
@@ -364,8 +366,8 @@ than Spyne&#8217;s Soap client.</li>
 <h3>spyne-2.9.4<a class="headerlink" href="#spyne-2-9-4" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li>Fix for Python 2.6 quirk where any decimal.Decimal() is always less than
-any <tt class="docutils literal"><span class="pre">float()</span></tt></li>
+<li>Fix for Python 2.6 quirk where any <tt class="docutils literal"><span class="pre">decimal.Decimal()</span></tt> is always less than
+any <tt class="docutils literal"><span class="pre">float()</span></tt>. Where did that come from?!</li>
 <li>Fix missing &#8216;/&#8217; in WsgiMounter.</li>
 <li>Fix confusion in <tt class="docutils literal"><span class="pre">spyne.model.primitive.Decimal</span></tt>&#8216;s parameter order.</li>
 <li>Add forgotten <tt class="docutils literal"><span class="pre">HttpBase</span></tt> parameters to <tt class="docutils literal"><span class="pre">WsgiApplication</span></tt>.</li>
@@ -408,10 +410,10 @@ ComplexModel!</li>
 <li>First-class integration with Pyramid.</li>
 <li>First geospatial types: Point and Polygon.</li>
 <li>Initial revision of the http request pattern matching support via
-<tt class="docutils literal"><span class="pre">werkzeug.routing</span></tt></li>
+<tt class="docutils literal"><span class="pre">werkzeug.routing</span></tt>.</li>
 <li><tt class="docutils literal"><span class="pre">XmlObject</span></tt> -&gt; <tt class="docutils literal"><span class="pre">XmlDocument</span></tt>, <tt class="docutils literal"><span class="pre">JsonObject</span></tt> -&gt; <tt class="docutils literal"><span class="pre">JsonDocument</span></tt>,
 <tt class="docutils literal"><span class="pre">MessagePackObject</span></tt> -&gt; <tt class="docutils literal"><span class="pre">MessagePackDocument</span></tt>,
-<tt class="docutils literal"><span class="pre">DictObject</span> <span class="pre">-&gt;</span> <span class="pre">DictDocument</span></tt>.</li>
+<tt class="docutils literal"><span class="pre">DictObject</span></tt> -&gt; <tt class="docutils literal"><span class="pre">DictDocument</span></tt>.</li>
 </ul>
 </div></blockquote>
 </div>

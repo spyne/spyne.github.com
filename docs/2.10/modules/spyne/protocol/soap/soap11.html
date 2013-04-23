@@ -231,18 +231,19 @@
     <span class="nb">type</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">XmlDocument</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
     <span class="nb">type</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="s">&#39;soap&#39;</span><span class="p">,</span> <span class="s">&#39;soap11&#39;</span><span class="p">))</span>
 
-    <span class="c"># SOAP requires DateTime strings to be in iso format. The following</span>
-    <span class="c"># lines make sure custom datetime formatting via DateTime(format=&quot;...&quot;)</span>
-    <span class="c"># string is bypassed.</span>
-    <span class="n">_to_string_handlers</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">Time</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
-        <span class="n">DateTime</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
-    <span class="p">}</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">xml_declaration</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                <span class="n">cleanup_namespaces</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s">&#39;UTF-8&#39;</span><span class="p">,</span> <span class="n">pretty_print</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="n">XmlDocument</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">xml_declaration</span><span class="p">,</span>
+                                    <span class="n">cleanup_namespaces</span><span class="p">,</span> <span class="n">encoding</span><span class="p">,</span> <span class="n">pretty_print</span><span class="p">)</span>
 
-    <span class="n">_from_string_handlers</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">Date</span><span class="p">:</span> <span class="n">date_from_string_iso</span><span class="p">,</span>
-        <span class="n">DateTime</span><span class="p">:</span> <span class="n">datetime_from_string_iso</span><span class="p">,</span>
-    <span class="p">}</span>
+        <span class="c"># SOAP requires DateTime strings to be in iso format. The following</span>
+        <span class="c"># lines make sure custom datetime formatting via DateTime(format=&quot;...&quot;)</span>
+        <span class="c"># string is bypassed.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">Time</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">DateTime</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from_string_handlers</span><span class="p">[</span><span class="n">Date</span><span class="p">]</span> <span class="o">=</span> <span class="n">date_from_string_iso</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from_string_handlers</span><span class="p">[</span><span class="n">DateTime</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime_from_string_iso</span>
 
     <span class="k">def</span> <span class="nf">create_in_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
 <div class="viewcode-block" id="Soap11.create_in_document"><a class="viewcode-back" href="../../../../reference/protocol/soap.html#spyne.protocol.soap.soap11.Soap11.create_in_document">[docs]</a>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s">&#39;wsgi&#39;</span><span class="p">:</span>

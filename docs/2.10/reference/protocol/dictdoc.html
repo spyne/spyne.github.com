@@ -93,10 +93,10 @@ protocol that deals with hierarchical and flat dicts as {in,out}_documents.</p>
 look at it.</p>
 <dl class="class">
 <dt id="spyne.protocol.dictdoc.DictDocument">
-<em class="property">class </em><tt class="descclassname">spyne.protocol.dictdoc.</tt><tt class="descname">DictDocument</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>ignore_uncap=False</em>, <em>ignore_wrappers=False</em>, <em>complex_as=&lt;type 'dict'&gt;</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/dictdoc.html#DictDocument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.dictdoc.DictDocument" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">spyne.protocol.dictdoc.</tt><tt class="descname">DictDocument</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>ignore_uncap=False</em>, <em>ignore_wrappers=True</em>, <em>complex_as=&lt;type 'dict'&gt;</em>, <em>ordered=False</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/dictdoc.html#DictDocument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.dictdoc.DictDocument" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base.html#spyne.protocol._base.ProtocolBase" title="spyne.protocol._base.ProtocolBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol._base.ProtocolBase</span></tt></a></p>
-<p>An abstract protocol that can use hierarchical or flat dicts as input and
-output documents.</p>
+<p>An abstract protocol that can use hierarchical or flat dicts as input
+and output documents.</p>
 <p>Implement <tt class="docutils literal"><span class="pre">serialize()</span></tt>, <tt class="docutils literal"><span class="pre">deserialize()</span></tt>, <tt class="docutils literal"><span class="pre">create_in_document()</span></tt> and
 <tt class="docutils literal"><span class="pre">create_out_string()</span></tt> to use this.</p>
 <dl class="method">
@@ -124,7 +124,7 @@ output documents.</p>
 
 <dl class="class">
 <dt id="spyne.protocol.dictdoc.HierDictDocument">
-<em class="property">class </em><tt class="descclassname">spyne.protocol.dictdoc.</tt><tt class="descname">HierDictDocument</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>ignore_uncap=False</em>, <em>ignore_wrappers=False</em>, <em>complex_as=&lt;type 'dict'&gt;</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/dictdoc.html#HierDictDocument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.dictdoc.HierDictDocument" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">spyne.protocol.dictdoc.</tt><tt class="descname">HierDictDocument</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>ignore_uncap=False</em>, <em>ignore_wrappers=True</em>, <em>complex_as=&lt;type 'dict'&gt;</em>, <em>ordered=False</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/dictdoc.html#HierDictDocument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.dictdoc.HierDictDocument" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#spyne.protocol.dictdoc.DictDocument" title="spyne.protocol.dictdoc.DictDocument"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol.dictdoc.DictDocument</span></tt></a></p>
 <p>This protocol contains logic for protocols that serialize and deserialize
 hierarchical dictionaries. Examples include: Json, MessagePack and Yaml.</p>
@@ -138,7 +138,7 @@ hierarchical dictionaries. Examples include: Json, MessagePack and Yaml.</p>
 
 <dl class="method">
 <dt id="spyne.protocol.dictdoc.HierDictDocument.object_to_flat_dict">
-<tt class="descname">object_to_flat_dict</tt><big>(</big><em>inst_cls</em>, <em>value</em>, <em>hier_delim='_'</em>, <em>retval=None</em>, <em>prefix=None</em>, <em>parent=None</em>, <em>subvalue_eater=&lt;function &lt;lambda&gt; at 0x456c758&gt;</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/dictdoc.html#HierDictDocument.object_to_flat_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.dictdoc.HierDictDocument.object_to_flat_dict" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">object_to_flat_dict</tt><big>(</big><em>inst_cls</em>, <em>value</em>, <em>hier_delim='_'</em>, <em>retval=None</em>, <em>prefix=None</em>, <em>parent=None</em>, <em>subvalue_eater=&lt;function &lt;lambda&gt; at 0x44af050&gt;</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/dictdoc.html#HierDictDocument.object_to_flat_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.dictdoc.HierDictDocument.object_to_flat_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a native python object to a flat dict.</p>
 <p>See <tt class="xref py py-func docutils literal"><span class="pre">spyne.model.complex.ComplexModelBase.get_flat_type_info()</span></tt>.</p>
 </dd></dl>

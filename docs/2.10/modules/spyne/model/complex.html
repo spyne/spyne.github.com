@@ -332,6 +332,7 @@
         <span class="n">base_type_info</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c"># get base class (if exists) and enforce single inheritance</span>
         <span class="n">extends</span> <span class="o">=</span> <span class="n">cls_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;__extends__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">extends</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">cls_bases</span><span class="p">:</span>
                 <span class="n">base_types</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="s">&quot;_type_info&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
@@ -341,8 +342,8 @@
                         <span class="n">base_type_info</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">_type_info</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">extends</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">b</span><span class="p">)):</span>
-                            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;WSDL 1.1 does not support multiple&quot;</span>
-                                            <span class="s">&quot; inheritance&quot;</span><span class="p">)</span>
+                            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;WSDL 1.1 does not support multiple &quot;</span>
+                                            <span class="s">&quot;inheritance&quot;</span><span class="p">)</span>
 
                         <span class="k">try</span><span class="p">:</span>
                             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">base_types</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">ModelBase</span><span class="p">):</span>
@@ -693,7 +694,6 @@
                     <span class="n">v</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">_</span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">(),</span> <span class="n">k</span><span class="p">,</span>
                                                                    <span class="n">TYPE_SUFFIX</span><span class="p">)</span>
 
-
             <span class="n">v</span><span class="o">.</span><span class="n">resolve_namespace</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">default_ns</span><span class="p">,</span> <span class="n">tags</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">_force_own_namespace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -759,9 +759,9 @@
         <span class="k">if</span> <span class="n">ns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">retval</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="n">ns</span>
 
-        <span class="n">e</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">retval</span><span class="p">,</span> <span class="s">&#39;__extends__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">e</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">retval</span><span class="o">.</span><span class="n">__extends__</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s">&#39;__extends__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">orig</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">retval</span><span class="p">,</span> <span class="s">&#39;__orig__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">orig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">retval</span><span class="o">.</span><span class="n">__extends__</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">orig</span><span class="p">,</span> <span class="s">&#39;__extends__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">retval</span>
 
