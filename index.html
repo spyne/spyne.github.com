@@ -195,7 +195,6 @@ $(document).ready(function(){
              "from spyne.server.pyramid import PyramidApplication"
             ,""
             ,"from pyramid.config import Configurator"
-            ,"from pyramid.view import view_config"
         ]
         ,ZeroMQServer: ["from spyne.server.zeromq import ZeroMQServer"]
     }
@@ -251,12 +250,9 @@ $(document).ready(function(){
         ,PyramidApplication: [
              "if __name__ == '__main__':"
             ,"    app = PyramidApplication(application)"
-            ,"    pyramid_app = view_config(route_name='home')(application)"
-            ,"    settings = {}"
-            ,"    settings['debug_all'] = True"
+            ,"    settings = {'debug_all': True}"
             ,"    config = Configurator(settings=settings)"
-            ,"    config.add_route('home', '/')"
-            ,"    config.scan()"
+            ,"    config.add_route('home', '/{method_name}')"
             ,""
             ,"    # You can use any Wsgi server. Here, we chose"
             ,"    # Python's built-in wsgi server but you're not"
