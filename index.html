@@ -93,17 +93,13 @@ $(document).ready(function(){
     }
 
     var prot_response = {
-        JsonDocument: ['{\n    "say_helloResponse": {'
-            ,'        "say_helloResult": {'
-            ,'            "string": ['
-            ,'                "Hello, World",'
-            ,'                "Hello, World",'
-            ,'                "Hello, World",'
-            ,'                "Hello, World"'
-            ,'            ]'
-            ,'        }'
-            ,'    }'
-            ,'}'
+        JsonDocument: [
+             '['
+            ,'    "Hello, World",'
+            ,'    "Hello, World",'
+            ,'    "Hello, World",'
+            ,'    "Hello, World"'
+            ,']'
         ]
         ,Soap11: ["<?xml version='1.0' encoding='utf-8'?>\n<senv:Envelope xmlns:tns=\"spyne.examples.hello\""
             ,'      xmlns:senv="http://schemas.xmlsoap.org/soap/envelope/">'
