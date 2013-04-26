@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.model.binary &mdash; spyne 2.10.1 documentation</title>
+    <title>spyne.model.binary &mdash; spyne 2.10.2 documentation</title>
     
     <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.10.1',
+        VERSION:     '2.10.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.1 documentation" href="../../../index.html" />
+    <link rel="top" title="spyne 2.10.2 documentation" href="../../../index.html" />
     <link rel="up" title="spyne" href="../../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.1 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.2 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -108,19 +108,10 @@
 <span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">ModelBase</span>
 <span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">SimpleModel</span>
 
-<span class="n">binary_encoding_handlers</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="bp">None</span><span class="p">:</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">,</span>
-    <span class="s">&#39;hex&#39;</span><span class="p">:</span> <span class="n">hexlify</span><span class="p">,</span>
-    <span class="s">&#39;base64&#39;</span><span class="p">:</span> <span class="n">b64encode</span><span class="p">,</span>
-    <span class="s">&#39;urlsafe_base64&#39;</span><span class="p">:</span> <span class="n">urlsafe_b64encode</span><span class="p">,</span>
-<span class="p">}</span>
+<span class="k">class</span> <span class="nc">BINARY_ENCODING_HEX</span><span class="p">:</span> <span class="k">pass</span>
+<span class="k">class</span> <span class="nc">BINARY_ENCODING_BASE64</span><span class="p">:</span> <span class="k">pass</span>
+<span class="k">class</span> <span class="nc">BINARY_ENCODING_URLSAFE_BASE64</span><span class="p">:</span> <span class="k">pass</span>
 
-<span class="n">binary_decoding_handlers</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="bp">None</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">],</span>
-    <span class="s">&#39;hex&#39;</span><span class="p">:</span> <span class="n">unhexlify</span><span class="p">,</span>
-    <span class="s">&#39;base64&#39;</span><span class="p">:</span> <span class="n">b64decode</span><span class="p">,</span>
-    <span class="s">&#39;urlsafe_base64&#39;</span><span class="p">:</span> <span class="n">urlsafe_b64decode</span><span class="p">,</span>
-<span class="p">}</span>
 
 <span class="k">class</span> <span class="nc">ByteArray</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span>
 <div class="viewcode-block" id="ByteArray"><a class="viewcode-back" href="../../../reference/model/binary.html#spyne.model.binary.ByteArray">[docs]</a>    <span class="sd">&quot;&quot;&quot;Canonical container for arbitrary data. Every protocol has a different</span>
@@ -143,32 +134,80 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">tn</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="k">if</span> <span class="s">&#39;encoding&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">v</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;encoding&#39;</span><span class="p">]</span>
 
-            <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="s">&#39;base64&#39;</span><span class="p">):</span>
-                <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;type_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;base64Binary&#39;</span>
-            <span class="k">elif</span> <span class="n">v</span> <span class="o">==</span> <span class="s">&#39;hex&#39;</span><span class="p">:</span>
-                <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;type_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;hexBinary&#39;</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="s">&#39;base64&#39;</span><span class="p">,</span> <span class="s">&#39;base64Binary&#39;</span><span class="p">,</span> <span class="n">BINARY_ENCODING_BASE64</span><span class="p">):</span>
+                <span class="c"># This string is defined in the Xml Schema Standard</span>
+                <span class="n">tn</span> <span class="o">=</span> <span class="s">&#39;base64Binary&#39;</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;encoding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">BINARY_ENCODING_BASE64</span>
+
+            <span class="k">elif</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;hex&#39;</span><span class="p">,</span> <span class="s">&#39;hexBinary&#39;</span><span class="p">,</span> <span class="n">BINARY_ENCODING_HEX</span><span class="p">):</span>
+                <span class="c"># This string is defined in the Xml Schema Standard</span>
+                <span class="n">tn</span> <span class="o">=</span> <span class="s">&#39;hexBinary&#39;</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;encoding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">BINARY_ENCODING_HEX</span>
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;encoding&#39; must be one of: </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> \
                                 <span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">ByteArray</span><span class="o">.</span><span class="n">_encoding</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">values</span><span class="p">()),))</span>
 
+        <span class="n">retval</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">retval</span><span class="o">.</span><span class="n">__type_name__</span> <span class="o">=</span> <span class="n">tn</span>
+        <span class="k">return</span> <span class="n">retval</span>
 
-        <span class="k">return</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_default</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
 
     <span class="nd">@classmethod</span>
     <span class="nd">@nillable_string</span>
     <span class="k">def</span> <span class="nf">to_base64</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">_bytes_join</span><span class="p">(</span><span class="n">value</span><span class="p">))]</span>
+        <span class="k">return</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">_bytes_join</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
 
     <span class="nd">@classmethod</span>
     <span class="nd">@nillable_string</span>
     <span class="k">def</span> <span class="nf">from_base64</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">_bytes_join</span><span class="p">(</span><span class="n">value</span><span class="p">))]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">b64decode</span><span class="p">(</span><span class="n">_bytes_join</span><span class="p">(</span><span class="n">value</span><span class="p">))]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@nillable_string</span>
+    <span class="k">def</span> <span class="nf">to_urlsafe_base64</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">urlsafe_b64encode</span><span class="p">(</span><span class="n">_bytes_join</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@nillable_string</span>
+    <span class="k">def</span> <span class="nf">from_urlsafe_base64</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">urlsafe_b64decode</span><span class="p">(</span><span class="n">_bytes_join</span><span class="p">(</span><span class="n">value</span><span class="p">))]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@nillable_string</span>
+    <span class="k">def</span> <span class="nf">to_hex</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">hexlify</span><span class="p">(</span><span class="n">_bytes_join</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@nillable_string</span>
+    <span class="k">def</span> <span class="nf">from_hex</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">unhexlify</span><span class="p">(</span><span class="n">_bytes_join</span><span class="p">(</span><span class="n">value</span><span class="p">))]</span>
 
 
-<span class="k">class</span> <span class="nc">File</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span></div>
+<span class="n">binary_encoding_handlers</span> <span class="o">=</span> <span class="p">{</span></div>
+    <span class="bp">None</span><span class="p">:</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">,</span>
+    <span class="n">BINARY_ENCODING_HEX</span><span class="p">:</span> <span class="n">ByteArray</span><span class="o">.</span><span class="n">to_hex</span><span class="p">,</span>
+    <span class="n">BINARY_ENCODING_BASE64</span><span class="p">:</span> <span class="n">ByteArray</span><span class="o">.</span><span class="n">to_base64</span><span class="p">,</span>
+    <span class="n">BINARY_ENCODING_URLSAFE_BASE64</span><span class="p">:</span> <span class="n">urlsafe_b64encode</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">binary_decoding_handlers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="bp">None</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">],</span>
+    <span class="n">BINARY_ENCODING_HEX</span><span class="p">:</span> <span class="n">ByteArray</span><span class="o">.</span><span class="n">from_hex</span><span class="p">,</span>
+    <span class="n">BINARY_ENCODING_BASE64</span><span class="p">:</span> <span class="n">ByteArray</span><span class="o">.</span><span class="n">from_base64</span><span class="p">,</span>
+    <span class="n">BINARY_ENCODING_URLSAFE_BASE64</span><span class="p">:</span> <span class="n">ByteArray</span><span class="o">.</span><span class="n">to_urlsafe_base64</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">File</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span>
 <div class="viewcode-block" id="File"><a class="viewcode-back" href="../../../reference/model/binary.html#spyne.model.binary.File">[docs]</a>    <span class="sd">&quot;&quot;&quot;A compact way of dealing with incoming files for protocols with a</span>
 <span class="sd">    standard way of encoding file metadata along with binary data. (E.g. Http)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -340,7 +379,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.1 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.2 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
       </ul>

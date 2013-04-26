@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.protocol.json &mdash; spyne 2.10.1 documentation</title>
+    <title>spyne.protocol.json &mdash; spyne 2.10.2 documentation</title>
     
     <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.10.1',
+        VERSION:     '2.10.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.1 documentation" href="../../../index.html" />
+    <link rel="top" title="spyne 2.10.2 documentation" href="../../../index.html" />
     <link rel="up" title="spyne" href="../../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.1 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.2 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -113,6 +113,7 @@
 <span class="kn">from</span> <span class="nn">spyne.protocol._model</span> <span class="kn">import</span> <span class="n">double_from_string</span>
 <span class="kn">from</span> <span class="nn">spyne.error</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 
+<span class="kn">from</span> <span class="nn">spyne.model.binary</span> <span class="kn">import</span> <span class="n">BINARY_ENCODING_BASE64</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Date</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Time</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">DateTime</span>
@@ -146,6 +147,9 @@
     <span class="nb">type</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">HierDictDocument</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
     <span class="nb">type</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;json&#39;</span><span class="p">)</span>
 
+    <span class="n">default_binary_encoding</span> <span class="o">=</span> <span class="n">BINARY_ENCODING_BASE64</span>
+
+    <span class="c"># flags used just for tests</span>
     <span class="n">_decimal_as_string</span> <span class="o">=</span> <span class="bp">True</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
@@ -213,7 +217,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.1 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.2 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
       </ul>
