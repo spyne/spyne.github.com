@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.server.wsgi &mdash; spyne 2.10.2 documentation</title>
+    <title>spyne.server.wsgi &mdash; spyne 2.10.3 documentation</title>
     
     <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.10.2',
+        VERSION:     '2.10.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.2 documentation" href="../../../index.html" />
+    <link rel="top" title="spyne 2.10.3 documentation" href="../../../index.html" />
     <link rel="up" title="spyne" href="../../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.2 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.3 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -99,16 +99,15 @@
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">cgi</span> <span class="kn">import</span> <span class="n">parse_qs</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span> <span class="c"># Python 3</span>
-    <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">parse_qs</span>
+<span class="kn">from</span> <span class="nn">urlparse</span> <span class="kn">import</span> <span class="n">unquote</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">werkzeug.formparser</span> <span class="kn">import</span> <span class="n">parse_form_data</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">parse_form_data</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">e</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 
 <span class="kn">from</span> <span class="nn">spyne.application</span> <span class="kn">import</span> <span class="n">get_fault_string_from_exception</span>
 <span class="kn">from</span> <span class="nn">spyne.auxproc</span> <span class="kn">import</span> <span class="n">process_contexts</span>
@@ -136,6 +135,28 @@
     <span class="k">def</span> <span class="nf">apply_mtom</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">e</span>
 
+<span class="k">def</span> <span class="nf">_parse_qs</span><span class="p">(</span><span class="n">qs</span><span class="p">):</span>
+    <span class="n">pairs</span> <span class="o">=</span> <span class="p">[</span><span class="n">s2</span> <span class="k">for</span> <span class="n">s1</span> <span class="ow">in</span> <span class="n">qs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;&amp;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">s1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;;&#39;</span><span class="p">)]</span>
+    <span class="n">retval</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">name_value</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name_value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">name_value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">nv</span> <span class="o">=</span> <span class="n">name_value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;=&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c"># Handle case of a control-name with no equal sign</span>
+            <span class="n">nv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="n">unquote</span><span class="p">(</span><span class="n">nv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;+&#39;</span><span class="p">,</span> <span class="s">&#39; &#39;</span><span class="p">))</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">nv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">unquote</span><span class="p">(</span><span class="n">nv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;+&#39;</span><span class="p">,</span> <span class="s">&#39; &#39;</span><span class="p">))</span>
+
+        <span class="n">retval</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">retval</span>
 
 <span class="k">def</span> <span class="nf">_get_http_headers</span><span class="p">(</span><span class="n">req_env</span><span class="p">):</span>
     <span class="n">retval</span> <span class="o">=</span> <span class="p">{}</span>
@@ -191,26 +212,26 @@
 <span class="sd">    compliant callable class.</span>
 
 <span class="sd">    Supported events:</span>
-<span class="sd">    * ``wsdl``</span>
-<span class="sd">        Called right before the wsdl data is returned to the client.</span>
+<span class="sd">        * ``wsdl``</span>
+<span class="sd">            Called right before the wsdl data is returned to the client.</span>
 
-<span class="sd">    * ``wsdl_exception``</span>
-<span class="sd">        Called right after an exception is thrown during wsdl generation.</span>
-<span class="sd">        The exception object is stored in ctx.transport.wsdl_error attribute.</span>
+<span class="sd">        * ``wsdl_exception``</span>
+<span class="sd">            Called right after an exception is thrown during wsdl generation.</span>
+<span class="sd">            The exception object is stored in ctx.transport.wsdl_error attribute.</span>
 
-<span class="sd">    * ``wsgi_call``</span>
-<span class="sd">        Called first when the incoming http request is identified as a rpc</span>
-<span class="sd">        request.</span>
+<span class="sd">        * ``wsgi_call``</span>
+<span class="sd">            Called first when the incoming http request is identified as a rpc</span>
+<span class="sd">            request.</span>
 
-<span class="sd">    * ``wsgi_return``</span>
-<span class="sd">        Called right before the output stream is returned to the WSGI handler.</span>
+<span class="sd">        * ``wsgi_return``</span>
+<span class="sd">            Called right before the output stream is returned to the WSGI handler.</span>
 
-<span class="sd">    * ``wsgi_error``</span>
-<span class="sd">        Called right before returning the exception to the client.</span>
+<span class="sd">        * ``wsgi_error``</span>
+<span class="sd">            Called right before returning the exception to the client.</span>
 
-<span class="sd">    * ``wsgi_close``</span>
-<span class="sd">        Called after the whole data has been returned to the client. It&#39;s</span>
-<span class="sd">        called both from success and error cases.</span>
+<span class="sd">        * ``wsgi_close``</span>
+<span class="sd">            Called after the whole data has been returned to the client. It&#39;s</span>
+<span class="sd">            called both from success and error cases.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">chunked</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
@@ -564,7 +585,8 @@
                                           <span class="n">ctx</span><span class="o">.</span><span class="n">method_request_string</span><span class="p">,</span> <span class="n">END_COLOR</span><span class="p">))</span>
 
         <span class="n">ctx</span><span class="o">.</span><span class="n">in_header_doc</span> <span class="o">=</span> <span class="n">_get_http_headers</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span><span class="p">)</span>
-        <span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span> <span class="o">=</span> <span class="n">parse_qs</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span><span class="p">[</span><span class="s">&#39;QUERY_STRING&#39;</span><span class="p">])</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span> <span class="o">=</span> <span class="n">_parse_qs</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span><span class="p">[</span><span class="s">&#39;QUERY_STRING&#39;</span><span class="p">])</span>
+
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
              <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span><span class="p">:</span>
                  <span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
@@ -612,7 +634,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.2 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.3 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
       </ul>

@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>SQLAlchemy Integration &mdash; spyne 2.10.2 documentation</title>
+    <title>SQLAlchemy Integration &mdash; spyne 2.10.3 documentation</title>
     
     <link rel="stylesheet" href="../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.10.2',
+        VERSION:     '2.10.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.2 documentation" href="../index.html" />
+    <link rel="top" title="spyne 2.10.3 documentation" href="../index.html" />
     <link rel="up" title="Spyne Manual" href="index.html" />
     <link rel="next" title="Input Validation" href="05-02_validation.html" />
     <link rel="prev" title="User Manager" href="04_usermanager.html" /> 
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="04_usermanager.html" title="User Manager"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">spyne 2.10.2 documentation</a> &raquo;</li>
+        <li><a href="../index.html">spyne 2.10.3 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Spyne Manual</a> &raquo;</li> 
       </ul>
     </div>
@@ -110,7 +110,7 @@ how to do painless transaction management using Spyne events.</p>
 <p>There are two ways of integrating with SQLAlchemy:</p>
 <ol class="arabic">
 <li><p class="first">The first and supported method is to use the output of the
-<tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.TTableModel</span></tt>.</p>
+<a class="reference internal" href="../reference/model/sql.html#spyne.model.complex.TTableModel" title="spyne.model.complex.TTableModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.TTableModel</span></tt></a>.</p>
 <p>The <tt class="docutils literal"><span class="pre">TTableModel</span></tt> class is a templated callable that produces a
 <tt class="docutils literal"><span class="pre">ComplexModel</span></tt> that has enough information except table name to be mapped
 with a SQL table. It takes an optional <tt class="docutils literal"><span class="pre">metadata</span></tt> argument and creates a
@@ -252,19 +252,14 @@ relations, it might not always be appropriate. Spyne offers the so-called
 <p>In this case, Spyne takes care of creating a relation table with appropriate
 foreign key columns.</p>
 <p>We can also alter column names or the relation table name:</p>
-<dl class="docutils">
-<dt>::</dt>
-<dd><p class="first">from spyne.model.complex import table</p>
-<dl class="last docutils">
-<dt>permissions = Array(Permission).store_as(table(</dt>
-<dd><blockquote class="first">
-<div>multi=&#8217;user_perm_rel&#8217;,
-left=&#8217;u_id&#8217;, right=&#8217;perm_id&#8217;,</div></blockquote>
-<p class="last">))</p>
-</dd>
-</dl>
-</dd>
-</dl>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">table</span>
+
+<span class="n">permissions</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="n">Permission</span><span class="p">)</span><span class="o">.</span><span class="n">store_as</span><span class="p">(</span><span class="n">table</span><span class="p">(</span>
+          <span class="n">multi</span><span class="o">=</span><span class="s">&#39;user_perm_rel&#39;</span><span class="p">,</span>
+          <span class="n">left</span><span class="o">=</span><span class="s">&#39;u_id&#39;</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="s">&#39;perm_id&#39;</span><span class="p">,</span>
+      <span class="p">))</span>
+</pre></div>
+</div>
 <p>See the <a class="reference internal" href="../reference/model/complex.html#spyne.model.complex.table" title="spyne.model.complex.table"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.table</span></tt></a> reference for more details on
 configuring object relations.</p>
 <div class="section" id="using-sql-databases-as-hybrid-document-stores">
@@ -406,7 +401,7 @@ interesting project.</p>
         <li class="right" >
           <a href="04_usermanager.html" title="User Manager"
              >previous</a> |</li>
-        <li><a href="../index.html">spyne 2.10.2 documentation</a> &raquo;</li>
+        <li><a href="../index.html">spyne 2.10.3 documentation</a> &raquo;</li>
           <li><a href="index.html" >Spyne Manual</a> &raquo;</li> 
       </ul>
     </div>

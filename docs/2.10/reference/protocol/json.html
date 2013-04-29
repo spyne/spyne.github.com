@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Json &mdash; spyne 2.10.2 documentation</title>
+    <title>Json &mdash; spyne 2.10.3 documentation</title>
     
     <link rel="stylesheet" href="../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.10.2',
+        VERSION:     '2.10.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../static/jquery.js"></script>
     <script type="text/javascript" src="../../static/underscore.js"></script>
     <script type="text/javascript" src="../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.2 documentation" href="../../index.html" />
+    <link rel="top" title="spyne 2.10.3 documentation" href="../../index.html" />
     <link rel="up" title="Protocols" href="index.html" />
     <link rel="next" title="MessagePack" href="msgpack.html" />
     <link rel="prev" title="Dictionary Document" href="dictdoc.html" /> 
@@ -46,13 +46,21 @@
         <li class="right" >
           <a href="dictdoc.html" title="Dictionary Document"
              accesskey="P">previous</a> |</li>
-        <li><a href="../../index.html">spyne 2.10.2 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">spyne 2.10.3 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Protocols</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Json</a><ul>
+<li><a class="reference internal" href="#missing-types">Missing Types</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="dictdoc.html"
                         title="previous chapter">Dictionary Document</a></p>
@@ -92,6 +100,25 @@ Currently, only <a class="reference internal" href="#spyne.protocol.json.JsonDoc
 <p>Initially released in 2.8.0-rc.</p>
 <p>This module is EXPERIMENTAL. You may not recognize the code here next time you
 look at it.</p>
+<div class="section" id="missing-types">
+<h2>Missing Types<a class="headerlink" href="#missing-types" title="Permalink to this headline">¶</a></h2>
+<p>The JSON standard does not define every type that Spyne supports. These include
+Date/Time types as well as arbitrary-length integers and arbitrary-precision
+decimals. Integers are parsed to <tt class="docutils literal"><span class="pre">int</span></tt>s or <tt class="docutils literal"><span class="pre">long</span></tt>s seamlessly but
+<tt class="docutils literal"><span class="pre">Decimal</span></tt>s are only parsed correctly when they come off as strings.</p>
+<p>While it&#8217;s possible to e.g. (de)serialize floats to <tt class="docutils literal"><span class="pre">Decimal</span></tt>s by adding
+hooks to <tt class="docutils literal"><span class="pre">parse_float</span></tt> <a class="footnote-reference" href="#id2" id="id1">[1]</a> (and convert later as necessary), such
+customizations apply to the whole incoming document which pretty much messes up
+<tt class="docutils literal"><span class="pre">AnyDict</span></tt> encoding and decoding.</p>
+<p>It also wasn&#8217;t possible to work with <tt class="docutils literal"><span class="pre">object_pairs_hook</span></tt> as Spyne&#8217;s parsing
+is always &#8220;from outside to inside&#8221; whereas <tt class="docutils literal"><span class="pre">object_pairs_hook</span></tt> is passed
+<tt class="docutils literal"><span class="pre">dict</span></tt>s basically in any order &#8220;from inside to outside&#8221;.</p>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="http://docs.python.org/2/library/json.html#json.loads">http://docs.python.org/2/library/json.html#json.loads</a></td></tr>
+</tbody>
+</table>
 <dl class="class">
 <dt id="spyne.protocol.json.JsonDocument">
 <em class="property">class </em><tt class="descclassname">spyne.protocol.json.</tt><tt class="descname">JsonDocument</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>ignore_uncap=False</em>, <em>ignore_wrappers=True</em>, <em>complex_as=&lt;type 'dict'&gt;</em>, <em>ordered=False</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/json.html#JsonDocument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.json.JsonDocument" title="Permalink to this definition">¶</a></dt>
@@ -120,6 +147,7 @@ available, json package otherwise.</p>
 </dd></dl>
 
 </div>
+</div>
 
 
           </div>
@@ -142,7 +170,7 @@ available, json package otherwise.</p>
         <li class="right" >
           <a href="dictdoc.html" title="Dictionary Document"
              >previous</a> |</li>
-        <li><a href="../../index.html">spyne 2.10.2 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">spyne 2.10.3 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li>
           <li><a href="index.html" >Protocols</a> &raquo;</li> 
       </ul>

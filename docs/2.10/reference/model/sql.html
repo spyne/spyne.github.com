@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Persisting Objects &mdash; spyne 2.10.2 documentation</title>
+    <title>Persisting Objects &mdash; spyne 2.10.3 documentation</title>
     
     <link rel="stylesheet" href="../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.10.2',
+        VERSION:     '2.10.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../static/jquery.js"></script>
     <script type="text/javascript" src="../../static/underscore.js"></script>
     <script type="text/javascript" src="../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.2 documentation" href="../../index.html" />
+    <link rel="top" title="spyne 2.10.3 documentation" href="../../index.html" />
     <link rel="up" title="Models" href="index.html" />
     <link rel="next" title="Interfaces" href="../interface.html" />
     <link rel="prev" title="Fault" href="fault.html" /> 
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="fault.html" title="Fault"
              accesskey="P">previous</a> |</li>
-        <li><a href="../../index.html">spyne 2.10.2 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">spyne 2.10.3 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Models</a> &raquo;</li> 
       </ul>
@@ -88,8 +88,8 @@
   <div class="section" id="module-spyne.model.table">
 <span id="persisting-objects"></span><span id="reference-model-persistance"></span><h1>Persisting Objects<a class="headerlink" href="#module-spyne.model.table" title="Permalink to this headline">¶</a></h1>
 <p>This module is DEPRECATED. Create your own TableModel using
-<tt class="xref py py-func docutils literal"><span class="pre">spyne.model.complex.TTableModel()</span></tt></p>
-<p>Here&#8217;s an example way of using the :class:<a href="#id1"><span class="problematic" id="id2">`</span></a>spyne.model.table.TableModel:</p>
+<a class="reference internal" href="#spyne.model.complex.TTableModel" title="spyne.model.complex.TTableModel"><tt class="xref py py-func docutils literal"><span class="pre">spyne.model.complex.TTableModel()</span></tt></a></p>
+<p>Here&#8217;s an example way of using the <a class="reference internal" href="#spyne.model.table.TableModel" title="spyne.model.table.TableModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.table.TableModel</span></tt></a>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">TableModel</span><span class="p">,</span> <span class="n">DeclarativeBase</span><span class="p">):</span>
     <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;spyne.examples.user_manager&#39;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;spyne_user&#39;</span>
@@ -146,6 +146,13 @@ the _type_info dictionary that spyne relies on. It otherwise leaves
 SQLAlchemy and its information alone.</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="spyne.model.complex.TTableModel">
+<tt class="descclassname">spyne.model.complex.</tt><tt class="descname">TTableModel</tt><big>(</big><em>func</em><big>)</big><a class="reference internal" href="../../modules/spyne/model/complex.html#TTableModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.complex.TTableModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>A memoization decorator that keeps caching until reset for unhashable
+types. It works on id()&#8217;s of objects instead.</p>
+</dd></dl>
+
 </div>
 
 
@@ -169,7 +176,7 @@ SQLAlchemy and its information alone.</p>
         <li class="right" >
           <a href="fault.html" title="Fault"
              >previous</a> |</li>
-        <li><a href="../../index.html">spyne 2.10.2 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">spyne 2.10.3 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li>
           <li><a href="index.html" >Models</a> &raquo;</li> 
       </ul>

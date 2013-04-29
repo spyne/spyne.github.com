@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>User Manager &mdash; spyne 2.10.2 documentation</title>
+    <title>User Manager &mdash; spyne 2.10.3 documentation</title>
     
     <link rel="stylesheet" href="../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.10.2',
+        VERSION:     '2.10.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.2 documentation" href="../index.html" />
+    <link rel="top" title="spyne 2.10.3 documentation" href="../index.html" />
     <link rel="up" title="Spyne Manual" href="index.html" />
     <link rel="next" title="SQLAlchemy Integration" href="05-01_sqlalchemy.html" />
     <link rel="prev" title="Spyne Models and Native Python Types" href="03_types.html" /> 
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="03_types.html" title="Spyne Models and Native Python Types"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">spyne 2.10.2 documentation</a> &raquo;</li>
+        <li><a href="../index.html">spyne 2.10.3 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Spyne Manual</a> &raquo;</li> 
       </ul>
     </div>
@@ -157,7 +157,7 @@ events to measure method performance can be found in the
 subclass which has one or more functions decorated with the <tt class="docutils literal"><span class="pre">&#64;rpc</span></tt> or
 <tt class="docutils literal"><span class="pre">&#64;srpc</span></tt> decorator.</p>
 <p>The <tt class="docutils literal"><span class="pre">ServiceBase</span></tt> subclasses are never instantiated, so methods decorated
-by <tt class="docutils literal"><span class="pre">&#64;rpc</span></tt> are implicit <tt class="docutils literal"><span class="pre">staticmethod</span></tt>s <a class="footnote-reference" href="#id5" id="id1">[1]</a>.</p>
+by <tt class="docutils literal"><span class="pre">&#64;rpc</span></tt> are implicit <tt class="docutils literal"><span class="pre">staticmethod</span></tt>s <a class="footnote-reference" href="#id3" id="id1">[1]</a>.</p>
 <p>The <tt class="docutils literal"><span class="pre">&#64;rpc</span></tt> decorator is what you would use most of the time. It passes an
 implicit first argument, the context object, conventionally named <tt class="docutils literal"><span class="pre">ctx</span></tt> to
 the user method. The <tt class="docutils literal"><span class="pre">&#64;srpc</span></tt> decorator is more for functions that you want
@@ -197,7 +197,7 @@ types behind the scenes as follows:</p>
 <a class="reference internal" href="../reference/decorator.html#spyne.decorator.srpc" title="spyne.decorator.srpc"><tt class="xref py py-func docutils literal"><span class="pre">spyne.decorator.srpc()</span></tt></a> reference for more information about various
 parameters you can pass to tweak how the method is exposed.</p>
 <p>The <tt class="docutils literal"><span class="pre">'Response'</span></tt> and <tt class="docutils literal"><span class="pre">'Result'</span></tt> suffixes are configurable as well. See
-<a href="#id2"><span class="problematic" id="id3">:mode:`spyne.const`</span></a> reference for more information.</p>
+<tt class="xref py py-mod docutils literal"><span class="pre">spyne.const</span></tt> reference for more information.</p>
 <div class="section" id="decorators-and-rpc">
 <h3>Decorators and <tt class="docutils literal"><span class="pre">&#64;rpc</span></tt><a class="headerlink" href="#decorators-and-rpc" title="Permalink to this headline">¶</a></h3>
 <p>Using other decorators with <tt class="docutils literal"><span class="pre">&#64;rpc</span></tt>-decorated functions is possible, yet a
@@ -209,7 +209,7 @@ bit tricky.</p>
 </div>
 <p>So if <tt class="docutils literal"><span class="pre">f</span></tt> here is your decorator, its signature should be the same as the
 user method, otherwise the parameter names and numbers in the interface are
-going to be wrong, which will cause weird errors <a class="footnote-reference" href="#id6" id="id4">[2]</a>.</p>
+going to be wrong, which will cause weird errors <a class="footnote-reference" href="#id4" id="id2">[2]</a>.</p>
 <p>This is called &#8220;decorator chaining&#8221; which is solved by the aptly-named
 <a class="reference external" href="http://pypi.python.org/pypi/decorator/">decorator package</a>. Here&#8217;s an
 example:</p>
@@ -249,19 +249,19 @@ original value.</p>
 <div class="section" id="what-s-next">
 <h2>What&#8217;s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
 <p>You can read the <a class="reference internal" href="05-01_sqlalchemy.html#manual-sqlalchemy"><em>SQLAlchemy Integration</em></a> document where the
-<tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.TTableModel</span></tt> class and its helpers are introduced.
+<a class="reference internal" href="../reference/model/sql.html#spyne.model.complex.TTableModel" title="spyne.model.complex.TTableModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.TTableModel</span></tt></a> class and its helpers are introduced.
 You can also have look at the <a class="reference internal" href="05-02_validation.html#manual-validation"><em>Input Validation</em></a> section where Spyne&#8217;s
 imperative and declarative input validation features are introduced.</p>
-<table class="docutils footnote" frame="void" id="id5" rules="none">
+<table class="docutils footnote" frame="void" id="id3" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Here&#8217;s how that&#8217;s done: <a class="reference external" href="https://github.com/arskom/spyne/blob/295dd1f594b00719235f219b95269c248f102535/spyne/service.py#L49">Magic!</a>. :)</td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id6" rules="none">
+<table class="docutils footnote" frame="void" id="id4" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id4">[2]</a></td><td>If you just intend to have a convenient way to set additional
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>If you just intend to have a convenient way to set additional
 method metadata, you can assign any value to the <tt class="docutils literal"><span class="pre">_udp</span></tt> argument
 of the <tt class="docutils literal"><span class="pre">&#64;rpc</span></tt> decorator.</td></tr>
 </tbody>
@@ -290,7 +290,7 @@ of the <tt class="docutils literal"><span class="pre">&#64;rpc</span></tt> decor
         <li class="right" >
           <a href="03_types.html" title="Spyne Models and Native Python Types"
              >previous</a> |</li>
-        <li><a href="../index.html">spyne 2.10.2 documentation</a> &raquo;</li>
+        <li><a href="../index.html">spyne 2.10.3 documentation</a> &raquo;</li>
           <li><a href="index.html" >Spyne Manual</a> &raquo;</li> 
       </ul>
     </div>

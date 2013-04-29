@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.protocol.json &mdash; spyne 2.10.2 documentation</title>
+    <title>spyne.protocol.json &mdash; spyne 2.10.3 documentation</title>
     
     <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.10.2',
+        VERSION:     '2.10.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.2 documentation" href="../../../index.html" />
+    <link rel="top" title="spyne 2.10.3 documentation" href="../../../index.html" />
     <link rel="up" title="spyne" href="../../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.2 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.3 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -92,6 +92,25 @@
 
 <span class="sd">This module is EXPERIMENTAL. You may not recognize the code here next time you</span>
 <span class="sd">look at it.</span>
+
+<span class="sd">Missing Types</span>
+<span class="sd">=============</span>
+
+<span class="sd">The JSON standard does not define every type that Spyne supports. These include</span>
+<span class="sd">Date/Time types as well as arbitrary-length integers and arbitrary-precision</span>
+<span class="sd">decimals. Integers are parsed to ``int``\s or ``long``\s seamlessly but</span>
+<span class="sd">``Decimal``\s are only parsed correctly when they come off as strings.</span>
+
+<span class="sd">While it&#39;s possible to e.g. (de)serialize floats to ``Decimal``\s by adding</span>
+<span class="sd">hooks to ``parse_float`` [#]_ (and convert later as necessary), such</span>
+<span class="sd">customizations apply to the whole incoming document which pretty much messes up</span>
+<span class="sd">``AnyDict`` encoding and decoding.</span>
+
+<span class="sd">It also wasn&#39;t possible to work with ``object_pairs_hook`` as Spyne&#39;s parsing</span>
+<span class="sd">is always &quot;from outside to inside&quot; whereas ``object_pairs_hook`` is passed</span>
+<span class="sd">``dict``\s basically in any order &quot;from inside to outside&quot;.</span>
+
+<span class="sd">.. [#] http://docs.python.org/2/library/json.html#json.loads</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
@@ -108,18 +127,14 @@
     <span class="kn">import</span> <span class="nn">json</span>
     <span class="n">JSONDecodeError</span> <span class="o">=</span> <span class="ne">ValueError</span>
 
-<span class="kn">from</span> <span class="nn">spyne.protocol._model</span> <span class="kn">import</span> <span class="n">integer_from_string</span>
-<span class="kn">from</span> <span class="nn">spyne.protocol._model</span> <span class="kn">import</span> <span class="n">decimal_from_string</span>
-<span class="kn">from</span> <span class="nn">spyne.protocol._model</span> <span class="kn">import</span> <span class="n">double_from_string</span>
 <span class="kn">from</span> <span class="nn">spyne.error</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 
 <span class="kn">from</span> <span class="nn">spyne.model.binary</span> <span class="kn">import</span> <span class="n">BINARY_ENCODING_BASE64</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Date</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Time</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">DateTime</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Integer</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Decimal</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Double</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Integer</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Boolean</span>
 <span class="kn">from</span> <span class="nn">spyne.model.fault</span> <span class="kn">import</span> <span class="n">Fault</span>
 <span class="kn">from</span> <span class="nn">spyne.protocol.dictdoc</span> <span class="kn">import</span> <span class="n">HierDictDocument</span>
@@ -217,7 +232,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.2 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.3 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
       </ul>
