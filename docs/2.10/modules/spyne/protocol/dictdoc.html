@@ -95,7 +95,7 @@
 <span class="sd">==========</span>
 
 <span class="sd">Plain HTTP does not support communicating hierarchical key-value stores. Spyne</span>
-<span class="sd">makes plain HTTP fake hierarchical dicts by a series of small hacks:</span>
+<span class="sd">makes plain HTTP fake hierarchical dicts two small hacks:</span>
 
 <span class="sd">Let&#39;s look at the following object hierarchy: ::</span>
 
@@ -114,10 +114,10 @@
 
 <span class="sd">We do two hacks to deserialize the above object structure from a flat dict:</span>
 
-<span class="sd">* Object hierarchies are flattened. e.g. the flat representation of the above</span>
-<span class="sd">  dict is: ``{&#39;a&#39;: 1, &#39;b_c&#39;: 2}}``.</span>
-<span class="sd">* Arrays of objects are sent using variables with array indexes in square</span>
-<span class="sd">  brackets. So the request with the following query object: ::</span>
+<span class="sd">1. Object hierarchies are flattened. e.g. the flat representation of the above</span>
+<span class="sd">   dict is: ``{&#39;a&#39;: 1, &#39;b_c&#39;: 2}``.</span>
+<span class="sd">2. Arrays of objects are sent using variables with array indexes in square</span>
+<span class="sd">   brackets. So the request with the following query object: ::</span>
 
 <span class="sd">      {&#39;a&#39;: 1, &#39;b_d[0]&#39;: 1, &#39;b_d[1]&#39;: 2}}</span>
 
@@ -138,7 +138,7 @@
 
 <span class="sd">      {&#39;a&#39;: 1, &#39;b[0]_c&#39;: 1, &#39;b[1]_c&#39;: 2}}</span>
 
-<span class="sd">  ... would corresponds to: ::</span>
+<span class="sd">  ... would correspond to: ::</span>
 
 <span class="sd">      {&#39;a&#39;: 1, &#39;b&#39;: [{ &#39;c&#39;: 1}, {&#39;c&#39;: 2}]}</span>
 
@@ -146,7 +146,7 @@
 
 <span class="sd">      Outer(a=1, b=[Inner(c=1), Inner(c=2)])</span>
 
-<span class="sd">These hacks are both slower to process and bulkier on wire, use class</span>
+<span class="sd">These hacks are both slower to process and bulkier on wire, so use class</span>
 <span class="sd">hierarchies with HTTP only when performance is not that much of a concern.</span>
 
 <span class="sd">Cookies</span>
@@ -158,14 +158,17 @@
 <span class="sd">It&#39;s also possible to get the ``Cookie`` header intact by defining an</span>
 <span class="sd">``in_header`` object with a field named ``Cookie`` (case sensitive).</span>
 
-<span class="sd">As an example, let&#39;s assume the following HTTP request:</span>
+<span class="sd">As an example, let&#39;s assume the following HTTP request: ::</span>
 
-<span class="sd">GET / HTTP/1.0</span>
-<span class="sd">Cookie: v1=4;v2=8</span>
-<span class="sd">(...)</span>
+<span class="sd">    GET / HTTP/1.0</span>
+<span class="sd">    Cookie: v1=4;v2=8</span>
+<span class="sd">    (...)</span>
 
-<span class="sd">The keys ``v1`` and ``v2`` are passed to the ``in_header`` class if it defines</span>
-<span class="sd">the ``v1`` and ``v2`` values.</span>
+<span class="sd">The keys ``v1`` and ``v2`` are passed to the ``in_header`` class if it has</span>
+<span class="sd">fields named ``v1`` or ``v2``.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">=======</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -294,8 +297,12 @@
 
 
 <span class="k">class</span> <span class="nc">FlatDictDocument</span><span class="p">(</span><span class="n">DictDocument</span><span class="p">):</span></div>
+<div class="viewcode-block" id="FlatDictDocument"><a class="viewcode-back" href="../../../reference/protocol/dictdoc.html#spyne.protocol.dictdoc.FlatDictDocument">[docs]</a>    <span class="sd">&quot;&quot;&quot;This protocol contains logic for protocols that serialize and deserialize</span>
+<span class="sd">    flat dictionaries. The only example as of now is Http.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">flat_dict_to_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="n">inst_class</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">hier_delim</span><span class="o">=</span><span class="s">&quot;_&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Converts a flat dict to a native python object.</span>
+<div class="viewcode-block" id="FlatDictDocument.flat_dict_to_object"><a class="viewcode-back" href="../../../reference/protocol/dictdoc.html#spyne.protocol.dictdoc.FlatDictDocument.flat_dict_to_object">[docs]</a>        <span class="sd">&quot;&quot;&quot;Converts a flat dict to a native python object.</span>
 
 <span class="sd">        See :func:`spyne.model.complex.ComplexModelBase.get_flat_type_info`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -420,8 +427,8 @@
 
         <span class="k">return</span> <span class="n">inst</span>
 
-    <span class="k">def</span> <span class="nf">object_to_flat_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inst_cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">hier_delim</span><span class="o">=</span><span class="s">&quot;_&quot;</span><span class="p">,</span> <span class="n">retval</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                     <span class="n">prefix</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">subvalue_eater</span><span class="o">=</span><span class="k">lambda</span> <span class="n">prot</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">t</span><span class="p">:</span><span class="n">v</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">object_to_flat_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inst_cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">hier_delim</span><span class="o">=</span><span class="s">&quot;_&quot;</span><span class="p">,</span> <span class="n">retval</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span></div>
+<div class="viewcode-block" id="FlatDictDocument.object_to_flat_dict"><a class="viewcode-back" href="../../../reference/protocol/dictdoc.html#spyne.protocol.dictdoc.FlatDictDocument.object_to_flat_dict">[docs]</a>                     <span class="n">prefix</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">subvalue_eater</span><span class="o">=</span><span class="k">lambda</span> <span class="n">prot</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">t</span><span class="p">:</span><span class="n">v</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Converts a native python object to a flat dict.</span>
 
 <span class="sd">        See :func:`spyne.model.complex.ComplexModelBase.get_flat_type_info`.</span>
@@ -459,7 +466,7 @@
         <span class="k">return</span> <span class="n">retval</span>
 
 
-<span class="k">class</span> <span class="nc">HierDictDocument</span><span class="p">(</span><span class="n">DictDocument</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">HierDictDocument</span><span class="p">(</span><span class="n">DictDocument</span><span class="p">):</span></div></div>
 <div class="viewcode-block" id="HierDictDocument"><a class="viewcode-back" href="../../../reference/protocol/dictdoc.html#spyne.protocol.dictdoc.HierDictDocument">[docs]</a>    <span class="sd">&quot;&quot;&quot;This protocol contains logic for protocols that serialize and deserialize</span>
 <span class="sd">    hierarchical dictionaries. Examples include: Json, MessagePack and Yaml.</span>
 
