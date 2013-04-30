@@ -170,11 +170,11 @@ $(document).ready(function(){
             ,'</ns0:say_helloResponse>'
         ]
         ,MessagePackDocument: [
-             '00000000  94 ab 48 65 6c 6c 6f 2c  20 44 61 76 65 ab 48 65  |..Hello, Dave.He|'
-            ,'00000010  6c 6c 6f 2c 20 44 61 76  65 ab 48 65 6c 6c 6f 2c  |llo, Dave.Hello,|'
-            ,'00000020  20 44 61 76 65 ab 48 65  6c 6c 6f 2c 20 44 61 76  | Dave.Hello, Dav|'
-            ,'00000030  65                                                |e|'
-            ,'00000031'
+             '00000000  94 ac 48 65 6c 6c 6f 2c  20 57 6f 72 6c 64 ac 48  |..Hello, World.H|'
+            ,'00000010  65 6c 6c 6f 2c 20 57 6f  72 6c 64 ac 48 65 6c 6c  |ello, World.Hell|'
+            ,'00000020  6f 2c 20 57 6f 72 6c 64  ac 48 65 6c 6c 6f 2c 20  |o, World.Hello, |'
+            ,'00000030  57 6f 72 6c 64                                    |World|'
+            ,'00000035'
         ]
     }
 
@@ -1037,29 +1037,43 @@ $(document).ready(function(){
 <header>
     <div class="header_title">
         <h1 class="header">spyne</h1>
+        <p style="margin-bottom: 0;">
         <small>RPC that doesn't break your back.</small>
+        </p>
 
+        <br>
         <span style="font-weight: bold">Latest releases:</span> <br/>
+        <div>
+            <strong>2.10.3</strong> | <a href="https://pypi.python.org/packages/source/s/spyne/spyne-2.10.3.tar.gz">Download</a>
+            <span class="pipe"> | </span>
+            <span style="display: inline-block">Apr 29th, 2013</span>
+            <span class="pipe"> | </span>
+            <span style="display: inline-block">
+                <a href="http://travis-ci.org/arskom/spyne">
+                    <img alt="2.10 Travis Status" src="https://secure.travis-ci.org/arskom/spyne.png?branch=2_9">
+                </a>
+            </span>
+        </div>
 
-        2.10.3 - <a href="https://pypi.python.org/packages/source/s/spyne/spyne-2.10.3.tar.gz">Download</a>
-        <br/> Apr 29th, 2013 <br/>
-        <a href="http://travis-ci.org/arskom/spyne">
-            <img alt="Travis Status" src="https://secure.travis-ci.org/arskom/spyne.png?branch=2_9">
-        </a>
-        <hr>
-        2.9.5 - <a href="https://pypi.python.org/packages/source/s/spyne/spyne-2.9.5.tar.gz">Download</a>
-        <br/> Apr 22nd, 2013 <br/>
-        <a href="http://travis-ci.org/arskom/spyne">
-            <img alt="Travis Status" src="https://secure.travis-ci.org/arskom/spyne.png?branch=master">
-        </a>
+        <div>
+            <strong>2.9.5</strong> | <a href="https://pypi.python.org/packages/source/s/spyne/spyne-2.9.5.tar.gz">Download</a>
+            <span class="pipe"> | </span>
+            <span style="display: inline-block">Apr 22nd, 2013</span>
+            <span class="pipe"> | </span>
+            <span style="display: inline-block">
+                <a href="http://travis-ci.org/arskom/spyne">
+                    <img alt="2.9 Travis Status" src="https://secure.travis-ci.org/arskom/spyne.png?branch=master">
+                </a>
+            </span>
+        </div>
     </div>
-    <hr>
+
     <ul>
-        <li class="download"><a class="docs" href="docs/index.html">Docs</a></li>
+        <li class="buttons"><a class="docs" href="docs/index.html">Docs</a></li>
         <li class="buttons"><a class="blog" href="blog/index.html">Blog</a></li>
-        <li><a class="buttons github" href="https://github.com/arskom/spyne">GitHub</a></li>
-        <li class="download"><a class="pypi" href="http://pypi.python.org/pypi/spyne">PyPi</a></li>
-        <li class="download"><a class="so" href="http://stackoverflow.com/questions/tagged/spyne">StackOverflow</a></li>
+        <li class="buttons"><a class="buttons github" href="https://github.com/arskom/spyne">GitHub</a></li>
+        <li class="buttons"><a class="pypi" href="http://pypi.python.org/pypi/spyne">PyPi</a></li>
+        <li class="buttons"><a class="so" href="http://stackoverflow.com/questions/tagged/spyne">StackOverflow</a></li>
     </ul>
     <div class="clear"></div>
 </header>
@@ -1111,7 +1125,7 @@ $(document).ready(function(){
                         <legend>Output Protocol</legend>
                         <!-- <label><input class="param_rpc" type="radio" name="outprot" value="HttpRpc" checked />HttpRpc</label>  <br/> -->
                         <label><input class="param_rpc" type="radio" name="outprot" value="JsonDocument" checked /> Json Document</label>  <br/>
-                        <label><input class="param_rpc" type="radio" name="outprot" value="YamlDocument" checked /> Yaml Document</label>  <br/>
+                        <label><input class="param_rpc" type="radio" name="outprot" value="YamlDocument" /> Yaml Document</label>  <br/>
                         <label><input class="param_rpc" type="radio" name="outprot" value="Soap11" /> Soap 1.1</label>  <br/>
                         <label><input class="param_rpc" type="radio" name="outprot" value="XmlDocument" /> Xml Document</label>  <br/>
                         <label><input class="param_rpc" type="radio" name="outprot" value="MessagePackDocument" /> MessagePack Document</label>  <br/>

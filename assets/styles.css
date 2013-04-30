@@ -468,7 +468,15 @@ div.parameters {
     float: left;
 }
 
+span.pipe {
+    display:none;
+}
+
 @media print, screen and (max-width: 1060px) {
+    span.pipe {
+        display:inline;
+    }
+
     div.wrapper {
         width:auto;
         margin:0;
@@ -499,6 +507,7 @@ div.parameters {
 
     div.header_title {
         float: left;
+        margin-bottom: 20px;
     }
 }
 
@@ -507,30 +516,21 @@ div.parameters {
         word-wrap:break-word;
     }
 
-    header {
-        padding-right:32px;
-        margin-right: 0;
-    }
-
-    section {
-        padding:10px 0 10px 20px;
-        margin:0 0 30px;
-    }
-
     div.parameters {
         float: none;
     }
+
     div.code {
         float:none;
         width: auto;
     }
-    
+
     div.header_title {
         float: left;
     }
 }
 
-@media print, screen and (max-width: 430px) {
+@media print, screen and (max-width: 700px) {
     header ul, header p.view {
         position:static;
     }
