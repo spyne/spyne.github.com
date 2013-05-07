@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.model.primitive &mdash; spyne 2.10.3 documentation</title>
+    <title>spyne.model.primitive &mdash; spyne 2.10.4 documentation</title>
     
     <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.10.3',
+        VERSION:     '2.10.4',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.3 documentation" href="../../../index.html" />
+    <link rel="top" title="spyne 2.10.4 documentation" href="../../../index.html" />
     <link rel="up" title="spyne" href="../../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.3 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.4 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -394,9 +394,12 @@
 
             <span class="c"># + 1 for decimal separator</span>
             <span class="c"># + 1 for negative sign</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;max_str_len&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">total_digits</span> <span class="o">+</span>
-                                    <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">fraction_digits</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span>
-                                                   <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;max_str_len&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">msl</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;max_str_len&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">msl</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;max_str_len&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">total_digits</span> <span class="o">+</span>
+                                             <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">fraction_digits</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;max_str_len&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msl</span>
 
         <span class="n">retval</span> <span class="o">=</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span>  <span class="o">**</span> <span class="n">kwargs</span><span class="p">)</span>
 
@@ -1029,7 +1032,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.3 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.4 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
       </ul>
