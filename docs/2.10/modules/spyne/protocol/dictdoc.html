@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.protocol.dictdoc &mdash; spyne 2.10.5 documentation</title>
+    <title>spyne.protocol.dictdoc &mdash; spyne 2.10.6 documentation</title>
     
     <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.10.5',
+        VERSION:     '2.10.6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.5 documentation" href="../../../index.html" />
+    <link rel="top" title="spyne 2.10.6 documentation" href="../../../index.html" />
     <link rel="up" title="spyne" href="../../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.5 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.6 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -501,7 +501,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">fire_event</span><span class="p">(</span><span class="s">&#39;before_serialize&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">out_error</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span> <span class="o">=</span> <span class="p">[</span><span class="n">Fault</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">out_error</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span>
                                                                  <span class="n">ctx</span><span class="o">.</span><span class="n">out_error</span><span class="p">)]</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -734,7 +734,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.5 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.6 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
       </ul>
