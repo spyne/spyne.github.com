@@ -1,0 +1,176 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>spyne.server.django &mdash; spyne 2.10.7 documentation</title>
+    
+    <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.10.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../../static/doctools.js"></script>
+    <link rel="top" title="spyne 2.10.7 documentation" href="../../../index.html" />
+    <link rel="up" title="spyne" href="../../spyne.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">spyne 2.10.7 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for spyne.server.django</h1><div class="highlight"><pre>
+<span class="c"># encoding: utf-8</span>
+<span class="c">#</span>
+<span class="c"># spyne - Copyright (C) Spyne contributors.</span>
+<span class="c">#</span>
+<span class="c"># This library is free software; you can redistribute it and/or</span>
+<span class="c"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c"># License as published by the Free Software Foundation; either</span>
+<span class="c"># version 2.1 of the License, or (at your option) any later version.</span>
+<span class="c">#</span>
+<span class="c"># This library is distributed in the hope that it will be useful,</span>
+<span class="c"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c"># Lesser General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c"># License along with this library; if not, write to the Free Software</span>
+<span class="c"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301</span>
+<span class="c">#</span>
+
+<span class="sd">&quot;&quot;&quot;The ``spyne.server.django`` module contains a Django-compatible Http</span>
+<span class="sd">transport. It&#39;s a thin wrapper around</span>
+<span class="sd">:class:`spyne.server.wsgi.WsgiApplication`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">StreamingHttpResponse</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">StreamingHttpResponse</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">e</span>
+
+<span class="kn">from</span> <span class="nn">spyne.server.wsgi</span> <span class="kn">import</span> <span class="n">WsgiApplication</span>
+
+
+<div class="viewcode-block" id="DjangoApplication"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.django.DjangoApplication">[docs]</a><span class="k">class</span> <span class="nc">DjangoApplication</span><span class="p">(</span><span class="n">WsgiApplication</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;You should use this for regular RPC.&quot;&quot;&quot;</span>
+
+    <span class="n">HttpResponseObject</span> <span class="o">=</span> <span class="n">HttpResponse</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">HttpResponseObject</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">start_response</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">):</span>
+            <span class="c"># Status is one of spyne.const.http</span>
+            <span class="n">status</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">retval</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">header</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">:</span>
+                <span class="n">retval</span><span class="p">[</span><span class="n">header</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="n">environ</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c"># FIXME: No idea what these two did.</span>
+        <span class="c">#        They were commented out to fix compatibility issues with</span>
+        <span class="c">#        Django-1.2.x</span>
+        <span class="c"># See http://github.com/arskom/spyne/issues/222.</span>
+        <span class="c">#environ[&#39;wsgi.input&#39;] = request</span>
+        <span class="c">#environ[&#39;wsgi.multithread&#39;] = False</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">WsgiApplication</span><span class="o">.</span><span class="n">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environ</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_response</span><span class="p">(</span><span class="n">retval</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">retval</span>
+
+<div class="viewcode-block" id="DjangoApplication.set_response"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.django.DjangoApplication.set_response">[docs]</a>    <span class="k">def</span> <span class="nf">set_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retval</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="StreamingDjangoApplication"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.django.StreamingDjangoApplication">[docs]</a><span class="k">class</span> <span class="nc">StreamingDjangoApplication</span><span class="p">(</span><span class="n">DjangoApplication</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;You should use this when you&#39;re generating HUGE data as response.</span>
+<span class="sd">    This is new in Django 1.5.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">HttpResponseObject</span> <span class="o">=</span> <span class="n">StreamingHttpResponse</span>
+
+<div class="viewcode-block" id="StreamingDjangoApplication.set_response"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.django.StreamingDjangoApplication.set_response">[docs]</a>    <span class="k">def</span> <span class="nf">set_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retval</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">streaming_content</span> <span class="o">=</span> <span class="n">response</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">spyne 2.10.7 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
