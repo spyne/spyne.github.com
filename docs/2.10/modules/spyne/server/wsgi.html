@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.server.wsgi &mdash; spyne 2.10.6 documentation</title>
+    <title>spyne.server.wsgi &mdash; spyne 2.10.7 documentation</title>
     
     <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.10.6',
+        VERSION:     '2.10.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.6 documentation" href="../../../index.html" />
+    <link rel="top" title="spyne 2.10.7 documentation" href="../../../index.html" />
     <link rel="up" title="spyne" href="../../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.6 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.7 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -127,6 +127,7 @@
 <span class="kn">from</span> <span class="nn">spyne.const.ansi_color</span> <span class="kn">import</span> <span class="n">END_COLOR</span>
 <span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_200</span>
 <span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_404</span>
+<span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_405</span>
 <span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_500</span>
 
 
@@ -215,6 +216,21 @@
 <div class="viewcode-block" id="WsgiApplication"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.wsgi.WsgiApplication">[docs]</a>    <span class="sd">&#39;&#39;&#39;A `PEP-3333 &lt;http://www.python.org/dev/peps/pep-3333&gt;`_</span>
 <span class="sd">    compliant callable class.</span>
 
+<span class="sd">    If you want to have a hard-coded URL in the wsdl document, this is how to do</span>
+<span class="sd">    it: ::</span>
+
+<span class="sd">        wsgi_app = WsgiApplication(...)</span>
+<span class="sd">        wsgi_app.http_transport.doc.wsdl11.build_interface_document(&quot;http://example.com&quot;)</span>
+
+<span class="sd">    This is not strictly necessary -- if you don&#39;t do this, Spyne will get the</span>
+<span class="sd">    URL from the first request, build the wsdl on-the-fly and cache it as a</span>
+<span class="sd">    string in memory for later requests. However, if you want to make sure</span>
+<span class="sd">    you only have this url on the WSDL, this is how to do it. Note that if</span>
+<span class="sd">    your client takes the information in the Wsdl document seriously (not all</span>
+<span class="sd">    do), all requests will go to the designated url above even when you get the</span>
+<span class="sd">    Wsdl from another location, which can make testing a bit difficult. Use in</span>
+<span class="sd">    moderation.</span>
+
 <span class="sd">    Supported events:</span>
 <span class="sd">        * ``wsdl``</span>
 <span class="sd">            Called right before the wsdl data is returned to the client.</span>
@@ -249,7 +265,7 @@
             <span class="s">&quot;POST&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_rpc</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_mtx_build_interface_document</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_wsdl</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wsdl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc</span><span class="o">.</span><span class="n">wsdl11</span><span class="o">.</span><span class="n">get_interface_document</span><span class="p">()</span>
 
         <span class="c"># Initialize HTTP Patterns</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_http_patterns</span> <span class="o">=</span> <span class="bp">None</span>
@@ -321,6 +337,9 @@
             <span class="n">start_response</span><span class="p">(</span><span class="n">HTTP_404</span><span class="p">,</span>
                                   <span class="n">_gen_http_headers</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">resp_headers</span><span class="p">))</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">HTTP_404</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wsdl</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_wsdl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc</span><span class="o">.</span><span class="n">wsdl11</span><span class="o">.</span><span class="n">get_interface_document</span><span class="p">()</span>
 
         <span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">wsdl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wsdl</span>
 
@@ -638,7 +657,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.6 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.7 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
       </ul>
