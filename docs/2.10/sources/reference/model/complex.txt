@@ -7,4 +7,3 @@ Complex
 .. automodule:: spyne.model.complex
    :members:
    :show-inheritance:
-

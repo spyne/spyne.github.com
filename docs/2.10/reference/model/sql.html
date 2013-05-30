@@ -88,7 +88,7 @@
   <div class="section" id="module-spyne.model.table">
 <span id="persisting-objects"></span><span id="reference-model-persistance"></span><h1>Persisting Objects<a class="headerlink" href="#module-spyne.model.table" title="Permalink to this headline">¶</a></h1>
 <p>This module is DEPRECATED. Create your own TableModel using
-<a class="reference internal" href="#spyne.model.complex.TTableModel" title="spyne.model.complex.TTableModel"><tt class="xref py py-func docutils literal"><span class="pre">spyne.model.complex.TTableModel()</span></tt></a></p>
+<tt class="xref py py-func docutils literal"><span class="pre">spyne.model.complex.TTableModel()</span></tt></p>
 <p>Here&#8217;s an example way of using the <a class="reference internal" href="#spyne.model.table.TableModel" title="spyne.model.table.TableModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.table.TableModel</span></tt></a>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">TableModel</span><span class="p">,</span> <span class="n">DeclarativeBase</span><span class="p">):</span>
     <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;spyne.examples.user_manager&#39;</span>
@@ -144,13 +144,6 @@ section for more info.</p>
 <p>This class uses the information in class definition dictionary to build
 the _type_info dictionary that spyne relies on. It otherwise leaves
 SQLAlchemy and its information alone.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="spyne.model.complex.TTableModel">
-<tt class="descclassname">spyne.model.complex.</tt><tt class="descname">TTableModel</tt><big>(</big><em>func</em><big>)</big><a class="reference internal" href="../../modules/spyne/model/complex.html#TTableModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.model.complex.TTableModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>A memoization decorator that keeps caching until reset for unhashable
-types. It works on id()&#8217;s of objects instead.</p>
 </dd></dl>
 
 </div>
