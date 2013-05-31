@@ -192,8 +192,8 @@
         <span class="k">pass</span>
 
 
+<span class="c">#Persistent storage serialization method values</span>
 <span class="n">PSSM_VALUES</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;json&#39;</span><span class="p">:</span> <span class="n">json</span><span class="p">,</span> <span class="s">&#39;xml&#39;</span><span class="p">:</span> <span class="n">xml</span><span class="p">,</span> <span class="s">&#39;msgpack&#39;</span><span class="p">:</span> <span class="n">msgpack</span><span class="p">,</span> <span class="s">&#39;table&#39;</span><span class="p">:</span> <span class="n">table</span><span class="p">}</span>
-<span class="sd">&quot;&quot;&quot;Persistent storage serialization method values&quot;&quot;&quot;</span>
 
 
 <span class="k">class</span> <span class="nc">TypeInfo</span><span class="p">(</span><span class="n">odict</span><span class="p">):</span>
@@ -948,9 +948,10 @@
     <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">(</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">(),</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">retval</span><span class="p">))</span>
 
 
+<span class="c"># this has docstring repeated in the documentation at reference/model/complex.rst</span>
 <span class="nd">@memoize_id</span>
 <span class="k">def</span> <span class="nf">TTableModel</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A TableModel template that generates a new TableModel class for each</span>
+<div class="viewcode-block" id="TTableModel"><a class="viewcode-back" href="../../../reference/model/complex.html#spyne.model.complex.TTableModel">[docs]</a>    <span class="sd">&quot;&quot;&quot;A TableModel template that generates a new TableModel class for each</span>
 <span class="sd">    call. If metadata is not supplied, a new one is instantiated.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -967,7 +968,7 @@
 
 <span class="c">### You should not use this and always instantiate explicitly your own</span>
 <span class="c">### TTableModel.</span>
-<span class="k">try</span><span class="p">:</span>
+<span class="k">try</span><span class="p">:</span></div>
     <span class="n">TableModel</span> <span class="o">=</span> <span class="n">TTableModel</span><span class="p">()</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="k">pass</span>

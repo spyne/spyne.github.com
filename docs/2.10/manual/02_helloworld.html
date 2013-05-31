@@ -263,20 +263,15 @@ protocol.</p>
 <p>This example is available here: <a class="reference external" href="http://github.com/arskom/spyne/blob/master/examples/helloworld_http.py">http://github.com/arskom/spyne/blob/master/examples/helloworld_http.py</a></p>
 <p>We will just need to change the Application definition as
 follows:</p>
-<div class="highlight-python"><pre>application = Application([HelloWorldService], 'spyne.examples.hello.http',</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">application</span> <span class="o">=</span> <span class="n">Application</span><span class="p">([</span><span class="n">HelloWorldService</span><span class="p">],</span> <span class="s">&#39;spyne.examples.hello.http&#39;</span><span class="p">,</span>
+      <span class="n">in_protocol</span><span class="o">=</span><span class="n">HttpRpc</span><span class="p">(</span><span class="n">validator</span><span class="o">=</span><span class="s">&#39;soft&#39;</span><span class="p">),</span>
+      <span class="n">out_protocol</span><span class="o">=</span><span class="n">JsonDocument</span><span class="p">(),</span>
+  <span class="p">)</span>
+</pre></div>
 </div>
 <p>For HttpRpc, the only available validator is <tt class="docutils literal"><span class="pre">'soft'</span></tt>. It is Spyne&#8217;s own
 validation engine that works for all protocols that support it (which
 includes every implementation that comes bundled with Spyne).</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">in_protocol</span><span class="o">=</span><span class="n">HttpRpc</span><span class="p">(</span><span class="n">validator</span><span class="o">=</span><span class="s">&#39;soft&#39;</span><span class="p">),</span>
-</pre></div>
-</div>
-<p>The <tt class="docutils literal"><span class="pre">skip_depth</span></tt> parameter to <tt class="docutils literal"><span class="pre">JsonDocument</span></tt> simplifies the response dict
-by skipping outer response structures that are redundant when the client keeps
-track of which reponse document corresponds to which request.</p>
-<div class="highlight-python"><pre>    out_protocol=JsonDocument(skip_depth=1),
-)</pre>
-</div>
 <p>Same as before, we then wrap the Spyne application with its wsgi wrapper:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">wsgi_app</span> <span class="o">=</span> <span class="n">WsgiApplication</span><span class="p">(</span><span class="n">application</span><span class="p">)</span>
 </pre></div>
@@ -299,22 +294,6 @@ the http server:</p>
     "Hello, Dave"
 ]</pre>
 </div>
-<p>If we had passed <tt class="docutils literal"><span class="pre">skip_depth=0</span></tt> to the output protocol, we&#8217;d have a
-slightly bulkier response:</p>
-<div class="highlight-python"><pre>$ curl -s http://localhost:8000/say_hello?name=Dave\&amp;times=3 | python -m json.tool
-{
-    "say_helloResponse": {
-        "say_helloResult": {
-            "string": [
-                "Hello, Dave",
-                "Hello, Dave",
-                "Hello, Dave"
-            ]
-        }
-    }
-}</pre>
-</div>
-<p>Note how this corresponds to the structure in the Soap response.</p>
 <p>Spyne tries to make it as easy as possible to work with multiple protocols by
 being as configurable as possible without having to alter user code.</p>
 <div class="section" id="what-s-next">
