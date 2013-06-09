@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.protocol._base &mdash; spyne 2.10.7 documentation</title>
+    <title>spyne.protocol._base &mdash; spyne 2.10.8 documentation</title>
     
     <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.10.7',
+        VERSION:     '2.10.8',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.7 documentation" href="../../../index.html" />
+    <link rel="top" title="spyne 2.10.8 documentation" href="../../../index.html" />
     <link rel="up" title="spyne" href="../../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.7 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.8 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -95,6 +95,7 @@
 <span class="kn">from</span> <span class="nn">spyne.util.cdict</span> <span class="kn">import</span> <span class="n">cdict</span>
 
 <span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_400</span>
+<span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_401</span>
 <span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_404</span>
 <span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_405</span>
 <span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_413</span>
@@ -104,6 +105,7 @@
 <span class="kn">from</span> <span class="nn">spyne.error</span> <span class="kn">import</span> <span class="n">ResourceNotFoundError</span>
 <span class="kn">from</span> <span class="nn">spyne.error</span> <span class="kn">import</span> <span class="n">RequestTooLongError</span>
 <span class="kn">from</span> <span class="nn">spyne.error</span> <span class="kn">import</span> <span class="n">RequestNotAllowed</span>
+<span class="kn">from</span> <span class="nn">spyne.error</span> <span class="kn">import</span> <span class="n">InvalidCredentialsError</span>
 
 <span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">ModelBase</span>
 <span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">SimpleModel</span>
@@ -165,7 +167,6 @@
 <span class="sd">        of serializing return values instead of raising a TypeError.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">allowed_http_verbs</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="n">mime_type</span> <span class="o">=</span> <span class="s">&#39;application/octet-stream&#39;</span>
 
     <span class="n">SOFT_VALIDATION</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="s">&quot;Soft&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nb">object</span><span class="p">,),</span> <span class="p">{})</span>
@@ -330,6 +331,8 @@
             <span class="k">return</span> <span class="n">HTTP_404</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fault</span><span class="p">,</span> <span class="n">RequestNotAllowed</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">HTTP_405</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fault</span><span class="p">,</span> <span class="n">InvalidCredentialsError</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">HTTP_401</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fault</span><span class="p">,</span> <span class="n">Fault</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">fault</span><span class="o">.</span><span class="n">faultcode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;Client.&#39;</span><span class="p">)</span>
                                                 <span class="ow">or</span> <span class="n">fault</span><span class="o">.</span><span class="n">faultcode</span> <span class="o">==</span> <span class="s">&#39;Client&#39;</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">HTTP_400</span>
@@ -371,7 +374,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.7 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.8 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
       </ul>

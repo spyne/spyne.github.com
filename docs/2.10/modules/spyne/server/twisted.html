@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.server.twisted &mdash; spyne 2.10.7 documentation</title>
+    <title>spyne.server.twisted &mdash; spyne 2.10.8 documentation</title>
     
     <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.10.7',
+        VERSION:     '2.10.8',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.7 documentation" href="../../../index.html" />
+    <link rel="top" title="spyne 2.10.8 documentation" href="../../../index.html" />
     <link rel="up" title="spyne" href="../../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.7 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.8 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -114,23 +114,31 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">isgenerator</span>
+
 <span class="kn">from</span> <span class="nn">twisted.python.log</span> <span class="kn">import</span> <span class="n">err</span>
 <span class="kn">from</span> <span class="nn">twisted.internet.interfaces</span> <span class="kn">import</span> <span class="n">IPullProducer</span>
 <span class="kn">from</span> <span class="nn">twisted.internet.defer</span> <span class="kn">import</span> <span class="n">Deferred</span>
+<span class="kn">from</span> <span class="nn">twisted.internet.protocol</span> <span class="kn">import</span> <span class="n">Factory</span>
 <span class="kn">from</span> <span class="nn">twisted.web.iweb</span> <span class="kn">import</span> <span class="n">UNKNOWN_LENGTH</span>
 <span class="kn">from</span> <span class="nn">twisted.web.resource</span> <span class="kn">import</span> <span class="n">Resource</span>
 <span class="kn">from</span> <span class="nn">twisted.web.server</span> <span class="kn">import</span> <span class="n">NOT_DONE_YET</span>
+<span class="kn">from</span> <span class="nn">twisted.python</span> <span class="kn">import</span> <span class="n">log</span>
 
 <span class="kn">from</span> <span class="nn">zope.interface</span> <span class="kn">import</span> <span class="n">implements</span>
 
+<span class="kn">from</span> <span class="nn">spyne</span> <span class="kn">import</span> <span class="n">MethodContext</span>
+<span class="kn">from</span> <span class="nn">spyne</span> <span class="kn">import</span> <span class="n">TransportContext</span>
 <span class="kn">from</span> <span class="nn">spyne.auxproc</span> <span class="kn">import</span> <span class="n">process_contexts</span>
-<span class="kn">from</span> <span class="nn">spyne.server.http</span> <span class="kn">import</span> <span class="n">HttpMethodContext</span>
-<span class="kn">from</span> <span class="nn">spyne.server.http</span> <span class="kn">import</span> <span class="n">HttpBase</span>
-
 <span class="kn">from</span> <span class="nn">spyne.const.ansi_color</span> <span class="kn">import</span> <span class="n">LIGHT_GREEN</span>
 <span class="kn">from</span> <span class="nn">spyne.const.ansi_color</span> <span class="kn">import</span> <span class="n">END_COLOR</span>
 <span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_404</span>
-<span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_405</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">PushBase</span>
+<span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">ComplexModel</span>
+<span class="kn">from</span> <span class="nn">spyne.model.fault</span> <span class="kn">import</span> <span class="n">Fault</span>
+<span class="kn">from</span> <span class="nn">spyne.server</span> <span class="kn">import</span> <span class="n">ServerBase</span>
+<span class="kn">from</span> <span class="nn">spyne.server.http</span> <span class="kn">import</span> <span class="n">HttpBase</span>
+<span class="kn">from</span> <span class="nn">spyne.server.http</span> <span class="kn">import</span> <span class="n">HttpMethodContext</span>
 
 
 <span class="k">def</span> <span class="nf">_reconstruct_url</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
@@ -228,13 +236,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_wsdl</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="k">def</span> <span class="nf">render_GET</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
-<div class="viewcode-block" id="TwistedWebResource.render_GET"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.twisted.TwistedWebResource.render_GET">[docs]</a>        <span class="n">_ahv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_transport</span><span class="o">.</span><span class="n">_allowed_http_verbs</span>
-        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.wsdl&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;?wsdl&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="TwistedWebResource.render_GET"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.twisted.TwistedWebResource.render_GET">[docs]</a>        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.wsdl&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;?wsdl&#39;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__handle_wsdl_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-
-        <span class="k">elif</span> <span class="ow">not</span> <span class="p">(</span><span class="n">_ahv</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="s">&quot;GET&quot;</span> <span class="ow">in</span> <span class="n">_ahv</span><span class="p">):</span>
-            <span class="n">request</span><span class="o">.</span><span class="n">setResponseCode</span><span class="p">(</span><span class="mi">405</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">HTTP_405</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_rpc</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
@@ -242,9 +245,8 @@
     <span class="k">def</span> <span class="nf">render_POST</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span></div>
 <div class="viewcode-block" id="TwistedWebResource.render_POST"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.twisted.TwistedWebResource.render_POST">[docs]</a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_rpc</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">handle_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_ctx</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span></div>
-<div class="viewcode-block" id="TwistedWebResource.handle_error"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.twisted.TwistedWebResource.handle_error">[docs]</a>        <span class="n">resp_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_transport</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">out_protocol</span> \
-                                            <span class="o">.</span><span class="n">fault_to_http_response_code</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">handle_rpc_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_ctx</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span></div>
+<div class="viewcode-block" id="TwistedWebResource.handle_rpc_error"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.twisted.TwistedWebResource.handle_rpc_error">[docs]</a>        <span class="n">resp_code</span> <span class="o">=</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_protocol</span><span class="o">.</span><span class="n">fault_to_http_response_code</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
 
         <span class="n">request</span><span class="o">.</span><span class="n">setResponseCode</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">resp_code</span><span class="p">[:</span><span class="mi">3</span><span class="p">]))</span>
 
@@ -267,18 +269,18 @@
         <span class="n">p_ctx</span><span class="p">,</span> <span class="n">others</span> <span class="o">=</span> <span class="n">contexts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">contexts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
         <span class="k">if</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">in_error</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_error</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">in_error</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_rpc_error</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">in_error</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">http_transport</span><span class="o">.</span><span class="n">get_in_object</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">in_error</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_error</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">in_error</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_rpc_error</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">in_error</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">http_transport</span><span class="o">.</span><span class="n">get_out_object</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_error</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_error</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_error</span><span class="p">,</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_rpc_error</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_error</span><span class="p">,</span>
                                                                         <span class="n">request</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">_cb_request_finished</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
@@ -288,6 +290,7 @@
         <span class="k">def</span> <span class="nf">_eb_request_finished</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
             <span class="n">err</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
             <span class="n">p_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
 
         <span class="k">def</span> <span class="nf">_cb_deferred</span><span class="p">(</span><span class="n">retval</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">cb</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">cb</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">out_message</span><span class="o">.</span><span class="n">_type_info</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
@@ -305,13 +308,34 @@
             <span class="n">request</span><span class="o">.</span><span class="n">registerProducer</span><span class="p">(</span><span class="n">producer</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">_eb_deferred</span><span class="p">(</span><span class="n">retval</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
-            <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_error</span> <span class="o">=</span> <span class="n">retval</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_error</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_error</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+            <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_error</span> <span class="o">=</span> <span class="n">retval</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">retval</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">Fault</span><span class="p">):</span>
+                <span class="n">retval</span><span class="o">.</span><span class="n">printTraceback</span><span class="p">()</span>
+
+            <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_rpc_error</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_error</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
 
         <span class="n">ret</span> <span class="o">=</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_object</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">Deferred</span><span class="p">):</span>
             <span class="n">ret</span><span class="o">.</span><span class="n">addCallback</span><span class="p">(</span><span class="n">_cb_deferred</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
             <span class="n">ret</span><span class="o">.</span><span class="n">addErrback</span><span class="p">(</span><span class="n">_eb_deferred</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">PushBase</span><span class="p">):</span>
+            <span class="n">gen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_transport</span><span class="o">.</span><span class="n">get_out_string</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">)</span>
+
+            <span class="k">assert</span> <span class="n">isgenerator</span><span class="p">(</span><span class="n">gen</span><span class="p">),</span> <span class="s">&quot;It looks like this protocol is not &quot;</span> \
+                                     <span class="s">&quot;async-compliant yet.&quot;</span>
+
+            <span class="k">def</span> <span class="nf">_cb_push</span><span class="p">():</span>
+                <span class="n">process_contexts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">http_transport</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">p_ctx</span><span class="p">)</span>
+
+                <span class="n">producer</span> <span class="o">=</span> <span class="n">_Producer</span><span class="p">(</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">out_string</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+                <span class="n">producer</span><span class="o">.</span><span class="n">deferred</span><span class="o">.</span><span class="n">addCallbacks</span><span class="p">(</span><span class="n">_cb_request_finished</span><span class="p">,</span>
+                                                           <span class="n">_eb_request_finished</span><span class="p">)</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">registerProducer</span><span class="p">(</span><span class="n">producer</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+
+            <span class="n">ret</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">_cb_push</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">_cb_deferred</span><span class="p">(</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">out_object</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">cb</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
@@ -350,6 +374,170 @@
 
         <span class="k">finally</span><span class="p">:</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="k">try</span><span class="p">:</span></div>
+    <span class="kn">from</span> <span class="nn">twisted.web.websockets</span> <span class="kn">import</span> <span class="n">WebSocketsProtocol</span>
+    <span class="kn">from</span> <span class="nn">twisted.web.websockets</span> <span class="kn">import</span> <span class="n">WebSocketsResource</span>
+    <span class="kn">from</span> <span class="nn">twisted.web.websockets</span> <span class="kn">import</span> <span class="n">CONTROLS</span>
+
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">spyne.util._twisted_ws</span> <span class="kn">import</span> <span class="n">WebSocketsProtocol</span>
+    <span class="kn">from</span> <span class="nn">spyne.util._twisted_ws</span> <span class="kn">import</span> <span class="n">WebSocketsResource</span>
+    <span class="kn">from</span> <span class="nn">spyne.util._twisted_ws</span> <span class="kn">import</span> <span class="n">CONTROLS</span>
+
+
+<span class="k">class</span> <span class="nc">WebSocketTransportContext</span><span class="p">(</span><span class="n">TransportContext</span><span class="p">):</span>
+<div class="viewcode-block" id="WebSocketTransportContext"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.twisted.WebSocketTransportContext">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transport</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">client_handle</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="n">TransportContext</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transport</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_handle</span> <span class="o">=</span> <span class="n">client_handle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+<span class="k">class</span> <span class="nc">WebSocketMethodContext</span><span class="p">(</span><span class="n">MethodContext</span><span class="p">):</span></div>
+<div class="viewcode-block" id="WebSocketMethodContext"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.twisted.WebSocketMethodContext">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transport</span><span class="p">,</span> <span class="n">client_handle</span><span class="p">):</span>
+        <span class="n">MethodContext</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transport</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">transport</span> <span class="o">=</span> <span class="n">WebSocketTransportContext</span><span class="p">(</span><span class="n">transport</span><span class="p">,</span> <span class="s">&#39;ws&#39;</span><span class="p">,</span>
+                                                            <span class="n">client_handle</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">TwistedWebSocketProtocol</span><span class="p">(</span><span class="n">WebSocketsProtocol</span><span class="p">):</span></div>
+<div class="viewcode-block" id="TwistedWebSocketProtocol"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.twisted.TwistedWebSocketProtocol">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transport</span><span class="p">,</span> <span class="n">bookkeep</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">_clients</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_spyne_transport</span> <span class="o">=</span> <span class="n">transport</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span> <span class="o">=</span> <span class="n">_clients</span>
+        <span class="k">if</span> <span class="n">bookkeep</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connectionMade</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connectionMade</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connectionLost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connectionLost</span>
+        <span class="k">if</span> <span class="n">_clients</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">_connectionMade</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">WebSocketsProtocol</span><span class="o">.</span><span class="n">connectionMade</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)]</span> <span class="o">=</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)]</span>
+
+
+    <span class="k">def</span> <span class="nf">frameReceived</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">fin</span><span class="p">):</span>
+<div class="viewcode-block" id="TwistedWebSocketProtocol.frameReceived"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.twisted.TwistedWebSocketProtocol.frameReceived">[docs]</a>        <span class="n">tpt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spyne_transport</span>
+
+        <span class="n">initial_ctx</span> <span class="o">=</span> <span class="n">WebSocketMethodContext</span><span class="p">(</span><span class="n">tpt</span><span class="p">,</span> <span class="n">client_handle</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">initial_ctx</span><span class="o">.</span><span class="n">in_string</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">]</span>
+
+        <span class="n">contexts</span> <span class="o">=</span> <span class="n">tpt</span><span class="o">.</span><span class="n">generate_contexts</span><span class="p">(</span><span class="n">initial_ctx</span><span class="p">)</span>
+        <span class="n">p_ctx</span><span class="p">,</span> <span class="n">others</span> <span class="o">=</span> <span class="n">contexts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">contexts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="k">if</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">in_error</span><span class="p">:</span>
+            <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_object</span> <span class="o">=</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">in_error</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tpt</span><span class="o">.</span><span class="n">get_in_object</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">in_error</span><span class="p">:</span>
+                <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_object</span> <span class="o">=</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">in_error</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tpt</span><span class="o">.</span><span class="n">get_out_object</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_error</span><span class="p">:</span>
+                    <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_object</span> <span class="o">=</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_error</span>
+
+        <span class="k">def</span> <span class="nf">_cb_deferred</span><span class="p">(</span><span class="n">retval</span><span class="p">,</span> <span class="n">cb</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">cb</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">out_message</span><span class="o">.</span><span class="n">_type_info</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_object</span> <span class="o">=</span> <span class="p">[</span><span class="n">retval</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_object</span> <span class="o">=</span> <span class="n">retval</span>
+
+            <span class="n">tpt</span><span class="o">.</span><span class="n">get_out_string</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sendFrame</span><span class="p">(</span><span class="n">opcode</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">out_string</span><span class="p">),</span> <span class="n">fin</span><span class="p">)</span>
+            <span class="n">p_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">process_contexts</span><span class="p">(</span><span class="n">tpt</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">p_ctx</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_eb_deferred</span><span class="p">(</span><span class="n">retval</span><span class="p">):</span>
+            <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_error</span> <span class="o">=</span> <span class="n">retval</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">retval</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">Fault</span><span class="p">):</span>
+                <span class="n">retval</span><span class="o">.</span><span class="n">printTraceback</span><span class="p">()</span>
+
+            <span class="n">tpt</span><span class="o">.</span><span class="n">get_out_string</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sendFrame</span><span class="p">(</span><span class="n">opcode</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">out_string</span><span class="p">),</span> <span class="n">fin</span><span class="p">)</span>
+            <span class="n">p_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_object</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">Deferred</span><span class="p">):</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">addCallback</span><span class="p">(</span><span class="n">_cb_deferred</span><span class="p">)</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">addErrback</span><span class="p">(</span><span class="n">_eb_deferred</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">PushBase</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_cb_deferred</span><span class="p">(</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">out_object</span><span class="p">,</span> <span class="n">cb</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">TwistedWebSocketFactory</span><span class="p">(</span><span class="n">Factory</span><span class="p">):</span></div></div>
+<div class="viewcode-block" id="TwistedWebSocketFactory"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.twisted.TwistedWebSocketFactory">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">bookkeep</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">_clients</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">app</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transport</span> <span class="o">=</span> <span class="n">ServerBase</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bookkeep</span> <span class="o">=</span> <span class="n">bookkeep</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span> <span class="o">=</span> <span class="n">_clients</span>
+        <span class="k">if</span> <span class="n">_clients</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">buildProtocol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">):</span>
+<div class="viewcode-block" id="TwistedWebSocketFactory.buildProtocol"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.twisted.TwistedWebSocketFactory.buildProtocol">[docs]</a>        <span class="k">return</span> <span class="n">TwistedWebSocketProtocol</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bookkeep</span><span class="p">,</span>
+                                                                <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">_Fake</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></div></div>
+    <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">_FakeWrap</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">_Ret</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
+        <span class="n">_type_info</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;ugh &quot;</span><span class="p">:</span> <span class="n">cls</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">_Ret</span>
+
+
+<span class="k">class</span> <span class="nc">_FakeCtx</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">cls</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_object</span> <span class="o">=</span> <span class="n">obj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_error</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptor</span> <span class="o">=</span> <span class="n">_Fake</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">out_message</span> <span class="o">=</span> <span class="n">cls</span>
+
+
+<span class="k">class</span> <span class="nc">InvalidRequestError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="InvalidRequestError"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.twisted.InvalidRequestError">[docs]</a>    <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">TwistedWebSocketResource</span><span class="p">(</span><span class="n">WebSocketsResource</span><span class="p">):</span></div>
+<div class="viewcode-block" id="TwistedWebSocketResource"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.twisted.TwistedWebSocketResource">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">bookkeep</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">app</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">bookkeep</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_propagate</span>
+
+        <span class="n">WebSocketsResource</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">TwistedWebSocketFactory</span><span class="p">(</span><span class="n">app</span><span class="p">,</span>
+                                                       <span class="n">bookkeep</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TwistedWebSocketResource.propagate"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.twisted.TwistedWebSocketResource.propagate">[docs]</a>        <span class="k">raise</span> <span class="n">InvalidRequestError</span><span class="p">(</span><span class="s">&quot;You must enable bookkeeping to have &quot;</span>
+                                  <span class="s">&quot;message propagation work.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">cls</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></div>
+        <span class="k">if</span> <span class="n">cls</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">cls</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">__class__</span>
+
+        <span class="n">op</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">out_protocol</span>
+        <span class="n">ctx</span> <span class="o">=</span> <span class="n">_FakeCtx</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">op</span><span class="o">.</span><span class="n">RESPONSE</span><span class="p">)</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">create_out_string</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+        <span class="n">doc</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">out_string</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="o">.</span><span class="n">itervalues</span><span class="p">():</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">sendFrame</span><span class="p">(</span><span class="n">CONTROLS</span><span class="o">.</span><span class="n">TEXT</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
 </pre></div></div>
 
           </div>
@@ -366,7 +554,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.7 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.10.8 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
       </ul>
