@@ -104,7 +104,6 @@
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span> <span class="c"># Python 3</span>
     <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
 
-<span class="kn">from</span> <span class="nn">spyne.error</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 <span class="kn">from</span> <span class="nn">spyne.util</span> <span class="kn">import</span> <span class="n">_bytes_join</span>
 <span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">nillable_string</span>
 <span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">ModelBase</span>
@@ -171,10 +170,7 @@
     <span class="nd">@classmethod</span>
     <span class="nd">@nillable_string</span>
     <span class="k">def</span> <span class="nf">from_base64</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">b64decode</span><span class="p">(</span><span class="n">_bytes_join</span><span class="p">(</span><span class="n">value</span><span class="p">))]</span>
-        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">b64decode</span><span class="p">(</span><span class="n">_bytes_join</span><span class="p">(</span><span class="n">value</span><span class="p">))]</span>
 
     <span class="nd">@classmethod</span>
     <span class="nd">@nillable_string</span>
@@ -287,7 +283,7 @@
                            <span class="s">&quot;if you want to read it back.&quot;</span>
         <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mh">0x4000</span><span class="p">)</span> <span class="c"># this needs to be a multiple of 4 (for base64)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mh">0x4000</span><span class="p">)</span> <span class="c"># this needs to be a multiple of 4</span>
         <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mh">0x4000</span><span class="p">)</span>

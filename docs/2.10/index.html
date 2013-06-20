@@ -146,7 +146,7 @@ available: <a class="reference external" href="http://github.com/arskom/spyne/tr
 </div>
 <div class="section" id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
-<p>Spyne is known to work on Python versions 2.5, 2.6 and 2.7. We&#8217;re also looking for
+<p>Spyne is known to work on Python versions 2.6 and 2.7. We&#8217;re also looking for
 volunteers to test Python 3.x.</p>
 <p>The only hard requirement is <a class="reference external" href="http://pytz.sourceforge.net/">pytz</a> which is
 available via pypi.</p>
@@ -160,7 +160,7 @@ of Spyne:</p>
 <tt class="docutils literal"><span class="pre">spyne.model.complex.TTableModel</span></tt>.</li>
 <li><a class="reference external" href="https://github.com/zeromq/pyzmq">pyzmq</a> is needed for
 <tt class="docutils literal"><span class="pre">spyne.client.zeromq.ZeroMQClient</span></tt> and
-<tt class="docutils literal"><span class="pre">spyne.server.zeromq.ZeroMQServer</span></tt>. pyzmq&lt;2.2 is needed for Python 2.5.</li>
+<tt class="docutils literal"><span class="pre">spyne.server.zeromq.ZeroMQServer</span></tt>.</li>
 <li><a class="reference external" href="http://werkzeug.pocoo.org/">Werkzeug</a> is needed for
 <tt class="docutils literal"><span class="pre">spyne.protocol.http.HttpRpc</span></tt>.</li>
 <li><a class="reference external" href="http://pypi.python.org/pypi/pyparsing">PyParsing&lt;2.0</a> is needed for
@@ -168,14 +168,13 @@ using <tt class="docutils literal"><span class="pre">HttpPattern</span></tt>&#82
 Python 3 only.</li>
 <li><a class="reference external" href="http://twistedmatrix.com/">Twisted</a> is needed for
 <tt class="docutils literal"><span class="pre">spyne.server.twisted.TwistedWebResource</span></tt> and
-<tt class="docutils literal"><span class="pre">spyne.client.twisted.TwistedHttpClient</span></tt>. Twisted&lt;12 is needed for
-Python 2.5.</li>
+<tt class="docutils literal"><span class="pre">spyne.client.twisted.TwistedHttpClient</span></tt>.</li>
 <li><a class="reference external" href="http://djangoproject.com/">Django</a> (tested with 1.2 and up) is needed for
 <tt class="docutils literal"><span class="pre">spyne.server.django.DjangoApplication</span></tt>.</li>
 <li><a class="reference external" href="http://pylonsproject.org/">Pyramid</a> is needed for
 <tt class="docutils literal"><span class="pre">spyne.server.pyramid.PyramidApplication</span></tt>.</li>
 <li><a class="reference external" href="http://github.com/msgpack/msgpack-python/">msgpack-python</a> is needed for
-<tt class="docutils literal"><span class="pre">spyne.protocol.msgpack</span></tt>. msgpack-python&lt;0.3 is needed for Python 2.5.</li>
+<tt class="docutils literal"><span class="pre">spyne.protocol.msgpack</span></tt>.</li>
 <li><a class="reference external" href="https://bitbucket.org/xi/pyyaml">PyYaml</a> is needed for
 <tt class="docutils literal"><span class="pre">spyne.protocol.yaml</span></tt>.</li>
 <li><a class="reference external" href="http://github.com/simplejson/simplejson">simplejson</a> is used when found

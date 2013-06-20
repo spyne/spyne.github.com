@@ -98,20 +98,14 @@
 
 <span class="kn">from</span> <span class="nn">spyne.util.cdict</span> <span class="kn">import</span> <span class="n">cdict</span>
 <span class="kn">from</span> <span class="nn">spyne.util.odict</span> <span class="kn">import</span> <span class="n">odict</span>
+<span class="kn">from</span> <span class="nn">spyne.interface</span> <span class="kn">import</span> <span class="n">InterfaceDocumentBase</span>
 
-<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">SimpleModel</span>
 <span class="kn">from</span> <span class="nn">spyne.model.binary</span> <span class="kn">import</span> <span class="n">ByteArray</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">SimpleModel</span>
 <span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">ComplexModelBase</span>
 <span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">Alias</span>
 <span class="kn">from</span> <span class="nn">spyne.model.enum</span> <span class="kn">import</span> <span class="n">EnumBase</span>
 <span class="kn">from</span> <span class="nn">spyne.model.fault</span> <span class="kn">import</span> <span class="n">Fault</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Decimal</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">DateTime</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Date</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Time</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Unicode</span>
-
-<span class="kn">from</span> <span class="nn">spyne.interface</span> <span class="kn">import</span> <span class="n">InterfaceDocumentBase</span>
 
 <span class="kn">from</span> <span class="nn">spyne.interface.xml_schema.model</span> <span class="kn">import</span> <span class="n">byte_array_add</span>
 <span class="kn">from</span> <span class="nn">spyne.interface.xml_schema.model</span> <span class="kn">import</span> <span class="n">simple_add</span>
@@ -123,6 +117,12 @@
 <span class="kn">from</span> <span class="nn">spyne.interface.xml_schema.model</span> <span class="kn">import</span> <span class="n">simple_get_restriction_tag</span>
 <span class="kn">from</span> <span class="nn">spyne.interface.xml_schema.model</span> <span class="kn">import</span> <span class="n">unicode_get_restriction_tag</span>
 <span class="kn">from</span> <span class="nn">spyne.interface.xml_schema.model</span> <span class="kn">import</span> <span class="n">Tget_range_restriction_tag</span>
+
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Decimal</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">DateTime</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Date</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Time</span>
+<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Unicode</span>
 
 
 <span class="n">_add_handlers</span> <span class="o">=</span> <span class="n">cdict</span><span class="p">({</span>

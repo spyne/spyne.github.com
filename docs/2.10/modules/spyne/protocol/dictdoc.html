@@ -152,8 +152,8 @@
 <span class="sd">Cookies</span>
 <span class="sd">=======</span>
 
-<span class="sd">Cookie headers are parsed and fields within HTTP requests are assigned to</span>
-<span class="sd">fields in the ``in_header`` class, if defined.</span>
+<span class="sd">Cookie headers are parsed and fields within HTTP requests are assigned to fields</span>
+<span class="sd">in the ``in_header`` class, if defined.</span>
 
 <span class="sd">It&#39;s also possible to get the ``Cookie`` header intact by defining an</span>
 <span class="sd">``in_header`` object with a field named ``Cookie`` (case sensitive).</span>
@@ -164,45 +164,11 @@
 <span class="sd">    Cookie: v1=4;v2=8</span>
 <span class="sd">    (...)</span>
 
-<span class="sd">The keys ``v1`` and ``v2`` are passed to the instance of the ``in_header``</span>
-<span class="sd">class if it has fields named ``v1`` or ``v2``.</span>
+<span class="sd">The keys ``v1`` and ``v2`` are passed to the ``in_header`` class if it has</span>
+<span class="sd">fields named ``v1`` or ``v2``.</span>
 
-<span class="sd">Wrappers</span>
-<span class="sd">========</span>
-
-<span class="sd">Wrapper objects are an artifact of the Xml world, which don&#39;t really make sense</span>
-<span class="sd">in other protocols. Let&#39;s look at the following object: ::</span>
-
-<span class="sd">    v = Permission(application=&#39;app&#39;, feature=&#39;f1&#39;),</span>
-
-<span class="sd">Here&#39;s how it would be serialized to XML: ::</span>
-
-<span class="sd">    &lt;Permission&gt;</span>
-<span class="sd">      &lt;application&gt;app&lt;/application&gt;</span>
-<span class="sd">      &lt;feature&gt;f1&lt;/feature&gt;</span>
-<span class="sd">    &lt;/Permission&gt;</span>
-
-<span class="sd">With ``ignore_wrappers=True`` (which is the default) This gets serialized to</span>
-<span class="sd">dict as follows:</span>
-
-<span class="sd">    {</span>
-<span class="sd">        &quot;application&quot;: &quot;app&quot;,</span>
-<span class="sd">        &quot;feature&quot;: &quot;f1&quot;</span>
-<span class="sd">    }</span>
-
-<span class="sd">When ``ignore_wrappers=False``, the same value/type combination would result in</span>
-<span class="sd">the following dict: ::</span>
-
-<span class="sd">    {&quot;Permission&quot;: {</span>
-<span class="sd">        {</span>
-<span class="sd">            &quot;application&quot;: &quot;app&quot;,</span>
-<span class="sd">            &quot;feature&quot;: &quot;f1&quot;</span>
-<span class="sd">        }</span>
-<span class="sd">    },</span>
-
-<span class="sd">This could become useful when you call a don&#39;t know what type to expect, which</span>
-<span class="sd">is never the case with Spyne. This functionality is kept for compatibility</span>
-<span class="sd">purposes.</span>
+<span class="sd">Classes</span>
+<span class="sd">=======</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -317,7 +283,7 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">body   : </span><span class="si">%r</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s">&quot;Need a dictionary with exactly one key &quot;</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s">&quot;Need a dictionary with exacltly one key &quot;</span>
                                   <span class="s">&quot;as method name.&quot;</span><span class="p">)</span>
 
         <span class="n">mrs</span><span class="p">,</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -657,7 +623,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_wrappers</span><span class="p">:</span>
             <span class="n">ti</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="s">&#39;_type_info&#39;</span><span class="p">,</span> <span class="p">{})</span>
 
-            <span class="k">while</span> <span class="n">class_</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">_wrapper</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">while</span> <span class="n">class_</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">_wrapper</span><span class="p">:</span>
                 <span class="c"># Wrappers are auto-generated objects that have exactly one</span>
                 <span class="c"># child type.</span>
                 <span class="n">key</span><span class="p">,</span> <span class="o">=</span> <span class="n">ti</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
