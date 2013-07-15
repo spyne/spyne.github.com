@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.protocol.soap.soap11 &mdash; spyne 2.10.8 documentation</title>
+    <title>spyne.protocol.soap.soap11 &mdash; spyne 2.10.9 documentation</title>
     
     <link rel="stylesheet" href="../../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../../static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.10.8',
+        VERSION:     '2.10.9',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.8 documentation" href="../../../../index.html" />
+    <link rel="top" title="spyne 2.10.9 documentation" href="../../../../index.html" />
     <link rel="up" title="spyne" href="../../../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">spyne 2.10.8 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -109,6 +109,7 @@
 
 <span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
 <span class="kn">from</span> <span class="nn">lxml.etree</span> <span class="kn">import</span> <span class="n">XMLSyntaxError</span>
+<span class="kn">from</span> <span class="nn">lxml.etree</span> <span class="kn">import</span> <span class="n">XMLParser</span>
 
 <span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_405</span>
 <span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_500</span>
@@ -153,8 +154,7 @@
 
     <span class="k">return</span> <span class="n">header</span><span class="p">,</span> <span class="n">body</span>
 
-<span class="k">def</span> <span class="nf">_parse_xml_string</span><span class="p">(</span><span class="n">xml_string</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                                  <span class="n">parser</span><span class="o">=</span><span class="n">etree</span><span class="o">.</span><span class="n">XMLParser</span><span class="p">(</span><span class="n">remove_comments</span><span class="o">=</span><span class="bp">True</span><span class="p">)):</span>
+<span class="k">def</span> <span class="nf">_parse_xml_string</span><span class="p">(</span><span class="n">xml_string</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">charset</span><span class="p">:</span>
         <span class="n">string</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">charset</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">xml_string</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
@@ -260,7 +260,9 @@
             <span class="n">content_type</span> <span class="o">=</span> <span class="n">cgi</span><span class="o">.</span><span class="n">parse_header</span><span class="p">(</span><span class="n">content_type</span><span class="p">)</span>
             <span class="n">collapse_swa</span><span class="p">(</span><span class="n">content_type</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_string</span><span class="p">)</span>
 
-        <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span> <span class="o">=</span> <span class="n">_parse_xml_string</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_string</span><span class="p">,</span> <span class="n">charset</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span> <span class="o">=</span> <span class="n">_parse_xml_string</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_string</span><span class="p">,</span>
+                                            <span class="n">XMLParser</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parser_kwargs</span><span class="p">),</span>
+                                                                        <span class="n">charset</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">decompose_incoming_envelope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">XmlDocument</span><span class="o">.</span><span class="n">REQUEST</span><span class="p">):</span></div>
 <div class="viewcode-block" id="Soap11.decompose_incoming_envelope"><a class="viewcode-back" href="../../../../reference/protocol/soap.html#spyne.protocol.soap.soap11.Soap11.decompose_incoming_envelope">[docs]</a>        <span class="n">envelope_xml</span><span class="p">,</span> <span class="n">xmlids</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span>
@@ -425,7 +427,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">spyne 2.10.8 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../../spyne.html" >spyne</a> &raquo;</li> 
       </ul>
