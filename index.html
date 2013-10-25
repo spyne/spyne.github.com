@@ -770,8 +770,8 @@ $(document).ready(function(){
           });
         }
 
-        imports = imports.concat(db_imports).concat([""]);
         imports = imports.concat(gen_imports).concat([""]);
+        imports = imports.concat(db_imports).concat([""]);
 
         if (! hide_sqla) {
             code = code.concat(db_boilerplate).concat([""]);
