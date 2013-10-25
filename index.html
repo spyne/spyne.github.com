@@ -282,22 +282,6 @@ $(document).ready(function(){
                 regen_code_aux();
             }
         });
-
-        var ti = div.find("#toggle_sqla");
-        ti.click(function(e) {
-            if (hide_sqla) {
-                hide_sqla = false;
-                regen_code_rpc();
-                regen_code_db();
-                regen_code_aux();
-            }
-            else {
-                hide_sqla = true;
-                regen_code_rpc();
-                regen_code_db();
-                regen_code_aux();
-            }
-        });
     }
 
     function is_supported(transport, inprot, outprot) {
@@ -751,8 +735,6 @@ $(document).ready(function(){
         }
     };
 
-    var hide_sqla = true;
-
     function regen_code_db() {
         var code = [];
         var sql = [];
@@ -773,9 +755,7 @@ $(document).ready(function(){
         imports = imports.concat(gen_imports).concat([""]);
         imports = imports.concat(db_imports).concat([""]);
 
-        if (! hide_sqla) {
-            code = code.concat(db_boilerplate).concat([""]);
-        }
+        code = code.concat(db_boilerplate).concat([""]);
 
         if (ser == "SqlOtm" || ser == "SqlMtm") {
             code = code.concat(obj_perm_db)
@@ -809,8 +789,6 @@ $(document).ready(function(){
         div.html([
              '<div>'
             ,  '<a id="toggle_imports">' + (hide_imports ? "Show Imports": "Hide Imports") + '</a>'
-            ,  ' | '
-            ,  '<a id="toggle_sqla">' + (hide_sqla ? "Show SQLAlchemy Init": "Hide SQLAlchemy Init") + '</a>'
             ,  ' | '
             ,"<a target=\"_blank\" href=\"https://github.com/arskom/spyne/tree/spyne-" + version +
                             "/examples/user_manager/server_sqlalchemy.py\">Example</a>"
