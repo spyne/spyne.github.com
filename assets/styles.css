@@ -340,7 +340,7 @@ header li {
     height:15px;
     margin-bottom: 12px;
     line-height: 1em;
-    padding: 6px 6px 6px 7px;
+    padding: 6px 6px 6px 4px;
 
     background: #AF0011;
     background: -moz-linear-gradient(top, #AF0011 0%, #820011 100%);
