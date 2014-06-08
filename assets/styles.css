@@ -336,7 +336,7 @@ header ul {
 
 header li {
     list-style-type: none;
-    width:132px;
+    width:140px;
     height:15px;
     margin-bottom: 12px;
     line-height: 1em;
@@ -404,7 +404,7 @@ a.pypi:hover {
 }
 a.so {
     -webkit-font-smoothing: antialiased;
-    background: url(../images/so-2.png) no-repeat 0px 2px;
+    background: url(../images/so-2.png) no-repeat -7px -8px;
     font-weight: normal;
     text-shadow: rgba(0, 0, 0, 0.4) 0 -1px 0;
     padding: 0px 0px 0px 22px;
@@ -417,7 +417,8 @@ a.so:hover {
 
 a.jenkins {
     -webkit-font-smoothing: antialiased;
-    background: url(../images/jenkins.png) no-repeat 0px 2px;
+    background: url(../images/jenkins-small.png) no-repeat -3px 0px;
+    background-size: 22px 22px;
     font-weight: normal;
     text-shadow: rgba(0, 0, 0, 0.4) 0 -1px 0;
     padding: 0px 0px 0px 22px;
@@ -442,7 +443,7 @@ a.blog:hover {
 }
 
 a.github {
-    background: url(../images/octocat-small.png) no-repeat 1px;
+    background: url(../images/octocat-small.png) no-repeat -2px;
 }
 
 a.buttons:hover {
