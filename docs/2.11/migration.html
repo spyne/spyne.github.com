@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Migration Guide &mdash; spyne 2.11.0 documentation</title>
+    
+    <link rel="stylesheet" href="static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.11.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="spyne 2.11.0 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">spyne 2.11.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Migration Guide</a><ul>
+<li><a class="reference internal" href="#id1">2.10 =&gt; 2.11</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/migration.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="migration-guide">
+<h1>Migration Guide<a class="headerlink" href="#migration-guide" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>2.10 =&gt; 2.11<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>While Spyne tries very hard not to break backwards compatibility across minor
+releases, fixes to some blatant bugs that we just can&#8217;t stand having around
+anymore that ships with 2.11 do have the possibility of breaking existing code.</p>
+<p>The good news about this is that, in most of the cases, they find
+inconsistencies in your code and force you to fix them before they hurt you one
+way or the other.</p>
+<p>So here&#8217;s a list of things that you should look for when your daemon refuses to
+boot after switching to Spyne 2.11:</p>
+<ol class="arabic">
+<li><p class="first"><strong>Schema non-determinism due to inheritance</strong>: Spyne now adds all child
+classes of a given parent class to the Xml Schema document, regardless of
+whether it&#8217;s used in service definitions or not. So when a subclass contains
+a field that is also present in the parent class, you will see a &#8220;content
+model not determinist&#8221; [sic] error and the daemon will refuse to boot. This
+is a first step towards implementing polymorphic responses. This error could
+be hidden in cases where the subclass was not explicitly used as a type
+marker in &#64;rpc either directly or indirectly.</p>
+<p><strong>Fix</strong>: Make sure that the offending field is present in only one of the
+parent or child classes. Please note that common fields in sibling classes
+are not supposed to cause any issues.</p>
+</li>
+<li><p class="first"><strong>Unequal number of parameters in &#64;rpc and function definition</strong>: Spyne 2.10
+did not care when &#64;rpc had more arguments than the actual function
+definition. Spyne 2.11 won&#8217;t tolerate this and the daemon will refuse to boot.</p>
+<p><strong>Fix</strong>: Make sure the number of arguments to &#64;rpc and the function it
+decorates are consistent.</p>
+</li>
+<li><p class="first"><strong>Declared field order can change</strong>: The field order inside the
+<tt class="docutils literal"><span class="pre">&lt;sequence&gt;</span></tt> tags in Xml Schema (and naturally Wsdl) documents should
+<em>in theory</em> stay the same, but we never know as CPython offers no guarantees
+about the element order consistency in its hashmap implementation.</p>
+<p><strong>Fix</strong>: Explicitly declare <tt class="docutils literal"><span class="pre">_type_info</span></tt> as a sequence of
+<tt class="docutils literal"><span class="pre">(field_name,</span> <span class="pre">field_type)</span></tt> pairs.</p>
+<p>This is not much of a problem in Python 3, as it&#8217;s possible to customize the
+class dict passed to the metaclass thanks to <tt class="docutils literal"><span class="pre">__prepare__</span></tt>. We now do that
+by default in Python 3.</p>
+<p>However, some folks wanted the same functionality in Python 2 so bad that
+they dared to submit this horrendous hack:
+<a class="reference external" href="https://github.com/arskom/spyne/pull/343">https://github.com/arskom/spyne/pull/343</a>
+You can use it to make sure field
+order stays consistent across Spyne releases and CPython implementations.</p>
+<p>As it seemed to work OK with CPython 2.6-3.3 and PyPy, we decided to ship it
+with 2.11 after making sure that it&#8217;s strictly opt-in. Please test it with
+your environment and report back as it&#8217;s relying, as far as we can tell,
+on some implementation details of CPython.</p>
+</li>
+<li><p class="first"><strong>Change in class declaration order</strong>: Spyne 2.11 uses a proper topological
+sorting algorithm for determining the order of the object definitions in the
+Xml Schema document. So the order of these will certainly be different from
+what 2.10 generates. This is not supposed to cause any issues though. Fingers
+crossed!</p>
+<p><strong>Fix:</strong> There is no fix short of reverting the toposort commits.</p>
+</li>
+<li><p class="first">Partly as a result of the above point, but also as a result of more robust
+type enumeration logic, auto-generated type names could be different from
+what 2.10 generates, which may break break SOAP clients that use statically
+compiled copies of the WSDL document.</p>
+<p><strong>Fix:</strong> Pass <cite>type_name=&#8217;...&#8217;</cite> to every Spyne type marker you customize.</p>
+</li>
+</ol>
+<p>We certainly hope that we won&#8217;t have to add more points to the above list.</p>
+<p>However, please don&#8217;t hesitate to chime in at <a class="reference external" href="mailto:people&#37;&#52;&#48;spyne&#46;io">people<span>&#64;</span>spyne<span>&#46;</span>io</a> if you think you
+have stumbled upon a backwards compatibility issue that wasn&#8217;t iterated above.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">spyne 2.11.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Spyne Contributors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+    </div>
+  </body>
+</html>
