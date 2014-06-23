@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Interfaces &mdash; spyne 2.10.9 documentation</title>
+    <title>Interfaces &mdash; spyne 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.10.9',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.9 documentation" href="../index.html" />
+    <link rel="top" title="spyne 2.11.0 documentation" href="../index.html" />
     <link rel="up" title="Spyne API Reference" href="index.html" />
     <link rel="next" title="Protocols" href="protocol/index.html" />
     <link rel="prev" title="Persisting Objects" href="model/sql.html" /> 
@@ -46,7 +44,7 @@
         <li class="right" >
           <a href="model/sql.html" title="Persisting Objects"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Spyne API Reference</a> &raquo;</li> 
       </ul>
     </div>
@@ -116,6 +114,23 @@ interface document.</p>
 </tbody>
 </table>
 <dl class="method">
+<dt id="spyne.interface.Interface.add_method">
+<tt class="descname">add_method</tt><big>(</big><em>method</em><big>)</big><a class="headerlink" href="#spyne.interface.Interface.add_method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator method that adds the given method descriptor to the
+interface. Also extracts and yields all the types found in there.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>method</strong> &#8211; A <tt class="xref py py-class docutils literal"><span class="pre">MethodDescriptor</span></tt> instance</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Sequence of <a class="reference internal" href="model/index.html#spyne.model.ModelBase" title="spyne.model.ModelBase"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.ModelBase</span></tt></a> subclasses.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="spyne.interface.Interface.get_class">
 <tt class="descname">get_class</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#spyne.interface.Interface.get_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the class definition that corresponds to the given key.
@@ -179,7 +194,7 @@ the used objects.</p>
 
 <dl class="attribute">
 <dt id="spyne.interface.Interface.tns">
-<tt class="descname">tns</tt><a class="headerlink" href="#spyne.interface.Interface.tns" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">tns</tt><em class="property"> None</em><a class="headerlink" href="#spyne.interface.Interface.tns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns default namespace that is seen in the targetNamespace
 attribute of the definitions tag.</p>
 <p>Not meant to be overridden.</p>
@@ -205,7 +220,7 @@ attribute of the definitions tag.</p>
 </table>
 <dl class="method">
 <dt id="spyne.interface.InterfaceDocumentBase.build_interface_document">
-<tt class="descname">build_interface_document</tt><big>(</big><em>cls</em><big>)</big><a class="headerlink" href="#spyne.interface.InterfaceDocumentBase.build_interface_document" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">build_interface_document</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.interface.InterfaceDocumentBase.build_interface_document" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function is supposed to be called just once, as late as possible
 into the process start. It builds the interface document and caches it
 somewhere. The overriding function should never call the overridden
@@ -214,7 +229,7 @@ function as this may result in the same event firing more than once.</p>
 
 <dl class="method">
 <dt id="spyne.interface.InterfaceDocumentBase.get_interface_document">
-<tt class="descname">get_interface_document</tt><big>(</big><em>cls</em><big>)</big><a class="headerlink" href="#spyne.interface.InterfaceDocumentBase.get_interface_document" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_interface_document</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.interface.InterfaceDocumentBase.get_interface_document" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function is called by server transports that try to satisfy the
 request for the interface document. This should just return a previously
 cached interface document.</p>
@@ -383,13 +398,13 @@ for a given namespace.</p>
         <li class="right" >
           <a href="model/sql.html" title="Persisting Objects"
              >previous</a> |</li>
-        <li><a href="../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Spyne API Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright Spyne Contributors.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

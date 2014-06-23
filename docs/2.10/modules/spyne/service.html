@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.service &mdash; spyne 2.10.9 documentation</title>
+    <title>spyne.service &mdash; spyne 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.10.9',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="../../static/jquery.js"></script>
     <script type="text/javascript" src="../../static/underscore.js"></script>
     <script type="text/javascript" src="../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.9 documentation" href="../../index.html" />
+    <link rel="top" title="spyne 2.11.0 documentation" href="../../index.html" />
     <link rel="up" title="spyne" href="../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +36,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li>
           <li><a href="../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -85,21 +83,22 @@
 <span class="c"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301</span>
 <span class="c">#</span>
 
-<span class="kn">from</span> <span class="nn">spyne._base</span> <span class="kn">import</span> <span class="n">BODY_STYLE_EMPTY</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains the :class:`ServiceBase` class and its helper objects.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">spyne._base</span> <span class="kn">import</span> <span class="n">BODY_STYLE_BARE</span>
-<span class="kn">from</span> <span class="nn">spyne._base</span> <span class="kn">import</span> <span class="n">EventManager</span>
+<span class="kn">from</span> <span class="nn">spyne.util.six</span> <span class="kn">import</span> <span class="n">add_metaclass</span><span class="p">,</span> <span class="n">string_types</span>
+<span class="kn">from</span> <span class="nn">spyne</span> <span class="kn">import</span> <span class="n">EventManager</span>
 <span class="kn">from</span> <span class="nn">spyne.util.oset</span> <span class="kn">import</span> <span class="n">oset</span>
 
-<span class="sd">&#39;&#39;&#39;This module contains the :class:`ServiceBase` class and its helper objects.</span>
-<span class="sd">&#39;&#39;&#39;</span>
 
 <span class="k">class</span> <span class="nc">ServiceBaseMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
-<div class="viewcode-block" id="ServiceBaseMeta"><a class="viewcode-back" href="../../reference/service.html#spyne.service.ServiceBaseMeta">[docs]</a>    <span class="sd">&#39;&#39;&#39;Creates the :class:`spyne.MethodDescriptor` objects by iterating over</span>
+<div class="viewcode-block" id="ServiceBaseMeta"><a class="viewcode-back" href="../../reference/service.html#spyne.service.ServiceBaseMeta">[docs]</a>    <span class="sd">&quot;&quot;&quot;Creates the :class:`spyne.MethodDescriptor` objects by iterating over</span>
 <span class="sd">    tagged methods.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ServiceBaseMeta</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_bases</span><span class="p">,</span> <span class="n">cls_dict</span><span class="p">)</span>
@@ -116,7 +115,9 @@
                 <span class="c"># these two lines are needed for staticmethod wrapping to work</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">descriptor</span><span class="o">.</span><span class="n">function</span><span class="p">))</span>
                 <span class="n">descriptor</span><span class="o">.</span><span class="n">reset_function</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+
                 <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">descriptor</span> <span class="o">=</span> <span class="n">descriptor</span>
+                <span class="n">descriptor</span><span class="o">.</span><span class="n">service_class</span> <span class="o">=</span> <span class="bp">self</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">public_methods</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">descriptor</span>
                 <span class="k">if</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">aux</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -146,8 +147,9 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__has_aux_methods</span>
 
 
-<span class="k">class</span> <span class="nc">ServiceBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></div>
-<div class="viewcode-block" id="ServiceBase"><a class="viewcode-back" href="../../reference/service.html#spyne.service.ServiceBase">[docs]</a>    <span class="sd">&#39;&#39;&#39;The ``ServiceBase`` class is the base class for all service definitions.</span>
+<span class="nd">@add_metaclass</span><span class="p">(</span><span class="n">ServiceBaseMeta</span><span class="p">)</span></div>
+<span class="k">class</span> <span class="nc">ServiceBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="ServiceBase"><a class="viewcode-back" href="../../reference/service.html#spyne.service.ServiceBase">[docs]</a>    <span class="sd">&quot;&quot;&quot;The ``ServiceBase`` class is the base class for all service definitions.</span>
 
 <span class="sd">    The convention is to have public methods defined under a subclass of this</span>
 <span class="sd">    class along with common properties of public methods like header classes or</span>
@@ -187,9 +189,7 @@
 <span class="sd">        * ``method_exception_string``</span>
 <span class="sd">            Called by the transport right before passing the exception string to</span>
 <span class="sd">            the client.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-
-    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ServiceBaseMeta</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__tns__</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="sd">&quot;&quot;&quot;For internal use only. You should use the ``tns`` argument to the</span>
@@ -250,7 +250,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_has_callbacks</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Determines if this service definition has callback methods or not.&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;Determines if this service definition has callback methods or not.&quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">public_methods</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">is_callback</span><span class="p">:</span>
@@ -260,33 +260,20 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">call_wrapper</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<div class="viewcode-block" id="ServiceBase.call_wrapper"><a class="viewcode-back" href="../../reference/service.html#spyne.service.ServiceBase.call_wrapper">[docs]</a>        <span class="sd">&#39;&#39;&#39;Called in place of the original method call. You can override this to</span>
+<div class="viewcode-block" id="ServiceBase.call_wrapper"><a class="viewcode-back" href="../../reference/service.html#spyne.service.ServiceBase.call_wrapper">[docs]</a>        <span class="sd">&quot;&quot;&quot;Called in place of the original method call. You can override this to</span>
 <span class="sd">        do your own exception handling.</span>
 
 <span class="sd">        :param ctx: The method context.</span>
 
 <span class="sd">        The overriding function must call this function by convention.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-
-        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">body_style</span> <span class="ow">is</span> <span class="n">BODY_STYLE_BARE</span><span class="p">:</span>
-            <span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span> <span class="o">=</span> <span class="p">[</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">body_style</span> <span class="ow">is</span> <span class="n">BODY_STYLE_EMPTY</span><span class="p">:</span>
-            <span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">no_ctx</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">ctx</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">ctx</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="o">*</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span><span class="p">)</span>
-
-    <span class="nd">@classmethod</span></div>
-    <span class="k">def</span> <span class="nf">get_method_id</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
-                <span class="n">cls</span><span class="o">.</span><span class="n">__module__</span><span class="p">,</span>
-                <span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
-                <span class="n">descriptor</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="p">])</span>
-</pre></div></div>
+</pre></div></div></div>
 
           </div>
         </div>
@@ -302,14 +289,14 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li>
           <li><a href="../spyne.html" >spyne</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright Spyne Contributors.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

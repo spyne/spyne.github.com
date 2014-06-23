@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.server.zeromq &mdash; spyne 2.10.9 documentation</title>
+    <title>spyne.server.zeromq &mdash; spyne 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.10.9',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.9 documentation" href="../../../index.html" />
+    <link rel="top" title="spyne 2.11.0 documentation" href="../../../index.html" />
     <link rel="up" title="spyne" href="../../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +36,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -88,6 +86,7 @@
 <span class="sd">&quot;&quot;&quot;The ``spyne.server.zeromq`` module contains a server implementation that</span>
 <span class="sd">uses ZeroMQ (zmq.REP) as transport.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">threading</span>
 
 <span class="kn">import</span> <span class="nn">zmq</span>
 
@@ -95,32 +94,42 @@
 <span class="kn">from</span> <span class="nn">spyne._base</span> <span class="kn">import</span> <span class="n">MethodContext</span>
 <span class="kn">from</span> <span class="nn">spyne.server</span> <span class="kn">import</span> <span class="n">ServerBase</span>
 
-<span class="n">context</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">()</span>
-<span class="sd">&quot;&quot;&quot;The ZeroMQ context.&quot;&quot;&quot;</span>
 
-<span class="k">class</span> <span class="nc">ZmqMethodContext</span><span class="p">(</span><span class="n">MethodContext</span><span class="p">):</span>
-<div class="viewcode-block" id="ZmqMethodContext"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.zeromq.ZmqMethodContext">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
-        <span class="n">MethodContext</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">)</span>
+<div class="viewcode-block" id="ZmqMethodContext"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.zeromq.ZmqMethodContext">[docs]</a><span class="k">class</span> <span class="nc">ZmqMethodContext</span><span class="p">(</span><span class="n">MethodContext</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ZmqMethodContext</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s">&#39;zmq&#39;</span>
-
-<span class="k">class</span> <span class="nc">ZeroMQServer</span><span class="p">(</span><span class="n">ServerBase</span><span class="p">):</span></div>
-<div class="viewcode-block" id="ZeroMQServer"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.zeromq.ZeroMQServer">[docs]</a>    <span class="sd">&quot;&quot;&quot;The ZeroMQ server transport.&quot;&quot;&quot;</span>
+</div>
+<div class="viewcode-block" id="ZeroMQServer"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.zeromq.ZeroMQServer">[docs]</a><span class="k">class</span> <span class="nc">ZeroMQServer</span><span class="p">(</span><span class="n">ServerBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The ZeroMQ server transport.&quot;&quot;&quot;</span>
     <span class="n">transport</span> <span class="o">=</span> <span class="s">&#39;http://rfc.zeromq.org/&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">app_url</span><span class="p">,</span> <span class="n">wsdl_url</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="n">ServerBase</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">app_url</span><span class="p">,</span> <span class="n">wsdl_url</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">socket</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ctx</span> <span class="ow">and</span> <span class="n">socket</span> <span class="ow">and</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">socket</span><span class="o">.</span><span class="n">context</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;ctx should be the same as socket.context&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ZeroMQServer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">app_url</span> <span class="o">=</span> <span class="n">app_url</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wsdl_url</span> <span class="o">=</span> <span class="n">wsdl_url</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">zmq_socket</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">REP</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">zmq_socket</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">app_url</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ctx</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ctx</span>
+        <span class="k">elif</span> <span class="n">socket</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">context</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">socket</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zmq_socket</span> <span class="o">=</span> <span class="n">socket</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zmq_socket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">REP</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zmq_socket</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">app_url</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__handle_wsdl_request</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get_interface_document</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">serve_forever</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<div class="viewcode-block" id="ZeroMQServer.serve_forever"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.zeromq.ZeroMQServer.serve_forever">[docs]</a>        <span class="sd">&quot;&quot;&quot;Runs the ZeroMQ server.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ZeroMQServer.serve_forever"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.zeromq.ZeroMQServer.serve_forever">[docs]</a>    <span class="k">def</span> <span class="nf">serve_forever</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Runs the ZeroMQ server.&quot;&quot;&quot;</span>
 
         <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
             <span class="n">error</span> <span class="o">=</span> <span class="bp">None</span>
@@ -150,10 +159,67 @@
 
             <span class="n">process_contexts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">zmq_socket</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">out_string</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zmq_socket</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">b</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">out_string</span><span class="p">))</span>
 
             <span class="n">p_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</pre></div></div></div>
+
+</div></div>
+<div class="viewcode-block" id="ZeroMQThreadPoolServer"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.zeromq.ZeroMQThreadPoolServer">[docs]</a><span class="k">class</span> <span class="nc">ZeroMQThreadPoolServer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a ZeroMQ server transport with several background workers,</span>
+<span class="sd">    allowing asynchronous calls.</span>
+
+<span class="sd">    More details on the pattern http://zguide.zeromq.org/page:all#Shared-Queue-DEALER-and-ROUTER-sockets&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">app_url</span><span class="p">,</span> <span class="n">pool_size</span><span class="p">,</span> <span class="n">wsdl_url</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">socket</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ctx</span> <span class="ow">and</span> <span class="n">socket</span> <span class="ow">and</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">socket</span><span class="o">.</span><span class="n">context</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;ctx should be the same as socket.context&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">app</span>
+
+        <span class="k">if</span> <span class="n">ctx</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ctx</span>
+        <span class="k">elif</span> <span class="n">socket</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">context</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">socket</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frontend</span> <span class="o">=</span> <span class="n">socket</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frontend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">ROUTER</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frontend</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">app_url</span><span class="p">)</span>
+
+        <span class="n">be_url</span> <span class="o">=</span> <span class="s">&#39;inproc://{tns}.{name}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">tns</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">background_jobs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">pool_size</span><span class="p">):</span>
+            <span class="n">worker</span><span class="p">,</span> <span class="n">job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_worker</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">be_url</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">worker</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">background_jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">DEALER</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">be_url</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ZeroMQThreadPoolServer.create_worker"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.zeromq.ZeroMQThreadPoolServer.create_worker">[docs]</a>    <span class="k">def</span> <span class="nf">create_worker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">be_url</span><span class="p">):</span>
+        <span class="n">socket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">REP</span><span class="p">)</span>
+        <span class="n">socket</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">be_url</span><span class="p">)</span>
+        <span class="n">worker</span> <span class="o">=</span> <span class="n">ZeroMQServer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">,</span> <span class="n">be_url</span><span class="p">,</span> <span class="n">socket</span><span class="o">=</span><span class="n">socket</span><span class="p">)</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">worker</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">)</span>
+        <span class="n">job</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="n">worker</span><span class="p">,</span> <span class="n">job</span>
+</div>
+<div class="viewcode-block" id="ZeroMQThreadPoolServer.serve_forever"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.zeromq.ZeroMQThreadPoolServer.serve_forever">[docs]</a>    <span class="k">def</span> <span class="nf">serve_forever</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Runs the ZeroMQ server.&quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">background_jobs</span><span class="p">:</span>
+            <span class="n">job</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="n">zmq</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">QUEUE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frontend</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">)</span>
+
+        <span class="c"># We never get here...</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frontend</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+</pre></div>
 
           </div>
         </div>
@@ -169,14 +235,14 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright Spyne Contributors.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

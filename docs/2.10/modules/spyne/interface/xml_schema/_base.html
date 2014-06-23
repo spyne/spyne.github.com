@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.interface.xml_schema._base &mdash; spyne 2.10.9 documentation</title>
+    <title>spyne.interface.xml_schema._base &mdash; spyne 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../../static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.10.9',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="../../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.9 documentation" href="../../../../index.html" />
+    <link rel="top" title="spyne 2.11.0 documentation" href="../../../../index.html" />
     <link rel="up" title="spyne.interface" href="../../interface.html" /> 
   </head>
   <body>
@@ -38,7 +36,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../../spyne.html" >spyne</a> &raquo;</li>
           <li><a href="../../interface.html" accesskey="U">spyne.interface</a> &raquo;</li> 
@@ -87,7 +85,7 @@
 <span class="c">#</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;spyne.interface.xml_schema&#39;</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
@@ -95,21 +93,19 @@
 <span class="kn">import</span> <span class="nn">spyne.const.xml_ns</span>
 
 <span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
 
 <span class="kn">from</span> <span class="nn">spyne.util.cdict</span> <span class="kn">import</span> <span class="n">cdict</span>
 <span class="kn">from</span> <span class="nn">spyne.util.odict</span> <span class="kn">import</span> <span class="n">odict</span>
-<span class="kn">from</span> <span class="nn">spyne.interface</span> <span class="kn">import</span> <span class="n">InterfaceDocumentBase</span>
+<span class="kn">from</span> <span class="nn">spyne.util.toposort</span> <span class="kn">import</span> <span class="n">toposort2</span>
 
-<span class="kn">from</span> <span class="nn">spyne.model.binary</span> <span class="kn">import</span> <span class="n">ByteArray</span>
-<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">SimpleModel</span>
-<span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">ComplexModelBase</span>
-<span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">Alias</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">SimpleModel</span><span class="p">,</span> <span class="n">ByteArray</span><span class="p">,</span> <span class="n">ComplexModelBase</span><span class="p">,</span> <span class="n">Fault</span><span class="p">,</span> \
+    <span class="n">Decimal</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">,</span> <span class="n">Date</span><span class="p">,</span> <span class="n">Time</span><span class="p">,</span> <span class="n">Unicode</span>
 <span class="kn">from</span> <span class="nn">spyne.model.enum</span> <span class="kn">import</span> <span class="n">EnumBase</span>
-<span class="kn">from</span> <span class="nn">spyne.model.fault</span> <span class="kn">import</span> <span class="n">Fault</span>
+<span class="kn">from</span> <span class="nn">spyne.interface</span> <span class="kn">import</span> <span class="n">InterfaceDocumentBase</span>
 
 <span class="kn">from</span> <span class="nn">spyne.interface.xml_schema.model</span> <span class="kn">import</span> <span class="n">byte_array_add</span>
 <span class="kn">from</span> <span class="nn">spyne.interface.xml_schema.model</span> <span class="kn">import</span> <span class="n">simple_add</span>
-<span class="kn">from</span> <span class="nn">spyne.interface.xml_schema.model</span> <span class="kn">import</span> <span class="n">alias_add</span>
 <span class="kn">from</span> <span class="nn">spyne.interface.xml_schema.model</span> <span class="kn">import</span> <span class="n">complex_add</span>
 <span class="kn">from</span> <span class="nn">spyne.interface.xml_schema.model</span> <span class="kn">import</span> <span class="n">fault_add</span>
 <span class="kn">from</span> <span class="nn">spyne.interface.xml_schema.model</span> <span class="kn">import</span> <span class="n">enum_add</span>
@@ -118,16 +114,9 @@
 <span class="kn">from</span> <span class="nn">spyne.interface.xml_schema.model</span> <span class="kn">import</span> <span class="n">unicode_get_restriction_tag</span>
 <span class="kn">from</span> <span class="nn">spyne.interface.xml_schema.model</span> <span class="kn">import</span> <span class="n">Tget_range_restriction_tag</span>
 
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Decimal</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">DateTime</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Date</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Time</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Unicode</span>
-
 
 <span class="n">_add_handlers</span> <span class="o">=</span> <span class="n">cdict</span><span class="p">({</span>
     <span class="nb">object</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">interface</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">tags</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
-    <span class="n">Alias</span><span class="p">:</span> <span class="n">alias_add</span><span class="p">,</span>
     <span class="n">ByteArray</span><span class="p">:</span> <span class="n">byte_array_add</span><span class="p">,</span>
     <span class="n">SimpleModel</span><span class="p">:</span> <span class="n">simple_add</span><span class="p">,</span>
     <span class="n">ComplexModelBase</span><span class="p">:</span> <span class="n">complex_add</span><span class="p">,</span>
@@ -181,11 +170,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">):</span>
-        <span class="n">InterfaceDocumentBase</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">XmlSchema</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">interface</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">schema_dict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">validation_schema</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">namespaces</span> <span class="o">=</span> <span class="n">odict</span><span class="p">()</span>
+
+        <span class="n">pref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">prefmap</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">tns</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">namespaces</span> <span class="o">=</span> <span class="n">odict</span><span class="p">({</span><span class="n">pref</span><span class="p">:</span> <span class="n">SchemaInfo</span><span class="p">()})</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">complex_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
@@ -202,7 +194,7 @@
     <span class="k">def</span> <span class="nf">build_schema_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">with_schema_location</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">schema_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="k">for</span> <span class="n">cls</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">classes</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">cls</span> <span class="ow">in</span> <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">toposort2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">deps</span><span class="p">)):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span>
 
         <span class="k">for</span> <span class="n">pref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">namespaces</span><span class="p">:</span>
@@ -223,15 +215,53 @@
                     <span class="n">import_</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;schemaLocation&#39;</span><span class="p">,</span> <span class="n">sl</span><span class="p">)</span>
 
             <span class="c"># append simpleType and complexType tags</span>
-            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">namespaces</span><span class="p">[</span><span class="n">pref</span><span class="p">]</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">namespaces</span><span class="p">[</span><span class="n">pref</span><span class="p">]</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                 <span class="n">schema</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
 
             <span class="c"># append element tags</span>
             <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">namespaces</span><span class="p">[</span><span class="n">pref</span><span class="p">]</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                 <span class="n">schema</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_missing_elements_for_methods</span><span class="p">()</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">fire_event</span><span class="p">(</span><span class="s">&#39;document_built&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">fire_event</span><span class="p">(</span><span class="s">&#39;xml_document_built&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_missing_elements_for_methods</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">missing_methods</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">services</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">service</span><span class="o">.</span><span class="n">public_methods</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">aux</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="n">method</span>
+
+        <span class="n">pref_tns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">prefmap</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">tns</span><span class="p">]</span>
+
+        <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_schema_info</span><span class="p">(</span><span class="n">pref_tns</span><span class="p">)</span><span class="o">.</span><span class="n">elements</span>
+        <span class="n">schema_root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema_dict</span><span class="p">[</span><span class="n">pref_tns</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">missing_methods</span><span class="p">():</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">in_message</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">sub_name</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">in_message</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+                <span class="n">element</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s">&#39;{</span><span class="si">%s</span><span class="s">}element&#39;</span> <span class="o">%</span> <span class="n">_ns_xsd</span><span class="p">)</span>
+                <span class="n">element</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+                <span class="n">element</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;type&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">in_message</span><span class="o">.</span><span class="n">get_type_name_ns</span><span class="p">(</span>
+                                                                <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">))</span>
+                <span class="n">elements</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">element</span>
+                <span class="n">schema_root</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">out_message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">out_message</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">sub_name</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">out_message</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+                    <span class="n">element</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s">&#39;{</span><span class="si">%s</span><span class="s">}element&#39;</span> <span class="o">%</span> <span class="n">_ns_xsd</span><span class="p">)</span>
+                    <span class="n">element</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+                    <span class="n">element</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;type&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">out_message</span> \
+                                              <span class="o">.</span><span class="n">get_type_name_ns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">))</span>
+                    <span class="n">elements</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">element</span>
+                    <span class="n">schema_root</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">build_validation_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <div class="viewcode-block" id="XmlSchema.build_validation_schema"><a class="viewcode-back" href="../../../../reference/interface.html#spyne.interface.xml_schema._base.XmlSchema.build_validation_schema">[docs]</a>        <span class="sd">&quot;&quot;&quot;Build application schema specifically for xml validation purposes.&quot;&quot;&quot;</span>
@@ -243,25 +273,34 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;generating schema for targetNamespace=</span><span class="si">%r</span><span class="s">, prefix: &quot;</span>
                   <span class="s">&quot;</span><span class="si">%r</span><span class="s"> in dir </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">tns</span><span class="p">,</span> <span class="n">pref_tns</span><span class="p">,</span> <span class="n">tmp_dir_name</span><span class="p">))</span>
 
-        <span class="c"># serialize nodes to files</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">file_name</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">.xsd&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tmp_dir_name</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span>
-            <span class="n">etree</span><span class="o">.</span><span class="n">ElementTree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">pretty_print</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;writing </span><span class="si">%r</span><span class="s"> for ns </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">file_name</span><span class="p">,</span>
-                                                       <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">nsmap</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c"># serialize nodes to files</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">file_name</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">.xsd&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tmp_dir_name</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">etree</span><span class="o">.</span><span class="n">ElementTree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">pretty_print</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">.xsd&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tmp_dir_name</span><span class="p">,</span> <span class="n">pref_tns</span><span class="p">),</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;writing </span><span class="si">%r</span><span class="s"> for ns </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span>
+                             <span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">nsmap</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;building schema...&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">validation_schema</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">XMLSchema</span><span class="p">(</span><span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">.xsd&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tmp_dir_name</span><span class="p">,</span> <span class="n">pref_tns</span><span class="p">),</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">validation_schema</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">XMLSchema</span><span class="p">(</span><span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;schema </span><span class="si">%r</span><span class="s"> built, cleaning up...&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_schema</span><span class="p">)</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;This is a Spyne error. Please seek support &quot;</span>
+                                 <span class="s">&quot;with a minimal test case that reproduces &quot;</span>
+                                 <span class="s">&quot;this error.&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span>
 
-        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">tmp_dir_name</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;removed </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">tmp_dir_name</span><span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">tmp_dir_name</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Schema built. Removed </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">tmp_dir_name</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;The schema files are left at: </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">tmp_dir_name</span><span class="p">)</span>
+            <span class="k">raise</span>
 
     <span class="k">def</span> <span class="nf">get_schema_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pref</span><span class="p">):</span></div>
 <div class="viewcode-block" id="XmlSchema.get_schema_node"><a class="viewcode-back" href="../../../../reference/interface.html#spyne.interface.xml_schema._base.XmlSchema.get_schema_node">[docs]</a>        <span class="sd">&quot;&quot;&quot;Return schema node for the given namespace prefix.&quot;&quot;&quot;</span>
@@ -287,10 +326,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">build_schema_nodes</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">add_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-        <span class="n">pref</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_namespace_prefix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">)</span>
+        <span class="n">pref</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_element_name_ns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;:&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="n">schema_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_schema_info</span><span class="p">(</span><span class="n">pref</span><span class="p">)</span>
-        <span class="n">schema_info</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">cls</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()]</span> <span class="o">=</span> <span class="n">node</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">sub_name</span> <span class="ow">or</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
+        <span class="n">schema_info</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span>
 
     <span class="k">def</span> <span class="nf">add_simple_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="n">tn</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">()</span>
@@ -335,7 +375,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../../spyne.html" >spyne</a> &raquo;</li>
           <li><a href="../../interface.html" >spyne.interface</a> &raquo;</li> 
@@ -343,7 +383,7 @@
     </div>
     <div class="footer">
         &copy; Copyright Spyne Contributors.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

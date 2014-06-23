@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Models &mdash; spyne 2.10.9 documentation</title>
+    <title>Models &mdash; spyne 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.10.9',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="../../static/jquery.js"></script>
     <script type="text/javascript" src="../../static/underscore.js"></script>
     <script type="text/javascript" src="../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.9 documentation" href="../../index.html" />
+    <link rel="top" title="spyne 2.11.0 documentation" href="../../index.html" />
     <link rel="up" title="Spyne API Reference" href="../index.html" />
     <link rel="next" title="Primitives" href="primitive.html" />
     <link rel="prev" title="Common Exceptions" href="../error.html" /> 
@@ -46,7 +44,7 @@
         <li class="right" >
           <a href="../error.html" title="Common Exceptions"
              accesskey="P">previous</a> |</li>
-        <li><a href="../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../index.html" accesskey="U">Spyne API Reference</a> &raquo;</li> 
       </ul>
     </div>
@@ -121,7 +119,8 @@ mainly used for defining constraints on input values.</p>
 <dl class="attribute">
 <dt id="spyne.model.ModelBase.__orig__">
 <tt class="descname">__orig__</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.ModelBase.__orig__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This holds the original class the class .customize()d from.</p>
+<dd><p>This holds the original class the class .customize()d from. Ie if this is
+None, the class is not a customize()d one.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -171,12 +170,6 @@ accessing it directly.</p>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>The class that holds the constraints for the given type.</p>
 <dl class="attribute">
-<dt id="spyne.model.ModelBase.Attributes.__metaclass__">
-<tt class="descname">__metaclass__</tt><a class="headerlink" href="#spyne.model.ModelBase.Attributes.__metaclass__" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">AttributesMeta</span></tt></p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="spyne.model.ModelBase.Attributes.db_type">
 <tt class="descname">db_type</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.ModelBase.Attributes.db_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>When not None, it overrides Spyne&#8217;s own mapping from Spyne types to
@@ -188,6 +181,19 @@ SQLAlchemy types. It&#8217;s a standard SQLAlchemy type marker, e.g.
 <dt id="spyne.model.ModelBase.Attributes.default">
 <tt class="descname">default</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.ModelBase.Attributes.default" title="Permalink to this definition">¶</a></dt>
 <dd><p>The default value if the input is None</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.ModelBase.Attributes.default_factory">
+<tt class="descname">default_factory</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.ModelBase.Attributes.default_factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>The default value if the input is None</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.ModelBase.Attributes.empty_is_none">
+<tt class="descname">empty_is_none</tt><em class="property"> = False</em><a class="headerlink" href="#spyne.model.ModelBase.Attributes.empty_is_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>When the incoming object is empty (e.g. &#8216;&#8217; for strings) treat it as
+None. No effect (yet) for outgoing values.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -252,7 +258,28 @@ if it&#8217;s there.</p>
 <dt id="spyne.model.ModelBase.Attributes.nillable">
 <tt class="descname">nillable</tt><em class="property"> = True</em><a class="headerlink" href="#spyne.model.ModelBase.Attributes.nillable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set this to false to reject null values. Synonyms with
-<tt class="docutils literal"><span class="pre">nullable</span></tt>.</p>
+<tt class="docutils literal"><span class="pre">nullable</span></tt>. True by default. The default value can be changed by</p>
+<blockquote>
+<div>setting <tt class="docutils literal"><span class="pre">AttributesMeta.NULLABLE_DEFAULT</span></tt>.</div></blockquote>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.ModelBase.Attributes.order">
+<tt class="descname">order</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.ModelBase.Attributes.order" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer that&#8217;s passed to <tt class="docutils literal"><span class="pre">_type_info.insert()</span></tt> as first argument
+when not None. <tt class="docutils literal"><span class="pre">.append()</span></tt> is used otherwise.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.ModelBase.Attributes.prot_attrs">
+<tt class="descname">prot_attrs</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.ModelBase.Attributes.prot_attrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>to be implemented.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.ModelBase.Attributes.read_only">
+<tt class="descname">read_only</tt><em class="property"> = False</em><a class="headerlink" href="#spyne.model.ModelBase.Attributes.read_only" title="Permalink to this definition">¶</a></dt>
+<dd><p>If True, the attribute won&#8217;t be initialized from outside values.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -270,6 +297,26 @@ xml schema.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="spyne.model.ModelBase.Attributes.sub_name">
+<tt class="descname">sub_name</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.ModelBase.Attributes.sub_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>This specifies which string should be used as field name when this
+type is seriazed under a ComplexModel.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.ModelBase.Attributes.sub_ns">
+<tt class="descname">sub_ns</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.ModelBase.Attributes.sub_ns" title="Permalink to this definition">¶</a></dt>
+<dd><p>An Xml-specific attribute that specifies which namespace should be
+used for field names in classes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.ModelBase.Attributes.table_name">
+<tt class="descname">table_name</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.ModelBase.Attributes.table_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Database table name.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="spyne.model.ModelBase.Attributes.translations">
 <tt class="descname">translations</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.ModelBase.Attributes.translations" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dict that contains locale codes as keys and translations of field
@@ -283,6 +330,13 @@ names to that language as values.</p>
 with default indexing options. If the value is a string, it will be
 used as the indexing method to create the unique index. See sqlalchemy
 documentation on how to create multi-column unique constraints.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.model.ModelBase.Attributes.xml_choice_group">
+<tt class="descname">xml_choice_group</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.model.ModelBase.Attributes.xml_choice_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>When not None, shares the same &lt;choice&gt; tag with fields with the same
+xml_choice_group value.</p>
 </dd></dl>
 
 </dd></dl>
@@ -329,6 +383,12 @@ is not available until the application calls populate_interface method
 of the interface generator.</p>
 </dd></dl>
 
+<dl class="classmethod">
+<dt id="spyne.model.ModelBase.to_string">
+<em class="property">classmethod </em><tt class="descclassname">ModelBase.</tt><tt class="descname">to_string</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#spyne.model.ModelBase.to_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns str(value). This should be overridden if this is not enough.</p>
+</dd></dl>
+
 <dl class="staticmethod">
 <dt id="spyne.model.ModelBase.validate_native">
 <em class="property">static </em><tt class="descclassname">ModelBase.</tt><tt class="descname">validate_native</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#spyne.model.ModelBase.validate_native" title="Permalink to this definition">¶</a></dt>
@@ -373,6 +433,13 @@ a customized class instead of an instance.</p>
 <p>See spyne.model.base.ModelBase for more information.</p>
 </dd></dl>
 
+<dl class="classmethod">
+<dt id="spyne.model.SimpleModel.customize">
+<em class="property">classmethod </em><tt class="descclassname">SimpleModel.</tt><tt class="descname">customize</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#spyne.model.SimpleModel.customize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duplicates cls and overwrites the values in <tt class="docutils literal"><span class="pre">cls.Attributes</span></tt> with
+<tt class="docutils literal"><span class="pre">**kwargs</span></tt> and returns the new class.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -399,13 +466,13 @@ a customized class instead of an instance.</p>
         <li class="right" >
           <a href="../error.html" title="Common Exceptions"
              >previous</a> |</li>
-        <li><a href="../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright Spyne Contributors.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.protocol.dictdoc &mdash; spyne 2.10.9 documentation</title>
+    <title>spyne.protocol.dictdoc &mdash; spyne 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.10.9',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.9 documentation" href="../../../index.html" />
+    <link rel="top" title="spyne 2.11.0 documentation" href="../../../index.html" />
     <link rel="up" title="spyne" href="../../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +36,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -95,7 +93,7 @@
 <span class="sd">==========</span>
 
 <span class="sd">Plain HTTP does not support hierarchical key-value stores. Spyne makes plain</span>
-<span class="sd">HTTP fake hierarchical dicts via two small hacks.</span>
+<span class="sd">HTTP fake hierarchical dicts with two small hacks.</span>
 
 <span class="sd">Let&#39;s look at the following object hierarchy: ::</span>
 
@@ -105,21 +103,21 @@
 
 <span class="sd">    class Outer(ComplexModel):</span>
 <span class="sd">        a = Integer</span>
-<span class="sd">        b = SomeObject</span>
+<span class="sd">        b = Inner</span>
 
 <span class="sd">For example, the ``Outer(a=1, b=Inner(c=2))`` object would correspond to the</span>
 <span class="sd">following hierarchichal dict representation: ::</span>
 
 <span class="sd">    {&#39;a&#39;: 1, &#39;b&#39;: { &#39;c&#39;: 2 }}</span>
 
-<span class="sd">We do two hacks to deserialize the above object structure from a flat dict:</span>
+<span class="sd">Here&#39;s what we do to deserialize the above object structure from a flat dict:</span>
 
 <span class="sd">1. Object hierarchies are flattened. e.g. the flat representation of the above</span>
-<span class="sd">   dict is: ``{&#39;a&#39;: 1, &#39;b_c&#39;: 2}``.</span>
+<span class="sd">   dict is: ``{&#39;a&#39;: 1, &#39;b.c&#39;: 2}``.</span>
 <span class="sd">2. Arrays of objects are sent using variables with array indexes in square</span>
 <span class="sd">   brackets. So the request with the following query object: ::</span>
 
-<span class="sd">      {&#39;a&#39;: 1, &#39;b_d[0]&#39;: 1, &#39;b_d[1]&#39;: 2}}</span>
+<span class="sd">      {&#39;a&#39;: 1, &#39;b.d[0]&#39;: 1, &#39;b.d[1]&#39;: 2}}</span>
 
 <span class="sd">  ... corresponds to: ::</span>
 
@@ -136,7 +134,7 @@
 
 <span class="sd">  Or the following object: ::</span>
 
-<span class="sd">      {&#39;a&#39;: 1, &#39;b[0]_c&#39;: 1, &#39;b[1]_c&#39;: 2}}</span>
+<span class="sd">      {&#39;a&#39;: 1, &#39;b[0].c&#39;: 1, &#39;b[1].c&#39;: 2}}</span>
 
 <span class="sd">  ... would correspond to: ::</span>
 
@@ -152,8 +150,8 @@
 <span class="sd">Cookies</span>
 <span class="sd">=======</span>
 
-<span class="sd">Cookie headers are parsed and fields within HTTP requests are assigned to fields</span>
-<span class="sd">in the ``in_header`` class, if defined.</span>
+<span class="sd">Cookie headers are parsed and fields within HTTP requests are assigned to</span>
+<span class="sd">fields in the ``in_header`` class, if defined.</span>
 
 <span class="sd">It&#39;s also possible to get the ``Cookie`` header intact by defining an</span>
 <span class="sd">``in_header`` object with a field named ``Cookie`` (case sensitive).</span>
@@ -164,12 +162,45 @@
 <span class="sd">    Cookie: v1=4;v2=8</span>
 <span class="sd">    (...)</span>
 
-<span class="sd">The keys ``v1`` and ``v2`` are passed to the ``in_header`` class if it has</span>
-<span class="sd">fields named ``v1`` or ``v2``.</span>
+<span class="sd">The keys ``v1`` and ``v2`` are passed to the instance of the ``in_header``</span>
+<span class="sd">class if it has fields named ``v1`` or ``v2``\.</span>
 
-<span class="sd">Classes</span>
-<span class="sd">=======</span>
+<span class="sd">Wrappers</span>
+<span class="sd">========</span>
+
+<span class="sd">Wrapper objects are an artifact of the Xml world, which don&#39;t really make sense</span>
+<span class="sd">in other protocols. Let&#39;s look at the following object: ::</span>
+
+<span class="sd">    v = Permission(application=&#39;app&#39;, feature=&#39;f1&#39;),</span>
+
+<span class="sd">Here&#39;s how it would be serialized to XML: ::</span>
+
+<span class="sd">    &lt;Permission&gt;</span>
+<span class="sd">      &lt;application&gt;app&lt;/application&gt;</span>
+<span class="sd">      &lt;feature&gt;f1&lt;/feature&gt;</span>
+<span class="sd">    &lt;/Permission&gt;</span>
+
+<span class="sd">With ``ignore_wrappers=True`` (which is the default) This gets serialized to</span>
+<span class="sd">dict as follows: ::</span>
+
+<span class="sd">    {</span>
+<span class="sd">        &quot;application&quot;: &quot;app&quot;,</span>
+<span class="sd">        &quot;feature&quot;: &quot;f1&quot;</span>
+<span class="sd">    }</span>
+
+<span class="sd">When ``ignore_wrappers=False``, the same value/type combination would result in</span>
+<span class="sd">the following dict: ::</span>
+
+<span class="sd">    {&quot;Permission&quot;: {</span>
+<span class="sd">        {</span>
+<span class="sd">            &quot;application&quot;: &quot;app&quot;,</span>
+<span class="sd">            &quot;feature&quot;: &quot;f1&quot;</span>
+<span class="sd">        }</span>
+<span class="sd">    },</span>
+
+<span class="sd">This could come in handy in case you don&#39;t know what type to expect.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
@@ -180,46 +211,73 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 
+<span class="kn">from</span> <span class="nn">spyne.util</span> <span class="kn">import</span> <span class="n">six</span>
 <span class="kn">from</span> <span class="nn">spyne.error</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 <span class="kn">from</span> <span class="nn">spyne.error</span> <span class="kn">import</span> <span class="n">ResourceNotFoundError</span>
 
-<span class="kn">from</span> <span class="nn">spyne.model.binary</span> <span class="kn">import</span> <span class="n">ByteArray</span>
-<span class="kn">from</span> <span class="nn">spyne.model.binary</span> <span class="kn">import</span> <span class="n">File</span>
-<span class="kn">from</span> <span class="nn">spyne.model.fault</span> <span class="kn">import</span> <span class="n">Fault</span>
-<span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">ComplexModelBase</span>
-<span class="kn">from</span> <span class="nn">spyne.model.complex</span> <span class="kn">import</span> <span class="n">Array</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">AnyDict</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">AnyXml</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">AnyHtml</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Uuid</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">DateTime</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Date</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Time</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Duration</span>
-<span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Unicode</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">ByteArray</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">String</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">File</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">Fault</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">ComplexModelBase</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">Array</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">SimpleModel</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">AnyDict</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">AnyXml</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">AnyHtml</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">Uuid</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">DateTime</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">Date</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">Time</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">Duration</span>
+<span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">Unicode</span>
 
 <span class="kn">from</span> <span class="nn">spyne.protocol</span> <span class="kn">import</span> <span class="n">ProtocolBase</span>
 
 
-<span class="k">def</span> <span class="nf">check_freq_dict</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">fti</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_check_freq_dict</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">fti</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">fti</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">fti</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">validate_freq</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">fti</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">val</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">fti</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
 
+        <span class="n">min_o</span><span class="p">,</span> <span class="n">max_o</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">min_occurs</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span>
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Array</span><span class="p">)</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">v</span><span class="p">,</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
             <span class="n">min_o</span><span class="p">,</span> <span class="n">max_o</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">min_occurs</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span>
-            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Array</span><span class="p">)</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">v</span><span class="p">,</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                <span class="n">min_o</span><span class="p">,</span> <span class="n">max_o</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">min_occurs</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span>
 
-            <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="n">min_o</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">k</span><span class="p">,</span>
-                            <span class="s">&#39;</span><span class="si">%%</span><span class="s">r member must occur at least </span><span class="si">%d</span><span class="s"> times.&#39;</span> <span class="o">%</span> <span class="n">min_o</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="n">max_o</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">k</span><span class="p">,</span>
-                            <span class="s">&#39;</span><span class="si">%%</span><span class="s">r member must occur at most </span><span class="si">%d</span><span class="s"> times.&#39;</span> <span class="o">%</span> <span class="n">max_o</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="n">min_o</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%r</span><span class="s">.</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span>
+                            <span class="s">&#39;</span><span class="si">%%</span><span class="s">s member must occur at least </span><span class="si">%d</span><span class="s"> times.&#39;</span> <span class="o">%</span> <span class="n">min_o</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="n">max_o</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%r</span><span class="s">.</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span>
+                            <span class="s">&#39;</span><span class="si">%%</span><span class="s">s member must occur at most </span><span class="si">%d</span><span class="s"> times.&#39;</span> <span class="o">%</span> <span class="n">max_o</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_s2cmi</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nidx</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sparse to contigous mapping inserter.</span>
+
+<span class="sd">    &gt;&gt;&gt; m1={3:0, 4:1, 7:2}</span>
+<span class="sd">    &gt;&gt;&gt; _s2cmi(m1, 5); m1</span>
+<span class="sd">    1</span>
+<span class="sd">    {3: 0, 4: 1, 5: 2, 7: 3}</span>
+<span class="sd">    &gt;&gt;&gt; _s2cmi(m1, 0); m1</span>
+<span class="sd">    0</span>
+<span class="sd">    {0: 0, 3: 1, 4: 2, 5: 3, 7: 4}</span>
+<span class="sd">    &gt;&gt;&gt; _s2cmi(m1, 8); m1</span>
+<span class="sd">    4</span>
+<span class="sd">    {0: 0, 3: 1, 4: 2, 5: 3, 7: 4, 8: 5}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nv</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">nidx</span><span class="p">:</span>
+            <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="n">nv</span><span class="p">:</span>
+            <span class="n">nv</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="n">m</span><span class="p">[</span><span class="n">nidx</span><span class="p">]</span> <span class="o">=</span> <span class="n">nv</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">nv</span> <span class="o">+</span> <span class="mi">1</span>
 
 
 <span class="k">class</span> <span class="nc">DictDocument</span><span class="p">(</span><span class="n">ProtocolBase</span><span class="p">):</span>
@@ -236,10 +294,10 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
             <span class="n">ignore_uncap</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">ignore_wrappers</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">complex_as</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
-                                                                <span class="n">ordered</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-        <span class="n">ProtocolBase</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">mime_type</span><span class="p">,</span> <span class="n">ignore_uncap</span><span class="p">)</span>
+                                                                 <span class="n">ordered</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DictDocument</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">mime_type</span><span class="p">,</span>
+                                                  <span class="n">ignore_uncap</span><span class="p">,</span> <span class="n">ignore_wrappers</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ignore_wrappers</span> <span class="o">=</span> <span class="n">ignore_wrappers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">complex_as</span> <span class="o">=</span> <span class="n">complex_as</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ordered</span> <span class="o">=</span> <span class="n">ordered</span>
         <span class="k">if</span> <span class="n">ordered</span><span class="p">:</span>
@@ -283,7 +341,7 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">body   : </span><span class="si">%r</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s">&quot;Need a dictionary with exacltly one key &quot;</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s">&quot;Need a dictionary with exactly one key &quot;</span>
                                   <span class="s">&quot;as method name.&quot;</span><span class="p">)</span>
 
         <span class="n">mrs</span><span class="p">,</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -303,28 +361,46 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 
-<span class="k">class</span> <span class="nc">FlatDictDocument</span><span class="p">(</span><span class="n">DictDocument</span><span class="p">):</span></div>
-<div class="viewcode-block" id="FlatDictDocument"><a class="viewcode-back" href="../../../reference/protocol/dictdoc.html#spyne.protocol.dictdoc.FlatDictDocument">[docs]</a>    <span class="sd">&quot;&quot;&quot;This protocol contains logic for protocols that serialize and deserialize</span>
+<span class="k">class</span> <span class="nc">SimpleDictDocument</span><span class="p">(</span><span class="n">DictDocument</span><span class="p">):</span></div>
+<div class="viewcode-block" id="SimpleDictDocument"><a class="viewcode-back" href="../../../reference/protocol/dictdoc.html#spyne.protocol.dictdoc.SimpleDictDocument">[docs]</a>    <span class="sd">&quot;&quot;&quot;This protocol contains logic for protocols that serialize and deserialize</span>
 <span class="sd">    flat dictionaries. The only example as of now is Http.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">flat_dict_to_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="n">inst_class</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">hier_delim</span><span class="o">=</span><span class="s">&quot;_&quot;</span><span class="p">):</span>
-<div class="viewcode-block" id="FlatDictDocument.flat_dict_to_object"><a class="viewcode-back" href="../../../reference/protocol/dictdoc.html#spyne.protocol.dictdoc.FlatDictDocument.flat_dict_to_object">[docs]</a>        <span class="sd">&quot;&quot;&quot;Converts a flat dict to a native python object.</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">ignore_uncap</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">ignore_wrappers</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">complex_as</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
+                 <span class="n">ordered</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">hier_delim</span><span class="o">=</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="n">strict_arrays</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SimpleDictDocument</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">app</span><span class="o">=</span><span class="n">app</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">validator</span><span class="p">,</span>
+                        <span class="n">mime_type</span><span class="o">=</span><span class="n">mime_type</span><span class="p">,</span> <span class="n">ignore_uncap</span><span class="o">=</span><span class="n">ignore_uncap</span><span class="p">,</span>
+                        <span class="n">ignore_wrappers</span><span class="o">=</span><span class="n">ignore_wrappers</span><span class="p">,</span> <span class="n">complex_as</span><span class="o">=</span><span class="n">complex_as</span><span class="p">,</span>
+                        <span class="n">ordered</span><span class="o">=</span><span class="n">ordered</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">hier_delim</span> <span class="o">=</span> <span class="n">hier_delim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strict_arrays</span> <span class="o">=</span> <span class="n">strict_arrays</span>
+
+    <span class="k">def</span> <span class="nf">simple_dict_to_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="n">inst_class</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">req_enc</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="SimpleDictDocument.simple_dict_to_object"><a class="viewcode-back" href="../../../reference/protocol/dictdoc.html#spyne.protocol.dictdoc.SimpleDictDocument.simple_dict_to_object">[docs]</a>        <span class="sd">&quot;&quot;&quot;Converts a flat dict to a native python object.</span>
 
 <span class="sd">        See :func:`spyne.model.complex.ComplexModelBase.get_flat_type_info`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">simple_type_info</span> <span class="o">=</span> <span class="n">inst_class</span><span class="o">.</span><span class="n">get_simple_type_info</span><span class="p">(</span><span class="n">inst_class</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">inst_class</span><span class="p">,</span> <span class="n">AnyDict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">doc</span>
+
+        <span class="k">assert</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">inst_class</span><span class="p">,</span> <span class="n">ComplexModelBase</span><span class="p">),</span> <span class="s">&quot;Patches are welcome&quot;</span>
 
         <span class="c"># this is for validating cls.Attributes.{min,max}_occurs</span>
         <span class="n">frequencies</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">validator</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">SOFT_VALIDATION</span><span class="p">:</span>
-            <span class="n">_fill</span><span class="p">(</span><span class="n">simple_type_info</span><span class="p">,</span> <span class="n">inst_class</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">)</span>
+            <span class="n">_fill</span><span class="p">(</span><span class="n">inst_class</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">)</span>
 
         <span class="n">retval</span> <span class="o">=</span> <span class="n">inst_class</span><span class="o">.</span><span class="n">get_deserialization_instance</span><span class="p">()</span>
+        <span class="n">simple_type_info</span> <span class="o">=</span> <span class="n">inst_class</span><span class="o">.</span><span class="n">get_simple_type_info</span><span class="p">(</span><span class="n">inst_class</span><span class="p">,</span>
+                                                     <span class="n">hier_delim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hier_delim</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">orig_k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">idxmap</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">orig_k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="n">k</span> <span class="o">=</span> <span class="n">RE_HTTP_ARRAY_INDEX</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">orig_k</span><span class="p">)</span>
+
             <span class="n">member</span> <span class="o">=</span> <span class="n">simple_type_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">member</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;discarding field </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">k</span><span class="p">)</span>
@@ -334,26 +410,48 @@
             <span class="c"># entries.</span>
             <span class="n">value</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">validator</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">SOFT_VALIDATION</span> <span class="ow">and</span> <span class="ow">not</span>
-                                  <span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">validate_string</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">v2</span><span class="p">)):</span>
-                    <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span>
+                <span class="c"># some wsgi implementations pass unicode strings, some pass str</span>
+                <span class="c"># strings. we get unicode here when we can and should.</span>
+                <span class="k">if</span> <span class="n">v2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">req_enc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> \
+                                        <span class="ow">and</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">String</span><span class="p">)</span> \
+                                        <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">Unicode</span><span class="p">)</span> \
+                                        <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">):</span>
+                    <span class="n">v2</span> <span class="o">=</span> <span class="n">v2</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">req_enc</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="p">(</span><span class="n">File</span><span class="p">,</span> <span class="n">ByteArray</span><span class="p">)):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">validator</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">SOFT_VALIDATION</span> <span class="ow">and</span> <span class="ow">not</span>
+                                  <span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">validate_string</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">v2</span><span class="p">)):</span>
+                        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">((</span><span class="n">orig_k</span><span class="p">,</span> <span class="n">v2</span><span class="p">))</span>
+
+                <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">((</span><span class="n">orig_k</span><span class="p">,</span> <span class="n">v2</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="n">File</span><span class="o">.</span><span class="n">Value</span><span class="p">):</span>
+                        <span class="n">native_v2</span> <span class="o">=</span> <span class="n">v2</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">native_v2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span>
+                                                   <span class="bp">self</span><span class="o">.</span><span class="n">default_binary_encoding</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">ByteArray</span><span class="p">):</span>
                     <span class="n">native_v2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span>
                                                    <span class="bp">self</span><span class="o">.</span><span class="n">default_binary_encoding</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">native_v2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">native_v2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+                            <span class="s">&quot;Validation failed for </span><span class="si">%r</span><span class="s">.</span><span class="si">%r</span><span class="s">: </span><span class="si">%%</span><span class="s">r&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">inst_class</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
 
                 <span class="k">if</span> <span class="p">(</span><span class="n">validator</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">SOFT_VALIDATION</span> <span class="ow">and</span> <span class="ow">not</span>
                            <span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">validate_native</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">native_v2</span><span class="p">)):</span>
-                    <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">((</span><span class="n">orig_k</span><span class="p">,</span> <span class="n">v2</span><span class="p">))</span>
 
                 <span class="n">value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">native_v2</span><span class="p">)</span>
 
             <span class="c"># assign the native value to the relevant class in the nested object</span>
             <span class="c"># structure.</span>
             <span class="n">cinst</span> <span class="o">=</span> <span class="n">retval</span>
-
             <span class="n">ctype_info</span> <span class="o">=</span> <span class="n">inst_class</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span><span class="n">inst_class</span><span class="p">)</span>
 
             <span class="n">idx</span><span class="p">,</span> <span class="n">nidx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
@@ -363,67 +461,88 @@
             <span class="n">indexes</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">RE_HTTP_ARRAY_INDEX</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">orig_k</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">pkey</span> <span class="ow">in</span> <span class="n">member</span><span class="o">.</span><span class="n">path</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
                 <span class="n">nidx</span> <span class="o">=</span> <span class="mi">0</span>
-
                 <span class="n">ncls</span><span class="p">,</span> <span class="n">ninst</span> <span class="o">=</span> <span class="n">ctype_info</span><span class="p">[</span><span class="n">pkey</span><span class="p">],</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cinst</span><span class="p">,</span> <span class="n">pkey</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">ncls</span><span class="p">,</span> <span class="n">Array</span><span class="p">):</span>
+                    <span class="n">ncls</span><span class="p">,</span> <span class="o">=</span> <span class="n">ncls</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 
                 <span class="n">mo</span> <span class="o">=</span> <span class="n">ncls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span>
-                <span class="k">if</span> <span class="n">ninst</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="n">ninst</span> <span class="o">=</span> <span class="n">ncls</span><span class="o">.</span><span class="n">get_deserialization_instance</span><span class="p">()</span>
-                    <span class="k">if</span> <span class="n">mo</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                        <span class="n">ninst</span> <span class="o">=</span> <span class="p">[</span><span class="n">ninst</span><span class="p">]</span>
-                    <span class="nb">setattr</span><span class="p">(</span><span class="n">cinst</span><span class="p">,</span> <span class="n">pkey</span><span class="p">,</span> <span class="n">ninst</span><span class="p">)</span>
-                    <span class="n">frequencies</span><span class="p">[</span><span class="n">cfreq_key</span><span class="p">][</span><span class="n">pkey</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-
-                <span class="k">if</span> <span class="n">mo</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">ncls</span><span class="p">,</span> <span class="n">Array</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">mo</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indexes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                         <span class="n">nidx</span> <span class="o">=</span> <span class="mi">0</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">nidx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">indexes</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span>
 
-                    <span class="k">if</span> <span class="n">nidx</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ninst</span><span class="p">):</span>
-                        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">orig_k</span><span class="p">,</span>
+                    <span class="k">if</span> <span class="n">ninst</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                        <span class="n">ninst</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="n">cinst</span><span class="o">.</span><span class="n">_safe_set</span><span class="p">(</span><span class="n">pkey</span><span class="p">,</span> <span class="n">ninst</span><span class="p">,</span> <span class="n">ncls</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strict_arrays</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ninst</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">newval</span> <span class="o">=</span> <span class="n">ncls</span><span class="o">.</span><span class="n">get_deserialization_instance</span><span class="p">()</span>
+                            <span class="n">ninst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newval</span><span class="p">)</span>
+                            <span class="n">frequencies</span><span class="p">[</span><span class="n">cfreq_key</span><span class="p">][</span><span class="n">pkey</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                        <span class="k">if</span> <span class="n">nidx</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ninst</span><span class="p">):</span>
+                            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">orig_k</span><span class="p">,</span>
                                             <span class="s">&quot;</span><span class="si">%%</span><span class="s">r Invalid array index </span><span class="si">%d</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="n">idx</span><span class="p">)</span>
-
-                    <span class="k">if</span> <span class="n">nidx</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ninst</span><span class="p">):</span>
-                        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">ncls</span><span class="p">,</span> <span class="n">Array</span><span class="p">):</span>
-                            <span class="n">_ncls</span><span class="p">,</span> <span class="o">=</span> <span class="n">ncls</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                            <span class="n">ninst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_ncls</span><span class="o">.</span><span class="n">get_deserialization_instance</span><span class="p">())</span>
-                        <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">nidx</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ninst</span><span class="p">):</span>
                             <span class="n">ninst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ncls</span><span class="o">.</span><span class="n">get_deserialization_instance</span><span class="p">())</span>
-                        <span class="n">frequencies</span><span class="p">[</span><span class="n">cfreq_key</span><span class="p">][</span><span class="n">pkey</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                            <span class="n">frequencies</span><span class="p">[</span><span class="n">cfreq_key</span><span class="p">][</span><span class="n">pkey</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-                    <span class="n">cinst</span> <span class="o">=</span> <span class="n">ninst</span><span class="p">[</span><span class="n">nidx</span><span class="p">]</span>
+                        <span class="n">cinst</span> <span class="o">=</span> <span class="n">ninst</span><span class="p">[</span><span class="n">nidx</span><span class="p">]</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">_m</span> <span class="o">=</span> <span class="n">idxmap</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="n">ninst</span><span class="p">)]</span>
+                        <span class="n">cidx</span> <span class="o">=</span> <span class="n">_m</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nidx</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">cidx</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                            <span class="n">cidx</span> <span class="o">=</span> <span class="n">_s2cmi</span><span class="p">(</span><span class="n">_m</span><span class="p">,</span> <span class="n">nidx</span><span class="p">)</span>
+                            <span class="n">newval</span> <span class="o">=</span> <span class="n">ncls</span><span class="o">.</span><span class="n">get_deserialization_instance</span><span class="p">()</span>
+                            <span class="n">ninst</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">cidx</span><span class="p">,</span> <span class="n">newval</span><span class="p">)</span>
+                            <span class="n">frequencies</span><span class="p">[</span><span class="n">cfreq_key</span><span class="p">][</span><span class="n">pkey</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="n">cinst</span> <span class="o">=</span> <span class="n">ninst</span><span class="p">[</span><span class="n">cidx</span><span class="p">]</span>
+
+                    <span class="k">assert</span> <span class="n">cinst</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">,</span> <span class="n">ninst</span>
 
                 <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ninst</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                        <span class="n">ninst</span> <span class="o">=</span> <span class="n">ncls</span><span class="o">.</span><span class="n">get_deserialization_instance</span><span class="p">()</span>
+                        <span class="n">cinst</span><span class="o">.</span><span class="n">_safe_set</span><span class="p">(</span><span class="n">pkey</span><span class="p">,</span> <span class="n">ninst</span><span class="p">,</span> <span class="n">ncls</span><span class="p">)</span>
+                        <span class="n">frequencies</span><span class="p">[</span><span class="n">cfreq_key</span><span class="p">][</span><span class="n">pkey</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
                     <span class="n">cinst</span> <span class="o">=</span> <span class="n">ninst</span>
 
                 <span class="n">cfreq_key</span> <span class="o">=</span> <span class="n">cfreq_key</span> <span class="o">+</span> <span class="p">(</span><span class="n">ncls</span><span class="p">,</span> <span class="n">nidx</span><span class="p">)</span>
                 <span class="n">idx</span> <span class="o">=</span> <span class="n">nidx</span>
-                <span class="n">ctype_info</span> <span class="o">=</span> <span class="n">ncls</span><span class="o">.</span><span class="n">_type_info</span>
+                <span class="n">ctype_info</span> <span class="o">=</span> <span class="n">ncls</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span><span class="n">ncls</span><span class="p">)</span>
 
             <span class="n">frequencies</span><span class="p">[</span><span class="n">cfreq_key</span><span class="p">][</span><span class="n">member</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">_v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cinst</span><span class="p">,</span> <span class="n">member</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">None</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">_v</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="nb">setattr</span><span class="p">(</span><span class="n">cinst</span><span class="p">,</span> <span class="n">member</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">value</span><span class="p">)</span>
+                    <span class="n">cinst</span><span class="o">.</span><span class="n">_safe_set</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">value</span><span class="p">,</span> <span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">_v</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">set array   </span><span class="si">%r</span><span class="s">(</span><span class="si">%r</span><span class="s">) = </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span>
                                                     <span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">pkey</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="n">cinst</span><span class="p">,</span> <span class="n">member</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">cinst</span><span class="o">.</span><span class="n">_safe_set</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">set default </span><span class="si">%r</span><span class="s">(</span><span class="si">%r</span><span class="s">) = </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span>
                                                     <span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">pkey</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">validator</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">SOFT_VALIDATION</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">frequencies</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">check_freq_dict</span><span class="p">(</span><span class="n">k</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">d</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">path_cls</span> <span class="ow">in</span> <span class="n">k</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">path_cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">validate_freq</span><span class="p">:</span>
+                        <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_check_freq_dict</span><span class="p">(</span><span class="n">path_cls</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">retval</span>
 
-    <span class="k">def</span> <span class="nf">object_to_flat_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inst_cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">hier_delim</span><span class="o">=</span><span class="s">&quot;_&quot;</span><span class="p">,</span> <span class="n">retval</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span></div>
-<div class="viewcode-block" id="FlatDictDocument.object_to_flat_dict"><a class="viewcode-back" href="../../../reference/protocol/dictdoc.html#spyne.protocol.dictdoc.FlatDictDocument.object_to_flat_dict">[docs]</a>                     <span class="n">prefix</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">subvalue_eater</span><span class="o">=</span><span class="k">lambda</span> <span class="n">prot</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">t</span><span class="p">:</span><span class="n">v</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">object_to_simple_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inst_cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">retval</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span></div>
+<div class="viewcode-block" id="SimpleDictDocument.object_to_simple_dict"><a class="viewcode-back" href="../../../reference/protocol/dictdoc.html#spyne.protocol.dictdoc.SimpleDictDocument.object_to_simple_dict">[docs]</a>         <span class="n">prefix</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">subvalue_eater</span><span class="o">=</span><span class="k">lambda</span> <span class="n">prot</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">t</span><span class="p">:</span><span class="n">v</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Converts a native python object to a flat dict.</span>
 
 <span class="sd">        See :func:`spyne.model.complex.ComplexModelBase.get_flat_type_info`.</span>
@@ -435,28 +554,57 @@
         <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">prefix</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">fti</span> <span class="o">=</span> <span class="n">inst_cls</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span><span class="n">inst_cls</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">fti</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">new_prefix</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
-            <span class="n">new_prefix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
-            <span class="n">subvalue</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s">&#39;get_flat_type_info&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span> <span class="c"># Not a ComplexModel</span>
-                <span class="n">key</span> <span class="o">=</span> <span class="n">hier_delim</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">new_prefix</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">inst_cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">min_occurs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">retval</span>
 
-                <span class="k">if</span> <span class="n">retval</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%r</span><span class="s">.</span><span class="si">%s</span><span class="s"> conflicts with previous value </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span>
-                                                     <span class="p">(</span><span class="n">inst_cls</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">retval</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">tags</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">tags</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="nb">id</span><span class="p">(</span><span class="n">value</span><span class="p">)])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">id</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">retval</span>
 
-                <span class="k">if</span> <span class="n">subvalue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">min_occurs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="n">retval</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">subvalue_eater</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subvalue</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-                    <span class="k">except</span><span class="p">:</span> <span class="c"># FIXME: What?</span>
-                        <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">min_occurs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                            <span class="n">retval</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">inst_cls</span><span class="p">,</span> <span class="n">ComplexModelBase</span><span class="p">):</span>
+            <span class="n">fti</span> <span class="o">=</span> <span class="n">inst_cls</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span><span class="n">inst_cls</span><span class="p">)</span>
 
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">object_to_flat_dict</span><span class="p">(</span><span class="n">fti</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">subvalue</span><span class="p">,</span> <span class="n">hier_delim</span><span class="p">,</span>
-                                            <span class="n">retval</span><span class="p">,</span> <span class="n">new_prefix</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">inst_cls</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">fti</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">new_prefix</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+                <span class="n">new_prefix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                <span class="n">subvalue</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="nb">issubclass</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Array</span><span class="p">)</span> <span class="ow">or</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> \
+                                                           <span class="n">subvalue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Array</span><span class="p">):</span>
+                        <span class="n">subtype</span><span class="p">,</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">subtype</span> <span class="o">=</span> <span class="n">v</span>
+
+                    <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">subtype</span><span class="p">,</span> <span class="n">SimpleModel</span><span class="p">):</span>
+                        <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hier_delim</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">new_prefix</span><span class="p">)</span>
+                        <span class="n">l</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="k">for</span> <span class="n">ssv</span> <span class="ow">in</span> <span class="n">subvalue</span><span class="p">:</span>
+                            <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subvalue_eater</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ssv</span><span class="p">,</span> <span class="n">subtype</span><span class="p">))</span>
+                        <span class="n">retval</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">last_prefix</span> <span class="o">=</span> <span class="n">new_prefix</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ssv</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">subvalue</span><span class="p">):</span>
+                            <span class="n">new_prefix</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">[</span><span class="si">%d</span><span class="s">]&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">last_prefix</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">object_to_simple_dict</span><span class="p">(</span><span class="n">subtype</span><span class="p">,</span> <span class="n">ssv</span><span class="p">,</span>
+                                   <span class="n">retval</span><span class="p">,</span> <span class="n">new_prefix</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">inst_cls</span><span class="p">,</span>
+                                   <span class="n">subvalue_eater</span><span class="o">=</span><span class="n">subvalue_eater</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">object_to_simple_dict</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">subvalue</span><span class="p">,</span> <span class="n">retval</span><span class="p">,</span> <span class="n">new_prefix</span><span class="p">,</span>
+                      <span class="n">parent</span><span class="o">=</span><span class="n">inst_cls</span><span class="p">,</span> <span class="n">subvalue_eater</span><span class="o">=</span><span class="n">subvalue_eater</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hier_delim</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">retval</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%r</span><span class="s">.</span><span class="si">%s</span><span class="s"> conflicts with previous value </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span>
+                                                    <span class="p">(</span><span class="n">inst_cls</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">retval</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+
+            <span class="n">retval</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">subvalue_eater</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">inst_cls</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">retval</span>
 
@@ -513,53 +661,58 @@
             <span class="k">if</span> <span class="n">out_type</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="k">return</span>
 
-            <span class="n">out_type_info</span> <span class="o">=</span> <span class="n">out_type</span><span class="o">.</span><span class="n">_type_info</span>
+            <span class="n">out_type_info</span> <span class="o">=</span> <span class="n">out_type</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span><span class="n">out_type</span><span class="p">)</span>
 
             <span class="c"># instantiate the result message</span>
             <span class="n">out_instance</span> <span class="o">=</span> <span class="n">out_type</span><span class="p">()</span>
 
             <span class="c"># assign raw result to its wrapper, result_message</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out_type_info</span><span class="p">)):</span>
-                <span class="n">attr_name</span> <span class="o">=</span> <span class="n">out_type_info</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="n">out_instance</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_object</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">out_type_info</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+                <span class="n">attr_name</span> <span class="o">=</span> <span class="n">k</span>
+                <span class="n">out_instance</span><span class="o">.</span><span class="n">_safe_set</span><span class="p">(</span><span class="n">attr_name</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_object</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">v</span><span class="p">)</span>
 
             <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_object_to_doc</span><span class="p">(</span><span class="n">out_type</span><span class="p">,</span> <span class="n">out_instance</span><span class="p">),</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">fire_event</span><span class="p">(</span><span class="s">&#39;after_serialize&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="c"># validate raw input</span>
-        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">Unicode</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">Unicode</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">((</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">_from_dict_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">validator</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_from_dict_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">validator</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">validator</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">SOFT_VALIDATION</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">AnyDict</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">value</span>
 
         <span class="c"># get native type</span>
-        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">ComplexModelBase</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">File</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">complex_as</span><span class="p">):</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_doc_to_object</span><span class="p">(</span><span class="n">File</span><span class="o">.</span><span class="n">Value</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">validator</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">ComplexModelBase</span><span class="p">):</span>
             <span class="n">retval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_doc_to_object</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">validator</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">validator</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">SOFT_VALIDATION</span>
-                                <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">)</span>
-                                <span class="ow">and</span> <span class="ow">not</span> <span class="n">class_</span><span class="o">.</span><span class="n">validate_string</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">)):</span>
-                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s">&#39;&#39;</span> <span class="ow">and</span> <span class="n">class_</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">empty_is_none</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="bp">None</span>
 
-            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="p">(</span><span class="n">ByteArray</span><span class="p">,</span> <span class="nb">file</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">validator</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">SOFT_VALIDATION</span>
+                                <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span>
+                                <span class="ow">and</span> <span class="ow">not</span> <span class="n">class_</span><span class="o">.</span><span class="n">validate_string</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">((</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="p">(</span><span class="n">ByteArray</span><span class="p">,</span> <span class="n">File</span><span class="p">)):</span>
                 <span class="n">retval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span>
                                                    <span class="bp">self</span><span class="o">.</span><span class="n">default_binary_encoding</span><span class="p">)</span>
-
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">retval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
         <span class="c"># validate native type</span>
         <span class="k">if</span> <span class="n">validator</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">SOFT_VALIDATION</span> <span class="ow">and</span> \
                                      <span class="ow">not</span> <span class="n">class_</span><span class="o">.</span><span class="n">validate_native</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">retval</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">retval</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">((</span><span class="n">key</span><span class="p">,</span> <span class="n">retval</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">retval</span>
 
@@ -571,8 +724,8 @@
             <span class="n">retval</span> <span class="o">=</span> <span class="p">[</span> <span class="p">]</span>
             <span class="p">(</span><span class="n">serializer</span><span class="p">,)</span> <span class="o">=</span> <span class="n">class_</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 
-            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
-                <span class="n">retval</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_from_dict_value</span><span class="p">(</span><span class="n">serializer</span><span class="p">,</span> <span class="n">child</span><span class="p">,</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">child</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
+                <span class="n">retval</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_from_dict_value</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">serializer</span><span class="p">,</span> <span class="n">child</span><span class="p">,</span>
                                                                     <span class="n">validator</span><span class="p">))</span>
 
             <span class="k">return</span> <span class="n">retval</span>
@@ -588,10 +741,12 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">items</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-            <span class="n">items</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">class_</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">doc</span><span class="p">)</span>
+            <span class="c"># Input is not a dict, so we assume it&#39;s a sequence that we can pair</span>
+            <span class="c"># with the incoming sequence with field names.</span>
+            <span class="n">items</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">flat_type_info</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">doc</span><span class="p">)</span>
 
         <span class="c"># parse input to set incoming data to related attributes.</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
             <span class="n">member</span> <span class="o">=</span> <span class="n">flat_type_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">member</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="k">continue</span>
@@ -603,41 +758,41 @@
                     <span class="n">value</span> <span class="o">=</span> <span class="p">[]</span>
 
                 <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
-                    <span class="n">value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_from_dict_value</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">validator</span><span class="p">))</span>
+                    <span class="n">value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_from_dict_value</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">member</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">validator</span><span class="p">))</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_from_dict_value</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">validator</span><span class="p">)</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_from_dict_value</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">member</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">validator</span><span class="p">)</span>
 
-            <span class="nb">setattr</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="n">inst</span><span class="o">.</span><span class="n">_safe_set</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">member</span><span class="p">)</span>
 
             <span class="n">frequencies</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="k">if</span> <span class="n">validator</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">SOFT_VALIDATION</span><span class="p">:</span>
-            <span class="n">check_freq_dict</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">,</span> <span class="n">flat_type_info</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">validator</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">SOFT_VALIDATION</span> <span class="ow">and</span> <span class="n">class_</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">validate_freq</span><span class="p">:</span>
+            <span class="n">_check_freq_dict</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">,</span> <span class="n">flat_type_info</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">inst</span>
 
-    <span class="k">def</span> <span class="nf">_object_to_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_object_to_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="n">retval</span> <span class="o">=</span> <span class="bp">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_wrappers</span><span class="p">:</span>
-            <span class="n">ti</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="s">&#39;_type_info&#39;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="n">ti</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s">&#39;_type_info&#39;</span><span class="p">,</span> <span class="p">{})</span>
 
-            <span class="k">while</span> <span class="n">class_</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">_wrapper</span><span class="p">:</span>
+            <span class="k">while</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">_wrapper</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="c"># Wrappers are auto-generated objects that have exactly one</span>
                 <span class="c"># child type.</span>
                 <span class="n">key</span><span class="p">,</span> <span class="o">=</span> <span class="n">ti</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">Array</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">Array</span><span class="p">):</span>
                     <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-                <span class="n">class_</span><span class="p">,</span> <span class="o">=</span> <span class="n">ti</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                <span class="n">ti</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="s">&#39;_type_info&#39;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="n">cls</span><span class="p">,</span> <span class="o">=</span> <span class="n">ti</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                <span class="n">ti</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s">&#39;_type_info&#39;</span><span class="p">,</span> <span class="p">{})</span>
 
         <span class="c"># transform the results into a dict:</span>
-        <span class="k">if</span> <span class="n">class_</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="n">retval</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_to_value</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">inst</span><span class="p">)</span> <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
+                <span class="n">retval</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_to_value</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">inst</span><span class="p">)</span> <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">retval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_value</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_value</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">retval</span>
 
@@ -647,41 +802,63 @@
             <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_member_pairs</span><span class="p">(</span><span class="n">parent_cls</span><span class="p">,</span> <span class="n">inst</span><span class="p">):</span>
                 <span class="k">yield</span> <span class="n">r</span>
 
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">class_</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">class_</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span><span class="n">class_</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="p">,</span> <span class="s">&#39;exc_dict&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">):</span>
+                <span class="k">continue</span>
+
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">sub_value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
             <span class="c"># to guard against e.g. sqlalchemy throwing NoSuchColumnError</span>
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Error getting </span><span class="si">%r</span><span class="s">: </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">e</span><span class="p">))</span>
                 <span class="n">sub_value</span> <span class="o">=</span> <span class="bp">None</span>
 
-            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_object_to_doc</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">sub_value</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">min_occurs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">yield</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sub_value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">sub_value</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">default</span>
 
-    <span class="k">def</span> <span class="nf">_to_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">AnyDict</span><span class="p">):</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_object_to_doc</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">sub_value</span><span class="p">)</span>
+            <span class="n">min_o</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">min_occurs</span>
+
+            <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">min_o</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">complex_as</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+                <span class="n">sub_name</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">sub_name</span>
+                <span class="k">if</span> <span class="n">sub_name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">sub_name</span> <span class="o">=</span> <span class="n">k</span>
+
+                <span class="k">yield</span> <span class="p">(</span><span class="n">sub_name</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_to_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">AnyDict</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">value</span>
 
-        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">Array</span><span class="p">):</span>
-            <span class="n">st</span><span class="p">,</span> <span class="o">=</span> <span class="n">class_</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">Array</span><span class="p">):</span>
+            <span class="n">st</span><span class="p">,</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_object_to_doc</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">ComplexModelBase</span><span class="p">):</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">complex_as</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
-                <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_complex_to_list</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_complex_to_dict</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">ComplexModelBase</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_complex_to_doc</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="p">(</span><span class="n">ByteArray</span><span class="p">,</span> <span class="n">File</span><span class="p">)):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_binary_encoding</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">File</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">File</span><span class="o">.</span><span class="n">Value</span><span class="p">):</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_complex_to_doc</span><span class="p">(</span><span class="n">File</span><span class="o">.</span><span class="n">Value</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">complex_as</span> <span class="ow">is</span> <span class="nb">dict</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_wrappers</span><span class="p">:</span>
+                <span class="n">retval</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">retval</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">retval</span>
+
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="p">(</span><span class="n">ByteArray</span><span class="p">,</span> <span class="n">File</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_binary_encoding</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_complex_to_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">complex_as</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_complex_to_list</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_complex_to_dict</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_complex_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">inst</span><span class="p">):</span>
         <span class="n">inst</span> <span class="o">=</span> <span class="n">class_</span><span class="o">.</span><span class="n">get_serialization_instance</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span>
 
-        <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_member_pairs</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">inst</span><span class="p">))</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">complex_as</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_member_pairs</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">inst</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_wrappers</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">d</span>
         <span class="k">else</span><span class="p">:</span>
@@ -694,30 +871,18 @@
             <span class="k">yield</span> <span class="n">v</span>
 
 
-<span class="k">def</span> <span class="nf">_fill</span><span class="p">(</span><span class="n">simple_type_info</span><span class="p">,</span> <span class="n">inst_class</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">):</span></div>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">simple_type_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">min_occurs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">continue</span>
+<span class="k">def</span> <span class="nf">_fill</span><span class="p">(</span><span class="n">inst_class</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">):</span></div>
+    <span class="sd">&quot;&quot;&quot;This function initializes the frequencies dict with null values. If this</span>
+<span class="sd">    is not done, it won&#39;t be possible to catch missing elements when validating</span>
+<span class="sd">    the incoming document.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-        <span class="n">ctype_info</span> <span class="o">=</span> <span class="n">inst_class</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span><span class="n">inst_class</span><span class="p">)</span>
+    <span class="n">ctype_info</span> <span class="o">=</span> <span class="n">inst_class</span><span class="o">.</span><span class="n">get_flat_type_info</span><span class="p">(</span><span class="n">inst_class</span><span class="p">)</span>
+    <span class="n">cfreq_key</span> <span class="o">=</span> <span class="n">inst_class</span><span class="p">,</span> <span class="mi">0</span>
 
-        <span class="n">idx</span><span class="p">,</span> <span class="n">nidx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
-        <span class="n">pkey</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">cfreq_key</span> <span class="o">=</span> <span class="n">inst_class</span><span class="p">,</span> <span class="n">idx</span>
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">path</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="n">pkey</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">nidx</span> <span class="o">=</span> <span class="mi">0</span>
-
-            <span class="n">ncls</span> <span class="o">=</span> <span class="n">ctype_info</span><span class="p">[</span><span class="n">pkey</span><span class="p">]</span>
-
-            <span class="n">frequencies</span><span class="p">[</span><span class="n">cfreq_key</span><span class="p">][</span><span class="n">pkey</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">0</span>
-
-            <span class="n">cfreq_key</span> <span class="o">=</span> <span class="n">cfreq_key</span> <span class="o">+</span> <span class="p">(</span><span class="n">ncls</span><span class="p">,</span> <span class="n">nidx</span><span class="p">)</span>
-            <span class="n">idx</span> <span class="o">=</span> <span class="n">nidx</span>
-            <span class="n">ctype_info</span> <span class="o">=</span> <span class="n">ncls</span><span class="o">.</span><span class="n">_type_info</span>
-
-        <span class="n">frequencies</span><span class="p">[</span><span class="n">cfreq_key</span><span class="p">][</span><span class="n">member</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">ctype_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">min_occurs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">frequencies</span><span class="p">[</span><span class="n">cfreq_key</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 </pre></div>
 
           </div>
@@ -734,14 +899,14 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright Spyne Contributors.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

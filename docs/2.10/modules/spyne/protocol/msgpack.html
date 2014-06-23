@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.protocol.msgpack &mdash; spyne 2.10.9 documentation</title>
+    <title>spyne.protocol.msgpack &mdash; spyne 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.10.9',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.9 documentation" href="../../../index.html" />
+    <link rel="top" title="spyne 2.11.0 documentation" href="../../../index.html" />
     <link rel="up" title="spyne" href="../../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +36,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -99,12 +97,12 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
+<span class="kn">from</span> <span class="nn">spyne.util</span> <span class="kn">import</span> <span class="n">six</span>
+
 <span class="kn">import</span> <span class="nn">msgpack</span>
 
 <span class="kn">from</span> <span class="nn">spyne.model.fault</span> <span class="kn">import</span> <span class="n">Fault</span>
 <span class="kn">from</span> <span class="nn">spyne.protocol.dictdoc</span> <span class="kn">import</span> <span class="n">HierDictDocument</span>
-<span class="kn">from</span> <span class="nn">spyne.protocol._model</span> <span class="kn">import</span> <span class="n">integer_to_string</span>
-<span class="kn">from</span> <span class="nn">spyne.protocol._model</span> <span class="kn">import</span> <span class="n">integer_from_string</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Double</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Boolean</span>
 <span class="kn">from</span> <span class="nn">spyne.model.primitive</span> <span class="kn">import</span> <span class="n">Integer</span>
@@ -112,20 +110,8 @@
 
 <span class="k">class</span> <span class="nc">MessagePackDecodeError</span><span class="p">(</span><span class="n">Fault</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="n">Fault</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;Client.MessagePackDecodeError&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MessagePackDecodeError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="s">&quot;Client.MessagePackDecodeError&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 
-
-<span class="k">def</span> <span class="nf">_integer_from_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">integer_from_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">value</span>
-
-<span class="k">def</span> <span class="nf">_integer_to_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-    <span class="k">if</span> <span class="o">-</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">63</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">64</span><span class="p">:</span> <span class="c"># if it&#39;s inside the range msgpack can deal with</span>
-        <span class="k">return</span> <span class="n">value</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">integer_to_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">MessagePackDocument</span><span class="p">(</span><span class="n">HierDictDocument</span><span class="p">):</span>
 <div class="viewcode-block" id="MessagePackDocument"><a class="viewcode-back" href="../../../reference/protocol/msgpack.html#spyne.protocol.msgpack.MessagePackDocument">[docs]</a>    <span class="sd">&quot;&quot;&quot;An integration class for the msgpack protocol.&quot;&quot;&quot;</span>
@@ -146,16 +132,19 @@
                                         <span class="n">complex_as</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
                                         <span class="n">ordered</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
 
-        <span class="n">HierDictDocument</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">mime_type</span><span class="p">,</span> <span class="n">ignore_uncap</span><span class="p">,</span>
-                                           <span class="n">ignore_wrappers</span><span class="p">,</span> <span class="n">complex_as</span><span class="p">,</span> <span class="n">ordered</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MessagePackDocument</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">mime_type</span><span class="p">,</span>
+                            <span class="n">ignore_uncap</span><span class="p">,</span> <span class="n">ignore_wrappers</span><span class="p">,</span> <span class="n">complex_as</span><span class="p">,</span> <span class="n">ordered</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_from_string_handlers</span><span class="p">[</span><span class="n">Double</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">val</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_from_string_handlers</span><span class="p">[</span><span class="n">Boolean</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">val</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_from_string_handlers</span><span class="p">[</span><span class="n">Integer</span><span class="p">]</span> <span class="o">=</span> <span class="n">_integer_from_string</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from_string_handlers</span><span class="p">[</span><span class="n">Double</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ret</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from_string_handlers</span><span class="p">[</span><span class="n">Boolean</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ret</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from_string_handlers</span><span class="p">[</span><span class="n">Integer</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">integer_from_string</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">Double</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">val</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">Boolean</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">val</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">Integer</span><span class="p">]</span> <span class="o">=</span> <span class="n">_integer_to_string</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">Double</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ret</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">Boolean</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ret</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to_string_handlers</span><span class="p">[</span><span class="n">Integer</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">integer_to_string</span>
+
+    <span class="k">def</span> <span class="nf">_ret</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value</span>
 
     <span class="k">def</span> <span class="nf">create_in_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">in_string_encoding</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
 <div class="viewcode-block" id="MessagePackDocument.create_in_document"><a class="viewcode-back" href="../../../reference/protocol/msgpack.html#spyne.protocol.msgpack.MessagePackDocument.create_in_document">[docs]</a>        <span class="sd">&quot;&quot;&quot;Sets ``ctx.in_document``,  using ``ctx.in_string``.</span>
@@ -166,16 +155,28 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span> <span class="o">=</span> <span class="n">msgpack</span><span class="o">.</span><span class="n">unpackb</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_string</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span> <span class="o">=</span> <span class="n">msgpack</span><span class="o">.</span><span class="n">unpackb</span><span class="p">(</span><span class="n">b</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_string</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MessagePackDecodeError</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;reqobj: </span><span class="si">%r</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">MessagePackDecodeError</span><span class="p">(</span><span class="s">&quot;Request object must be a dictionary&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">create_out_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">out_string_encoding</span><span class="o">=</span><span class="s">&#39;utf8&#39;</span><span class="p">):</span></div>
         <span class="n">ctx</span><span class="o">.</span><span class="n">out_string</span> <span class="o">=</span> <span class="p">(</span><span class="n">msgpack</span><span class="o">.</span><span class="n">packb</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">integer_from_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">MessagePackDocument</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">integer_from_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">integer_to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="o">-</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">63</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">64</span><span class="p">:</span> <span class="c"># if it&#39;s inside the range msgpack can deal with</span>
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">MessagePackDocument</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">integer_to_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">MessagePackRpc</span><span class="p">(</span><span class="n">MessagePackDocument</span><span class="p">):</span></div>
 <div class="viewcode-block" id="MessagePackRpc"><a class="viewcode-back" href="../../../reference/protocol/msgpack.html#spyne.protocol.msgpack.MessagePackRpc">[docs]</a>    <span class="sd">&quot;&quot;&quot;An integration class for the msgpack-rpc protocol.&quot;&quot;&quot;</span>
@@ -196,8 +197,8 @@
 
         <span class="c"># TODO: Use feed api</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span> <span class="o">=</span> <span class="n">msgpack</span><span class="o">.</span><span class="n">unpackb</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_string</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span> <span class="o">=</span> <span class="n">msgpack</span><span class="o">.</span><span class="n">unpackb</span><span class="p">(</span><span class="n">b</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_string</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MessagePackDecodeError</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">))</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -218,8 +219,8 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="n">msgtype</span><span class="p">,</span> <span class="n">msgid</span><span class="p">,</span> <span class="n">msgname</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span>
 
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="n">msgtype</span><span class="p">,</span> <span class="n">msgid</span><span class="p">,</span> <span class="n">msgname</span><span class="p">,</span> <span class="n">msgparams</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msgtype</span><span class="p">,</span> <span class="n">msgid</span><span class="p">,</span> <span class="n">msgname</span><span class="p">,</span> <span class="n">msgparams</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">msgtype</span> <span class="o">==</span> <span class="n">MessagePackRpc</span><span class="o">.</span><span class="n">MSGPACK_REQUEST</span><span class="p">:</span>
             <span class="k">assert</span> <span class="n">message</span> <span class="o">==</span> <span class="n">MessagePackRpc</span><span class="o">.</span><span class="n">REQUEST</span>
@@ -256,6 +257,8 @@
             <span class="n">body_class</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">in_message</span>
         <span class="k">elif</span> <span class="n">message</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">RESPONSE</span><span class="p">:</span>
             <span class="n">body_class</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">out_message</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;what?&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">body_class</span><span class="p">:</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">in_object</span> <span class="o">=</span> <span class="n">body_class</span><span class="o">.</span><span class="n">get_serialization_instance</span><span class="p">(</span>
@@ -281,6 +284,8 @@
                 <span class="n">out_type</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">in_message</span>
             <span class="k">elif</span> <span class="n">message</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">RESPONSE</span><span class="p">:</span>
                 <span class="n">out_type</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">out_message</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;what?&quot;</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">out_type</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="k">return</span>
@@ -298,20 +303,13 @@
             <span class="c"># transform the results into a dict:</span>
             <span class="k">if</span> <span class="n">out_type</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_occurs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MessagePackRpc</span><span class="o">.</span><span class="n">MSGPACK_RESPONSE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
-                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_to_value</span><span class="p">(</span><span class="n">out_type</span><span class="p">,</span> <span class="n">inst</span><span class="p">)</span>
-                                                      <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">out_instance</span><span class="p">)</span>
-                    <span class="p">]]</span>
+                     <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_to_value</span><span class="p">(</span><span class="n">out_type</span><span class="p">,</span> <span class="n">inst</span><span class="p">)</span> <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">out_instance</span><span class="p">)]]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">ctx</span><span class="o">.</span><span class="n">out_document</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MessagePackRpc</span><span class="o">.</span><span class="n">MSGPACK_RESPONSE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
-                                        <span class="bp">self</span><span class="o">.</span><span class="n">_to_value</span><span class="p">(</span><span class="n">out_type</span><span class="p">,</span> <span class="n">out_instance</span><span class="p">),</span>
-                                   <span class="p">]]</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">_to_value</span><span class="p">(</span><span class="n">out_type</span><span class="p">,</span> <span class="n">out_instance</span><span class="p">)]]</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">fire_event</span><span class="p">(</span><span class="s">&#39;after_serialize&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
-
-
-<span class="n">MessagePackObject</span> <span class="o">=</span> <span class="n">MessagePackDocument</span></div>
-<span class="sd">&quot;&quot;&quot;DEPRECATED. Use :class:`spyne.protocol.msgpack.MessagePackDocument` instead&quot;&quot;&quot;</span>
-</pre></div>
+</pre></div></div>
 
           </div>
         </div>
@@ -327,14 +325,14 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright Spyne Contributors.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

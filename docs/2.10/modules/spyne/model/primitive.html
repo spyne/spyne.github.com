@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.model.primitive &mdash; spyne 2.10.9 documentation</title>
+    <title>spyne.model.primitive &mdash; spyne 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.10.9',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.9 documentation" href="../../../index.html" />
+    <link rel="top" title="spyne 2.11.0 documentation" href="../../../index.html" />
     <link rel="up" title="spyne.model" href="../model.html" /> 
   </head>
   <body>
@@ -38,7 +36,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li>
           <li><a href="../model.html" accesskey="U">spyne.model</a> &raquo;</li> 
@@ -90,27 +88,26 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">The ``spyne.model.primitive`` package contains types with values that fit</span>
 <span class="sd">in a single field.</span>
+
+<span class="sd">See :mod:`spyne.protocol._model` for {to,from}_string implementations.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span> <span class="o">&gt;</span> <span class="s">&#39;3&#39;</span><span class="p">:</span>
-    <span class="nb">long</span> <span class="o">=</span> <span class="nb">int</span>
-
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">pytz</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
 <span class="kn">import</span> <span class="nn">decimal</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">import</span> <span class="nn">spyne</span>
 
-<span class="kn">import</span> <span class="nn">spyne.const.xml_ns</span>
-
+<span class="kn">from</span> <span class="nn">spyne.const</span> <span class="kn">import</span> <span class="n">xml_ns</span>
 <span class="kn">from</span> <span class="nn">spyne.model</span> <span class="kn">import</span> <span class="n">SimpleModel</span>
 <span class="kn">from</span> <span class="nn">spyne.util</span> <span class="kn">import</span> <span class="n">memoize</span>
+<span class="kn">from</span> <span class="nn">spyne.model._base</span> <span class="kn">import</span> <span class="n">apply_pssm</span><span class="p">,</span> <span class="n">msgpack</span><span class="p">,</span> <span class="n">xml</span><span class="p">,</span> <span class="n">json</span>
 
 <span class="n">string_encoding</span> <span class="o">=</span> <span class="s">&#39;utf8&#39;</span>
 
@@ -189,8 +186,8 @@
     <span class="p">)</span>
 
 
-<span class="n">_ns_xs</span> <span class="o">=</span> <span class="n">spyne</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">xml_ns</span><span class="o">.</span><span class="n">xsd</span>
-<span class="n">_ns_xsi</span> <span class="o">=</span> <span class="n">spyne</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">xml_ns</span><span class="o">.</span><span class="n">xsi</span>
+<span class="n">_ns_xs</span> <span class="o">=</span> <span class="n">xml_ns</span><span class="o">.</span><span class="n">xsd</span>
+<span class="n">_ns_xsi</span> <span class="o">=</span> <span class="n">xml_ns</span><span class="o">.</span><span class="n">xsi</span>
 
 
 <span class="k">class</span> <span class="nc">AnyXml</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span>
@@ -209,7 +206,8 @@
 
 <span class="c"># EXPERIMENTAL</span>
 <span class="k">class</span> <span class="nc">AnyHtml</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span></div>
-    <span class="k">pass</span>
+    <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;string&#39;</span>
+
 
 <span class="k">class</span> <span class="nc">AnyDict</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span>
 <div class="viewcode-block" id="AnyDict"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.AnyDict">[docs]</a>    <span class="sd">&quot;&quot;&quot;A dict instance that can contain other dicts, iterables or primitive</span>
@@ -218,8 +216,26 @@
 
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;anyType&#39;</span>
 
+    <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">SimpleModel</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
+        <span class="n">store_as</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;Method for serializing to persistent storage. One of &#39;xml&#39;, &#39;json&#39; or</span>
+<span class="sd">        &#39;msgpack&#39;. It makes sense to specify this only when this object is</span>
+<span class="sd">        child of a `ComplexModel` sublass.&quot;&quot;&quot;</span>
 
-<span class="k">class</span> <span class="nc">Unicode</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span></div>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">customize</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="AnyDict.customize"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.AnyDict.customize">[docs]</a>        <span class="sd">&quot;&quot;&quot;Duplicates cls and overwrites the values in ``cls.Attributes`` with</span>
+<span class="sd">        ``**kwargs`` and returns the new class.&quot;&quot;&quot;</span>
+
+        <span class="n">store_as</span> <span class="o">=</span> <span class="n">apply_pssm</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;store_as&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+                                <span class="p">{</span><span class="s">&#39;json&#39;</span><span class="p">:</span> <span class="n">json</span><span class="p">,</span> <span class="s">&#39;xml&#39;</span><span class="p">:</span> <span class="n">xml</span><span class="p">,</span> <span class="s">&#39;msgpack&#39;</span><span class="p">:</span> <span class="n">msgpack</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">store_as</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;store_as&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">store_as</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">AnyDict</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">customize</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Unicode</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span></div></div>
 <div class="viewcode-block" id="Unicode"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Unicode">[docs]</a>    <span class="sd">&quot;&quot;&quot;The type to represent human-readable data. Its native format is `unicode`</span>
 <span class="sd">    or `str` with given encoding.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -275,8 +291,7 @@
     <span class="k">def</span> <span class="nf">validate_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span>     <span class="n">SimpleModel</span><span class="o">.</span><span class="n">validate_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
             <span class="ow">and</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="p">(</span>
-                    <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">min_len</span>
-                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_len</span>
+                <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">min_len</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_len</span>
                 <span class="ow">and</span> <span class="n">_re_match_with_span</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
             <span class="p">)))</span>
 
@@ -362,6 +377,11 @@
         <span class="sd">&quot;&quot;&quot;A regular python string formatting string. See here:</span>
 <span class="sd">        http://docs.python.org/library/stdtypes.html#string-formatting&quot;&quot;&quot;</span>
 
+        <span class="n">str_format</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;A regular python string formatting string used by invoking its</span>
+<span class="sd">        ``format()`` function. See here:</span>
+<span class="sd">        http://docs.python.org/2/library/string.html#format-string-syntax&quot;&quot;&quot;</span>
+
         <span class="n">pattern</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="sd">&quot;&quot;&quot;A regular expression that matches the whole field. See here for more</span>
 <span class="sd">        info: http://www.regular-expressions.info/xml.html&quot;&quot;&quot;</span>
@@ -413,16 +433,16 @@
                 <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">ge</span> <span class="o">==</span> <span class="n">Decimal</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">ge</span>
                 <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">lt</span> <span class="o">==</span> <span class="n">Decimal</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">lt</span>
                 <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">le</span> <span class="o">==</span> <span class="n">Decimal</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">le</span>
-                <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">total_digits</span> <span class="o">==</span> \
-                                         <span class="n">Decimal</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">total_digits</span>
-                <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">fraction_digits</span> <span class="o">==</span> \
-                                         <span class="n">Decimal</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">fraction_digits</span>
+                <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">total_digits</span> <span class="o">==</span>
+                                             <span class="n">Decimal</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">total_digits</span>
+                <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">fraction_digits</span> <span class="o">==</span>
+                                             <span class="n">Decimal</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">fraction_digits</span>
             <span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">validate_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">validate_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
-            <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_str_len</span><span class="p">))</span>
+            <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_str_len</span><span class="p">)</span>
         <span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
@@ -488,7 +508,7 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span>    <span class="n">Decimal</span><span class="o">.</span><span class="n">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-                <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">value</span>
+                <span class="ow">and</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">value</span><span class="p">)</span>
             <span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">UnsignedInteger</span><span class="p">(</span><span class="n">Integer</span><span class="p">):</span></div>
@@ -499,17 +519,29 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span>    <span class="n">Integer</span><span class="o">.</span><span class="n">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-                <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+                <span class="ow">and</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
             <span class="p">)</span>
 
 <span class="n">NonNegativeInteger</span> <span class="o">=</span> <span class="n">UnsignedInteger</span></div>
 <span class="sd">&quot;&quot;&quot;The arbitrary-size unsigned integer, alias for UnsignedInteger.&quot;&quot;&quot;</span>
 
 
-<span class="nd">@memoize</span>
+<span class="k">class</span> <span class="nc">PositiveInteger</span><span class="p">(</span><span class="n">NonNegativeInteger</span><span class="p">):</span>
+<div class="viewcode-block" id="PositiveInteger"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.PositiveInteger">[docs]</a>
+    <span class="sd">&quot;&quot;&quot;The arbitrary-size positive integer (natural number).&quot;&quot;&quot;</span>
+
+    <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;positiveInteger&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">Integer</span><span class="o">.</span><span class="n">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span>
+
+
+<span class="nd">@memoize</span></div>
 <span class="k">def</span> <span class="nf">TBoundedInteger</span><span class="p">(</span><span class="n">num_bits</span><span class="p">,</span> <span class="n">type_name</span><span class="p">):</span>
     <span class="n">_min_b</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mh">0x8</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">num_bits</span><span class="o">-</span><span class="mi">4</span><span class="p">))</span>     <span class="c"># 0x8 is 4 bits.</span>
-    <span class="n">_max_b</span> <span class="o">=</span>  <span class="p">(</span><span class="mh">0x8</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">num_bits</span><span class="o">-</span><span class="mi">4</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span> <span class="c"># -1? c&#39;est la vie ;)</span>
+    <span class="n">_max_b</span> <span class="o">=</span>  <span class="p">(</span><span class="mh">0x8</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">num_bits</span><span class="o">-</span><span class="mi">4</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span> <span class="c"># -1? c&#39;est la vie</span>
 
     <span class="k">class</span> <span class="nc">_BoundedInteger</span><span class="p">(</span><span class="n">Integer</span><span class="p">):</span>
         <span class="n">__type_name__</span> <span class="o">=</span> <span class="n">type_name</span>
@@ -522,8 +554,8 @@
         <span class="nd">@staticmethod</span>
         <span class="k">def</span> <span class="nf">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">(</span>
-                    <span class="n">_min_b</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="n">_max_b</span>
-                <span class="ow">and</span> <span class="n">Integer</span><span class="o">.</span><span class="n">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                    <span class="n">Integer</span><span class="o">.</span><span class="n">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="p">(</span><span class="n">_min_b</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="n">_max_b</span><span class="p">))</span>
             <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">_BoundedInteger</span>
@@ -545,8 +577,8 @@
         <span class="nd">@staticmethod</span>
         <span class="k">def</span> <span class="nf">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">(</span>
-                    <span class="n">_min_b</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">_max_b</span>
-                <span class="ow">and</span> <span class="n">UnsignedInteger</span><span class="o">.</span><span class="n">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                    <span class="n">UnsignedInteger</span><span class="o">.</span><span class="n">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="p">(</span><span class="n">_min_b</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">_max_b</span><span class="p">))</span>
             <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">_BoundedUnsignedInteger</span>
@@ -650,18 +682,23 @@
     <span class="k">def</span> <span class="nf">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
             <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="p">(</span>
-                <span class="n">value</span> <span class="o">&gt;</span>  <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">gt</span> <span class="ow">and</span>
-                <span class="n">value</span> <span class="o">&gt;=</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">ge</span> <span class="ow">and</span>
-                <span class="n">value</span> <span class="o">&lt;</span>  <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">lt</span> <span class="ow">and</span>
-                <span class="n">value</span> <span class="o">&lt;=</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">le</span>
+                    <span class="n">value</span> <span class="o">&gt;</span>  <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">gt</span>
+                <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">ge</span>
+                <span class="ow">and</span> <span class="n">value</span> <span class="o">&lt;</span>  <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">lt</span>
+                <span class="ow">and</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">le</span>
             <span class="p">))</span>
 
 
 <span class="k">class</span> <span class="nc">DateTime</span><span class="p">(</span><span class="n">SimpleModel</span><span class="p">):</span></div>
 <div class="viewcode-block" id="DateTime"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.DateTime">[docs]</a>    <span class="sd">&quot;&quot;&quot;A compact way to represent dates and times together. Supports time zones.</span>
+<span class="sd">    Working with timezones is a bit quirky -- Spyne works very hard to have</span>
+<span class="sd">    all datetimes with time zones internally and only strips them when</span>
+<span class="sd">    explicitly requested with ``timezone=False``\. See</span>
+<span class="sd">    :attr:`DateTime.Attributes.as_timezone` for more information.</span>
 
 <span class="sd">    Native type is :class:`datetime.datetime`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;dateTime&#39;</span>
 
     <span class="n">_local_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">DATETIME_PATTERN</span><span class="p">)</span>
@@ -672,21 +709,25 @@
 <div class="viewcode-block" id="DateTime.Attributes"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.DateTime.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;Customizable attributes of the :class:`spyne.model.primitive.DateTime`</span>
 <span class="sd">        type.&quot;&quot;&quot;</span>
 
-        <span class="n">gt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">MINYEAR</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pytz</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span> <span class="c"># minExclusive</span>
-        <span class="sd">&quot;&quot;&quot;The datetime should be greater than this datetime.&quot;&quot;&quot;</span>
+        <span class="n">gt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">MINYEAR</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">spyne</span><span class="o">.</span><span class="n">LOCAL_TZ</span><span class="p">)</span> <span class="c"># minExclusive</span>
+        <span class="sd">&quot;&quot;&quot;The datetime should be greater than this datetime. It must always</span>
+<span class="sd">        have a timezone.&quot;&quot;&quot;</span>
 
-        <span class="n">ge</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">MINYEAR</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pytz</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span> <span class="c"># minInclusive</span>
-        <span class="sd">&quot;&quot;&quot;The datetime should be greater than or equal to this datetime.&quot;&quot;&quot;</span>
+        <span class="n">ge</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">MINYEAR</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">spyne</span><span class="o">.</span><span class="n">LOCAL_TZ</span><span class="p">)</span> <span class="c"># minInclusive</span>
+        <span class="sd">&quot;&quot;&quot;The datetime should be greater than or equal to this datetime. It</span>
+<span class="sd">        must always have a timezone.&quot;&quot;&quot;</span>
 
-        <span class="n">lt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">MAXYEAR</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">999999</span><span class="p">,</span> <span class="n">pytz</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span> <span class="c"># maxExclusive</span>
-        <span class="sd">&quot;&quot;&quot;The datetime should be lower than this datetime.&quot;&quot;&quot;</span>
+        <span class="n">lt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">MAXYEAR</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">999999</span><span class="p">,</span> <span class="n">spyne</span><span class="o">.</span><span class="n">LOCAL_TZ</span><span class="p">)</span> <span class="c"># maxExclusive</span>
+        <span class="sd">&quot;&quot;&quot;The datetime should be lower than this datetime. It must always have</span>
+<span class="sd">        a timezone.&quot;&quot;&quot;</span>
 
-        <span class="n">le</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">MAXYEAR</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">999999</span><span class="p">,</span> <span class="n">pytz</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span> <span class="c"># maxInclusive</span>
-        <span class="sd">&quot;&quot;&quot;The datetime should be lower than or equal to this datetime.&quot;&quot;&quot;</span>
+        <span class="n">le</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">MAXYEAR</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">999999</span><span class="p">,</span> <span class="n">spyne</span><span class="o">.</span><span class="n">LOCAL_TZ</span><span class="p">)</span> <span class="c"># maxInclusive</span>
+        <span class="sd">&quot;&quot;&quot;The datetime should be lower than or equal to this datetime. It must</span>
+<span class="sd">        always have a timezone.&quot;&quot;&quot;</span>
 
         <span class="n">pattern</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="sd">&quot;&quot;&quot;A regular expression that matches the whole datetime. See here for more</span>
-<span class="sd">        info: http://www.regular-expressions.info/xml.html&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;A regular expression that matches the whole datetime. See here for</span>
+<span class="sd">        more info: http://www.regular-expressions.info/xml.html&quot;&quot;&quot;</span>
 
         <span class="n">format</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="sd">&quot;&quot;&quot;DateTime format fed to the ``strftime`` function. See:</span>
@@ -699,33 +740,30 @@
 <span class="sd">        string. See here for more info:</span>
 <span class="sd">        http://docs.python.org/library/stdtypes.html#string-formatting&quot;&quot;&quot;</span>
 
-        <span class="n">as_time_zone</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="sd">&quot;&quot;&quot;When not None, converts incoming and outgoing values to the given</span>
-<span class="sd">        time zone (by calling ``astimezone()``) and strips time zone information</span>
-<span class="sd">        from the native value (by calling ``replace(tzinfo=None)``).</span>
+        <span class="n">as_timezone</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;When not None, converts:</span>
+<span class="sd">            - Outgoing values to the given time zone (by calling</span>
+<span class="sd">              ``.astimezone()``).</span>
+<span class="sd">            - Incoming values without tzinfo to the given time zone by calling</span>
+<span class="sd">              ``.replace(tzinfo=&lt;as_timezone&gt;)`` and values with tzinfo to the</span>
+<span class="sd">               given timezone by calling ``.astimezone()``.</span>
 
 <span class="sd">        Either None or a return value of pytz.timezone()</span>
+
+<span class="sd">        When this is None and a datetime with tzinfo=None comes in, it&#39;s</span>
+<span class="sd">        converted to spyne.LOCAL_TZ which defaults to ``pytz.utc``. You can use</span>
+<span class="sd">        `tzlocal &lt;https://pypi.python.org/pypi/tzlocal&gt;`_ to set it to local</span>
+<span class="sd">        time right after ``import spyne``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="n">timezone</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="sd">&quot;&quot;&quot;If False, time zone info is stripped before serialization. Also makes</span>
+<span class="sd">        sqlalchemy schema generator emit &#39;timestamp without timezone&#39;.&quot;&quot;&quot;</span>
+
+        <span class="n">serialize_as</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;One of (None, &#39;sec&#39;, &#39;sec_float&#39;, &#39;msec&#39;, &#39;msec_float&#39;, &#39;usec&#39;)&quot;&quot;&quot;</span>
+
     <span class="nd">@staticmethod</span></div>
-    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">date_match</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="n">date_match</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
-
-        <span class="n">year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;year&#39;</span><span class="p">))</span>
-        <span class="n">month</span> <span class="o">=</span>  <span class="nb">int</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;month&#39;</span><span class="p">))</span>
-        <span class="n">day</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;day&#39;</span><span class="p">))</span>
-        <span class="n">hour</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;hr&#39;</span><span class="p">))</span>
-        <span class="nb">min</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;min&#39;</span><span class="p">))</span>
-        <span class="n">sec</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sec&#39;</span><span class="p">))</span>
-        <span class="n">microsec</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;sec_frac&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">microsec</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">microsec</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">microsec</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">microsec</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-
-        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="nb">min</span><span class="p">,</span> <span class="n">sec</span><span class="p">,</span> <span class="n">microsec</span><span class="p">,</span> <span class="n">tz</span><span class="p">)</span>
-
-    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_default</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span>    <span class="n">SimpleModel</span><span class="o">.</span><span class="n">is_default</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
                 <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">gt</span> <span class="o">==</span> <span class="n">DateTime</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">gt</span>
@@ -737,12 +775,14 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">tzinfo</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">spyne</span><span class="o">.</span><span class="n">LOCAL_TZ</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">validate_native</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
             <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="p">(</span>
-                <span class="n">value</span> <span class="o">&gt;</span>  <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">gt</span> <span class="ow">and</span>
-                <span class="n">value</span> <span class="o">&gt;=</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">ge</span> <span class="ow">and</span>
-                <span class="n">value</span> <span class="o">&lt;</span>  <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">lt</span> <span class="ow">and</span>
-                <span class="n">value</span> <span class="o">&lt;=</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">le</span>
+                    <span class="n">value</span> <span class="o">&gt;</span>  <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">gt</span>
+                <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">ge</span>
+                <span class="ow">and</span> <span class="n">value</span> <span class="o">&lt;</span>  <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">lt</span>
+                <span class="ow">and</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">le</span>
             <span class="p">))</span>
 
 
@@ -753,6 +793,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;date&#39;</span>
+
+    <span class="n">_offset_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">DATE_PATTERN</span> <span class="o">+</span> <span class="s">&#39;(&#39;</span> <span class="o">+</span> <span class="n">OFFSET_PATTERN</span> <span class="o">+</span> <span class="s">&#39;|Z)&#39;</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">DateTime</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
 <div class="viewcode-block" id="Date.Attributes"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Date.Attributes">[docs]</a>        <span class="sd">&quot;&quot;&quot;Customizable attributes of the :class:`spyne.model.primitive.Date`</span>
@@ -805,18 +847,109 @@
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;boolean&#39;</span>
 
 
-<span class="k">class</span> <span class="nc">Uuid</span><span class="p">(</span><span class="n">Unicode</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="n">UUID_PATTERN</span><span class="p">)):</span></div>
+<span class="k">def</span> <span class="nf">_uuid_validate_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span></div>
+    <span class="k">return</span> <span class="p">(</span>     <span class="n">SimpleModel</span><span class="o">.</span><span class="n">validate_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">min_len</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">max_len</span>
+            <span class="ow">and</span> <span class="n">_re_match_with_span</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="p">)))</span>
+
+
+<span class="k">def</span> <span class="nf">_Tuuid_validate</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">uuid</span> <span class="kn">import</span> <span class="n">UUID</span>
+
+    <span class="k">def</span> <span class="nf">_uvalid</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">UUID</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">key</span><span class="p">:</span><span class="n">v</span><span class="p">})</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">return</span> <span class="n">_uvalid</span>
+
+
+<span class="n">_uuid_validate</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="bp">None</span><span class="p">:</span> <span class="n">_uuid_validate_string</span><span class="p">,</span>
+    <span class="s">&#39;hex&#39;</span><span class="p">:</span> <span class="n">_Tuuid_validate</span><span class="p">(</span><span class="s">&#39;hex&#39;</span><span class="p">),</span>
+    <span class="s">&#39;urn&#39;</span><span class="p">:</span> <span class="n">_Tuuid_validate</span><span class="p">(</span><span class="s">&#39;urn&#39;</span><span class="p">),</span>
+    <span class="s">&#39;bytes&#39;</span><span class="p">:</span> <span class="n">_Tuuid_validate</span><span class="p">(</span><span class="s">&#39;bytes&#39;</span><span class="p">),</span>
+    <span class="s">&#39;bytes_le&#39;</span><span class="p">:</span> <span class="n">_Tuuid_validate</span><span class="p">(</span><span class="s">&#39;bytes_le&#39;</span><span class="p">),</span>
+    <span class="s">&#39;fields&#39;</span><span class="p">:</span> <span class="n">_Tuuid_validate</span><span class="p">(</span><span class="s">&#39;fields&#39;</span><span class="p">),</span>
+    <span class="s">&#39;int&#39;</span><span class="p">:</span> <span class="n">_Tuuid_validate</span><span class="p">(</span><span class="s">&#39;int&#39;</span><span class="p">),</span>
+<span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">Uuid</span><span class="p">(</span><span class="n">Unicode</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="n">UUID_PATTERN</span><span class="p">)):</span>
 <div class="viewcode-block" id="Uuid"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Uuid">[docs]</a>    <span class="sd">&quot;&quot;&quot;Unicode subclass for Universially-Unique Identifiers.&quot;&quot;&quot;</span>
+
     <span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
     <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;uuid&#39;</span>
 
+    <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="n">UUID_PATTERN</span><span class="p">)</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
+        <span class="n">serialize_as</span> <span class="o">=</span> <span class="bp">None</span>
 
-<span class="k">class</span> <span class="nc">Point</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span></div>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">validate_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_uuid_validate</span><span class="p">[</span><span class="n">cls</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">serialize_as</span><span class="p">](</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">NormalizedString</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span></div>
+    <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;normalizedString&#39;</span>
+    <span class="n">__extends__</span> <span class="o">=</span> <span class="n">Unicode</span>
+
+    <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
+        <span class="n">white_space</span> <span class="o">=</span> <span class="s">&quot;replace&quot;</span>
+
+<span class="k">class</span> <span class="nc">Token</span><span class="p">(</span><span class="n">NormalizedString</span><span class="p">):</span>
+    <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;token&#39;</span>
+
+    <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
+        <span class="n">white_space</span> <span class="o">=</span> <span class="s">&quot;collapse&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">Name</span><span class="p">(</span><span class="n">Token</span><span class="p">):</span>
+    <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;Name&#39;</span>
+
+    <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
+        <span class="c"># Original: &#39;[\i-[:]][\c-[:]]*&#39;</span>
+        <span class="c"># See: http://www.regular-expressions.info/xmlcharclass.html</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="s">&#39;[[_:A-Za-z]-[:]][[-._:A-Za-z0-9]-[:]]*&#39;</span>
+
+
+<span class="k">class</span> <span class="nc">NCName</span><span class="p">(</span><span class="n">Name</span><span class="p">):</span>
+    <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;NCName&#39;</span>
+
+
+
+<span class="k">class</span> <span class="nc">ID</span><span class="p">(</span><span class="n">NCName</span><span class="p">):</span>
+    <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;ID&#39;</span>
+
+
+
+<span class="k">class</span> <span class="nc">Language</span><span class="p">(</span><span class="n">Token</span><span class="p">):</span>
+    <span class="n">__type_name__</span> <span class="o">=</span> <span class="s">&#39;language&#39;</span>
+
+    <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="s">&#39;[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*&#39;</span>
+
+
+<span class="k">class</span> <span class="nc">Point</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span>
 <div class="viewcode-block" id="Point"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Point">[docs]</a>    <span class="sd">&quot;&quot;&quot;A point type whose native format is a WKT string. You can use</span>
-<span class="sd">    :func:`shapely.wkt.loads` to get a proper point type.&quot;&quot;&quot;</span>
+<span class="sd">    :func:`shapely.wkt.loads` to get a proper point type.</span>
+
+<span class="sd">    It&#39;s a subclass of the :class:`Unicode` type, so regular Unicode constraints</span>
+<span class="sd">    apply. The only additional parameter is the number of dimensions.</span>
+
+<span class="sd">    :param dim: Number of dimensons.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__type_name__</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">Value</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s">&#39;POINT(</span><span class="si">%%</span><span class="s">3.</span><span class="si">%(prec)s</span><span class="s">f </span><span class="si">%%</span><span class="s">3.</span><span class="si">%(prec)s</span><span class="s">f)&#39;</span> <span class="o">%</span> <span class="p">{</span><span class="s">&#39;prec&#39;</span><span class="p">:</span> <span class="n">prec</span><span class="p">})</span> <span class="o">%</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">assert</span> <span class="n">dim</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
@@ -827,12 +960,22 @@
 
         <span class="n">retval</span> <span class="o">=</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">retval</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__extends__</span> <span class="o">=</span> <span class="n">Unicode</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__orig__</span> <span class="o">=</span> <span class="n">Unicode</span>
         <span class="k">return</span> <span class="n">retval</span>
 
 
 <span class="k">class</span> <span class="nc">Line</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span></div>
-<div class="viewcode-block" id="Line"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Line">[docs]</a>    <span class="sd">&quot;&quot;&quot;A point type whose native format is a WKT string. You can use</span>
-<span class="sd">    :func:`shapely.wkt.loads` to get a proper point type.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Line"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Line">[docs]</a>    <span class="sd">&quot;&quot;&quot;A line type whose native format is a WKT string. You can use</span>
+<span class="sd">    :func:`shapely.wkt.loads` to get a proper line type.</span>
+
+<span class="sd">    It&#39;s a subclass of the :class:`Unicode` type, so regular Unicode constraints</span>
+<span class="sd">    apply. The only additional parameter is the number of dimensions.</span>
+
+<span class="sd">    :param dim: Number of dimensons.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__type_name__</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="bp">None</span>
@@ -846,13 +989,23 @@
 
         <span class="n">retval</span> <span class="o">=</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">retval</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__extends__</span> <span class="o">=</span> <span class="n">Unicode</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__orig__</span> <span class="o">=</span> <span class="n">Unicode</span>
         <span class="k">return</span> <span class="n">retval</span>
 
-<span class="n">LineString</span><span class="o">=</span><span class="n">Line</span></div>
+<span class="n">LineString</span> <span class="o">=</span> <span class="n">Line</span></div>
+
 
 <span class="k">class</span> <span class="nc">Polygon</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span>
-<div class="viewcode-block" id="Polygon"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Polygon">[docs]</a>    <span class="sd">&quot;&quot;&quot;A Polygon type whose native format is a WKT string. You can use</span>
-<span class="sd">    :func:`shapely.wkt.loads` to get a proper polygon type.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Polygon"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Polygon">[docs]</a>    <span class="sd">&quot;&quot;&quot;A polygon type whose native format is a WKT string. You can use</span>
+<span class="sd">    :func:`shapely.wkt.loads` to get a proper polygon type.</span>
+
+<span class="sd">    It&#39;s a subclass of the :class:`Unicode` type, so regular Unicode constraints</span>
+<span class="sd">    apply. The only additional parameter is the number of dimensions.</span>
+
+<span class="sd">    :param dim: Number of dimensons.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__type_name__</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="bp">None</span>
@@ -866,12 +1019,22 @@
 
         <span class="n">retval</span> <span class="o">=</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">retval</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__extends__</span> <span class="o">=</span> <span class="n">Unicode</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__orig__</span> <span class="o">=</span> <span class="n">Unicode</span>
         <span class="k">return</span> <span class="n">retval</span>
 
 
 <span class="k">class</span> <span class="nc">MultiPoint</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span></div>
-<div class="viewcode-block" id="MultiPoint"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.MultiPoint">[docs]</a>    <span class="sd">&quot;&quot;&quot;A Multipolygon type whose native format is a WKT string. You can use</span>
-<span class="sd">    :func:`shapely.wkt.loads` to get a proper multipolygon type.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="MultiPoint"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.MultiPoint">[docs]</a>    <span class="sd">&quot;&quot;&quot;A MultiPoint type whose native format is a WKT string. You can use</span>
+<span class="sd">    :func:`shapely.wkt.loads` to get a proper MultiPoint type.</span>
+
+<span class="sd">    It&#39;s a subclass of the :class:`Unicode` type, so regular Unicode constraints</span>
+<span class="sd">    apply. The only additional parameter is the number of dimensions.</span>
+
+<span class="sd">    :param dim: Number of dimensons.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__type_name__</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="bp">None</span>
@@ -881,16 +1044,26 @@
         <span class="k">if</span> <span class="n">dim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;dim&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dim</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_multipoint_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;type_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;multipoint</span><span class="si">%d</span><span class="s">d&#39;</span> <span class="o">%</span> <span class="n">dim</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;type_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;multiPoint</span><span class="si">%d</span><span class="s">d&#39;</span> <span class="o">%</span> <span class="n">dim</span>
 
         <span class="n">retval</span> <span class="o">=</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">retval</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__extends__</span> <span class="o">=</span> <span class="n">Unicode</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__orig__</span> <span class="o">=</span> <span class="n">Unicode</span>
         <span class="k">return</span> <span class="n">retval</span>
 
 
 <span class="k">class</span> <span class="nc">MultiLine</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span></div>
-<div class="viewcode-block" id="MultiLine"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.MultiLine">[docs]</a>    <span class="sd">&quot;&quot;&quot;A Multipolygon type whose native format is a WKT string. You can use</span>
-<span class="sd">    :func:`shapely.wkt.loads` to get a proper multipolygon type.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="MultiLine"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.MultiLine">[docs]</a>    <span class="sd">&quot;&quot;&quot;A MultiLine type whose native format is a WKT string. You can use</span>
+<span class="sd">    :func:`shapely.wkt.loads` to get a proper MultiLine type.</span>
+
+<span class="sd">    It&#39;s a subclass of the :class:`Unicode` type, so regular Unicode constraints</span>
+<span class="sd">    apply. The only additional parameter is the number of dimensions.</span>
+
+<span class="sd">    :param dim: Number of dimensons.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__type_name__</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="bp">None</span>
@@ -900,17 +1073,28 @@
         <span class="k">if</span> <span class="n">dim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;dim&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dim</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_multilinestring_pattern</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;type_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;multiline</span><span class="si">%d</span><span class="s">d&#39;</span> <span class="o">%</span> <span class="n">dim</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;type_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;multiLine</span><span class="si">%d</span><span class="s">d&#39;</span> <span class="o">%</span> <span class="n">dim</span>
 
         <span class="n">retval</span> <span class="o">=</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">retval</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__extends__</span> <span class="o">=</span> <span class="n">Unicode</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__orig__</span> <span class="o">=</span> <span class="n">Unicode</span>
         <span class="k">return</span> <span class="n">retval</span>
 
 <span class="n">MultiLineString</span> <span class="o">=</span> <span class="n">MultiLine</span></div>
 
+
 <span class="k">class</span> <span class="nc">MultiPolygon</span><span class="p">(</span><span class="n">Unicode</span><span class="p">):</span>
-<div class="viewcode-block" id="MultiPolygon"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.MultiPolygon">[docs]</a>    <span class="sd">&quot;&quot;&quot;A Multipolygon type whose native format is a WKT string. You can use</span>
-<span class="sd">    :func:`shapely.wkt.loads` to get a proper multipolygon type.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="MultiPolygon"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.MultiPolygon">[docs]</a>    <span class="sd">&quot;&quot;&quot;A MultiPolygon type whose native format is a WKT string. You can use</span>
+<span class="sd">    :func:`shapely.wkt.loads` to get a proper MultiPolygon type.</span>
+
+<span class="sd">    It&#39;s a subclass of the :class:`Unicode` type, so regular Unicode constraints</span>
+<span class="sd">    apply. The only additional parameter is the number of dimensions.</span>
+
+<span class="sd">    :param dim: Number of dimensons.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__type_name__</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="k">class</span> <span class="nc">Attributes</span><span class="p">(</span><span class="n">Unicode</span><span class="o">.</span><span class="n">Attributes</span><span class="p">):</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="bp">None</span>
@@ -924,13 +1108,15 @@
 
         <span class="n">retval</span> <span class="o">=</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">retval</span><span class="o">.</span><span class="n">__namespace__</span> <span class="o">=</span> <span class="s">&#39;http://spyne.io/schema&#39;</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__extends__</span> <span class="o">=</span> <span class="n">Unicode</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">__orig__</span> <span class="o">=</span> <span class="n">Unicode</span>
         <span class="k">return</span> <span class="n">retval</span>
 
 
-<span class="c"># a class that is really a namespace</span>
+<span class="c"># This class is DEPRECATED. Use the spyne.model.Mandatory like this:</span>
+<span class="c"># &gt;&gt;&gt; from spyne.model import Mandatory as M, Unicode</span>
+<span class="c"># &gt;&gt;&gt; MandatoryEmail = M(Unicode(pattern=&#39;[^@]+@[^@]+&#39;))</span>
 <span class="k">class</span> <span class="nc">Mandatory</span><span class="p">:</span></div>
-<div class="viewcode-block" id="Mandatory"><a class="viewcode-back" href="../../../reference/model/primitive.html#spyne.model.primitive.Mandatory">[docs]</a>    <span class="sd">&quot;&quot;&quot;Class that contains mandatory variants of primitives.&quot;&quot;&quot;</span>
-
     <span class="n">Unicode</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="n">type_name</span><span class="o">=</span><span class="s">&quot;MandatoryString&quot;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nillable</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">min_len</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">String</span> <span class="o">=</span> <span class="n">String</span><span class="p">(</span><span class="n">type_name</span><span class="o">=</span><span class="s">&quot;MandatoryString&quot;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nillable</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">min_len</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
@@ -985,7 +1171,7 @@
     <span class="n">MultiPolygon</span> <span class="o">=</span> <span class="n">MultiPolygon</span><span class="p">(</span><span class="n">type_name</span><span class="o">=</span><span class="s">&quot;MandatoryMultiPolygon&quot;</span><span class="p">,</span> <span class="n">min_len</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nillable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
 
-<span class="n">NATIVE_MAP</span> <span class="o">=</span> <span class="p">{</span></div>
+<span class="n">NATIVE_MAP</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nb">float</span><span class="p">:</span> <span class="n">Double</span><span class="p">,</span>
     <span class="nb">bool</span><span class="p">:</span> <span class="n">Boolean</span><span class="p">,</span>
     <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span> <span class="n">DateTime</span><span class="p">,</span>
@@ -996,11 +1182,11 @@
     <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">:</span> <span class="n">Uuid</span><span class="p">,</span>
 <span class="p">}</span>
 
+<span class="kn">from</span> <span class="nn">spyne.util</span> <span class="kn">import</span> <span class="n">six</span>
 
-<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span> <span class="o">&gt;</span> <span class="s">&#39;3&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span><span class="p">:</span>
     <span class="n">NATIVE_MAP</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
         <span class="nb">str</span><span class="p">:</span> <span class="n">Unicode</span><span class="p">,</span>
-        <span class="nb">unicode</span><span class="p">:</span> <span class="n">Unicode</span><span class="p">,</span>
         <span class="nb">int</span><span class="p">:</span> <span class="n">Integer</span><span class="p">,</span>
     <span class="p">})</span>
 
@@ -1033,7 +1219,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li>
           <li><a href="../model.html" >spyne.model</a> &raquo;</li> 
@@ -1041,7 +1227,7 @@
     </div>
     <div class="footer">
         &copy; Copyright Spyne Contributors.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Server Transports &mdash; spyne 2.10.9 documentation</title>
+    <title>Server Transports &mdash; spyne 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.10.9',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.9 documentation" href="../index.html" />
+    <link rel="top" title="spyne 2.11.0 documentation" href="../index.html" />
     <link rel="up" title="Spyne API Reference" href="index.html" />
     <link rel="next" title="Auxiliary Processors" href="auxproc.html" />
     <link rel="prev" title="Client Transports" href="client.html" /> 
@@ -46,7 +44,7 @@
         <li class="right" >
           <a href="client.html" title="Client Transports"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Spyne API Reference</a> &raquo;</li> 
       </ul>
     </div>
@@ -58,8 +56,8 @@
 <li><a class="reference internal" href="#module-spyne.server._base">Server Base Class</a></li>
 <li><a class="reference internal" href="#module-spyne.server.wsgi">HTTP (WSGI)</a></li>
 <li><a class="reference internal" href="#module-spyne.server.twisted">Http (Twisted)</a></li>
-<li><a class="reference internal" href="#module-spyne.server.django">Http (Django)</a></li>
-<li><a class="reference internal" href="#module-spyne.server.pyramid">Http (Pyramid)</a></li>
+<li><a class="reference internal" href="#http-django">Http (Django)</a></li>
+<li><a class="reference internal" href="#http-pyramid">Http (Pyramid)</a></li>
 <li><a class="reference internal" href="#module-spyne.server.zeromq">ZeroMQ</a></li>
 <li><a class="reference internal" href="#module-spyne.server.null">NullServer</a></li>
 </ul>
@@ -127,13 +125,20 @@ is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</spa
 <dl class="method">
 <dt id="spyne.server._base.ServerBase.get_out_object">
 <tt class="descname">get_out_object</tt><big>(</big><em>ctx</em><big>)</big><a class="reference internal" href="../modules/spyne/server/_base.html#ServerBase.get_out_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server._base.ServerBase.get_out_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the matched method using the <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt> to get
-<tt class="docutils literal"><span class="pre">ctx.out_object</span></tt>.</p>
+<dd><p>Calls the matched user function by passing it the <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt>
+to set <tt class="docutils literal"><span class="pre">ctx.out_object</span></tt>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="spyne.server._base.ServerBase.get_out_string">
-<tt class="descname">get_out_string</tt><big>(</big><em>ctx</em><big>)</big><a class="reference internal" href="../modules/spyne/server/_base.html#ServerBase.get_out_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server._base.ServerBase.get_out_string" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_out_string</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server._base.ServerBase.get_out_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.out_object</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.out_document</span></tt> and later
+<tt class="docutils literal"><span class="pre">ctx.out_string</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.server._base.ServerBase.get_out_string_pull">
+<tt class="descname">get_out_string_pull</tt><big>(</big><em>ctx</em><big>)</big><a class="reference internal" href="../modules/spyne/server/_base.html#ServerBase.get_out_string_pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server._base.ServerBase.get_out_string_pull" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.out_object</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.out_document</span></tt> and later
 <tt class="docutils literal"><span class="pre">ctx.out_string</span></tt>.</p>
 </dd></dl>
@@ -189,7 +194,8 @@ moderation.</p>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">wsdl_exception</span></tt></dt>
 <dd><p class="first last">Called right after an exception is thrown during wsdl generation.
-The exception object is stored in ctx.transport.wsdl_error attribute.</p>
+The exception object is stored in ctx.transport.wsdl_error
+attribute.</p>
 </dd>
 </dl>
 </li>
@@ -202,7 +208,8 @@ request.</p>
 </li>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">wsgi_return</span></tt></dt>
-<dd><p class="first last">Called right before the output stream is returned to the WSGI handler.</p>
+<dd><p class="first last">Called right before the output stream is returned to the WSGI
+handler.</p>
 </dd>
 </dl>
 </li>
@@ -253,8 +260,8 @@ is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</spa
 <dl class="method">
 <dt id="spyne.server.wsgi.WsgiApplication.get_out_object">
 <tt class="descname">get_out_object</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.wsgi.WsgiApplication.get_out_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the matched method using the <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt> to get
-<tt class="docutils literal"><span class="pre">ctx.out_object</span></tt>.</p>
+<dd><p>Calls the matched user function by passing it the <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt>
+to set <tt class="docutils literal"><span class="pre">ctx.out_object</span></tt>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -263,6 +270,18 @@ is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</spa
 <dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.out_object</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.out_document</span></tt> and later
 <tt class="docutils literal"><span class="pre">ctx.out_string</span></tt>.</p>
 </dd></dl>
+
+<dl class="method">
+<dt id="spyne.server.wsgi.WsgiApplication.get_out_string_pull">
+<tt class="descname">get_out_string_pull</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.wsgi.WsgiApplication.get_out_string_pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.out_object</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.out_document</span></tt> and later
+<tt class="docutils literal"><span class="pre">ctx.out_string</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.server.wsgi.WsgiApplication.get_out_string_push">
+<tt class="descname">get_out_string_push</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#spyne.server.wsgi.WsgiApplication.get_out_string_push" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="spyne.server.wsgi.WsgiApplication.handle_error">
@@ -289,9 +308,46 @@ is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</spa
 <tt class="descname">handle_rpc</tt><big>(</big><em>req_env</em>, <em>start_response</em><big>)</big><a class="reference internal" href="../modules/spyne/server/wsgi.html#WsgiApplication.handle_rpc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.wsgi.WsgiApplication.handle_rpc" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="spyne.server.wsgi.WsgiApplication.handle_wsdl_request">
+<tt class="descname">handle_wsdl_request</tt><big>(</big><em>req_env</em>, <em>start_response</em>, <em>url</em><big>)</big><a class="reference internal" href="../modules/spyne/server/wsgi.html#WsgiApplication.handle_wsdl_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.wsgi.WsgiApplication.handle_wsdl_request" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="spyne.server.wsgi.WsgiApplication.has_patterns">
-<tt class="descname">has_patterns</tt><a class="reference internal" href="../modules/spyne/server/wsgi.html#WsgiApplication.has_patterns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.wsgi.WsgiApplication.has_patterns" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">has_patterns</tt><em class="property"> None</em><a class="headerlink" href="#spyne.server.wsgi.WsgiApplication.has_patterns" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="spyne.server.wsgi.WsgiApplication.is_wsdl_request">
+<tt class="descname">is_wsdl_request</tt><big>(</big><em>req_env</em><big>)</big><a class="reference internal" href="../modules/spyne/server/wsgi.html#WsgiApplication.is_wsdl_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.wsgi.WsgiApplication.is_wsdl_request" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="spyne.server.wsgi.WsgiApplication.match_pattern">
+<tt class="descname">match_pattern</tt><big>(</big><em>ctx</em>, <em>method=''</em>, <em>path=''</em>, <em>host=''</em><big>)</big><a class="headerlink" href="#spyne.server.wsgi.WsgiApplication.match_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets ctx.method_request_string if there&#8217;s a match. It&#8217;s O(n) which
+means you should keep your number of patterns as low as possible.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ctx</strong> &#8211; A MethodContext instance</li>
+<li><strong>method</strong> &#8211; The verb in the HTTP Request (GET, POST, etc.)</li>
+<li><strong>host</strong> &#8211; The contents of the <tt class="docutils literal"><span class="pre">Host:</span></tt> header</li>
+<li><strong>path</strong> &#8211; Path but not the arguments. (i.e. stuff before &#8216;?&#8217;, if it&#8217;s
+there)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.server.wsgi.WsgiApplication.run_push">
+<tt class="descname">run_push</tt><big>(</big><em>ret</em>, <em>p_ctx</em>, <em>others</em>, <em>gen</em><big>)</big><a class="headerlink" href="#spyne.server.wsgi.WsgiApplication.run_push" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -317,9 +373,20 @@ the transport attribute using the <a class="reference internal" href="#spyne.ser
 <tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.wsgi.WsgiMethodContext.close" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="spyne.server.wsgi.WsgiMethodContext.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.wsgi.WsgiMethodContext.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.server.wsgi.WsgiMethodContext.default_transport_context">
+<tt class="descname">default_transport_context</tt><a class="headerlink" href="#spyne.server.wsgi.WsgiMethodContext.default_transport_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">HttpTransportContext</span></tt></p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="spyne.server.wsgi.WsgiMethodContext.descriptor">
-<tt class="descname">descriptor</tt><a class="headerlink" href="#spyne.server.wsgi.WsgiMethodContext.descriptor" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">descriptor</tt><em class="property"> None</em><a class="headerlink" href="#spyne.server.wsgi.WsgiMethodContext.descriptor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -332,16 +399,36 @@ the transport attribute using the <a class="reference internal" href="#spyne.ser
 <tt class="descname">get_descriptor</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.wsgi.WsgiMethodContext.get_descriptor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="spyne.server.wsgi.WsgiMethodContext.get_out_protocol">
+<tt class="descname">get_out_protocol</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.wsgi.WsgiMethodContext.get_out_protocol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="spyne.server.wsgi.WsgiMethodContext.method_name">
-<tt class="descname">method_name</tt><a class="headerlink" href="#spyne.server.wsgi.WsgiMethodContext.method_name" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">method_name</tt><em class="property"> None</em><a class="headerlink" href="#spyne.server.wsgi.WsgiMethodContext.method_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>The public name of the method the <tt class="docutils literal"><span class="pre">method_request_string</span></tt> was
 matched to.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="spyne.server.wsgi.WsgiMethodContext.out_protocol">
+<tt class="descname">out_protocol</tt><em class="property"> None</em><a class="headerlink" href="#spyne.server.wsgi.WsgiMethodContext.out_protocol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.server.wsgi.WsgiMethodContext.service_class">
+<tt class="descname">service_class</tt><em class="property"> None</em><a class="headerlink" href="#spyne.server.wsgi.WsgiMethodContext.service_class" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="spyne.server.wsgi.WsgiMethodContext.set_descriptor">
 <tt class="descname">set_descriptor</tt><big>(</big><em>descriptor</em><big>)</big><a class="headerlink" href="#spyne.server.wsgi.WsgiMethodContext.set_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="spyne.server.wsgi.WsgiMethodContext.set_out_protocol">
+<tt class="descname">set_out_protocol</tt><big>(</big><em>what</em><big>)</big><a class="headerlink" href="#spyne.server.wsgi.WsgiMethodContext.set_out_protocol" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -354,12 +441,17 @@ matched to.</p>
 
 <dl class="class">
 <dt id="spyne.server.wsgi.WsgiTransportContext">
-<em class="property">class </em><tt class="descclassname">spyne.server.wsgi.</tt><tt class="descname">WsgiTransportContext</tt><big>(</big><em>transport</em>, <em>req_env</em>, <em>content_type</em><big>)</big><a class="reference internal" href="../modules/spyne/server/wsgi.html#WsgiTransportContext"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.wsgi.WsgiTransportContext" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">spyne.server.wsgi.</tt><tt class="descname">WsgiTransportContext</tt><big>(</big><em>parent</em>, <em>transport</em>, <em>req_env</em>, <em>content_type</em><big>)</big><a class="reference internal" href="../modules/spyne/server/wsgi.html#WsgiTransportContext"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.wsgi.WsgiTransportContext" title="Permalink to this definition">¶</a></dt>
 <dd><p>The class that is used in the transport attribute of the
 <a class="reference internal" href="#spyne.server.wsgi.WsgiMethodContext" title="spyne.server.wsgi.WsgiMethodContext"><tt class="xref py py-class docutils literal"><span class="pre">WsgiMethodContext</span></tt></a> class.</p>
 <dl class="attribute">
 <dt id="spyne.server.wsgi.WsgiTransportContext.content_type">
-<tt class="descname">content_type</tt><a class="headerlink" href="#spyne.server.wsgi.WsgiTransportContext.content_type" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">content_type</tt><em class="property"> None</em><a class="headerlink" href="#spyne.server.wsgi.WsgiTransportContext.content_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="spyne.server.wsgi.WsgiTransportContext.get_cookie">
+<tt class="descname">get_cookie</tt><big>(</big><em>key</em><big>)</big><a class="reference internal" href="../modules/spyne/server/wsgi.html#WsgiTransportContext.get_cookie"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.wsgi.WsgiTransportContext.get_cookie" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -369,7 +461,7 @@ matched to.</p>
 
 <dl class="attribute">
 <dt id="spyne.server.wsgi.WsgiTransportContext.mime_type">
-<tt class="descname">mime_type</tt><a class="headerlink" href="#spyne.server.wsgi.WsgiTransportContext.mime_type" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">mime_type</tt><em class="property"> None</em><a class="headerlink" href="#spyne.server.wsgi.WsgiTransportContext.mime_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -385,6 +477,11 @@ matched to.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="spyne.server.wsgi.WsgiTransportContext.respond">
+<tt class="descname">respond</tt><big>(</big><em>resp_code</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#spyne.server.wsgi.WsgiTransportContext.respond" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="spyne.server.wsgi.WsgiTransportContext.set_mime_type">
 <tt class="descname">set_mime_type</tt><big>(</big><em>what</em><big>)</big><a class="headerlink" href="#spyne.server.wsgi.WsgiTransportContext.set_mime_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -394,641 +491,12 @@ matched to.</p>
 </div>
 <div class="section" id="module-spyne.server.twisted">
 <span id="http-twisted"></span><h2>Http (Twisted)<a class="headerlink" href="#module-spyne.server.twisted" title="Permalink to this headline">¶</a></h2>
-<p>The <tt class="docutils literal"><span class="pre">spyne.server.twisted</span></tt> module contains a server transport compatible
-with the Twisted event loop. It uses the TwistedWebResource object as transport.</p>
-<p>Also see the twisted examples in the examples directory of the source
-distribution.</p>
-<p>If you want to have a hard-coded URL in the wsdl document, this is how to do
-it:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">resource</span> <span class="o">=</span> <span class="n">TwistedWebResource</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="n">resource</span><span class="o">.</span><span class="n">http_transport</span><span class="o">.</span><span class="n">doc</span><span class="o">.</span><span class="n">wsdl11</span><span class="o">.</span><span class="n">build_interface_document</span><span class="p">(</span><span class="s">&quot;http://example.com&quot;</span><span class="p">)</span>
-</pre></div>
 </div>
-<p>This is not strictly necessary &#8211; if you don&#8217;t do this, Spyne will get the
-URL from the first request, build the wsdl on-the-fly and cache it as a
-string in memory for later requests. However, if you want to make sure
-you only have this url on the WSDL, this is how to do it. Note that if
-your client takes the information in wsdl seriously, all requests will go
-to the designated url above which can make testing a bit difficult. Use
-in moderation.</p>
-<p>This module is EXPERIMENTAL. Your mileage may vary. Patches are welcome.</p>
-<dl class="class">
-<dt id="spyne.server.twisted.TwistedHttpTransport">
-<em class="property">class </em><tt class="descclassname">spyne.server.twisted.</tt><tt class="descname">TwistedHttpTransport</tt><big>(</big><em>app</em>, <em>chunked=False</em>, <em>max_content_length=2097152</em>, <em>block_length=8192</em><big>)</big><a class="reference internal" href="../modules/spyne/server/twisted.html#TwistedHttpTransport"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.twisted.TwistedHttpTransport" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="staticmethod">
-<dt id="spyne.server.twisted.TwistedHttpTransport.decompose_incoming_envelope">
-<em class="property">static </em><tt class="descname">decompose_incoming_envelope</tt><big>(</big><em>prot</em>, <em>ctx</em>, <em>message</em><big>)</big><a class="reference internal" href="../modules/spyne/server/twisted.html#TwistedHttpTransport.decompose_incoming_envelope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.twisted.TwistedHttpTransport.decompose_incoming_envelope" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function is only called by the HttpRpc protocol to have the
-twisted web&#8217;s Request object is parsed into <tt class="docutils literal"><span class="pre">ctx.in_body_doc</span></tt> and
-<tt class="docutils literal"><span class="pre">ctx.in_header_doc</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedHttpTransport.generate_contexts">
-<tt class="descname">generate_contexts</tt><big>(</big><em>ctx</em>, <em>in_string_charset=None</em><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedHttpTransport.generate_contexts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls create_in_document and decompose_incoming_envelope to get
-method_request string in order to generate contexts.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedHttpTransport.get_in_object">
-<tt class="descname">get_in_object</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedHttpTransport.get_in_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.in_string</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.in_body_doc</span></tt>, which in turn
-is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedHttpTransport.get_out_object">
-<tt class="descname">get_out_object</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedHttpTransport.get_out_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the matched method using the <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt> to get
-<tt class="docutils literal"><span class="pre">ctx.out_object</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedHttpTransport.get_out_string">
-<tt class="descname">get_out_string</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedHttpTransport.get_out_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.out_object</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.out_document</span></tt> and later
-<tt class="docutils literal"><span class="pre">ctx.out_string</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedHttpTransport.serve_forever">
-<tt class="descname">serve_forever</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedHttpTransport.serve_forever" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement your event loop here, if needed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="spyne.server.twisted.TwistedHttpTransport.transport">
-<tt class="descname">transport</tt><em class="property"> = 'http://schemas.xmlsoap.org/soap/http'</em><a class="headerlink" href="#spyne.server.twisted.TwistedHttpTransport.transport" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="spyne.server.twisted.TwistedWebResource">
-<em class="property">class </em><tt class="descclassname">spyne.server.twisted.</tt><tt class="descname">TwistedWebResource</tt><big>(</big><em>app</em>, <em>chunked=False</em>, <em>max_content_length=2097152</em>, <em>block_length=8192</em><big>)</big><a class="reference internal" href="../modules/spyne/server/twisted.html#TwistedWebResource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource" title="Permalink to this definition">¶</a></dt>
-<dd><p>A server transport that exposes the application as a twisted web
-Resource.</p>
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.delEntity">
-<tt class="descname">delEntity</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.delEntity" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="spyne.server.twisted.TwistedWebResource.entityType">
-<tt class="descname">entityType</tt><em class="property"> = &lt;InterfaceClass twisted.web.resource.IResource&gt;</em><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.entityType" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.getChild">
-<tt class="descname">getChild</tt><big>(</big><em>path</em>, <em>request</em><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.getChild" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve a &#8216;child&#8217; resource from me.</p>
-<p>Implement this to create dynamic resource generation &#8211; resources which
-are always available may be registered with self.putChild().</p>
-<p>This will not be called if the class-level variable &#8216;isLeaf&#8217; is set in
-your subclass; instead, the &#8216;postpath&#8217; attribute of the request will be
-left as a list of the remaining path elements.</p>
-<p>For example, the URL /foo/bar/baz will normally be:</p>
-<div class="highlight-python"><pre>| site.resource.getChild('foo').getChild('bar').getChild('baz').</pre>
+<div class="section" id="http-django">
+<h2>Http (Django)<a class="headerlink" href="#http-django" title="Permalink to this headline">¶</a></h2>
 </div>
-<p>However, if the resource returned by &#8216;bar&#8217; has isLeaf set to true, then
-the getChild call will never be made on it.</p>
-<p>Parameters and return value have the same meaning and requirements as
-those defined by L{IResource.getChildWithDefault}.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.getChildForRequest">
-<tt class="descname">getChildForRequest</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.getChildForRequest" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.getChildWithDefault">
-<tt class="descname">getChildWithDefault</tt><big>(</big><em>path</em>, <em>request</em><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.getChildWithDefault" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve a static or dynamically generated child resource from me.</p>
-<p>First checks if a resource was added manually by putChild, and then
-call getChild to check for dynamic resources. Only override if you want
-to affect behaviour of all child lookups, rather than just dynamic
-ones.</p>
-<p>This will check to see if I have a pre-registered child resource of the
-given name, and call getChild if I do not.</p>
-<p>&#64;see: L{IResource.getChildWithDefault}</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.getDynamicEntity">
-<tt class="descname">getDynamicEntity</tt><big>(</big><em>name</em>, <em>request</em><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.getDynamicEntity" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.getStaticEntity">
-<tt class="descname">getStaticEntity</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.getStaticEntity" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.handle_error">
-<tt class="descname">handle_error</tt><big>(</big><em>p_ctx</em>, <em>others</em>, <em>error</em>, <em>request</em><big>)</big><a class="reference internal" href="../modules/spyne/server/twisted.html#TwistedWebResource.handle_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.handle_error" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.handle_rpc">
-<tt class="descname">handle_rpc</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="../modules/spyne/server/twisted.html#TwistedWebResource.handle_rpc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.handle_rpc" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="spyne.server.twisted.TwistedWebResource.isLeaf">
-<tt class="descname">isLeaf</tt><em class="property"> = True</em><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.isLeaf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.listDynamicEntities">
-<tt class="descname">listDynamicEntities</tt><big>(</big><em>request=None</em><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.listDynamicEntities" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.listDynamicNames">
-<tt class="descname">listDynamicNames</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.listDynamicNames" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.listEntities">
-<tt class="descname">listEntities</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.listEntities" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.listNames">
-<tt class="descname">listNames</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.listNames" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.listStaticEntities">
-<tt class="descname">listStaticEntities</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.listStaticEntities" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.listStaticNames">
-<tt class="descname">listStaticNames</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.listStaticNames" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.putChild">
-<tt class="descname">putChild</tt><big>(</big><em>path</em>, <em>child</em><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.putChild" title="Permalink to this definition">¶</a></dt>
-<dd><p>Register a static child.</p>
-<p>You almost certainly don&#8217;t want &#8216;/&#8217; in your path. If you
-intended to have the root of a folder, e.g. /foo/, you want
-path to be &#8216;&#8217;.</p>
-<p>&#64;see: L{IResource.putChild}</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.reallyPutEntity">
-<tt class="descname">reallyPutEntity</tt><big>(</big><em>name</em>, <em>entity</em><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.reallyPutEntity" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.render">
-<tt class="descname">render</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.render" title="Permalink to this definition">¶</a></dt>
-<dd><p>Render a given resource. See L{IResource}&#8217;s render method.</p>
-<p>I delegate to methods of self with the form &#8216;render_METHOD&#8217;
-where METHOD is the HTTP that was used to make the
-request. Examples: render_GET, render_HEAD, render_POST, and
-so on. Generally you should implement those methods instead of
-overriding this one.</p>
-<p>render_METHOD methods are expected to return a byte string which will be
-the rendered page, unless the return value is C{server.NOT_DONE_YET}, in
-which case it is this class&#8217;s responsibility to write the results using
-C{request.write(data)} and then call C{request.finish()}.</p>
-<p>Old code that overrides render() directly is likewise expected
-to return a byte string or NOT_DONE_YET.</p>
-<p>&#64;see: L{IResource.render}</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.render_GET">
-<tt class="descname">render_GET</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="../modules/spyne/server/twisted.html#TwistedWebResource.render_GET"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.render_GET" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.render_HEAD">
-<tt class="descname">render_HEAD</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.render_HEAD" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default handling of HEAD method.</p>
-<p>I just return self.render_GET(request). When method is HEAD,
-the framework will handle this correctly.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.twisted.TwistedWebResource.render_POST">
-<tt class="descname">render_POST</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="../modules/spyne/server/twisted.html#TwistedWebResource.render_POST"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.render_POST" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="spyne.server.twisted.TwistedWebResource.server">
-<tt class="descname">server</tt><em class="property"> = None</em><a class="headerlink" href="#spyne.server.twisted.TwistedWebResource.server" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-spyne.server.django">
-<span id="http-django"></span><h2>Http (Django)<a class="headerlink" href="#module-spyne.server.django" title="Permalink to this headline">¶</a></h2>
-<p>The <tt class="docutils literal"><span class="pre">spyne.server.django</span></tt> module contains a Django-compatible Http
-transport. It&#8217;s a thin wrapper around
-<a class="reference internal" href="#spyne.server.wsgi.WsgiApplication" title="spyne.server.wsgi.WsgiApplication"><tt class="xref py py-class docutils literal"><span class="pre">spyne.server.wsgi.WsgiApplication</span></tt></a>.</p>
-<dl class="class">
-<dt id="spyne.server.django.DjangoApplication">
-<em class="property">class </em><tt class="descclassname">spyne.server.django.</tt><tt class="descname">DjangoApplication</tt><big>(</big><em>app</em>, <em>chunked=True</em>, <em>max_content_length=2097152</em>, <em>block_length=8192</em><big>)</big><a class="reference internal" href="../modules/spyne/server/django.html#DjangoApplication"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.django.DjangoApplication" title="Permalink to this definition">¶</a></dt>
-<dd><p>You should use this for regular RPC.</p>
-<dl class="attribute">
-<dt id="spyne.server.django.DjangoApplication.HttpResponseObject">
-<tt class="descname">HttpResponseObject</tt><a class="headerlink" href="#spyne.server.django.DjangoApplication.HttpResponseObject" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">HttpResponse</span></tt></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.DjangoApplication.decompose_incoming_envelope">
-<tt class="descname">decompose_incoming_envelope</tt><big>(</big><em>prot</em>, <em>ctx</em>, <em>message</em><big>)</big><a class="headerlink" href="#spyne.server.django.DjangoApplication.decompose_incoming_envelope" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function is only called by the HttpRpc protocol to have the wsgi
-environment parsed into <tt class="docutils literal"><span class="pre">ctx.in_body_doc</span></tt> and <tt class="docutils literal"><span class="pre">ctx.in_header_doc</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.DjangoApplication.generate_contexts">
-<tt class="descname">generate_contexts</tt><big>(</big><em>ctx</em>, <em>in_string_charset=None</em><big>)</big><a class="headerlink" href="#spyne.server.django.DjangoApplication.generate_contexts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls create_in_document and decompose_incoming_envelope to get
-method_request string in order to generate contexts.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.DjangoApplication.generate_map_adapter">
-<tt class="descname">generate_map_adapter</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.django.DjangoApplication.generate_map_adapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function runs on first request because it needs the
-<cite>&#8216;SERVER_NAME&#8217;</cite> from the wsgi request environment.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.DjangoApplication.get_in_object">
-<tt class="descname">get_in_object</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.django.DjangoApplication.get_in_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.in_string</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.in_body_doc</span></tt>, which in turn
-is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.DjangoApplication.get_out_object">
-<tt class="descname">get_out_object</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.django.DjangoApplication.get_out_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the matched method using the <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt> to get
-<tt class="docutils literal"><span class="pre">ctx.out_object</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.DjangoApplication.get_out_string">
-<tt class="descname">get_out_string</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.django.DjangoApplication.get_out_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.out_object</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.out_document</span></tt> and later
-<tt class="docutils literal"><span class="pre">ctx.out_string</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.DjangoApplication.handle_error">
-<tt class="descname">handle_error</tt><big>(</big><em>p_ctx</em>, <em>others</em>, <em>error</em>, <em>start_response</em><big>)</big><a class="headerlink" href="#spyne.server.django.DjangoApplication.handle_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Serialize errors to an iterable of strings and return them.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>p_ctx</strong> &#8211; Primary (non-aux) context.</li>
-<li><strong>others</strong> &#8211; List if auxiliary contexts (can be empty).</li>
-<li><strong>error</strong> &#8211; One of ctx.{in,out}_error.</li>
-<li><strong>start_response</strong> &#8211; See the WSGI spec for more info.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.DjangoApplication.handle_rpc">
-<tt class="descname">handle_rpc</tt><big>(</big><em>req_env</em>, <em>start_response</em><big>)</big><a class="headerlink" href="#spyne.server.django.DjangoApplication.handle_rpc" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="spyne.server.django.DjangoApplication.has_patterns">
-<tt class="descname">has_patterns</tt><a class="headerlink" href="#spyne.server.django.DjangoApplication.has_patterns" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.DjangoApplication.serve_forever">
-<tt class="descname">serve_forever</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.django.DjangoApplication.serve_forever" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement your event loop here, if needed.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.DjangoApplication.set_response">
-<tt class="descname">set_response</tt><big>(</big><em>retval</em>, <em>response</em><big>)</big><a class="reference internal" href="../modules/spyne/server/django.html#DjangoApplication.set_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.django.DjangoApplication.set_response" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="spyne.server.django.DjangoApplication.transport">
-<tt class="descname">transport</tt><em class="property"> = 'http://schemas.xmlsoap.org/soap/http'</em><a class="headerlink" href="#spyne.server.django.DjangoApplication.transport" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="spyne.server.django.StreamingDjangoApplication">
-<em class="property">class </em><tt class="descclassname">spyne.server.django.</tt><tt class="descname">StreamingDjangoApplication</tt><big>(</big><em>app</em>, <em>chunked=True</em>, <em>max_content_length=2097152</em>, <em>block_length=8192</em><big>)</big><a class="reference internal" href="../modules/spyne/server/django.html#StreamingDjangoApplication"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.django.StreamingDjangoApplication" title="Permalink to this definition">¶</a></dt>
-<dd><p>You should use this when you&#8217;re generating HUGE data as response.
-This is new in Django 1.5.</p>
-<dl class="attribute">
-<dt id="spyne.server.django.StreamingDjangoApplication.HttpResponseObject">
-<tt class="descname">HttpResponseObject</tt><a class="headerlink" href="#spyne.server.django.StreamingDjangoApplication.HttpResponseObject" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">StreamingHttpResponse</span></tt></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.StreamingDjangoApplication.decompose_incoming_envelope">
-<tt class="descname">decompose_incoming_envelope</tt><big>(</big><em>prot</em>, <em>ctx</em>, <em>message</em><big>)</big><a class="headerlink" href="#spyne.server.django.StreamingDjangoApplication.decompose_incoming_envelope" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function is only called by the HttpRpc protocol to have the wsgi
-environment parsed into <tt class="docutils literal"><span class="pre">ctx.in_body_doc</span></tt> and <tt class="docutils literal"><span class="pre">ctx.in_header_doc</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.StreamingDjangoApplication.generate_contexts">
-<tt class="descname">generate_contexts</tt><big>(</big><em>ctx</em>, <em>in_string_charset=None</em><big>)</big><a class="headerlink" href="#spyne.server.django.StreamingDjangoApplication.generate_contexts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls create_in_document and decompose_incoming_envelope to get
-method_request string in order to generate contexts.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.StreamingDjangoApplication.generate_map_adapter">
-<tt class="descname">generate_map_adapter</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.django.StreamingDjangoApplication.generate_map_adapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function runs on first request because it needs the
-<cite>&#8216;SERVER_NAME&#8217;</cite> from the wsgi request environment.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.StreamingDjangoApplication.get_in_object">
-<tt class="descname">get_in_object</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.django.StreamingDjangoApplication.get_in_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.in_string</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.in_body_doc</span></tt>, which in turn
-is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.StreamingDjangoApplication.get_out_object">
-<tt class="descname">get_out_object</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.django.StreamingDjangoApplication.get_out_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the matched method using the <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt> to get
-<tt class="docutils literal"><span class="pre">ctx.out_object</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.StreamingDjangoApplication.get_out_string">
-<tt class="descname">get_out_string</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.django.StreamingDjangoApplication.get_out_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.out_object</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.out_document</span></tt> and later
-<tt class="docutils literal"><span class="pre">ctx.out_string</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.StreamingDjangoApplication.handle_error">
-<tt class="descname">handle_error</tt><big>(</big><em>p_ctx</em>, <em>others</em>, <em>error</em>, <em>start_response</em><big>)</big><a class="headerlink" href="#spyne.server.django.StreamingDjangoApplication.handle_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Serialize errors to an iterable of strings and return them.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>p_ctx</strong> &#8211; Primary (non-aux) context.</li>
-<li><strong>others</strong> &#8211; List if auxiliary contexts (can be empty).</li>
-<li><strong>error</strong> &#8211; One of ctx.{in,out}_error.</li>
-<li><strong>start_response</strong> &#8211; See the WSGI spec for more info.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.StreamingDjangoApplication.handle_rpc">
-<tt class="descname">handle_rpc</tt><big>(</big><em>req_env</em>, <em>start_response</em><big>)</big><a class="headerlink" href="#spyne.server.django.StreamingDjangoApplication.handle_rpc" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="spyne.server.django.StreamingDjangoApplication.has_patterns">
-<tt class="descname">has_patterns</tt><a class="headerlink" href="#spyne.server.django.StreamingDjangoApplication.has_patterns" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.StreamingDjangoApplication.serve_forever">
-<tt class="descname">serve_forever</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.django.StreamingDjangoApplication.serve_forever" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement your event loop here, if needed.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.django.StreamingDjangoApplication.set_response">
-<tt class="descname">set_response</tt><big>(</big><em>retval</em>, <em>response</em><big>)</big><a class="reference internal" href="../modules/spyne/server/django.html#StreamingDjangoApplication.set_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.django.StreamingDjangoApplication.set_response" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="spyne.server.django.StreamingDjangoApplication.transport">
-<tt class="descname">transport</tt><em class="property"> = 'http://schemas.xmlsoap.org/soap/http'</em><a class="headerlink" href="#spyne.server.django.StreamingDjangoApplication.transport" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-spyne.server.pyramid">
-<span id="http-pyramid"></span><h2>Http (Pyramid)<a class="headerlink" href="#module-spyne.server.pyramid" title="Permalink to this headline">¶</a></h2>
-<p>The <tt class="docutils literal"><span class="pre">spyne.server.pyramid</span></tt> module contains a Pyramid-compatible Http
-transport. It&#8217;s a thin wrapper around
-<a class="reference internal" href="#spyne.server.wsgi.WsgiApplication" title="spyne.server.wsgi.WsgiApplication"><tt class="xref py py-class docutils literal"><span class="pre">spyne.server.wsgi.WsgiApplication</span></tt></a>.</p>
-<dl class="class">
-<dt id="spyne.server.pyramid.PyramidApplication">
-<em class="property">class </em><tt class="descclassname">spyne.server.pyramid.</tt><tt class="descname">PyramidApplication</tt><big>(</big><em>app</em>, <em>chunked=True</em>, <em>max_content_length=2097152</em>, <em>block_length=8192</em><big>)</big><a class="reference internal" href="../modules/spyne/server/pyramid.html#PyramidApplication"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.pyramid.PyramidApplication" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pyramid View Wrapper. Use this for regular RPC</p>
-<dl class="method">
-<dt id="spyne.server.pyramid.PyramidApplication.decompose_incoming_envelope">
-<tt class="descname">decompose_incoming_envelope</tt><big>(</big><em>prot</em>, <em>ctx</em>, <em>message</em><big>)</big><a class="headerlink" href="#spyne.server.pyramid.PyramidApplication.decompose_incoming_envelope" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function is only called by the HttpRpc protocol to have the wsgi
-environment parsed into <tt class="docutils literal"><span class="pre">ctx.in_body_doc</span></tt> and <tt class="docutils literal"><span class="pre">ctx.in_header_doc</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.PyramidApplication.generate_contexts">
-<tt class="descname">generate_contexts</tt><big>(</big><em>ctx</em>, <em>in_string_charset=None</em><big>)</big><a class="headerlink" href="#spyne.server.pyramid.PyramidApplication.generate_contexts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls create_in_document and decompose_incoming_envelope to get
-method_request string in order to generate contexts.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.PyramidApplication.generate_map_adapter">
-<tt class="descname">generate_map_adapter</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.pyramid.PyramidApplication.generate_map_adapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function runs on first request because it needs the
-<cite>&#8216;SERVER_NAME&#8217;</cite> from the wsgi request environment.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.PyramidApplication.get_in_object">
-<tt class="descname">get_in_object</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.pyramid.PyramidApplication.get_in_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.in_string</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.in_body_doc</span></tt>, which in turn
-is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.PyramidApplication.get_out_object">
-<tt class="descname">get_out_object</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.pyramid.PyramidApplication.get_out_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the matched method using the <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt> to get
-<tt class="docutils literal"><span class="pre">ctx.out_object</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.PyramidApplication.get_out_string">
-<tt class="descname">get_out_string</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.pyramid.PyramidApplication.get_out_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.out_object</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.out_document</span></tt> and later
-<tt class="docutils literal"><span class="pre">ctx.out_string</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.PyramidApplication.handle_error">
-<tt class="descname">handle_error</tt><big>(</big><em>p_ctx</em>, <em>others</em>, <em>error</em>, <em>start_response</em><big>)</big><a class="headerlink" href="#spyne.server.pyramid.PyramidApplication.handle_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Serialize errors to an iterable of strings and return them.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>p_ctx</strong> &#8211; Primary (non-aux) context.</li>
-<li><strong>others</strong> &#8211; List if auxiliary contexts (can be empty).</li>
-<li><strong>error</strong> &#8211; One of ctx.{in,out}_error.</li>
-<li><strong>start_response</strong> &#8211; See the WSGI spec for more info.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.PyramidApplication.handle_rpc">
-<tt class="descname">handle_rpc</tt><big>(</big><em>req_env</em>, <em>start_response</em><big>)</big><a class="headerlink" href="#spyne.server.pyramid.PyramidApplication.handle_rpc" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="spyne.server.pyramid.PyramidApplication.has_patterns">
-<tt class="descname">has_patterns</tt><a class="headerlink" href="#spyne.server.pyramid.PyramidApplication.has_patterns" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.PyramidApplication.serve_forever">
-<tt class="descname">serve_forever</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.pyramid.PyramidApplication.serve_forever" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement your event loop here, if needed.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.PyramidApplication.set_response">
-<tt class="descname">set_response</tt><big>(</big><em>retval</em>, <em>response</em><big>)</big><a class="reference internal" href="../modules/spyne/server/pyramid.html#PyramidApplication.set_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.pyramid.PyramidApplication.set_response" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="spyne.server.pyramid.PyramidApplication.transport">
-<tt class="descname">transport</tt><em class="property"> = 'http://schemas.xmlsoap.org/soap/http'</em><a class="headerlink" href="#spyne.server.pyramid.PyramidApplication.transport" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="spyne.server.pyramid.StreamingPyramidApplication">
-<em class="property">class </em><tt class="descclassname">spyne.server.pyramid.</tt><tt class="descname">StreamingPyramidApplication</tt><big>(</big><em>app</em>, <em>chunked=True</em>, <em>max_content_length=2097152</em>, <em>block_length=8192</em><big>)</big><a class="reference internal" href="../modules/spyne/server/pyramid.html#StreamingPyramidApplication"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.pyramid.StreamingPyramidApplication" title="Permalink to this definition">¶</a></dt>
-<dd><p>You should use this when you&#8217;re generating HUGE data as response.</p>
-<dl class="method">
-<dt id="spyne.server.pyramid.StreamingPyramidApplication.decompose_incoming_envelope">
-<tt class="descname">decompose_incoming_envelope</tt><big>(</big><em>prot</em>, <em>ctx</em>, <em>message</em><big>)</big><a class="headerlink" href="#spyne.server.pyramid.StreamingPyramidApplication.decompose_incoming_envelope" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function is only called by the HttpRpc protocol to have the wsgi
-environment parsed into <tt class="docutils literal"><span class="pre">ctx.in_body_doc</span></tt> and <tt class="docutils literal"><span class="pre">ctx.in_header_doc</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.StreamingPyramidApplication.generate_contexts">
-<tt class="descname">generate_contexts</tt><big>(</big><em>ctx</em>, <em>in_string_charset=None</em><big>)</big><a class="headerlink" href="#spyne.server.pyramid.StreamingPyramidApplication.generate_contexts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls create_in_document and decompose_incoming_envelope to get
-method_request string in order to generate contexts.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.StreamingPyramidApplication.generate_map_adapter">
-<tt class="descname">generate_map_adapter</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.pyramid.StreamingPyramidApplication.generate_map_adapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function runs on first request because it needs the
-<cite>&#8216;SERVER_NAME&#8217;</cite> from the wsgi request environment.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.StreamingPyramidApplication.get_in_object">
-<tt class="descname">get_in_object</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.pyramid.StreamingPyramidApplication.get_in_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.in_string</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.in_body_doc</span></tt>, which in turn
-is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.StreamingPyramidApplication.get_out_object">
-<tt class="descname">get_out_object</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.pyramid.StreamingPyramidApplication.get_out_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the matched method using the <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt> to get
-<tt class="docutils literal"><span class="pre">ctx.out_object</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.StreamingPyramidApplication.get_out_string">
-<tt class="descname">get_out_string</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.pyramid.StreamingPyramidApplication.get_out_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.out_object</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.out_document</span></tt> and later
-<tt class="docutils literal"><span class="pre">ctx.out_string</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.StreamingPyramidApplication.handle_error">
-<tt class="descname">handle_error</tt><big>(</big><em>p_ctx</em>, <em>others</em>, <em>error</em>, <em>start_response</em><big>)</big><a class="headerlink" href="#spyne.server.pyramid.StreamingPyramidApplication.handle_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Serialize errors to an iterable of strings and return them.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>p_ctx</strong> &#8211; Primary (non-aux) context.</li>
-<li><strong>others</strong> &#8211; List if auxiliary contexts (can be empty).</li>
-<li><strong>error</strong> &#8211; One of ctx.{in,out}_error.</li>
-<li><strong>start_response</strong> &#8211; See the WSGI spec for more info.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.StreamingPyramidApplication.handle_rpc">
-<tt class="descname">handle_rpc</tt><big>(</big><em>req_env</em>, <em>start_response</em><big>)</big><a class="headerlink" href="#spyne.server.pyramid.StreamingPyramidApplication.handle_rpc" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="spyne.server.pyramid.StreamingPyramidApplication.has_patterns">
-<tt class="descname">has_patterns</tt><a class="headerlink" href="#spyne.server.pyramid.StreamingPyramidApplication.has_patterns" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.StreamingPyramidApplication.serve_forever">
-<tt class="descname">serve_forever</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.pyramid.StreamingPyramidApplication.serve_forever" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement your event loop here, if needed.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.server.pyramid.StreamingPyramidApplication.set_response">
-<tt class="descname">set_response</tt><big>(</big><em>retval</em>, <em>response</em><big>)</big><a class="reference internal" href="../modules/spyne/server/pyramid.html#StreamingPyramidApplication.set_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.pyramid.StreamingPyramidApplication.set_response" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="spyne.server.pyramid.StreamingPyramidApplication.transport">
-<tt class="descname">transport</tt><em class="property"> = 'http://schemas.xmlsoap.org/soap/http'</em><a class="headerlink" href="#spyne.server.pyramid.StreamingPyramidApplication.transport" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<div class="section" id="http-pyramid">
+<h2>Http (Pyramid)<a class="headerlink" href="#http-pyramid" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-spyne.server.zeromq">
 <span id="zeromq"></span><h2>ZeroMQ<a class="headerlink" href="#module-spyne.server.zeromq" title="Permalink to this headline">¶</a></h2>
@@ -1036,7 +504,7 @@ is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</spa
 uses ZeroMQ (zmq.REP) as transport.</p>
 <dl class="class">
 <dt id="spyne.server.zeromq.ZeroMQServer">
-<em class="property">class </em><tt class="descclassname">spyne.server.zeromq.</tt><tt class="descname">ZeroMQServer</tt><big>(</big><em>app</em>, <em>app_url</em>, <em>wsdl_url=None</em><big>)</big><a class="reference internal" href="../modules/spyne/server/zeromq.html#ZeroMQServer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.zeromq.ZeroMQServer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">spyne.server.zeromq.</tt><tt class="descname">ZeroMQServer</tt><big>(</big><em>app</em>, <em>app_url</em>, <em>wsdl_url=None</em>, <em>ctx=None</em>, <em>socket=None</em><big>)</big><a class="reference internal" href="../modules/spyne/server/zeromq.html#ZeroMQServer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.zeromq.ZeroMQServer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The ZeroMQ server transport.</p>
 <dl class="method">
 <dt id="spyne.server.zeromq.ZeroMQServer.generate_contexts">
@@ -1055,8 +523,8 @@ is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</spa
 <dl class="method">
 <dt id="spyne.server.zeromq.ZeroMQServer.get_out_object">
 <tt class="descname">get_out_object</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.zeromq.ZeroMQServer.get_out_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the matched method using the <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt> to get
-<tt class="docutils literal"><span class="pre">ctx.out_object</span></tt>.</p>
+<dd><p>Calls the matched user function by passing it the <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt>
+to set <tt class="docutils literal"><span class="pre">ctx.out_object</span></tt>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1065,6 +533,23 @@ is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</spa
 <dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.out_object</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.out_document</span></tt> and later
 <tt class="docutils literal"><span class="pre">ctx.out_string</span></tt>.</p>
 </dd></dl>
+
+<dl class="method">
+<dt id="spyne.server.zeromq.ZeroMQServer.get_out_string_pull">
+<tt class="descname">get_out_string_pull</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.zeromq.ZeroMQServer.get_out_string_pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.out_object</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.out_document</span></tt> and later
+<tt class="docutils literal"><span class="pre">ctx.out_string</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.server.zeromq.ZeroMQServer.get_out_string_push">
+<tt class="descname">get_out_string_push</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#spyne.server.zeromq.ZeroMQServer.get_out_string_push" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="spyne.server.zeromq.ZeroMQServer.run_push">
+<tt class="descname">run_push</tt><big>(</big><em>ret</em>, <em>p_ctx</em>, <em>others</em>, <em>gen</em><big>)</big><a class="headerlink" href="#spyne.server.zeromq.ZeroMQServer.run_push" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="spyne.server.zeromq.ZeroMQServer.serve_forever">
@@ -1080,6 +565,25 @@ is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</spa
 </dd></dl>
 
 <dl class="class">
+<dt id="spyne.server.zeromq.ZeroMQThreadPoolServer">
+<em class="property">class </em><tt class="descclassname">spyne.server.zeromq.</tt><tt class="descname">ZeroMQThreadPoolServer</tt><big>(</big><em>app</em>, <em>app_url</em>, <em>pool_size</em>, <em>wsdl_url=None</em>, <em>ctx=None</em>, <em>socket=None</em><big>)</big><a class="reference internal" href="../modules/spyne/server/zeromq.html#ZeroMQThreadPoolServer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.zeromq.ZeroMQThreadPoolServer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a ZeroMQ server transport with several background workers,
+allowing asynchronous calls.</p>
+<p>More details on the pattern <a class="reference external" href="http://zguide.zeromq.org/page:all#Shared-Queue-DEALER-and-ROUTER-sockets">http://zguide.zeromq.org/page:all#Shared-Queue-DEALER-and-ROUTER-sockets</a></p>
+<dl class="method">
+<dt id="spyne.server.zeromq.ZeroMQThreadPoolServer.create_worker">
+<tt class="descname">create_worker</tt><big>(</big><em>i</em>, <em>be_url</em><big>)</big><a class="reference internal" href="../modules/spyne/server/zeromq.html#ZeroMQThreadPoolServer.create_worker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.zeromq.ZeroMQThreadPoolServer.create_worker" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="spyne.server.zeromq.ZeroMQThreadPoolServer.serve_forever">
+<tt class="descname">serve_forever</tt><big>(</big><big>)</big><a class="reference internal" href="../modules/spyne/server/zeromq.html#ZeroMQThreadPoolServer.serve_forever"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.zeromq.ZeroMQThreadPoolServer.serve_forever" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the ZeroMQ server.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="spyne.server.zeromq.ZmqMethodContext">
 <em class="property">class </em><tt class="descclassname">spyne.server.zeromq.</tt><tt class="descname">ZmqMethodContext</tt><big>(</big><em>app</em><big>)</big><a class="reference internal" href="../modules/spyne/server/zeromq.html#ZmqMethodContext"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.zeromq.ZmqMethodContext" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
@@ -1087,9 +591,14 @@ is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</spa
 <tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.zeromq.ZmqMethodContext.close" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="spyne.server.zeromq.ZmqMethodContext.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.zeromq.ZmqMethodContext.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="spyne.server.zeromq.ZmqMethodContext.descriptor">
-<tt class="descname">descriptor</tt><a class="headerlink" href="#spyne.server.zeromq.ZmqMethodContext.descriptor" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">descriptor</tt><em class="property"> None</em><a class="headerlink" href="#spyne.server.zeromq.ZmqMethodContext.descriptor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1102,24 +611,38 @@ is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</spa
 <tt class="descname">get_descriptor</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.zeromq.ZmqMethodContext.get_descriptor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="spyne.server.zeromq.ZmqMethodContext.get_out_protocol">
+<tt class="descname">get_out_protocol</tt><big>(</big><big>)</big><a class="headerlink" href="#spyne.server.zeromq.ZmqMethodContext.get_out_protocol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="spyne.server.zeromq.ZmqMethodContext.method_name">
-<tt class="descname">method_name</tt><a class="headerlink" href="#spyne.server.zeromq.ZmqMethodContext.method_name" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">method_name</tt><em class="property"> None</em><a class="headerlink" href="#spyne.server.zeromq.ZmqMethodContext.method_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>The public name of the method the <tt class="docutils literal"><span class="pre">method_request_string</span></tt> was
 matched to.</p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.server.zeromq.ZmqMethodContext.out_protocol">
+<tt class="descname">out_protocol</tt><em class="property"> None</em><a class="headerlink" href="#spyne.server.zeromq.ZmqMethodContext.out_protocol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="spyne.server.zeromq.ZmqMethodContext.service_class">
+<tt class="descname">service_class</tt><em class="property"> None</em><a class="headerlink" href="#spyne.server.zeromq.ZmqMethodContext.service_class" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="spyne.server.zeromq.ZmqMethodContext.set_descriptor">
 <tt class="descname">set_descriptor</tt><big>(</big><em>descriptor</em><big>)</big><a class="headerlink" href="#spyne.server.zeromq.ZmqMethodContext.set_descriptor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</dd></dl>
+<dl class="method">
+<dt id="spyne.server.zeromq.ZmqMethodContext.set_out_protocol">
+<tt class="descname">set_out_protocol</tt><big>(</big><em>what</em><big>)</big><a class="headerlink" href="#spyne.server.zeromq.ZmqMethodContext.set_out_protocol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
-<dl class="data">
-<dt id="spyne.server.zeromq.context">
-<tt class="descclassname">spyne.server.zeromq.</tt><tt class="descname">context</tt><em class="property"> = &lt;zmq.sugar.context.Context object at 0x520bcf8&gt;</em><a class="headerlink" href="#spyne.server.zeromq.context" title="Permalink to this definition">¶</a></dt>
-<dd><p>The ZeroMQ context.</p>
 </dd></dl>
 
 </div>
@@ -1130,7 +653,7 @@ objects.</p>
 <p>The name comes from the &#8220;null modem connection&#8221;. Look it up.</p>
 <dl class="class">
 <dt id="spyne.server.null.NullServer">
-<em class="property">class </em><tt class="descclassname">spyne.server.null.</tt><tt class="descname">NullServer</tt><big>(</big><em>app</em>, <em>ostr=False</em><big>)</big><a class="reference internal" href="../modules/spyne/server/null.html#NullServer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.null.NullServer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">spyne.server.null.</tt><tt class="descname">NullServer</tt><big>(</big><em>app</em>, <em>ostr=False</em>, <em>locale='C'</em><big>)</big><a class="reference internal" href="../modules/spyne/server/null.html#NullServer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.null.NullServer" title="Permalink to this definition">¶</a></dt>
 <dd><p>A server that doesn&#8217;t support any transport at all &#8211; it&#8217;s implemented
 to test services without having to run a server.</p>
 <p>It implicitly uses the &#8216;sync&#8217; auxiliary processing mode.</p>
@@ -1165,8 +688,8 @@ is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</spa
 <dl class="method">
 <dt id="spyne.server.null.NullServer.get_out_object">
 <tt class="descname">get_out_object</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.null.NullServer.get_out_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the matched method using the <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt> to get
-<tt class="docutils literal"><span class="pre">ctx.out_object</span></tt>.</p>
+<dd><p>Calls the matched user function by passing it the <tt class="docutils literal"><span class="pre">ctx.in_object</span></tt>
+to set <tt class="docutils literal"><span class="pre">ctx.out_object</span></tt>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1177,8 +700,25 @@ is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</spa
 </dd></dl>
 
 <dl class="method">
+<dt id="spyne.server.null.NullServer.get_out_string_pull">
+<tt class="descname">get_out_string_pull</tt><big>(</big><em>ctx</em><big>)</big><a class="headerlink" href="#spyne.server.null.NullServer.get_out_string_pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the <tt class="docutils literal"><span class="pre">ctx.out_object</span></tt> to set <tt class="docutils literal"><span class="pre">ctx.out_document</span></tt> and later
+<tt class="docutils literal"><span class="pre">ctx.out_string</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.server.null.NullServer.get_out_string_push">
+<tt class="descname">get_out_string_push</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#spyne.server.null.NullServer.get_out_string_push" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="spyne.server.null.NullServer.get_wsdl">
 <tt class="descname">get_wsdl</tt><big>(</big><big>)</big><a class="reference internal" href="../modules/spyne/server/null.html#NullServer.get_wsdl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.server.null.NullServer.get_wsdl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="spyne.server.null.NullServer.run_push">
+<tt class="descname">run_push</tt><big>(</big><em>ret</em>, <em>p_ctx</em>, <em>others</em>, <em>gen</em><big>)</big><a class="headerlink" href="#spyne.server.null.NullServer.run_push" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1223,13 +763,13 @@ is used to set <tt class="docutils literal"><span class="pre">ctx.in_object</spa
         <li class="right" >
           <a href="client.html" title="Client Transports"
              >previous</a> |</li>
-        <li><a href="../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Spyne API Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright Spyne Contributors.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

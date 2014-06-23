@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>spyne.server.wsgi &mdash; spyne 2.10.9 documentation</title>
+    <title>spyne.server.wsgi &mdash; spyne 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.10.9',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.9 documentation" href="../../../index.html" />
+    <link rel="top" title="spyne 2.11.0 documentation" href="../../../index.html" />
     <link rel="up" title="spyne" href="../../spyne.html" /> 
   </head>
   <body>
@@ -38,7 +36,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" accesskey="U">spyne</a> &raquo;</li> 
       </ul>
@@ -91,7 +89,6 @@
 <span class="sd">logic.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
@@ -100,15 +97,22 @@
 <span class="kn">import</span> <span class="nn">itertools</span>
 
 <span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">unquote</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span> <span class="c"># Python 2</span>
     <span class="kn">from</span> <span class="nn">urlparse</span> <span class="kn">import</span> <span class="n">unquote</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span> <span class="c">#python 2.5</span>
-    <span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">unquote</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">werkzeug.formparser</span> <span class="kn">import</span> <span class="n">parse_form_data</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">import_error</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">parse_form_data</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">e</span>
+        <span class="k">raise</span> <span class="n">import_error</span>
+
+<span class="kn">from</span> <span class="nn">spyne.util.six</span> <span class="kn">import</span> <span class="n">string_types</span><span class="p">,</span> <span class="n">BytesIO</span><span class="p">,</span> <span class="n">PY3</span>
+<span class="k">if</span> <span class="n">PY3</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">http.cookies</span> <span class="kn">import</span> <span class="n">SimpleCookie</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">Cookie</span> <span class="kn">import</span> <span class="n">SimpleCookie</span>
+
 
 <span class="kn">from</span> <span class="nn">spyne.application</span> <span class="kn">import</span> <span class="n">get_fault_string_from_exception</span>
 <span class="kn">from</span> <span class="nn">spyne.auxproc</span> <span class="kn">import</span> <span class="n">process_contexts</span>
@@ -116,7 +120,6 @@
 <span class="kn">from</span> <span class="nn">spyne.model.binary</span> <span class="kn">import</span> <span class="n">File</span>
 <span class="kn">from</span> <span class="nn">spyne.model.fault</span> <span class="kn">import</span> <span class="n">Fault</span>
 <span class="kn">from</span> <span class="nn">spyne.protocol.http</span> <span class="kn">import</span> <span class="n">HttpRpc</span>
-<span class="kn">from</span> <span class="nn">spyne.protocol.http</span> <span class="kn">import</span> <span class="n">HttpPattern</span>
 <span class="kn">from</span> <span class="nn">spyne.server.http</span> <span class="kn">import</span> <span class="n">HttpBase</span>
 <span class="kn">from</span> <span class="nn">spyne.server.http</span> <span class="kn">import</span> <span class="n">HttpMethodContext</span>
 <span class="kn">from</span> <span class="nn">spyne.server.http</span> <span class="kn">import</span> <span class="n">HttpTransportContext</span>
@@ -127,18 +130,18 @@
 <span class="kn">from</span> <span class="nn">spyne.const.ansi_color</span> <span class="kn">import</span> <span class="n">END_COLOR</span>
 <span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_200</span>
 <span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_404</span>
-<span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_405</span>
 <span class="kn">from</span> <span class="nn">spyne.const.http</span> <span class="kn">import</span> <span class="n">HTTP_500</span>
 
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">spyne.protocol.soap.mime</span> <span class="kn">import</span> <span class="n">apply_mtom</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">apply_mtom</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">e</span>
 
+
 <span class="k">def</span> <span class="nf">_parse_qs</span><span class="p">(</span><span class="n">qs</span><span class="p">):</span>
-    <span class="n">pairs</span> <span class="o">=</span> <span class="p">[</span><span class="n">s2</span> <span class="k">for</span> <span class="n">s1</span> <span class="ow">in</span> <span class="n">qs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;&amp;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">s1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;;&#39;</span><span class="p">)]</span>
+    <span class="n">pairs</span> <span class="o">=</span> <span class="p">(</span><span class="n">s2</span> <span class="k">for</span> <span class="n">s1</span> <span class="ow">in</span> <span class="n">qs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;&amp;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">s1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;;&#39;</span><span class="p">))</span>
     <span class="n">retval</span> <span class="o">=</span> <span class="n">odict</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">name_value</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
@@ -190,8 +193,8 @@
 <div class="viewcode-block" id="WsgiTransportContext"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.wsgi.WsgiTransportContext">[docs]</a>    <span class="sd">&quot;&quot;&quot;The class that is used in the transport attribute of the</span>
 <span class="sd">    :class:`WsgiMethodContext` class.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transport</span><span class="p">,</span> <span class="n">req_env</span><span class="p">,</span> <span class="n">content_type</span><span class="p">):</span>
-        <span class="n">HttpTransportContext</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transport</span><span class="p">,</span> <span class="n">req_env</span><span class="p">,</span> <span class="n">content_type</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">transport</span><span class="p">,</span> <span class="n">req_env</span><span class="p">,</span> <span class="n">content_type</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">WsgiTransportContext</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">transport</span><span class="p">,</span> <span class="n">req_env</span><span class="p">,</span> <span class="n">content_type</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">req_env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">req</span>
         <span class="sd">&quot;&quot;&quot;WSGI Request environment&quot;&quot;&quot;</span>
@@ -199,21 +202,31 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">req_method</span> <span class="o">=</span> <span class="n">req_env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;REQUEST_METHOD&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
         <span class="sd">&quot;&quot;&quot;HTTP Request verb, as a convenience to users.&quot;&quot;&quot;</span>
 
+    <span class="k">def</span> <span class="nf">get_cookie</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<div class="viewcode-block" id="WsgiTransportContext.get_cookie"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.wsgi.WsgiTransportContext.get_cookie">[docs]</a>        <span class="n">cookie_string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">req_env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;HTTP_COOKIE&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cookie_string</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span>
 
-<span class="k">class</span> <span class="nc">WsgiMethodContext</span><span class="p">(</span><span class="n">HttpMethodContext</span><span class="p">):</span></div>
+        <span class="n">cookie</span> <span class="o">=</span> <span class="n">SimpleCookie</span><span class="p">()</span>
+        <span class="n">cookie</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">cookie_string</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cookie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+
+
+<span class="k">class</span> <span class="nc">WsgiMethodContext</span><span class="p">(</span><span class="n">HttpMethodContext</span><span class="p">):</span></div></div>
 <div class="viewcode-block" id="WsgiMethodContext"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.wsgi.WsgiMethodContext">[docs]</a>    <span class="sd">&quot;&quot;&quot;The WSGI-Specific method context. WSGI-Specific information is stored in</span>
 <span class="sd">    the transport attribute using the :class:`WsgiTransportContext` class.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transport</span><span class="p">,</span> <span class="n">req_env</span><span class="p">,</span> <span class="n">content_type</span><span class="p">):</span>
-        <span class="n">HttpMethodContext</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transport</span><span class="p">,</span> <span class="n">req_env</span><span class="p">,</span> <span class="n">content_type</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">WsgiMethodContext</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">transport</span><span class="p">,</span> <span class="n">req_env</span><span class="p">,</span> <span class="n">content_type</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">transport</span> <span class="o">=</span> <span class="n">WsgiTransportContext</span><span class="p">(</span><span class="n">transport</span><span class="p">,</span> <span class="n">req_env</span><span class="p">,</span> <span class="n">content_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transport</span> <span class="o">=</span> <span class="n">WsgiTransportContext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transport</span><span class="p">,</span> <span class="n">req_env</span><span class="p">,</span> <span class="n">content_type</span><span class="p">)</span>
         <span class="sd">&quot;&quot;&quot;Holds the WSGI-specific information&quot;&quot;&quot;</span>
 
 
 <span class="k">class</span> <span class="nc">WsgiApplication</span><span class="p">(</span><span class="n">HttpBase</span><span class="p">):</span></div>
-<div class="viewcode-block" id="WsgiApplication"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.wsgi.WsgiApplication">[docs]</a>    <span class="sd">&#39;&#39;&#39;A `PEP-3333 &lt;http://www.python.org/dev/peps/pep-3333&gt;`_</span>
+<div class="viewcode-block" id="WsgiApplication"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.wsgi.WsgiApplication">[docs]</a>    <span class="sd">&quot;&quot;&quot;A `PEP-3333 &lt;http://www.python.org/dev/peps/pep-3333&gt;`_</span>
 <span class="sd">    compliant callable class.</span>
 
 <span class="sd">    If you want to have a hard-coded URL in the wsdl document, this is how to do</span>
@@ -237,14 +250,16 @@
 
 <span class="sd">        * ``wsdl_exception``</span>
 <span class="sd">            Called right after an exception is thrown during wsdl generation.</span>
-<span class="sd">            The exception object is stored in ctx.transport.wsdl_error attribute.</span>
+<span class="sd">            The exception object is stored in ctx.transport.wsdl_error</span>
+<span class="sd">            attribute.</span>
 
 <span class="sd">        * ``wsgi_call``</span>
 <span class="sd">            Called first when the incoming http request is identified as a rpc</span>
 <span class="sd">            request.</span>
 
 <span class="sd">        * ``wsgi_return``</span>
-<span class="sd">            Called right before the output stream is returned to the WSGI handler.</span>
+<span class="sd">            Called right before the output stream is returned to the WSGI</span>
+<span class="sd">            handler.</span>
 
 <span class="sd">        * ``wsgi_exception``</span>
 <span class="sd">            Called right before returning the exception to the client.</span>
@@ -252,73 +267,38 @@
 <span class="sd">        * ``wsgi_close``</span>
 <span class="sd">            Called after the whole data has been returned to the client. It&#39;s</span>
 <span class="sd">            called both from success and error cases.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">chunked</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                <span class="n">max_content_length</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span>
-                <span class="n">block_length</span><span class="o">=</span><span class="mi">8</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">):</span>
-        <span class="n">HttpBase</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">chunked</span><span class="p">,</span> <span class="n">max_content_length</span><span class="p">,</span> <span class="n">block_length</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">chunked</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">max_content_length</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span>
+                                                         <span class="n">block_length</span><span class="o">=</span><span class="mi">8</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">WsgiApplication</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">chunked</span><span class="p">,</span> <span class="n">max_content_length</span><span class="p">,</span>
+                                                                   <span class="n">block_length</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_allowed_http_verbs</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">in_protocol</span><span class="o">.</span><span class="n">allowed_http_verbs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_verb_handlers</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s">&quot;GET&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_rpc</span><span class="p">,</span>
-            <span class="s">&quot;POST&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_rpc</span><span class="p">,</span>
-        <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_mtx_build_interface_document</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_wsdl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc</span><span class="o">.</span><span class="n">wsdl11</span><span class="o">.</span><span class="n">get_interface_document</span><span class="p">()</span>
 
-        <span class="c"># Initialize HTTP Patterns</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_http_patterns</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_map_adapter</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_mtx_build_map_adapter</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wsdl</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc</span><span class="o">.</span><span class="n">wsdl11</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_wsdl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc</span><span class="o">.</span><span class="n">wsdl11</span><span class="o">.</span><span class="n">get_interface_document</span><span class="p">()</span>
 
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">service_method_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="c"># p_ stands for primary</span>
-            <span class="n">p_service_class</span><span class="p">,</span> <span class="n">p_method_descriptor</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">patt</span> <span class="ow">in</span> <span class="n">p_method_descriptor</span><span class="o">.</span><span class="n">patterns</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">patt</span><span class="p">,</span> <span class="n">HttpPattern</span><span class="p">):</span>
-                    <span class="n">r</span> <span class="o">=</span> <span class="n">patt</span><span class="o">.</span><span class="n">as_werkzeug_rule</span><span class="p">()</span>
-
-                    <span class="c"># We are doing this here because we want to import Werkzeug</span>
-                    <span class="c"># as late as possible.</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_http_patterns</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                        <span class="kn">from</span> <span class="nn">werkzeug.routing</span> <span class="kn">import</span> <span class="n">Map</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_http_patterns</span> <span class="o">=</span> <span class="n">Map</span><span class="p">(</span><span class="n">host_matching</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_http_patterns</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">has_patterns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<div class="viewcode-block" id="WsgiApplication.has_patterns"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.wsgi.WsgiApplication.has_patterns">[docs]</a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_http_patterns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
-
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req_env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">,</span> <span class="n">wsgi_url</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></div>
-        <span class="sd">&#39;&#39;&#39;This method conforms to the WSGI spec for callable wsgi applications</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req_env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">,</span> <span class="n">wsgi_url</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This method conforms to the WSGI spec for callable wsgi applications</span>
 <span class="sd">        (PEP 333). It looks in environ[&#39;wsgi.input&#39;] for a fully formed rpc</span>
 <span class="sd">        message envelope, will deserialize the request parameters and call the</span>
 <span class="sd">        method on the object returned by the get_handler() method.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">url</span> <span class="o">=</span> <span class="n">wsgi_url</span>
-        <span class="n">verb</span> <span class="o">=</span> <span class="n">req_env</span><span class="p">[</span><span class="s">&#39;REQUEST_METHOD&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">url</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">url</span> <span class="o">=</span> <span class="n">reconstruct_url</span><span class="p">(</span><span class="n">req_env</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.wsdl&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__is_wsdl_request</span><span class="p">(</span><span class="n">req_env</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__handle_wsdl_request</span><span class="p">(</span><span class="n">req_env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
-
-        <span class="k">elif</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_allowed_http_verbs</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span>
-               <span class="n">verb</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allowed_http_verbs</span> <span class="ow">or</span> <span class="n">verb</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verb_handlers</span><span class="p">):</span>
-            <span class="n">start_response</span><span class="p">(</span><span class="n">HTTP_405</span><span class="p">,</span> <span class="p">[</span>
-                <span class="p">(</span><span class="s">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
-                <span class="p">(</span><span class="s">&#39;Allow&#39;</span><span class="p">,</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_allowed_http_verbs</span><span class="p">)),</span>
-            <span class="p">])</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">HTTP_405</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_wsdl_request</span><span class="p">(</span><span class="n">req_env</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_wsdl_request</span><span class="p">(</span><span class="n">req_env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verb_handlers</span><span class="p">[</span><span class="n">verb</span><span class="p">](</span><span class="n">req_env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_rpc</span><span class="p">(</span><span class="n">req_env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__is_wsdl_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req_env</span><span class="p">):</span>
-        <span class="c"># Get the wsdl for the service. Assume path_info matches pattern:</span>
+    <span class="k">def</span> <span class="nf">is_wsdl_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req_env</span><span class="p">):</span>
+<div class="viewcode-block" id="WsgiApplication.is_wsdl_request"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.wsgi.WsgiApplication.is_wsdl_request">[docs]</a>        <span class="c"># Get the wsdl for the service. Assume path_info matches pattern:</span>
         <span class="c"># /stuff/stuff/stuff/serviceName.wsdl or</span>
         <span class="c"># /stuff/stuff/stuff/serviceName/?wsdl</span>
 
@@ -330,8 +310,9 @@
             <span class="p">)</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__handle_wsdl_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req_env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
-        <span class="n">ctx</span> <span class="o">=</span> <span class="n">WsgiMethodContext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req_env</span><span class="p">,</span> <span class="s">&#39;text/xml; charset=utf-8&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">handle_wsdl_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req_env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span></div>
+<div class="viewcode-block" id="WsgiApplication.handle_wsdl_request"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.wsgi.WsgiApplication.handle_wsdl_request">[docs]</a>        <span class="n">ctx</span> <span class="o">=</span> <span class="n">WsgiMethodContext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req_env</span><span class="p">,</span> <span class="s">&#39;text/xml; charset=utf-8&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc</span><span class="o">.</span><span class="n">wsdl11</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">start_response</span><span class="p">(</span><span class="n">HTTP_404</span><span class="p">,</span>
@@ -354,7 +335,7 @@
                     <span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">wsdl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wsdl</span> <span class="o">=</span> \
                                         <span class="bp">self</span><span class="o">.</span><span class="n">doc</span><span class="o">.</span><span class="n">wsdl11</span><span class="o">.</span><span class="n">get_interface_document</span><span class="p">()</span>
 
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                 <span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">wsdl_error</span> <span class="o">=</span> <span class="n">e</span>
 
@@ -378,7 +359,7 @@
 
         <span class="k">return</span> <span class="p">[</span><span class="n">ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">wsdl</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">handle_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_ctx</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">handle_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_ctx</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span></div>
 <div class="viewcode-block" id="WsgiApplication.handle_error"><a class="viewcode-back" href="../../../reference/server.html#spyne.server.wsgi.WsgiApplication.handle_error">[docs]</a>        <span class="sd">&quot;&quot;&quot;Serialize errors to an iterable of strings and return them.</span>
 
 <span class="sd">        :param p_ctx: Primary (non-aux) context.</span>
@@ -389,10 +370,10 @@
 
         <span class="k">if</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">resp_code</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">p_ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">resp_code</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">out_protocol</span><span class="o">.</span><span class="n">fault_to_http_response_code</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+                <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_protocol</span><span class="o">.</span><span class="n">fault_to_http_response_code</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">get_out_string</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">)</span>
-        <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_string</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">out_string</span><span class="p">)]</span>
+        <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_string</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">out_string</span><span class="p">)]</span>
 
         <span class="n">p_ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">resp_headers</span><span class="p">[</span><span class="s">&#39;Content-Length&#39;</span><span class="p">]</span> <span class="o">=</span> \
                                                    <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">out_string</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
@@ -403,7 +384,7 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">process_contexts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">p_ctx</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span><span class="n">e</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="c"># Report but ignore any exceptions from auxiliary methods.</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
@@ -441,13 +422,14 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_out_string</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">)</span>
 
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_error</span> <span class="o">=</span> <span class="n">Fault</span><span class="p">(</span><span class="s">&#39;Server&#39;</span><span class="p">,</span> <span class="n">get_fault_string_from_exception</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_error</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_error</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_error</span><span class="p">(</span><span class="n">p_ctx</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_error</span><span class="p">,</span>
+                                                                 <span class="n">start_response</span><span class="p">)</span>
 
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">out_protocol</span><span class="p">,</span> <span class="n">HttpRpc</span><span class="p">)</span> <span class="ow">and</span> \
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">out_protocol</span><span class="p">,</span> <span class="n">HttpRpc</span><span class="p">)</span> <span class="ow">and</span> \
                                                <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_header_doc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">p_ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">resp_headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">out_header_doc</span><span class="p">)</span>
 
@@ -459,25 +441,25 @@
             <span class="c"># following test.</span>
             <span class="n">out_type_info</span> <span class="o">=</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">out_message</span><span class="o">.</span><span class="n">_type_info</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_type_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">out_object</span> <span class="o">=</span> <span class="p">[</span><span class="n">out_object</span><span class="p">]</span>
+                <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_object</span> <span class="o">=</span> <span class="p">[</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">out_object</span><span class="p">]</span>
 
             <span class="n">p_ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">resp_headers</span><span class="p">,</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_string</span> <span class="o">=</span> <span class="n">apply_mtom</span><span class="p">(</span>
                     <span class="n">p_ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">resp_headers</span><span class="p">,</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_string</span><span class="p">,</span>
                     <span class="n">p_ctx</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">out_message</span><span class="o">.</span><span class="n">_type_info</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
-                    <span class="n">out_object</span>
+                    <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_object</span><span class="p">,</span>
                 <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">fire_event</span><span class="p">(</span><span class="s">&#39;wsgi_return&#39;</span><span class="p">,</span> <span class="n">p_ctx</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunked</span><span class="p">:</span>
-            <span class="c"># the client has not set a content-length, so we delete it as the</span>
+            <span class="c"># the user has not set a content-length, so we delete it as the</span>
             <span class="c"># input is just an iterable.</span>
             <span class="k">if</span> <span class="s">&#39;Content-Length&#39;</span> <span class="ow">in</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">resp_headers</span><span class="p">:</span>
                 <span class="k">del</span> <span class="n">p_ctx</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">resp_headers</span><span class="p">[</span><span class="s">&#39;Content-Length&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">p_ctx</span><span class="o">.</span><span class="n">out_string</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">out_string</span><span class="p">)]</span>
 
-        <span class="c"># if the out_string is a generator function, this hack lets the user</span>
+        <span class="c"># if the out_string is a generator function, this hack makes the user</span>
         <span class="c"># code run until first yield, which lets it set response headers and</span>
         <span class="c"># whatnot before calling start_response. Is there a better way?</span>
         <span class="k">try</span><span class="p">:</span>
@@ -495,7 +477,7 @@
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
             <span class="n">retval_iter</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">p_ctx</span><span class="o">.</span><span class="n">out_string</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">first_chunk</span> <span class="o">=</span> <span class="n">retval_iter</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+                <span class="n">first_chunk</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">retval_iter</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
                 <span class="n">first_chunk</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
 
@@ -507,7 +489,7 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">process_contexts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">p_ctx</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="c"># Report but ignore any exceptions from auxiliary methods.</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
@@ -522,15 +504,14 @@
     <span class="k">def</span> <span class="nf">__reconstruct_wsgi_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">http_env</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Reconstruct http payload using information in the http header.&quot;&quot;&quot;</span>
 
-        <span class="c"># fyi, here&#39;s what the parse_header function returns:</span>
-        <span class="c"># &gt;&gt;&gt; import cgi; cgi.parse_header(&quot;text/xml; charset=utf-8&quot;)</span>
-        <span class="c"># (&#39;text/xml&#39;, {&#39;charset&#39;: &#39;utf-8&#39;})</span>
         <span class="n">content_type</span> <span class="o">=</span> <span class="n">http_env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;CONTENT_TYPE&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">content_type</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">charset</span> <span class="o">=</span> <span class="s">&#39;utf-8&#39;</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="n">charset</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">content_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c"># fyi, here&#39;s what the parse_header function returns:</span>
+            <span class="c"># &gt;&gt;&gt; import cgi; cgi.parse_header(&quot;text/xml; charset=utf-8&quot;)</span>
+            <span class="c"># (&#39;text/xml&#39;, {&#39;charset&#39;: &#39;utf-8&#39;})</span>
             <span class="n">content_type</span> <span class="o">=</span> <span class="n">cgi</span><span class="o">.</span><span class="n">parse_header</span><span class="p">(</span><span class="n">content_type</span><span class="p">)</span>
-            <span class="n">charset</span> <span class="o">=</span> <span class="n">content_type</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;charset&#39;</span><span class="p">,</span> <span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
+            <span class="n">charset</span> <span class="o">=</span> <span class="n">content_type</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;charset&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wsgi_input_to_iterable</span><span class="p">(</span><span class="n">http_env</span><span class="p">),</span> <span class="n">charset</span>
 
@@ -583,42 +564,43 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">wsgi_env</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_patterns</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">werkzeug.exceptions</span> <span class="kn">import</span> <span class="n">NotFound</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_adapter</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">generate_map_adapter</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+            <span class="c"># http://legacy.python.org/dev/peps/pep-0333/#url-reconstruction</span>
+            <span class="n">domain</span> <span class="o">=</span> <span class="n">wsgi_env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;HTTP_HOST&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">domain</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">domain</span> <span class="o">=</span> <span class="n">wsgi_env</span><span class="p">[</span><span class="s">&#39;SERVER_NAME&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">domain</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s">&#39;:&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="c"># strip port info</span>
 
-            <span class="k">try</span><span class="p">:</span>
-                <span class="c">#If PATH_INFO matches a url, Set method_request_string to mrs</span>
-                <span class="n">mrs</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_adapter</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
-                                            <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span><span class="p">[</span><span class="s">&quot;PATH_INFO&quot;</span><span class="p">],</span>
-                                            <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span><span class="p">[</span><span class="s">&quot;REQUEST_METHOD&quot;</span><span class="p">])</span>
-                <span class="n">ctx</span><span class="o">.</span><span class="n">method_request_string</span> <span class="o">=</span> <span class="n">mrs</span>
-
-            <span class="k">except</span> <span class="n">NotFound</span><span class="p">:</span>
-                <span class="k">pass</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_pattern</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span>
+                    <span class="n">wsgi_env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;REQUEST_METHOD&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
+                    <span class="n">wsgi_env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;PATH_INFO&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
+                    <span class="n">domain</span><span class="p">,</span>
+                <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">method_request_string</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">method_request_string</span> <span class="o">=</span> <span class="s">&#39;{</span><span class="si">%s</span><span class="s">}</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span>
                                     <span class="n">prot</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">get_tns</span><span class="p">(),</span>
-                                    <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span><span class="p">[</span><span class="s">&#39;PATH_INFO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                                    <span class="n">wsgi_env</span><span class="p">[</span><span class="s">&#39;PATH_INFO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">Method name: </span><span class="si">%r%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">LIGHT_GREEN</span><span class="p">,</span>
                                           <span class="n">ctx</span><span class="o">.</span><span class="n">method_request_string</span><span class="p">,</span> <span class="n">END_COLOR</span><span class="p">))</span>
 
-        <span class="n">ctx</span><span class="o">.</span><span class="n">in_header_doc</span> <span class="o">=</span> <span class="n">_get_http_headers</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span><span class="p">)</span>
-        <span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span> <span class="o">=</span> <span class="n">_parse_qs</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span><span class="p">[</span><span class="s">&#39;QUERY_STRING&#39;</span><span class="p">])</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">in_header_doc</span> <span class="o">=</span> <span class="n">_get_http_headers</span><span class="p">(</span><span class="n">wsgi_env</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span> <span class="o">=</span> <span class="n">_parse_qs</span><span class="p">(</span><span class="n">wsgi_env</span><span class="p">[</span><span class="s">&#39;QUERY_STRING&#39;</span><span class="p">])</span>
 
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
              <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span><span class="p">:</span>
-                 <span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                 <span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
              <span class="k">else</span><span class="p">:</span>
-                 <span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">]</span>
+                 <span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span><span class="p">[</span><span class="s">&#39;REQUEST_METHOD&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;POST&#39;</span><span class="p">,</span> <span class="s">&#39;PUT&#39;</span><span class="p">,</span> <span class="s">&#39;PATCH&#39;</span><span class="p">):</span>
-            <span class="n">stream</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">files</span> <span class="o">=</span> <span class="n">parse_form_data</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">in_document</span><span class="p">,</span>
-                                            <span class="n">stream_factory</span><span class="o">=</span><span class="n">prot</span><span class="o">.</span><span class="n">stream_factory</span><span class="p">)</span>
+        <span class="n">verb</span> <span class="o">=</span> <span class="n">wsgi_env</span><span class="p">[</span><span class="s">&#39;REQUEST_METHOD&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">verb</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;POST&#39;</span><span class="p">,</span> <span class="s">&#39;PUT&#39;</span><span class="p">,</span> <span class="s">&#39;PATCH&#39;</span><span class="p">):</span>
+            <span class="n">stream</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">files</span> <span class="o">=</span> <span class="n">parse_form_data</span><span class="p">(</span><span class="n">wsgi_env</span><span class="p">,</span>
+                                             <span class="n">stream_factory</span><span class="o">=</span><span class="n">prot</span><span class="o">.</span><span class="n">stream_factory</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">lists</span><span class="p">():</span>
                 <span class="n">val</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">[])</span>
@@ -641,6 +623,10 @@
                                                     <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">handle</span><span class="o">=</span><span class="n">v</span><span class="o">.</span><span class="n">stream</span><span class="p">))</span>
 
                 <span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">]:</span>
+                    <span class="n">ctx</span><span class="o">.</span><span class="n">in_body_doc</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">None</span><span class="p">]</span>
 </pre></div></div></div>
 
           </div>
@@ -657,14 +643,14 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../spyne.html" >spyne</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright Spyne Contributors.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

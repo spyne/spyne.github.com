@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Application Definition &mdash; spyne 2.10.9 documentation</title>
+    <title>Application Definition &mdash; spyne 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.10.9',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.9 documentation" href="../index.html" />
+    <link rel="top" title="spyne 2.11.0 documentation" href="../index.html" />
     <link rel="up" title="Spyne API Reference" href="index.html" />
     <link rel="next" title="Service Definition" href="service.html" />
     <link rel="prev" title="Fundamental Data Structures" href="base.html" /> 
@@ -46,7 +44,7 @@
         <li class="right" >
           <a href="base.html" title="Fundamental Data Structures"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Spyne API Reference</a> &raquo;</li> 
       </ul>
     </div>
@@ -96,7 +94,7 @@ definitions, input and output protocols.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>services</strong> &#8211; An iterable of ServiceBase subclasses that define
+<li><strong>services</strong> &#8211; An iterable of ServiceBase subclasses that defines
 the exposed services.</li>
 <li><strong>tns</strong> &#8211; The targetNamespace attribute of the exposed
 service.</li>
@@ -113,35 +111,36 @@ protocol. It&#8217;s only optional for NullServer transport.</li>
 </tr>
 </tbody>
 </table>
-<p>Supported events:</p>
-<ul>
+<dl class="docutils">
+<dt>Supported events:</dt>
+<dd><ul class="first last">
 <li><dl class="first docutils">
-<dt>method_call:</dt>
+<dt><tt class="docutils literal"><span class="pre">method_call</span></tt>:</dt>
 <dd><p class="first last">Called right before the service method is executed</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>method_return_object:</dt>
+<dt><tt class="docutils literal"><span class="pre">method_return_object</span></tt>:</dt>
 <dd><p class="first last">Called right after the service method is executed</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>method_exception_object:</dt>
+<dt><tt class="docutils literal"><span class="pre">method_exception_object</span></tt>:</dt>
 <dd><p class="first last">Called when an exception occurred in a service method, before the
 exception is serialized.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>method_context_created:</dt>
+<dt><tt class="docutils literal"><span class="pre">method_context_created</span></tt>:</dt>
 <dd><p class="first last">Called from the constructor of the MethodContext instance.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>method_context_closed:</dt>
+<dt><tt class="docutils literal"><span class="pre">method_context_closed</span></tt>:</dt>
 <dd><p class="first last">Called from the <tt class="docutils literal"><span class="pre">close()</span></tt> function of the MethodContext instance,
 which in turn is called by the transport when the response is fully
 sent to the client (or in the client case, the response is fully
@@ -150,6 +149,8 @@ received from server).</p>
 </dl>
 </li>
 </ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="spyne.application.Application.call_wrapper">
 <tt class="descname">call_wrapper</tt><big>(</big><em>ctx</em><big>)</big><a class="reference internal" href="../modules/spyne/application.html#Application.call_wrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.application.Application.call_wrapper" title="Permalink to this definition">¶</a></dt>
@@ -200,13 +201,13 @@ python errors to your clients in case of unhandled exceptions.</p>
         <li class="right" >
           <a href="base.html" title="Fundamental Data Structures"
              >previous</a> |</li>
-        <li><a href="../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Spyne API Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright Spyne Contributors.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

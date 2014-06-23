@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Miscellanous Spyne Utilities &mdash; spyne 2.10.9 documentation</title>
+    <title>Miscellanous Spyne Utilities &mdash; spyne 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.10.9',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.9 documentation" href="../index.html" />
+    <link rel="top" title="spyne 2.11.0 documentation" href="../index.html" />
     <link rel="up" title="Spyne API Reference" href="index.html" />
     <link rel="next" title="Running Tests" href="../tests.html" />
     <link rel="prev" title="Auxiliary Processors" href="auxproc.html" /> 
@@ -46,7 +44,7 @@
         <li class="right" >
           <a href="auxproc.html" title="Auxiliary Processors"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Spyne API Reference</a> &raquo;</li> 
       </ul>
     </div>
@@ -212,9 +210,11 @@ both input and output protocols.</p>
 </div>
 <div class="section" id="module-spyne.util.xml">
 <span id="xml-utilities"></span><h2>Xml Utilities<a class="headerlink" href="#module-spyne.util.xml" title="Permalink to this headline">¶</a></h2>
+<p>The <cite>spyne.util.xml</cite> module contains various Xml and Xml Schema related
+utility functions.</p>
 <dl class="function">
 <dt id="spyne.util.xml.get_object_as_xml">
-<tt class="descclassname">spyne.util.xml.</tt><tt class="descname">get_object_as_xml</tt><big>(</big><em>value</em>, <em>cls=None</em>, <em>root_tag_name=None</em>, <em>no_namespace=False</em><big>)</big><a class="reference internal" href="../modules/spyne/util/xml.html#get_object_as_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.util.xml.get_object_as_xml" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">spyne.util.xml.</tt><tt class="descname">get_object_as_xml</tt><big>(</big><em>inst</em>, <em>cls=None</em>, <em>root_tag_name=None</em>, <em>no_namespace=False</em><big>)</big><a class="reference internal" href="../modules/spyne/util/xml.html#get_object_as_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.util.xml.get_object_as_xml" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an ElementTree representation of a
 <a class="reference internal" href="model/complex.html#spyne.model.complex.ComplexModel" title="spyne.model.complex.ComplexModel"><tt class="xref py py-class docutils literal"><span class="pre">spyne.model.complex.ComplexModel</span></tt></a> subclass.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -222,9 +222,11 @@ both input and output protocols.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>value</strong> &#8211; The instance of the class to be serialized.</li>
-<li><strong>value</strong> &#8211; The root tag string to use. Defaults to the output of
+<li><strong>inst</strong> &#8211; The instance of the class to be serialized.</li>
+<li><strong>cls</strong> &#8211; The class to be serialized. Optional.</li>
+<li><strong>root_tag_name</strong> &#8211; The root tag string to use. Defaults to the output of
 <tt class="docutils literal"><span class="pre">value.__class__.get_type_name_ns()</span></tt>.</li>
+<li><strong>no_namespace</strong> &#8211; When true, namespace information is discarded.</li>
 </ul>
 </td>
 </tr>
@@ -273,8 +275,8 @@ ElementTree representation of the same class.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>value</strong> &#8211; The class the xml document represents.</li>
-<li><strong>value</strong> &#8211; The xml document to be deserialized.</li>
+<li><strong>elt</strong> &#8211; The xml document to be deserialized.</li>
+<li><strong>cls</strong> &#8211; The class the xml document represents.</li>
 </ul>
 </td>
 </tr>
@@ -332,13 +334,13 @@ Returns the corresponding native python object.</p>
         <li class="right" >
           <a href="auxproc.html" title="Auxiliary Processors"
              >previous</a> |</li>
-        <li><a href="../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Spyne API Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright Spyne Contributors.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Dictionary Document &mdash; spyne 2.10.9 documentation</title>
+    <title>Dictionary Document &mdash; spyne 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.10.9',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="../../static/jquery.js"></script>
     <script type="text/javascript" src="../../static/underscore.js"></script>
     <script type="text/javascript" src="../../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.9 documentation" href="../../index.html" />
+    <link rel="top" title="spyne 2.11.0 documentation" href="../../index.html" />
     <link rel="up" title="Protocols" href="index.html" />
     <link rel="next" title="Json" href="json.html" />
     <link rel="prev" title="Soap 1.1" href="soap.html" /> 
@@ -46,7 +44,7 @@
         <li class="right" >
           <a href="soap.html" title="Soap 1.1"
              accesskey="P">previous</a> |</li>
-        <li><a href="../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Protocols</a> &raquo;</li> 
       </ul>
@@ -58,7 +56,7 @@
 <li><a class="reference internal" href="#">Dictionary Document</a><ul>
 <li><a class="reference internal" href="#flattening">Flattening</a></li>
 <li><a class="reference internal" href="#cookies">Cookies</a></li>
-<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#wrappers">Wrappers</a></li>
 </ul>
 </li>
 </ul>
@@ -104,7 +102,7 @@ look at it.</p>
 <div class="section" id="flattening">
 <h2>Flattening<a class="headerlink" href="#flattening" title="Permalink to this headline">¶</a></h2>
 <p>Plain HTTP does not support hierarchical key-value stores. Spyne makes plain
-HTTP fake hierarchical dicts via two small hacks.</p>
+HTTP fake hierarchical dicts with two small hacks.</p>
 <p>Let&#8217;s look at the following object hierarchy:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Inner</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">Integer</span>
@@ -112,7 +110,7 @@ HTTP fake hierarchical dicts via two small hacks.</p>
 
 <span class="k">class</span> <span class="nc">Outer</span><span class="p">(</span><span class="n">ComplexModel</span><span class="p">):</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">Integer</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">SomeObject</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">Inner</span>
 </pre></div>
 </div>
 <p>For example, the <tt class="docutils literal"><span class="pre">Outer(a=1,</span> <span class="pre">b=Inner(c=2))</span></tt> object would correspond to the
@@ -120,14 +118,14 @@ following hierarchichal dict representation:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">2</span> <span class="p">}}</span>
 </pre></div>
 </div>
-<p>We do two hacks to deserialize the above object structure from a flat dict:</p>
+<p>Here&#8217;s what we do to deserialize the above object structure from a flat dict:</p>
 <ol class="arabic">
 <li><p class="first">Object hierarchies are flattened. e.g. the flat representation of the above
-dict is: <tt class="docutils literal"><span class="pre">{'a':</span> <span class="pre">1,</span> <span class="pre">'b_c':</span> <span class="pre">2}</span></tt>.</p>
+dict is: <tt class="docutils literal"><span class="pre">{'a':</span> <span class="pre">1,</span> <span class="pre">'b.c':</span> <span class="pre">2}</span></tt>.</p>
 </li>
 <li><p class="first">Arrays of objects are sent using variables with array indexes in square
 brackets. So the request with the following query object:</p>
-<div class="highlight-python"><pre>{'a': 1, 'b_d[0]': 1, 'b_d[1]': 2}}</pre>
+<div class="highlight-python"><pre>{'a': 1, 'b.d[0]': 1, 'b.d[1]': 2}}</pre>
 </div>
 </li>
 </ol>
@@ -146,7 +144,7 @@ brackets. So the request with the following query object:</p>
 </pre></div>
 </div>
 <p>Or the following object:</p>
-<div class="highlight-python"><pre>{'a': 1, 'b[0]_c': 1, 'b[1]_c': 2}}</pre>
+<div class="highlight-python"><pre>{'a': 1, 'b[0].c': 1, 'b[1].c': 2}}</pre>
 </div>
 <p>... would correspond to:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="p">[{</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}]}</span>
@@ -162,8 +160,8 @@ hierarchies with HTTP only when performance is not that much of a concern.</p>
 </div>
 <div class="section" id="cookies">
 <h2>Cookies<a class="headerlink" href="#cookies" title="Permalink to this headline">¶</a></h2>
-<p>Cookie headers are parsed and fields within HTTP requests are assigned to fields
-in the <tt class="docutils literal"><span class="pre">in_header</span></tt> class, if defined.</p>
+<p>Cookie headers are parsed and fields within HTTP requests are assigned to
+fields in the <tt class="docutils literal"><span class="pre">in_header</span></tt> class, if defined.</p>
 <p>It&#8217;s also possible to get the <tt class="docutils literal"><span class="pre">Cookie</span></tt> header intact by defining an
 <tt class="docutils literal"><span class="pre">in_header</span></tt> object with a field named <tt class="docutils literal"><span class="pre">Cookie</span></tt> (case sensitive).</p>
 <p>As an example, let&#8217;s assume the following HTTP request:</p>
@@ -171,11 +169,40 @@ in the <tt class="docutils literal"><span class="pre">in_header</span></tt> clas
 Cookie: v1=4;v2=8
 (...)</pre>
 </div>
-<p>The keys <tt class="docutils literal"><span class="pre">v1</span></tt> and <tt class="docutils literal"><span class="pre">v2</span></tt> are passed to the <tt class="docutils literal"><span class="pre">in_header</span></tt> class if it has
-fields named <tt class="docutils literal"><span class="pre">v1</span></tt> or <tt class="docutils literal"><span class="pre">v2</span></tt>.</p>
+<p>The keys <tt class="docutils literal"><span class="pre">v1</span></tt> and <tt class="docutils literal"><span class="pre">v2</span></tt> are passed to the instance of the <tt class="docutils literal"><span class="pre">in_header</span></tt>
+class if it has fields named <tt class="docutils literal"><span class="pre">v1</span></tt> or <tt class="docutils literal"><span class="pre">v2</span></tt>.</p>
 </div>
-<div class="section" id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="wrappers">
+<h2>Wrappers<a class="headerlink" href="#wrappers" title="Permalink to this headline">¶</a></h2>
+<p>Wrapper objects are an artifact of the Xml world, which don&#8217;t really make sense
+in other protocols. Let&#8217;s look at the following object:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">v</span> <span class="o">=</span> <span class="n">Permission</span><span class="p">(</span><span class="n">application</span><span class="o">=</span><span class="s">&#39;app&#39;</span><span class="p">,</span> <span class="n">feature</span><span class="o">=</span><span class="s">&#39;f1&#39;</span><span class="p">),</span>
+</pre></div>
+</div>
+<p>Here&#8217;s how it would be serialized to XML:</p>
+<div class="highlight-python"><pre>&lt;Permission&gt;
+  &lt;application&gt;app&lt;/application&gt;
+  &lt;feature&gt;f1&lt;/feature&gt;
+&lt;/Permission&gt;</pre>
+</div>
+<p>With <tt class="docutils literal"><span class="pre">ignore_wrappers=True</span></tt> (which is the default) This gets serialized to
+dict as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s">&quot;application&quot;</span><span class="p">:</span> <span class="s">&quot;app&quot;</span><span class="p">,</span>
+    <span class="s">&quot;feature&quot;</span><span class="p">:</span> <span class="s">&quot;f1&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>When <tt class="docutils literal"><span class="pre">ignore_wrappers=False</span></tt>, the same value/type combination would result in
+the following dict:</p>
+<div class="highlight-python"><pre>{"Permission": {
+    {
+        "application": "app",
+        "feature": "f1"
+    }
+},</pre>
+</div>
+<p>This could come in handy in case you don&#8217;t know what type to expect.</p>
 <dl class="class">
 <dt id="spyne.protocol.dictdoc.DictDocument">
 <em class="property">class </em><tt class="descclassname">spyne.protocol.dictdoc.</tt><tt class="descname">DictDocument</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>ignore_uncap=False</em>, <em>ignore_wrappers=True</em>, <em>complex_as=&lt;type 'dict'&gt;</em>, <em>ordered=False</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/dictdoc.html#DictDocument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.dictdoc.DictDocument" title="Permalink to this definition">¶</a></dt>
@@ -208,34 +235,34 @@ and output documents.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="spyne.protocol.dictdoc.FlatDictDocument">
-<em class="property">class </em><tt class="descclassname">spyne.protocol.dictdoc.</tt><tt class="descname">FlatDictDocument</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>ignore_uncap=False</em>, <em>ignore_wrappers=True</em>, <em>complex_as=&lt;type 'dict'&gt;</em>, <em>ordered=False</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/dictdoc.html#FlatDictDocument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.dictdoc.FlatDictDocument" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spyne.protocol.dictdoc.DictDocument" title="spyne.protocol.dictdoc.DictDocument"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol.dictdoc.DictDocument</span></tt></a></p>
-<p>This protocol contains logic for protocols that serialize and deserialize
-flat dictionaries. The only example as of now is Http.</p>
-<dl class="method">
-<dt id="spyne.protocol.dictdoc.FlatDictDocument.flat_dict_to_object">
-<tt class="descname">flat_dict_to_object</tt><big>(</big><em>doc</em>, <em>inst_class</em>, <em>validator=None</em>, <em>hier_delim='_'</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/dictdoc.html#FlatDictDocument.flat_dict_to_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.dictdoc.FlatDictDocument.flat_dict_to_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a flat dict to a native python object.</p>
-<p>See <tt class="xref py py-func docutils literal"><span class="pre">spyne.model.complex.ComplexModelBase.get_flat_type_info()</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="spyne.protocol.dictdoc.FlatDictDocument.object_to_flat_dict">
-<tt class="descname">object_to_flat_dict</tt><big>(</big><em>inst_cls</em>, <em>value</em>, <em>hier_delim='_'</em>, <em>retval=None</em>, <em>prefix=None</em>, <em>parent=None</em>, <em>subvalue_eater=&lt;function &lt;lambda&gt; at 0x4222500&gt;</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/dictdoc.html#FlatDictDocument.object_to_flat_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.dictdoc.FlatDictDocument.object_to_flat_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a native python object to a flat dict.</p>
-<p>See <tt class="xref py py-func docutils literal"><span class="pre">spyne.model.complex.ComplexModelBase.get_flat_type_info()</span></tt>.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="spyne.protocol.dictdoc.HierDictDocument">
 <em class="property">class </em><tt class="descclassname">spyne.protocol.dictdoc.</tt><tt class="descname">HierDictDocument</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>ignore_uncap=False</em>, <em>ignore_wrappers=True</em>, <em>complex_as=&lt;type 'dict'&gt;</em>, <em>ordered=False</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/dictdoc.html#HierDictDocument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.dictdoc.HierDictDocument" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#spyne.protocol.dictdoc.DictDocument" title="spyne.protocol.dictdoc.DictDocument"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol.dictdoc.DictDocument</span></tt></a></p>
 <p>This protocol contains logic for protocols that serialize and deserialize
 hierarchical dictionaries. Examples include: Json, MessagePack and Yaml.</p>
 <p>Implement <tt class="docutils literal"><span class="pre">create_in_document()</span></tt> and <tt class="docutils literal"><span class="pre">create_out_string()</span></tt> to use this.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spyne.protocol.dictdoc.SimpleDictDocument">
+<em class="property">class </em><tt class="descclassname">spyne.protocol.dictdoc.</tt><tt class="descname">SimpleDictDocument</tt><big>(</big><em>app=None</em>, <em>validator=None</em>, <em>mime_type=None</em>, <em>ignore_uncap=False</em>, <em>ignore_wrappers=True</em>, <em>complex_as=&lt;type 'dict'&gt;</em>, <em>ordered=False</em>, <em>hier_delim='.'</em>, <em>strict_arrays=False</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/dictdoc.html#SimpleDictDocument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.dictdoc.SimpleDictDocument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spyne.protocol.dictdoc.DictDocument" title="spyne.protocol.dictdoc.DictDocument"><tt class="xref py py-class docutils literal"><span class="pre">spyne.protocol.dictdoc.DictDocument</span></tt></a></p>
+<p>This protocol contains logic for protocols that serialize and deserialize
+flat dictionaries. The only example as of now is Http.</p>
+<dl class="method">
+<dt id="spyne.protocol.dictdoc.SimpleDictDocument.object_to_simple_dict">
+<tt class="descname">object_to_simple_dict</tt><big>(</big><em>inst_cls</em>, <em>value</em>, <em>retval=None</em>, <em>prefix=None</em>, <em>parent=None</em>, <em>subvalue_eater=&lt;function &lt;lambda&gt; at 0x4bc2de8&gt;</em>, <em>tags=None</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/dictdoc.html#SimpleDictDocument.object_to_simple_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.dictdoc.SimpleDictDocument.object_to_simple_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a native python object to a flat dict.</p>
+<p>See <tt class="xref py py-func docutils literal"><span class="pre">spyne.model.complex.ComplexModelBase.get_flat_type_info()</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spyne.protocol.dictdoc.SimpleDictDocument.simple_dict_to_object">
+<tt class="descname">simple_dict_to_object</tt><big>(</big><em>doc</em>, <em>inst_class</em>, <em>validator=None</em>, <em>req_enc=None</em><big>)</big><a class="reference internal" href="../../modules/spyne/protocol/dictdoc.html#SimpleDictDocument.simple_dict_to_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spyne.protocol.dictdoc.SimpleDictDocument.simple_dict_to_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a flat dict to a native python object.</p>
+<p>See <tt class="xref py py-func docutils literal"><span class="pre">spyne.model.complex.ComplexModelBase.get_flat_type_info()</span></tt>.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -262,14 +289,14 @@ hierarchical dictionaries. Examples include: Json, MessagePack and Yaml.</p>
         <li class="right" >
           <a href="soap.html" title="Soap 1.1"
              >previous</a> |</li>
-        <li><a href="../../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Spyne API Reference</a> &raquo;</li>
           <li><a href="index.html" >Protocols</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright Spyne Contributors.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

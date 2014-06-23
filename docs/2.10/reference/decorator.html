@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>RPC Decorators &mdash; spyne 2.10.9 documentation</title>
+    <title>RPC Decorators &mdash; spyne 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.10.9',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.9 documentation" href="../index.html" />
+    <link rel="top" title="spyne 2.11.0 documentation" href="../index.html" />
     <link rel="up" title="Spyne API Reference" href="index.html" />
     <link rel="next" title="Common Exceptions" href="error.html" />
     <link rel="prev" title="Service Definition" href="service.html" /> 
@@ -46,7 +44,7 @@
         <li class="right" >
           <a href="service.html" title="Service Definition"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Spyne API Reference</a> &raquo;</li> 
       </ul>
     </div>
@@ -100,18 +98,34 @@ decorator is a simple example of this.</p>
 <p>You should use the <a class="reference internal" href="server.html#spyne.server.null.NullServer" title="spyne.server.null.NullServer"><tt class="xref py py-class docutils literal"><span class="pre">spyne.server.null.NullServer</span></tt></a> transport if you
 want to call the methods directly. You can also use the &#8216;function&#8217; attribute
 of the returned object to call the function itself.</p>
+<p><tt class="docutils literal"><span class="pre">_operation_name</span></tt> vs <tt class="docutils literal"><span class="pre">_in_message_name</span></tt>:
+Soap clients(SoapUI, Savon, suds) will use the operation name as the
+function name. The name of the input message(_in_message_name) is irrelevant
+when interfacing in this manner; this is because the clients mostly wrap
+around it. However, the soap xml request only uses the input message when
+posting with the soap server; the other protocols only use the input message
+as well. <tt class="docutils literal"><span class="pre">_operation_name</span></tt> cannot be used with <tt class="docutils literal"><span class="pre">_in_message_name</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>_returns</strong> &#8211; Denotes The return type of the function. It can be a type or
-a sequence of types for functions that have multiple return values.</li>
+<li><strong>_returns</strong> &#8211; <p>Denotes The return type of the function. It can be a
+type or a sequence of types for functions that have multiple return</p>
+<blockquote>
+<div>values.</div></blockquote>
+</li>
 <li><strong>_in_header</strong> &#8211; A type or an iterable of types that that this method
 accepts as incoming header.</li>
 <li><strong>_out_header</strong> &#8211; A type or an iterable of types that that this method
 sends as outgoing header.</li>
-<li><strong>_in_message_name</strong> &#8211; The public name of the function.</li>
+<li><strong>_operation_name</strong> &#8211; The function&#8217;s soap operation name. The operation
+and SoapAction names will be equal to the value of <tt class="docutils literal"><span class="pre">_operation_name</span></tt>.
+Default is the function name.</li>
+<li><strong>_in_message_name</strong> &#8211; The public name of the function&#8217;s input message.
+Default is: <tt class="docutils literal"><span class="pre">_operation_name</span> <span class="pre">+</span> <span class="pre">REQUEST_SUFFIX</span></tt>.</li>
+<li><strong>_out_message_name</strong> &#8211; The public name of the function&#8217;s output message.
+Default is: <tt class="docutils literal"><span class="pre">_operation_name</span> <span class="pre">+</span> <span class="pre">RESPONSE_SUFFIX</span></tt>.</li>
 <li><strong>_in_variable_names</strong> &#8211; The public names of the function arguments. It&#8217;s
 a dict that maps argument names in the code to public ones.</li>
 <li><strong>_out_variable_name</strong> &#8211; The public name of the function response object.
@@ -124,17 +138,22 @@ or <tt class="docutils literal"><span class="pre">_returns</span></tt> is not a 
 <li><strong>_body_style</strong> &#8211; One of <tt class="docutils literal"><span class="pre">('bare',</span> <span class="pre">'wrapped')</span></tt>. Default: <tt class="docutils literal"><span class="pre">'wrapped'</span></tt>.
 In wrapped mode, wraps response objects in an additional class.</li>
 <li><strong>_soap_body_style</strong> &#8211; One of (&#8216;rpc&#8217;, &#8216;document&#8217;). Default <tt class="docutils literal"><span class="pre">'document'</span></tt>.
-<tt class="docutils literal"><span class="pre">_soap_body_style='document'</span></tt> is an alias for <tt class="docutils literal"><span class="pre">_body_style='wrapped'</span></tt>.
-<tt class="docutils literal"><span class="pre">_soap_body_style='rpc'</span></tt> is an alias for <tt class="docutils literal"><span class="pre">_body_style='bare'</span></tt>.</li>
+<tt class="docutils literal"><span class="pre">_soap_body_style='document'</span></tt> is an alias for
+<tt class="docutils literal"><span class="pre">_body_style='wrapped'</span></tt>. <tt class="docutils literal"><span class="pre">_soap_body_style='rpc'</span></tt> is an alias for
+<tt class="docutils literal"><span class="pre">_body_style='bare'</span></tt>.</li>
 <li><strong>_port_type</strong> &#8211; Soap port type string.</li>
 <li><strong>_no_ctx</strong> &#8211; Don&#8217;t pass implicit ctx object to the user method.</li>
+<li><strong>_no_self</strong> &#8211; This method does not get an implicit &#8216;self&#8217; argument
+(before any other argument, including ctx).</li>
 <li><strong>_udp</strong> &#8211; Short for UserDefinedProperties, you can use this to mark the
 method with arbitrary metadata.</li>
 <li><strong>_aux</strong> &#8211; The auxiliary backend to run this method. <tt class="docutils literal"><span class="pre">None</span></tt> if primary.</li>
-<li><strong>_throws</strong> &#8211; A sequence of exceptions that this function can throw. No
-real functionality besides publishing this information in interface
-documents.</li>
+<li><strong>_throws</strong> &#8211; A sequence of exceptions that this function can throw. This
+has no real functionality besides publishing this information in
+interface documents.</li>
 <li><strong>_args</strong> &#8211; the name of the arguments to expose.</li>
+<li><strong>_service_class</strong> &#8211; A <tt class="xref py py-class docutils literal"><span class="pre">ServiceBase</span></tt> subclass, if you feel like
+overriding it.</li>
 </ul>
 </td>
 </tr>
@@ -176,13 +195,13 @@ existing functions that can&#8217;t be changed.</p>
         <li class="right" >
           <a href="service.html" title="Service Definition"
              >previous</a> |</li>
-        <li><a href="../index.html">spyne 2.10.9 documentation</a> &raquo;</li>
+        <li><a href="../index.html">spyne 2.11.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Spyne API Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright Spyne Contributors.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

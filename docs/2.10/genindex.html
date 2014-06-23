@@ -1,7 +1,4 @@
 
-
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -10,15 +7,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Index &mdash; spyne 2.10.9 documentation</title>
+    <title>Index &mdash; spyne 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '2.10.9',
+        URL_ROOT:    './',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +24,7 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="spyne 2.10.9 documentation" href="index.html" /> 
+    <link rel="top" title="spyne 2.11.0 documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,7 +36,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">spyne 2.10.9 documentation</a> &raquo;</li> 
+        <li><a href="index.html">spyne 2.11.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -107,19 +104,15 @@
   </dt>
 
       
-  <dt><a href="reference/model/index.html#spyne.model.ModelBase.Attributes.__metaclass__">__metaclass__ (spyne.model.ModelBase.Attributes attribute)</a>
-  </dt>
-
-      
   <dt><a href="reference/model/index.html#spyne.model.ModelBase.__namespace__">__namespace__ (spyne.model.ModelBase attribute)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="reference/model/index.html#spyne.model.SimpleModel.__new__">__new__() (spyne.model.SimpleModel static method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="reference/model/index.html#spyne.model.ModelBase.__orig__">__orig__ (spyne.model.ModelBase attribute)</a>
   </dt>
@@ -139,27 +132,13 @@
   </dt>
 
       
-  <dt><a href="reference/model/complex.html#spyne.model.complex.Alias">Alias (class in spyne.model.complex)</a>
+  <dt><a href="reference/interface.html#spyne.interface.Interface.add_method">add_method() (spyne.interface.Interface method)</a>
   </dt>
 
       
-  <dt><a href="reference/model/complex.html#spyne.model.complex.ComplexModelBase.alias">alias() (spyne.model.complex.ComplexModelBase static method)</a>
+  <dt><a href="reference/protocol/http.html#spyne.protocol.http.HttpPattern.address">address (spyne.protocol.http.HttpPattern attribute)</a>
   </dt>
 
-      
-  <dt><a href="reference/protocol/http.html#spyne.protocol.http.HttpRpc.allowed_http_verbs">allowed_http_verbs (spyne.protocol.http.HttpRpc attribute)</a>
-  </dt>
-
-      <dd><dl>
-        
-  <dt><a href="reference/protocol/soap.html#spyne.protocol.soap.soap11.Soap11.allowed_http_verbs">(spyne.protocol.soap.soap11.Soap11 attribute)</a>
-  </dt>
-
-        
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlDocument.allowed_http_verbs">(spyne.protocol.xml._base.XmlDocument attribute)</a>
-  </dt>
-
-      </dl></dd>
       
   <dt><a href="reference/model/primitive.html#spyne.model.primitive.AnyDict">AnyDict (class in spyne.model.primitive)</a>
   </dt>
@@ -180,12 +159,12 @@
   <dt><a href="reference/base.html#spyne.MethodContext.app">app (spyne.MethodContext attribute)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="reference/model/index.html#spyne.model.ModelBase.Annotations.appinfo">appinfo (spyne.model.ModelBase.Annotations attribute)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="reference/application.html#spyne.application.Application">Application (class in spyne.application)</a>
   </dt>
@@ -203,7 +182,7 @@
   </dt>
 
       
-  <dt><a href="reference/model/primitive.html#spyne.model.primitive.DateTime.Attributes.as_time_zone">as_time_zone (spyne.model.primitive.DateTime.Attributes attribute)</a>
+  <dt><a href="reference/model/primitive.html#spyne.model.primitive.DateTime.Attributes.as_timezone">as_timezone (spyne.model.primitive.DateTime.Attributes attribute)</a>
   </dt>
 
       
@@ -293,6 +272,10 @@
 
       </dl></dd>
       
+  <dt><a href="reference/model/complex.html#spyne.model.complex.ComplexModelBase.Attributes.child_attrs">child_attrs (spyne.model.complex.ComplexModelBase.Attributes attribute)</a>
+  </dt>
+
+      
   <dt><a href="reference/base.html#spyne.MethodDescriptor.class_key">class_key (spyne.MethodDescriptor attribute)</a>
   </dt>
 
@@ -333,9 +316,15 @@
   </dt>
 
       
-  <dt><a href="reference/server.html#spyne.server.zeromq.context">context (in module spyne.server.zeromq)</a>
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiMethodContext.copy">copy() (spyne.server.wsgi.WsgiMethodContext method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="reference/server.html#spyne.server.zeromq.ZmqMethodContext.copy">(spyne.server.zeromq.ZmqMethodContext method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="reference/protocol/base.html#spyne.protocol._base.ProtocolBase.create_in_document">create_in_document() (spyne.protocol._base.ProtocolBase method)</a>
   </dt>
@@ -361,10 +350,6 @@
   <dt><a href="reference/protocol/soap.html#spyne.protocol.soap.soap11.Soap11.create_in_document">(spyne.protocol.soap.soap11.Soap11 method)</a>
   </dt>
 
-        
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlDocument.create_in_document">(spyne.protocol.xml._base.XmlDocument method)</a>
-  </dt>
-
       </dl></dd>
       
   <dt><a href="reference/protocol/base.html#spyne.protocol._base.ProtocolBase.create_out_string">create_out_string() (spyne.protocol._base.ProtocolBase method)</a>
@@ -379,11 +364,11 @@
   <dt><a href="reference/protocol/json.html#spyne.protocol.json.JsonDocument.create_out_string">(spyne.protocol.json.JsonDocument method)</a>
   </dt>
 
-        
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlDocument.create_out_string">(spyne.protocol.xml._base.XmlDocument method)</a>
+      </dl></dd>
+      
+  <dt><a href="reference/server.html#spyne.server.zeromq.ZeroMQThreadPoolServer.create_worker">create_worker() (spyne.server.zeromq.ZeroMQThreadPoolServer method)</a>
   </dt>
 
-      </dl></dd>
       
   <dt><a href="reference/model/complex.html#spyne.model.complex.ComplexModelBase.customize">customize() (spyne.model.complex.ComplexModelBase class method)</a>
   </dt>
@@ -391,6 +376,14 @@
       <dd><dl>
         
   <dt><a href="reference/model/index.html#spyne.model.ModelBase.customize">(spyne.model.ModelBase class method)</a>
+  </dt>
+
+        
+  <dt><a href="reference/model/index.html#spyne.model.SimpleModel.customize">(spyne.model.SimpleModel class method)</a>
+  </dt>
+
+        
+  <dt><a href="reference/model/primitive.html#spyne.model.primitive.AnyDict.customize">(spyne.model.primitive.AnyDict class method)</a>
   </dt>
 
       </dl></dd>
@@ -406,6 +399,10 @@
 
       
   <dt><a href="reference/model/primitive.html#spyne.model.primitive.Date.Attributes">Date.Attributes (class in spyne.model.primitive)</a>
+  </dt>
+
+      
+  <dt><a href="reference/protocol/base.html#spyne.protocol._base.ProtocolBase.date_from_string_iso">date_from_string_iso() (spyne.protocol._base.ProtocolBase method)</a>
   </dt>
 
       
@@ -429,6 +426,10 @@
   </dt>
 
       
+  <dt><a href="reference/model/complex.html#spyne.model.complex.ComplexModelBase.Attributes.declare_order">declare_order (spyne.model.complex.ComplexModelBase.Attributes attribute)</a>
+  </dt>
+
+      
   <dt><a href="reference/protocol/base.html#spyne.protocol._base.ProtocolBase.decompose_incoming_envelope">decompose_incoming_envelope() (spyne.protocol._base.ProtocolBase method)</a>
   </dt>
 
@@ -446,30 +447,6 @@
   </dt>
 
         
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlDocument.decompose_incoming_envelope">(spyne.protocol.xml._base.XmlDocument method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.django.DjangoApplication.decompose_incoming_envelope">(spyne.server.django.DjangoApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.django.StreamingDjangoApplication.decompose_incoming_envelope">(spyne.server.django.StreamingDjangoApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.PyramidApplication.decompose_incoming_envelope">(spyne.server.pyramid.PyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.StreamingPyramidApplication.decompose_incoming_envelope">(spyne.server.pyramid.StreamingPyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedHttpTransport.decompose_incoming_envelope">(spyne.server.twisted.TwistedHttpTransport static method)</a>
-  </dt>
-
-        
   <dt><a href="reference/server.html#spyne.server.wsgi.WsgiApplication.decompose_incoming_envelope">(spyne.server.wsgi.WsgiApplication method)</a>
   </dt>
 
@@ -478,20 +455,18 @@
   <dt><a href="reference/model/index.html#spyne.model.ModelBase.Attributes.default">default (spyne.model.ModelBase.Attributes attribute)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="reference/protocol/http.html#spyne.protocol.http.HttpRpc.default_binary_encoding">default_binary_encoding (spyne.protocol.http.HttpRpc attribute)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlDocument.default_binary_encoding">(spyne.protocol.xml._base.XmlDocument attribute)</a>
+      
+  <dt><a href="reference/model/index.html#spyne.model.ModelBase.Attributes.default_factory">default_factory (spyne.model.ModelBase.Attributes attribute)</a>
   </dt>
 
-      </dl></dd>
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.delEntity">delEntity() (spyne.server.twisted.TwistedWebResource method)</a>
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiMethodContext.default_transport_context">default_transport_context (spyne.server.wsgi.WsgiMethodContext attribute)</a>
   </dt>
 
       
@@ -521,10 +496,6 @@
   <dt><a href="reference/protocol/soap.html#spyne.protocol.soap.soap11.Soap11.deserialize">(spyne.protocol.soap.soap11.Soap11 method)</a>
   </dt>
 
-        
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlDocument.deserialize">(spyne.protocol.xml._base.XmlDocument method)</a>
-  </dt>
-
       </dl></dd>
       
   <dt><a href="reference/util.html#spyne.util.protocol.deserialize_request_string">deserialize_request_string() (in module spyne.util.protocol)</a>
@@ -536,10 +507,6 @@
 
       
   <dt><a href="reference/protocol/dictdoc.html#spyne.protocol.dictdoc.DictDocument">DictDocument (class in spyne.protocol.dictdoc)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#spyne.server.django.DjangoApplication">DjangoApplication (class in spyne.server.django)</a>
   </dt>
 
       
@@ -567,11 +534,11 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/model/primitive.html#spyne.model.primitive.Unicode.Attributes.encoding">encoding (spyne.model.primitive.Unicode.Attributes attribute)</a>
+  <dt><a href="reference/model/index.html#spyne.model.ModelBase.Attributes.empty_is_none">empty_is_none (spyne.model.ModelBase.Attributes attribute)</a>
   </dt>
 
       
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.entityType">entityType (spyne.server.twisted.TwistedWebResource attribute)</a>
+  <dt><a href="reference/model/primitive.html#spyne.model.primitive.Unicode.Attributes.encoding">encoding (spyne.model.primitive.Unicode.Attributes attribute)</a>
   </dt>
 
       
@@ -641,17 +608,13 @@
   </dt>
 
       
-  <dt><a href="reference/base.html#spyne.EventManager.fire_event">fire_event() (spyne.EventManager method)</a>
-  </dt>
-
-      
-  <dt><a href="reference/protocol/dictdoc.html#spyne.protocol.dictdoc.FlatDictDocument.flat_dict_to_object">flat_dict_to_object() (spyne.protocol.dictdoc.FlatDictDocument method)</a>
+  <dt><a href="reference/protocol/base.html#spyne.protocol._base.ProtocolBase.file_to_string">file_to_string() (spyne.protocol._base.ProtocolBase method)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/protocol/dictdoc.html#spyne.protocol.dictdoc.FlatDictDocument">FlatDictDocument (class in spyne.protocol.dictdoc)</a>
+  <dt><a href="reference/base.html#spyne.EventManager.fire_event">fire_event() (spyne.EventManager method)</a>
   </dt>
 
       
@@ -678,10 +641,6 @@
       </dl></dd>
       
   <dt><a href="reference/model/primitive.html#spyne.model.primitive.Decimal.Attributes.fraction_digits">fraction_digits (spyne.model.primitive.Decimal.Attributes attribute)</a>
-  </dt>
-
-      
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlDocument.from_element">from_element() (spyne.protocol.xml._base.XmlDocument method)</a>
   </dt>
 
       
@@ -732,27 +691,7 @@
 
       <dd><dl>
         
-  <dt><a href="reference/server.html#spyne.server.django.DjangoApplication.generate_contexts">(spyne.server.django.DjangoApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.django.StreamingDjangoApplication.generate_contexts">(spyne.server.django.StreamingDjangoApplication method)</a>
-  </dt>
-
-        
   <dt><a href="reference/server.html#spyne.server.null.NullServer.generate_contexts">(spyne.server.null.NullServer method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.PyramidApplication.generate_contexts">(spyne.server.pyramid.PyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.StreamingPyramidApplication.generate_contexts">(spyne.server.pyramid.StreamingPyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedHttpTransport.generate_contexts">(spyne.server.twisted.TwistedHttpTransport method)</a>
   </dt>
 
         
@@ -765,27 +704,9 @@
 
       </dl></dd>
       
-  <dt><a href="reference/server.html#spyne.server.django.DjangoApplication.generate_map_adapter">generate_map_adapter() (spyne.server.django.DjangoApplication method)</a>
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiApplication.generate_map_adapter">generate_map_adapter() (spyne.server.wsgi.WsgiApplication method)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="reference/server.html#spyne.server.django.StreamingDjangoApplication.generate_map_adapter">(spyne.server.django.StreamingDjangoApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.PyramidApplication.generate_map_adapter">(spyne.server.pyramid.PyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.StreamingPyramidApplication.generate_map_adapter">(spyne.server.pyramid.StreamingPyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiApplication.generate_map_adapter">(spyne.server.wsgi.WsgiApplication method)</a>
-  </dt>
-
-      </dl></dd>
       
   <dt><a href="reference/protocol/base.html#spyne.protocol._base.ProtocolBase.generate_method_contexts">generate_method_contexts() (spyne.protocol._base.ProtocolBase method)</a>
   </dt>
@@ -800,6 +721,10 @@
 
       
   <dt><a href="reference/interface.html#spyne.interface.Interface.get_class_instance">get_class_instance() (spyne.interface.Interface method)</a>
+  </dt>
+
+      
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiTransportContext.get_cookie">get_cookie() (spyne.server.wsgi.WsgiTransportContext method)</a>
   </dt>
 
       
@@ -826,27 +751,7 @@
   </dt>
 
         
-  <dt><a href="reference/server.html#spyne.server.django.DjangoApplication.get_in_object">(spyne.server.django.DjangoApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.django.StreamingDjangoApplication.get_in_object">(spyne.server.django.StreamingDjangoApplication method)</a>
-  </dt>
-
-        
   <dt><a href="reference/server.html#spyne.server.null.NullServer.get_in_object">(spyne.server.null.NullServer method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.PyramidApplication.get_in_object">(spyne.server.pyramid.PyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.StreamingPyramidApplication.get_in_object">(spyne.server.pyramid.StreamingPyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedHttpTransport.get_in_object">(spyne.server.twisted.TwistedHttpTransport method)</a>
   </dt>
 
         
@@ -898,27 +803,7 @@
   </dt>
 
         
-  <dt><a href="reference/server.html#spyne.server.django.DjangoApplication.get_out_object">(spyne.server.django.DjangoApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.django.StreamingDjangoApplication.get_out_object">(spyne.server.django.StreamingDjangoApplication method)</a>
-  </dt>
-
-        
   <dt><a href="reference/server.html#spyne.server.null.NullServer.get_out_object">(spyne.server.null.NullServer method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.PyramidApplication.get_out_object">(spyne.server.pyramid.PyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.StreamingPyramidApplication.get_out_object">(spyne.server.pyramid.StreamingPyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedHttpTransport.get_out_object">(spyne.server.twisted.TwistedHttpTransport method)</a>
   </dt>
 
         
@@ -927,6 +812,18 @@
 
         
   <dt><a href="reference/server.html#spyne.server.zeromq.ZeroMQServer.get_out_object">(spyne.server.zeromq.ZeroMQServer method)</a>
+  </dt>
+
+      </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiMethodContext.get_out_protocol">get_out_protocol() (spyne.server.wsgi.WsgiMethodContext method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="reference/server.html#spyne.server.zeromq.ZmqMethodContext.get_out_protocol">(spyne.server.zeromq.ZmqMethodContext method)</a>
   </dt>
 
       </dl></dd>
@@ -940,27 +837,7 @@
   </dt>
 
         
-  <dt><a href="reference/server.html#spyne.server.django.DjangoApplication.get_out_string">(spyne.server.django.DjangoApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.django.StreamingDjangoApplication.get_out_string">(spyne.server.django.StreamingDjangoApplication method)</a>
-  </dt>
-
-        
   <dt><a href="reference/server.html#spyne.server.null.NullServer.get_out_string">(spyne.server.null.NullServer method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.PyramidApplication.get_out_string">(spyne.server.pyramid.PyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.StreamingPyramidApplication.get_out_string">(spyne.server.pyramid.StreamingPyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedHttpTransport.get_out_string">(spyne.server.twisted.TwistedHttpTransport method)</a>
   </dt>
 
         
@@ -973,11 +850,41 @@
 
       </dl></dd>
       
+  <dt><a href="reference/server.html#spyne.server._base.ServerBase.get_out_string_pull">get_out_string_pull() (spyne.server._base.ServerBase method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="reference/server.html#spyne.server.null.NullServer.get_out_string_pull">(spyne.server.null.NullServer method)</a>
+  </dt>
+
+        
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiApplication.get_out_string_pull">(spyne.server.wsgi.WsgiApplication method)</a>
+  </dt>
+
+        
+  <dt><a href="reference/server.html#spyne.server.zeromq.ZeroMQServer.get_out_string_pull">(spyne.server.zeromq.ZeroMQServer method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="reference/server.html#spyne.server.null.NullServer.get_out_string_push">get_out_string_push() (spyne.server.null.NullServer method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiApplication.get_out_string_push">(spyne.server.wsgi.WsgiApplication method)</a>
+  </dt>
+
+        
+  <dt><a href="reference/server.html#spyne.server.zeromq.ZeroMQServer.get_out_string_push">(spyne.server.zeromq.ZeroMQServer method)</a>
+  </dt>
+
+      </dl></dd>
+      
   <dt><a href="reference/util.html#spyne.util.xml.get_schema_documents">get_schema_documents() (in module spyne.util.xml)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="reference/interface.html#spyne.interface.wsdl.wsdl11.Wsdl11.get_schema_info">get_schema_info() (spyne.interface.wsdl.wsdl11.Wsdl11 method)</a>
   </dt>
@@ -1000,10 +907,6 @@
       </dl></dd>
       
   <dt><a href="reference/model/complex.html#spyne.model.complex.ComplexModelBase.get_serialization_instance">get_serialization_instance() (spyne.model.complex.ComplexModelBase class method)</a>
-  </dt>
-
-      
-  <dt><a href="reference/model/complex.html#spyne.model.complex.ComplexModelBase.get_simple_type_info">get_simple_type_info() (spyne.model.complex.ComplexModelBase static method)</a>
   </dt>
 
       
@@ -1039,26 +942,6 @@
   </dt>
 
       
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.getChild">getChild() (spyne.server.twisted.TwistedWebResource method)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.getChildForRequest">getChildForRequest() (spyne.server.twisted.TwistedWebResource method)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.getChildWithDefault">getChildWithDefault() (spyne.server.twisted.TwistedWebResource method)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.getDynamicEntity">getDynamicEntity() (spyne.server.twisted.TwistedWebResource method)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.getStaticEntity">getStaticEntity() (spyne.server.twisted.TwistedWebResource method)</a>
-  </dt>
-
-      
   <dt><a href="reference/model/primitive.html#spyne.model.primitive.Date.Attributes.gt">gt (spyne.model.primitive.Date.Attributes attribute)</a>
   </dt>
 
@@ -1083,89 +966,43 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/server.html#spyne.server.django.DjangoApplication.handle_error">handle_error() (spyne.server.django.DjangoApplication method)</a>
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiApplication.handle_error">handle_error() (spyne.server.wsgi.WsgiApplication method)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="reference/server.html#spyne.server.django.StreamingDjangoApplication.handle_error">(spyne.server.django.StreamingDjangoApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.PyramidApplication.handle_error">(spyne.server.pyramid.PyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.StreamingPyramidApplication.handle_error">(spyne.server.pyramid.StreamingPyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.handle_error">(spyne.server.twisted.TwistedWebResource method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiApplication.handle_error">(spyne.server.wsgi.WsgiApplication method)</a>
-  </dt>
-
-      </dl></dd>
       
-  <dt><a href="reference/server.html#spyne.server.django.DjangoApplication.handle_rpc">handle_rpc() (spyne.server.django.DjangoApplication method)</a>
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiApplication.handle_rpc">handle_rpc() (spyne.server.wsgi.WsgiApplication method)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="reference/server.html#spyne.server.django.StreamingDjangoApplication.handle_rpc">(spyne.server.django.StreamingDjangoApplication method)</a>
+      
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiApplication.handle_wsdl_request">handle_wsdl_request() (spyne.server.wsgi.WsgiApplication method)</a>
   </dt>
 
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.PyramidApplication.handle_rpc">(spyne.server.pyramid.PyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.StreamingPyramidApplication.handle_rpc">(spyne.server.pyramid.StreamingPyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.handle_rpc">(spyne.server.twisted.TwistedWebResource method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiApplication.handle_rpc">(spyne.server.wsgi.WsgiApplication method)</a>
-  </dt>
-
-      </dl></dd>
       
   <dt><a href="reference/interface.html#spyne.interface.Interface.has_class">has_class() (spyne.interface.Interface method)</a>
   </dt>
 
       
-  <dt><a href="reference/server.html#spyne.server.django.DjangoApplication.has_patterns">has_patterns (spyne.server.django.DjangoApplication attribute)</a>
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiApplication.has_patterns">has_patterns (spyne.server.wsgi.WsgiApplication attribute)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="reference/server.html#spyne.server.django.StreamingDjangoApplication.has_patterns">(spyne.server.django.StreamingDjangoApplication attribute)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.PyramidApplication.has_patterns">(spyne.server.pyramid.PyramidApplication attribute)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.StreamingPyramidApplication.has_patterns">(spyne.server.pyramid.StreamingPyramidApplication attribute)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiApplication.has_patterns">(spyne.server.wsgi.WsgiApplication attribute)</a>
-  </dt>
-
-      </dl></dd>
       
-  <dt><a href="reference/protocol/dictdoc.html#spyne.protocol.dictdoc.HierDictDocument">HierDictDocument (class in spyne.protocol.dictdoc)</a>
+  <dt><a href="reference/protocol/http.html#spyne.protocol.http.HttpPattern.hello">hello() (spyne.protocol.http.HttpPattern method)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="reference/protocol/dictdoc.html#spyne.protocol.dictdoc.HierDictDocument">HierDictDocument (class in spyne.protocol.dictdoc)</a>
+  </dt>
+
+      
+  <dt><a href="reference/protocol/http.html#spyne.protocol.http.HttpPattern.host">host (spyne.protocol.http.HttpPattern attribute)</a>
+  </dt>
+
+      
+  <dt><a href="reference/base.html#spyne.MethodDescriptor.href">href (spyne.MethodDescriptor attribute)</a>
+  </dt>
+
       
   <dt><a href="reference/client.html#spyne.client.http.HttpClient">HttpClient (class in spyne.client.http)</a>
   </dt>
@@ -1174,16 +1011,6 @@
   <dt><a href="reference/protocol/http.html#spyne.protocol.http.HttpPattern">HttpPattern (class in spyne.protocol.http)</a>
   </dt>
 
-      
-  <dt><a href="reference/server.html#spyne.server.django.DjangoApplication.HttpResponseObject">HttpResponseObject (spyne.server.django.DjangoApplication attribute)</a>
-  </dt>
-
-      <dd><dl>
-        
-  <dt><a href="reference/server.html#spyne.server.django.StreamingDjangoApplication.HttpResponseObject">(spyne.server.django.StreamingDjangoApplication attribute)</a>
-  </dt>
-
-      </dl></dd>
       
   <dt><a href="reference/protocol/http.html#spyne.protocol.http.HttpRpc">HttpRpc (class in spyne.protocol.http)</a>
   </dt>
@@ -1229,6 +1056,10 @@
   </dt>
 
       
+  <dt><a href="reference/base.html#spyne.MethodDescriptor.in_message_name_override">in_message_name_override (spyne.MethodDescriptor attribute)</a>
+  </dt>
+
+      
   <dt><a href="reference/base.html#spyne.MethodContext.in_object">in_object (spyne.MethodContext attribute)</a>
   </dt>
 
@@ -1252,12 +1083,12 @@
   <dt><a href="reference/auxproc.html#spyne.auxproc._base.AuxProcBase.initialize_context">initialize_context() (spyne.auxproc._base.AuxProcBase method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="reference/model/primitive.html#spyne.model.primitive.Int">Int (in module spyne.model.primitive)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="reference/model/primitive.html#spyne.model.primitive.Integer">Integer (class in spyne.model.primitive)</a>
   </dt>
@@ -1291,11 +1122,23 @@
   </dt>
 
       
+  <dt><a href="reference/error.html#spyne.error.InvalidCredentialsError">InvalidCredentialsError</a>
+  </dt>
+
+      
+  <dt><a href="reference/error.html#spyne.error.InvalidInputError">InvalidInputError</a>
+  </dt>
+
+      
+  <dt><a href="reference/error.html#spyne.error.InvalidRequestError">InvalidRequestError (in module spyne.error)</a>
+  </dt>
+
+      
   <dt><a href="reference/interface.html#spyne.interface.Interface.is_valid_import">is_valid_import() (spyne.interface.Interface method)</a>
   </dt>
 
       
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.isLeaf">isLeaf (spyne.server.twisted.TwistedWebResource attribute)</a>
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiApplication.is_wsdl_request">is_wsdl_request() (spyne.server.wsgi.WsgiApplication method)</a>
   </dt>
 
       
@@ -1309,17 +1152,13 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/model/complex.html#spyne.model.complex.json">json (class in spyne.model.complex)</a>
-  </dt>
-
-      
   <dt><a href="reference/protocol/json.html#spyne.protocol.json.JsonDocument">JsonDocument (class in spyne.protocol.json)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/protocol/json.html#spyne.protocol.json.JsonObject">JsonObject (in module spyne.protocol.json)</a>
+  <dt><a href="reference/protocol/json.html#spyne.protocol.json.JsonP">JsonP (class in spyne.protocol.json)</a>
   </dt>
 
   </dl></td>
@@ -1365,39 +1204,11 @@
   </dt>
 
       
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.listDynamicEntities">listDynamicEntities() (spyne.server.twisted.TwistedWebResource method)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.listDynamicNames">listDynamicNames() (spyne.server.twisted.TwistedWebResource method)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.listEntities">listEntities() (spyne.server.twisted.TwistedWebResource method)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.listNames">listNames() (spyne.server.twisted.TwistedWebResource method)</a>
+  <dt><a href="reference/base.html#spyne.MethodContext.locale">locale (spyne.MethodContext attribute)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.listStaticEntities">listStaticEntities() (spyne.server.twisted.TwistedWebResource method)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.listStaticNames">listStaticNames() (spyne.server.twisted.TwistedWebResource method)</a>
-  </dt>
-
-      
-  <dt><a href="reference/base.html#spyne.MethodContext.locale">locale (spyne.MethodContext attribute)</a>
-  </dt>
-
-      
-  <dt><a href="reference/model/complex.html#spyne.model.complex.log_repr">log_repr() (in module spyne.model.complex)</a>
-  </dt>
-
       
   <dt><a href="reference/model/index.html#spyne.model.ModelBase.Attributes.logged">logged (spyne.model.ModelBase.Attributes attribute)</a>
   </dt>
@@ -1431,7 +1242,11 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/model/primitive.html#spyne.model.primitive.Mandatory">Mandatory (class in spyne.model.primitive)</a>
+  <dt><a href="reference/model/complex.html#spyne.model.complex.Mandatory">Mandatory() (in module spyne.model.complex)</a>
+  </dt>
+
+      
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiApplication.match_pattern">match_pattern() (spyne.server.wsgi.WsgiApplication method)</a>
   </dt>
 
       
@@ -1452,10 +1267,6 @@
 
       
   <dt><a href="reference/protocol/msgpack.html#spyne.protocol.msgpack.MessagePackDocument">MessagePackDocument (class in spyne.protocol.msgpack)</a>
-  </dt>
-
-      
-  <dt><a href="reference/protocol/msgpack.html#spyne.protocol.msgpack.MessagePackObject">MessagePackObject (in module spyne.protocol.msgpack)</a>
   </dt>
 
       
@@ -1488,6 +1299,10 @@
   <dt><a href="reference/base.html#spyne.MethodDescriptor">MethodDescriptor (class in spyne)</a>
   </dt>
 
+      
+  <dt><a href="reference/model/complex.html#spyne.model.complex.ComplexModelBase.Attributes.methods">methods (spyne.model.complex.ComplexModelBase.Attributes attribute)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
@@ -1497,10 +1312,6 @@
       <dd><dl>
         
   <dt><a href="reference/protocol/soap.html#spyne.protocol.soap.soap11.Soap11.mime_type">(spyne.protocol.soap.soap11.Soap11 attribute)</a>
-  </dt>
-
-        
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlDocument.mime_type">(spyne.protocol.xml._base.XmlDocument attribute)</a>
   </dt>
 
         
@@ -1573,6 +1384,10 @@
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="reference/base.html#spyne.MethodDescriptor.no_self">no_self (spyne.MethodDescriptor attribute)</a>
+  </dt>
+
+      
   <dt><a href="reference/model/primitive.html#spyne.model.primitive.NonNegativeInteger">NonNegativeInteger (in module spyne.model.primitive)</a>
   </dt>
 
@@ -1587,11 +1402,19 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/protocol/dictdoc.html#spyne.protocol.dictdoc.FlatDictDocument.object_to_flat_dict">object_to_flat_dict() (spyne.protocol.dictdoc.FlatDictDocument method)</a>
+  <dt><a href="reference/protocol/dictdoc.html#spyne.protocol.dictdoc.SimpleDictDocument.object_to_simple_dict">object_to_simple_dict() (spyne.protocol.dictdoc.SimpleDictDocument method)</a>
   </dt>
 
       
   <dt><a href="reference/util.html#spyne.util.odict.odict">odict (class in spyne.util.odict)</a>
+  </dt>
+
+      
+  <dt><a href="reference/base.html#spyne.MethodDescriptor.operation_name">operation_name (spyne.MethodDescriptor attribute)</a>
+  </dt>
+
+      
+  <dt><a href="reference/model/index.html#spyne.model.ModelBase.Attributes.order">order (spyne.model.ModelBase.Attributes attribute)</a>
   </dt>
 
       
@@ -1627,11 +1450,29 @@
   </dt>
 
       
+  <dt><a href="reference/base.html#spyne.MethodDescriptor.out_message_name_override">out_message_name_override (spyne.MethodDescriptor attribute)</a>
+  </dt>
+
+      
   <dt><a href="reference/base.html#spyne.MethodContext.out_object">out_object (spyne.MethodContext attribute)</a>
   </dt>
 
       
   <dt><a href="reference/base.html#spyne.MethodContext.out_protocol">out_protocol (spyne.MethodContext attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiMethodContext.out_protocol">(spyne.server.wsgi.WsgiMethodContext attribute)</a>
+  </dt>
+
+        
+  <dt><a href="reference/server.html#spyne.server.zeromq.ZmqMethodContext.out_protocol">(spyne.server.zeromq.ZmqMethodContext attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="reference/base.html#spyne.MethodContext.out_stream">out_stream (spyne.MethodContext attribute)</a>
   </dt>
 
       
@@ -1644,6 +1485,14 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="reference/base.html#spyne.MethodDescriptor.parent_class">parent_class (spyne.MethodDescriptor attribute)</a>
+  </dt>
+
+      
+  <dt><a href="reference/model/complex.html#spyne.model.complex.ComplexModelBase.Attributes.parent_variant">parent_variant (spyne.model.complex.ComplexModelBase.Attributes attribute)</a>
+  </dt>
+
       
   <dt><a href="reference/model/primitive.html#spyne.model.primitive.Date.Attributes.pattern">pattern (spyne.model.primitive.Date.Attributes attribute)</a>
   </dt>
@@ -1683,6 +1532,12 @@
   </dt>
 
       
+  <dt><a href="reference/model/primitive.html#spyne.model.primitive.PositiveInteger">PositiveInteger (class in spyne.model.primitive)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
   <dt><a href="reference/auxproc.html#spyne.auxproc._base.AuxProcBase.process">process() (spyne.auxproc._base.AuxProcBase method)</a>
   </dt>
 
@@ -1690,14 +1545,16 @@
   <dt><a href="reference/auxproc.html#spyne.auxproc._base.AuxProcBase.process_context">process_context() (spyne.auxproc._base.AuxProcBase method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="reference/application.html#spyne.application.Application.process_request">process_request() (spyne.application.Application method)</a>
   </dt>
 
       
   <dt><a href="reference/model/complex.html#spyne.model.complex.ComplexModelBase.produce">produce() (spyne.model.complex.ComplexModelBase static method)</a>
+  </dt>
+
+      
+  <dt><a href="reference/model/index.html#spyne.model.ModelBase.Attributes.prot_attrs">prot_attrs (spyne.model.ModelBase.Attributes attribute)</a>
   </dt>
 
       
@@ -1709,15 +1566,7 @@
   </dt>
 
       
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.putChild">putChild() (spyne.server.twisted.TwistedWebResource method)</a>
-  </dt>
-
-      
   <dt><a href="reference/util.html#spyne.util.simple.pyramid_soap11_application">pyramid_soap11_application() (in module spyne.util.simple)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#spyne.server.pyramid.PyramidApplication">PyramidApplication (class in spyne.server.pyramid)</a>
   </dt>
 
   </dl></td>
@@ -1727,27 +1576,11 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.reallyPutEntity">reallyPutEntity() (spyne.server.twisted.TwistedWebResource method)</a>
+  <dt><a href="reference/model/index.html#spyne.model.ModelBase.Attributes.read_only">read_only (spyne.model.ModelBase.Attributes attribute)</a>
   </dt>
 
       
   <dt><a href="reference/client.html#spyne.client._base.RemoteProcedureBase">RemoteProcedureBase (class in spyne.client._base)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.render">render() (spyne.server.twisted.TwistedWebResource method)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.render_GET">render_GET() (spyne.server.twisted.TwistedWebResource method)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.render_HEAD">render_HEAD() (spyne.server.twisted.TwistedWebResource method)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.render_POST">render_POST() (spyne.server.twisted.TwistedWebResource method)</a>
   </dt>
 
       
@@ -1762,8 +1595,6 @@
   <dt><a href="reference/error.html#spyne.error.RequestNotAllowed">RequestNotAllowed</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="reference/error.html#spyne.error.RequestTooLongError">RequestTooLongError</a>
   </dt>
@@ -1777,7 +1608,17 @@
   </dt>
 
       
+  <dt><a href="reference/error.html#spyne.error.ResourceAlreadyExistsError">ResourceAlreadyExistsError</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
   <dt><a href="reference/error.html#spyne.error.ResourceNotFoundError">ResourceNotFoundError</a>
+  </dt>
+
+      
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiTransportContext.respond">respond() (spyne.server.wsgi.WsgiTransportContext method)</a>
   </dt>
 
       
@@ -1800,6 +1641,20 @@
   <dt><a href="reference/decorator.html#spyne.decorator.rpc">rpc() (in module spyne.decorator)</a>
   </dt>
 
+      
+  <dt><a href="reference/server.html#spyne.server.null.NullServer.run_push">run_push() (spyne.server.null.NullServer method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiApplication.run_push">(spyne.server.wsgi.WsgiApplication method)</a>
+  </dt>
+
+        
+  <dt><a href="reference/server.html#spyne.server.zeromq.ZeroMQServer.run_push">(spyne.server.zeromq.ZeroMQServer method)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
 </tr></table>
 
@@ -1808,18 +1663,6 @@
   <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="reference/model/index.html#spyne.model.ModelBase.Attributes.schema_tag">schema_tag (spyne.model.ModelBase.Attributes attribute)</a>
-  </dt>
-
-      
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlDocument.SCHEMA_VALIDATION">SCHEMA_VALIDATION (spyne.protocol.xml._base.XmlDocument attribute)</a>
-  </dt>
-
-      
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.SchemaValidationError">SchemaValidationError</a>
-  </dt>
-
-      
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.SchemaValidationError.Attributes">SchemaValidationError.Attributes (class in spyne.protocol.xml._base)</a>
   </dt>
 
       
@@ -1839,38 +1682,18 @@
   <dt><a href="reference/protocol/soap.html#spyne.protocol.soap.soap11.Soap11.serialize">(spyne.protocol.soap.soap11.Soap11 method)</a>
   </dt>
 
-        
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlDocument.serialize">(spyne.protocol.xml._base.XmlDocument method)</a>
+      </dl></dd>
+      
+  <dt><a href="reference/model/primitive.html#spyne.model.primitive.DateTime.Attributes.serialize_as">serialize_as (spyne.model.primitive.DateTime.Attributes attribute)</a>
   </dt>
 
-      </dl></dd>
       
   <dt><a href="reference/server.html#spyne.server._base.ServerBase.serve_forever">serve_forever() (spyne.server._base.ServerBase method)</a>
   </dt>
 
       <dd><dl>
         
-  <dt><a href="reference/server.html#spyne.server.django.DjangoApplication.serve_forever">(spyne.server.django.DjangoApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.django.StreamingDjangoApplication.serve_forever">(spyne.server.django.StreamingDjangoApplication method)</a>
-  </dt>
-
-        
   <dt><a href="reference/server.html#spyne.server.null.NullServer.serve_forever">(spyne.server.null.NullServer method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.PyramidApplication.serve_forever">(spyne.server.pyramid.PyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.StreamingPyramidApplication.serve_forever">(spyne.server.pyramid.StreamingPyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedHttpTransport.serve_forever">(spyne.server.twisted.TwistedHttpTransport method)</a>
   </dt>
 
         
@@ -1881,29 +1704,35 @@
   <dt><a href="reference/server.html#spyne.server.zeromq.ZeroMQServer.serve_forever">(spyne.server.zeromq.ZeroMQServer method)</a>
   </dt>
 
-      </dl></dd>
-      
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource.server">server (spyne.server.twisted.TwistedWebResource attribute)</a>
+        
+  <dt><a href="reference/server.html#spyne.server.zeromq.ZeroMQThreadPoolServer.serve_forever">(spyne.server.zeromq.ZeroMQThreadPoolServer method)</a>
   </dt>
 
+      </dl></dd>
       
   <dt><a href="reference/server.html#spyne.server._base.ServerBase">ServerBase (class in spyne.server._base)</a>
   </dt>
 
       
-  <dt><a href="reference/base.html#spyne.MethodContext.service_class">service_class (spyne.MethodContext attribute)</a>
+  <dt><a href="reference/base.html#spyne.MethodDescriptor.service_class">service_class (spyne.MethodDescriptor attribute)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiMethodContext.service_class">(spyne.server.wsgi.WsgiMethodContext attribute)</a>
+  </dt>
+
+        
+  <dt><a href="reference/server.html#spyne.server.zeromq.ZmqMethodContext.service_class">(spyne.server.zeromq.ZmqMethodContext attribute)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="reference/service.html#spyne.service.ServiceBase">ServiceBase (class in spyne.service)</a>
   </dt>
 
       
   <dt><a href="reference/service.html#spyne.service.ServiceBaseMeta">ServiceBaseMeta (class in spyne.service)</a>
-  </dt>
-
-      
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlDocument.set_app">set_app() (spyne.protocol.xml._base.XmlDocument method)</a>
   </dt>
 
       
@@ -1939,20 +1768,12 @@
 
       </dl></dd>
       
-  <dt><a href="reference/server.html#spyne.server.django.DjangoApplication.set_response">set_response() (spyne.server.django.DjangoApplication method)</a>
+  <dt><a href="reference/server.html#spyne.server.wsgi.WsgiMethodContext.set_out_protocol">set_out_protocol() (spyne.server.wsgi.WsgiMethodContext method)</a>
   </dt>
 
       <dd><dl>
         
-  <dt><a href="reference/server.html#spyne.server.django.StreamingDjangoApplication.set_response">(spyne.server.django.StreamingDjangoApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.PyramidApplication.set_response">(spyne.server.pyramid.PyramidApplication method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.StreamingPyramidApplication.set_response">(spyne.server.pyramid.StreamingPyramidApplication method)</a>
+  <dt><a href="reference/server.html#spyne.server.zeromq.ZmqMethodContext.set_out_protocol">(spyne.server.zeromq.ZmqMethodContext method)</a>
   </dt>
 
       </dl></dd>
@@ -1973,13 +1794,17 @@
   <dt><a href="reference/protocol/http.html#spyne.protocol.http.HttpRpc.set_validator">(spyne.protocol.http.HttpRpc method)</a>
   </dt>
 
-        
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlDocument.set_validator">(spyne.protocol.xml._base.XmlDocument method)</a>
-  </dt>
-
       </dl></dd>
       
   <dt><a href="reference/model/primitive.html#spyne.model.primitive.Short">Short (in module spyne.model.primitive)</a>
+  </dt>
+
+      
+  <dt><a href="reference/protocol/dictdoc.html#spyne.protocol.dictdoc.SimpleDictDocument.simple_dict_to_object">simple_dict_to_object() (spyne.protocol.dictdoc.SimpleDictDocument method)</a>
+  </dt>
+
+      
+  <dt><a href="reference/protocol/dictdoc.html#spyne.protocol.dictdoc.SimpleDictDocument">SimpleDictDocument (class in spyne.protocol.dictdoc)</a>
   </dt>
 
       
@@ -2069,23 +1894,11 @@
   </dt>
 
       
-  <dt><a href="reference/protocol/xml.html#module-spyne.protocol.xml._base">spyne.protocol.xml._base (module)</a>
-  </dt>
-
-      
   <dt><a href="reference/server.html#module-spyne.server._base">spyne.server._base (module)</a>
   </dt>
 
       
-  <dt><a href="reference/server.html#module-spyne.server.django">spyne.server.django (module)</a>
-  </dt>
-
-      
   <dt><a href="reference/server.html#module-spyne.server.null">spyne.server.null (module)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#module-spyne.server.pyramid">spyne.server.pyramid (module)</a>
   </dt>
 
       
@@ -2144,56 +1957,36 @@
   <dt><a href="reference/model/complex.html#spyne.model.complex.ComplexModelBase.Attributes.sqla_mapper_args">sqla_mapper_args (spyne.model.complex.ComplexModelBase.Attributes attribute)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.SchemaValidationError.Attributes.sqla_mapper_args">(spyne.protocol.xml._base.SchemaValidationError.Attributes attribute)</a>
-  </dt>
-
-      </dl></dd>
       
   <dt><a href="reference/model/complex.html#spyne.model.complex.ComplexModelBase.Attributes.sqla_metadata">sqla_metadata (spyne.model.complex.ComplexModelBase.Attributes attribute)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.SchemaValidationError.Attributes.sqla_metadata">(spyne.protocol.xml._base.SchemaValidationError.Attributes attribute)</a>
-  </dt>
-
-      </dl></dd>
       
   <dt><a href="reference/model/complex.html#spyne.model.complex.ComplexModelBase.Attributes.sqla_table">sqla_table (spyne.model.complex.ComplexModelBase.Attributes attribute)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.SchemaValidationError.Attributes.sqla_table">(spyne.protocol.xml._base.SchemaValidationError.Attributes attribute)</a>
-  </dt>
-
-      </dl></dd>
       
   <dt><a href="reference/model/complex.html#spyne.model.complex.ComplexModelBase.Attributes.sqla_table_args">sqla_table_args (spyne.model.complex.ComplexModelBase.Attributes attribute)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.SchemaValidationError.Attributes.sqla_table_args">(spyne.protocol.xml._base.SchemaValidationError.Attributes attribute)</a>
-  </dt>
-
-      </dl></dd>
       
   <dt><a href="reference/decorator.html#spyne.decorator.srpc">srpc() (in module spyne.decorator)</a>
   </dt>
 
       
-  <dt><a href="reference/server.html#spyne.server.django.StreamingDjangoApplication">StreamingDjangoApplication (class in spyne.server.django)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#spyne.server.pyramid.StreamingPyramidApplication">StreamingPyramidApplication (class in spyne.server.pyramid)</a>
+  <dt><a href="reference/model/primitive.html#spyne.model.primitive.Decimal.Attributes.str_format">str_format (spyne.model.primitive.Decimal.Attributes attribute)</a>
   </dt>
 
       
   <dt><a href="reference/model/primitive.html#spyne.model.primitive.DateTime.Attributes.string_format">string_format (spyne.model.primitive.DateTime.Attributes attribute)</a>
+  </dt>
+
+      
+  <dt><a href="reference/model/index.html#spyne.model.ModelBase.Attributes.sub_name">sub_name (spyne.model.ModelBase.Attributes attribute)</a>
+  </dt>
+
+      
+  <dt><a href="reference/model/index.html#spyne.model.ModelBase.Attributes.sub_ns">sub_ns (spyne.model.ModelBase.Attributes attribute)</a>
   </dt>
 
       
@@ -2207,19 +2000,9 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/model/complex.html#spyne.model.complex.table">table (class in spyne.model.complex)</a>
+  <dt><a href="reference/model/index.html#spyne.model.ModelBase.Attributes.table_name">table_name (spyne.model.ModelBase.Attributes attribute)</a>
   </dt>
 
-      
-  <dt><a href="reference/model/complex.html#spyne.model.complex.ComplexModelBase.Attributes.table_name">table_name (spyne.model.complex.ComplexModelBase.Attributes attribute)</a>
-  </dt>
-
-      <dd><dl>
-        
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.SchemaValidationError.Attributes.table_name">(spyne.protocol.xml._base.SchemaValidationError.Attributes attribute)</a>
-  </dt>
-
-      </dl></dd>
       
   <dt><a href="reference/model/sql.html#spyne.model.table.TableModel">TableModel (class in spyne.model.table)</a>
   </dt>
@@ -2241,6 +2024,20 @@
   </dt>
 
       
+  <dt><a href="reference/protocol/base.html#spyne.protocol._base.ProtocolBase.time_from_string">time_from_string() (spyne.protocol._base.ProtocolBase method)</a>
+  </dt>
+
+      
+  <dt><a href="reference/protocol/base.html#spyne.protocol._base.ProtocolBase.time_to_string">time_to_string() (spyne.protocol._base.ProtocolBase method)</a>
+  </dt>
+
+      
+  <dt><a href="reference/model/primitive.html#spyne.model.primitive.DateTime.Attributes.timezone">timezone (spyne.model.primitive.DateTime.Attributes attribute)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
   <dt><a href="reference/protocol/http.html#spyne.protocol.http.HttpRpc.tmp_delete_on_close">tmp_delete_on_close (spyne.protocol.http.HttpRpc attribute)</a>
   </dt>
 
@@ -2248,14 +2045,8 @@
   <dt><a href="reference/interface.html#spyne.interface.Interface.tns">tns (spyne.interface.Interface attribute)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlDocument.to_parent_element">to_parent_element() (spyne.protocol.xml._base.XmlDocument method)</a>
-  </dt>
-
-      
-  <dt><a href="reference/protocol/http.html#spyne.protocol.http.to_string">to_string() (in module spyne.protocol.http)</a>
+  <dt><a href="reference/model/index.html#spyne.model.ModelBase.to_string">to_string() (spyne.model.ModelBase class method)</a>
   </dt>
 
       
@@ -2263,9 +2054,19 @@
   </dt>
 
       
-  <dt><a href="reference/model/index.html#spyne.model.ModelBase.Attributes.translations">translations (spyne.model.ModelBase.Attributes attribute)</a>
+  <dt><a href="reference/base.html#spyne.MethodDescriptor.translate">translate() (spyne.MethodDescriptor method)</a>
   </dt>
 
+      
+  <dt><a href="reference/base.html#spyne.MethodDescriptor.translations">translations (spyne.MethodDescriptor attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="reference/model/index.html#spyne.model.ModelBase.Attributes.translations">(spyne.model.ModelBase.Attributes attribute)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="reference/base.html#spyne.MethodContext.transport">transport (spyne.MethodContext attribute)</a>
   </dt>
@@ -2276,27 +2077,7 @@
   </dt>
 
         
-  <dt><a href="reference/server.html#spyne.server.django.DjangoApplication.transport">(spyne.server.django.DjangoApplication attribute)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.django.StreamingDjangoApplication.transport">(spyne.server.django.StreamingDjangoApplication attribute)</a>
-  </dt>
-
-        
   <dt><a href="reference/server.html#spyne.server.null.NullServer.transport">(spyne.server.null.NullServer attribute)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.PyramidApplication.transport">(spyne.server.pyramid.PyramidApplication attribute)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.pyramid.StreamingPyramidApplication.transport">(spyne.server.pyramid.StreamingPyramidApplication attribute)</a>
-  </dt>
-
-        
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedHttpTransport.transport">(spyne.server.twisted.TwistedHttpTransport attribute)</a>
   </dt>
 
         
@@ -2317,14 +2098,6 @@
   </dt>
 
       
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedHttpTransport">TwistedHttpTransport (class in spyne.server.twisted)</a>
-  </dt>
-
-      
-  <dt><a href="reference/server.html#spyne.server.twisted.TwistedWebResource">TwistedWebResource (class in spyne.server.twisted)</a>
-  </dt>
-
-      
   <dt><a href="reference/protocol/base.html#spyne.protocol._base.ProtocolBase.type">type (spyne.protocol._base.ProtocolBase attribute)</a>
   </dt>
 
@@ -2335,10 +2108,6 @@
 
         
   <dt><a href="reference/protocol/soap.html#spyne.protocol.soap.soap11.Soap11.type">(spyne.protocol.soap.soap11.Soap11 attribute)</a>
-  </dt>
-
-        
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlDocument.type">(spyne.protocol.xml._base.XmlDocument attribute)</a>
   </dt>
 
       </dl></dd>
@@ -2421,10 +2190,6 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlDocument.validate_body">validate_body() (spyne.protocol.xml._base.XmlDocument method)</a>
-  </dt>
-
-      
   <dt><a href="reference/protocol/base.html#spyne.protocol._base.ProtocolBase.validate_document">validate_document() (spyne.protocol._base.ProtocolBase method)</a>
   </dt>
 
@@ -2436,12 +2201,12 @@
   <dt><a href="reference/model/index.html#spyne.model.ModelBase.validate_native">validate_native() (spyne.model.ModelBase static method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="reference/model/index.html#spyne.model.ModelBase.validate_string">validate_string() (spyne.model.ModelBase static method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="reference/error.html#spyne.error.ValidationError">ValidationError</a>
   </dt>
@@ -2450,12 +2215,20 @@
   <dt><a href="reference/model/index.html#spyne.model.SimpleModel.Attributes.values">values (spyne.model.SimpleModel.Attributes attribute)</a>
   </dt>
 
+      
+  <dt><a href="reference/protocol/http.html#spyne.protocol.http.HttpPattern.verb">verb (spyne.protocol.http.HttpPattern attribute)</a>
+  </dt>
+
   </dl></td>
 </tr></table>
 
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="reference/base.html#spyne.MethodDescriptor.when">when (spyne.MethodDescriptor attribute)</a>
+  </dt>
+
       
   <dt><a href="reference/interface.html#spyne.interface.wsdl.wsdl11.Wsdl11">Wsdl11 (class in spyne.interface.wsdl.wsdl11)</a>
   </dt>
@@ -2489,7 +2262,7 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/model/complex.html#spyne.model.complex.xml">xml (class in spyne.model.complex)</a>
+  <dt><a href="reference/model/index.html#spyne.model.ModelBase.Attributes.xml_choice_group">xml_choice_group (spyne.model.ModelBase.Attributes attribute)</a>
   </dt>
 
       
@@ -2503,11 +2276,7 @@
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlDocument">XmlDocument (class in spyne.protocol.xml._base)</a>
-  </dt>
-
-      
-  <dt><a href="reference/protocol/xml.html#spyne.protocol.xml._base.XmlObject">XmlObject (in module spyne.protocol.xml._base)</a>
+  <dt><a href="reference/model/complex.html#spyne.model.complex.XmlData">XmlData (class in spyne.model.complex)</a>
   </dt>
 
       
@@ -2531,6 +2300,10 @@
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="reference/server.html#spyne.server.zeromq.ZeroMQThreadPoolServer">ZeroMQThreadPoolServer (class in spyne.server.zeromq)</a>
+  </dt>
+
+      
   <dt><a href="reference/server.html#spyne.server.zeromq.ZmqMethodContext">ZmqMethodContext (class in spyne.server.zeromq)</a>
   </dt>
 
@@ -2553,12 +2326,12 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">spyne 2.10.9 documentation</a> &raquo;</li> 
+        <li><a href="index.html">spyne 2.11.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright Spyne Contributors.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>
