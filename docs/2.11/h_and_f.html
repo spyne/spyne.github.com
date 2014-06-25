@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>History and Future &mdash; spyne 2.11.0 documentation</title>
+    <title>Development History &mdash; spyne 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -47,22 +47,8 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">History and Future</a><ul>
+<li><a class="reference internal" href="#">Development History</a><ul>
 <li><a class="reference internal" href="#versioning">Versioning</a></li>
-<li><a class="reference internal" href="#roadmap-and-criticism">Roadmap and Criticism</a></li>
-<li><a class="reference internal" href="#comparison-with-other-rpc-frameworks">Comparison with other rpc frameworks</a><ul>
-<li><a class="reference internal" href="#ladon">Ladon</a></li>
-<li><a class="reference internal" href="#wsme">WSME</a></li>
-<li><a class="reference internal" href="#suds">Suds</a></li>
-<li><a class="reference internal" href="#pysimplesoap">PySimpleSoap</a></li>
-<li><a class="reference internal" href="#rpyc">RPyC</a></li>
-<li><a class="reference internal" href="#rfoo">rfoo</a></li>
-<li><a class="reference internal" href="#zsi">ZSI</a></li>
-<li><a class="reference internal" href="#soapy">SOAPy</a></li>
-<li><a class="reference internal" href="#rsl">rsl</a></li>
-<li><a class="reference internal" href="#pyro">PyRo</a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#id1">Changelog</a><ul>
 <li><a class="reference internal" href="#spyne-2-11-0">spyne-2.11.0</a></li>
 <li><a class="reference internal" href="#spyne-2-10-10">spyne-2.10.10</a></li>
@@ -163,8 +149,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="history-and-future">
-<span id="changelog"></span><h1>History and Future<a class="headerlink" href="#history-and-future" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="development-history">
+<span id="changelog"></span><h1>Development History<a class="headerlink" href="#development-history" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="versioning">
 <h2>Versioning<a class="headerlink" href="#versioning" title="Permalink to this headline">¶</a></h2>
 <p>Spyne respects the &#8220;Semantic Versioning&#8221; rules outlined in <a class="reference external" href="http://semver.org">http://semver.org</a>.</p>
@@ -201,183 +187,6 @@ people.</li>
 project as beta because some new feature is not yet well-tested, but we will
 clearly denote experimental code in its documentation.</p>
 </div>
-<div class="section" id="roadmap-and-criticism">
-<h2>Roadmap and Criticism<a class="headerlink" href="#roadmap-and-criticism" title="Permalink to this headline">¶</a></h2>
-<p>This is an attempt to make a free-for-all area to display opinions about
-possible feature directions of Spyne. Doing it in a text file in the source
-repository may not be the best approach for the job, but it should be enough to
-at least spark a discussion around this topic.</p>
-<p>The following would definitely be nice to have, but are just modules that should
-not cause a change in unrelated areas of Spyne.</p>
-<ul class="simple">
-<li>Support for polymorphism in XML Schema.</li>
-<li>Support for the JsonRpc protocol.</li>
-<li>Support for the JsonSchema interface document standard.</li>
-<li>Support for the Thrift binary protocol.</li>
-<li>Support for the Thrift IDL &#8211; The Thrift Interface Definition Language.</li>
-<li>Support for the MessagePack IDL.</li>
-<li>Support for the XmlRpc standard.</li>
-<li>Support for EXI &#8211; The Efficient Xml Interchange as a serializer.</li>
-<li>SMTP as client/server transport.</li>
-<li>SPDY as client/server transport.</li>
-<li>Support security extensions to Soap (maybe using <a class="reference external" href="http://pypi.python.org/pypi/PyXMLSec/0.3.0">PyXMLSec</a> ?)</li>
-<li>Support addressing (routing) extensions to Soap</li>
-<li>Add WSDL Parsing support to Soap client.</li>
-<li>Implement Soap 1.2 standard.</li>
-<li>Implement Wsdl 2.0 standard.</li>
-<li>Reflect transport and protocol pairs other than Soap/Http in the Wsdl.</li>
-<li>etc.</li>
-</ul>
-</div>
-<div class="section" id="comparison-with-other-rpc-frameworks">
-<span id="manual-comparison"></span><h2>Comparison with other rpc frameworks<a class="headerlink" href="#comparison-with-other-rpc-frameworks" title="Permalink to this headline">¶</a></h2>
-<p>RPC is a very popular subject. There&#8217;s a plethora of active and inactive
-projects that satisfy a wide range of requirements. Here are the main sources
-of information:</p>
-<ul class="simple">
-<li><a class="reference external" href="http://pypi.python.org/pypi?%3Aaction=search&amp;term=rpc">http://pypi.python.org/pypi?%3Aaction=search&amp;term=rpc</a></li>
-<li><a class="reference external" href="http://www.ohloh.net/tags/python/rpc">http://www.ohloh.net/tags/python/rpc</a></li>
-<li><a class="reference external" href="http://stackoverflow.com/questions/1879971/what-is-the-current-choice-for-doing-rpc-in-python">http://stackoverflow.com/questions/1879971/what-is-the-current-choice-for-doing-rpc-in-python</a></li>
-</ul>
-<div class="section" id="ladon">
-<h3>Ladon<a class="headerlink" href="#ladon" title="Permalink to this headline">¶</a></h3>
-<p>The Ladon project has almost the same goals and same approach to the
-rpc-related issues as Spyne.</p>
-<p>Discussion thread: <a class="reference external" href="https://answers.launchpad.net/ladon/+question/171664">https://answers.launchpad.net/ladon/+question/171664</a></p>
-<ul>
-<li><p class="first">Supports JsonWSP protocol, which is JsonRpc with interface description. Spyne
-supports JsonDocument which serializes complex object hierarchies as nested
-dict objects.</p>
-</li>
-<li><p class="first">Supports both Python 2 and Python 3. Spyne is Python 2 only.</p>
-</li>
-<li><p class="first">Auto-generates human-readable API documentation.
-(example: <a class="reference external" href="http://ladonize.org/python-demos/AlbumService">http://ladonize.org/python-demos/AlbumService</a>) In Spyne, you need
-to do with the ugliness of a raw wsdl document.</p>
-</li>
-<li><p class="first">Uses standard python tools for xml parsing which is good for pure-python
-deployments. Spyne uses lxml, due to its excellent xml namespace support and
-speed. So Spyne is faster but more difficult to deploy.</p>
-</li>
-<li><p class="first">Does not support ZeroMQ as transport.</p>
-</li>
-<li><p class="first">Does not support MessagePack.</p>
-</li>
-<li><p class="first">Does not support HttpRpc.</p>
-</li>
-<li><p class="first">Does not do declarative input validation. Traditional (imperative) input
-validation is possible via a code injection mechanism similar to Spyne&#8217;s
-events.</p>
-</li>
-<li><p class="first">Does not have a Soap client. Spyne does, but it&#8217;s not that useful as it does
-not parse Wsdl documents.</p>
-<blockquote>
-<div><p>In fact, Ladon is pure server-side software - the whole idea of supporting
-a standard protocol like SOAP is that clients are already out there.</p>
-</div></blockquote>
-</li>
-<li><p class="first">Spyne uses own classes for denoting types, whereas Ladon uses Python
-callables. This lets Ladon api to be simpler, but gives the Spyne api the
-power to have declarative restrictions on input types.</p>
-</li>
-<li><p class="first">Does not test against ws-i.org deliverables for testing soap compatibility.</p>
-</li>
-<li><p class="first">Does not support parsing and/or modifying protocol or transport headers.</p>
-</li>
-</ul>
-</div>
-<div class="section" id="wsme">
-<h3>WSME<a class="headerlink" href="#wsme" title="Permalink to this headline">¶</a></h3>
-<p>&#8220;&#8221;&#8221;
-Web Service Made Easy (WSME) is a very easy way to implement webservices in
-your python web application. It is originally a rewrite of TGWebServices with
-focus on extensibility, framework-independance and better type handling.
-&#8220;&#8221;&#8220;</p>
-<ul class="simple">
-<li>Supports TurboGears</li>
-<li>Supports REST+Json, REST+Xml, (a subset of) SOAP and ExtDirect.</li>
-<li>Supports type validation.</li>
-<li>No client support.</li>
-<li>Does not test against ws-i.org deliverables for testing soap compatibility.</li>
-<li>Only supports HTTP as transport.</li>
-<li>Uses genshi for Xml support.</li>
-</ul>
-</div>
-<div class="section" id="suds">
-<h3>Suds<a class="headerlink" href="#suds" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li>Soap 1.1 / Wsdl 1.1 Client only.</li>
-<li>Excellent wsdl parser, very easy to use.</li>
-<li>Recommended way to interface with Spyne&#8217;s Soap services.</li>
-<li>Uses own pure-python xml implementation, so it&#8217;s roughly 10 times slower
-than Spyne&#8217;s Soap client.</li>
-<li>Pure-python library, so relatively easier to deploy.</li>
-</ul>
-</div>
-<div class="section" id="pysimplesoap">
-<h3>PySimpleSoap<a class="headerlink" href="#pysimplesoap" title="Permalink to this headline">¶</a></h3>
-<p>This is preliminary. Please correct these points if you spot any error.</p>
-<ul class="simple">
-<li>Small, ~2kloc library.</li>
-<li>See here: <a class="reference external" href="https://code.google.com/p/pysimplesoap/wiki/FAQ">https://code.google.com/p/pysimplesoap/wiki/FAQ</a></li>
-</ul>
-</div>
-<div class="section" id="rpyc">
-<h3>RPyC<a class="headerlink" href="#rpyc" title="Permalink to this headline">¶</a></h3>
-<p>This is preliminary. Please correct these points if you spot any error.</p>
-<ul class="simple">
-<li>Uses own protocol</li>
-<li>Does not do validation.</li>
-<li>Python-specific.</li>
-<li>Fast.</li>
-<li>Not designed for public servers. ??</li>
-</ul>
-</div>
-<div class="section" id="rfoo">
-<h3>rfoo<a class="headerlink" href="#rfoo" title="Permalink to this headline">¶</a></h3>
-<p>This is preliminary. Please correct these points if you spot any error.</p>
-<ul class="simple">
-<li>Uses own protocol</li>
-<li>Does not do validation.</li>
-<li>Python-specific.</li>
-<li>Fast.</li>
-<li>Not designed for public servers. ??</li>
-</ul>
-</div>
-<div class="section" id="zsi">
-<h3>ZSI<a class="headerlink" href="#zsi" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li>Unmaintained, although still works with recent Python versions</li>
-<li>Contains SOAPpy, which is not the same as SOAPy (notice the extra P)</li>
-<li>Supports attachments.</li>
-<li>Requires code generation (wsdl2py) for complex data structures</li>
-<li>Almost complete lack of user-friendliness. (&lt;= um, citation needed???)</li>
-<li>Lack of WSDL generator.</li>
-</ul>
-</div>
-<div class="section" id="soapy">
-<h3>SOAPy<a class="headerlink" href="#soapy" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li>Really simple (only two files, both less than 500 lines of code)</li>
-<li>Client only</li>
-<li>Requires PyXML, thus unusable with recent Python versions</li>
-</ul>
-</div>
-<div class="section" id="rsl">
-<h3>rsl<a class="headerlink" href="#rsl" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li>Client only.</li>
-<li>Unmaintained.</li>
-</ul>
-</div>
-<div class="section" id="pyro">
-<h3>PyRo<a class="headerlink" href="#pyro" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li>Python Remote Objects</li>
-<li>???</li>
-</ul>
-</div>
-</div>
 <div class="section" id="id1">
 <h2>Changelog<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="spyne-2-11-0">
@@ -403,14 +212,12 @@ another.</p>
 </li>
 <li><p class="first">SQLAlchemy: Implement a hybrid file container that puts file metadata in a
 json column in database and and file data in file system. Fully supported by
-all protocols as a binary File format.</p>
+all protocols as a binary File.Value instance.</p>
 </li>
 <li><p class="first">Implement an Xml Schema parser.</p>
 </li>
-<li><p class="first">Import all model markers to <tt class="docutils literal"><span class="pre">spyne.model</span></tt>.</p>
-</li>
-<li><p class="first">Import <tt class="docutils literal"><span class="pre">&#64;rpc</span></tt>, <tt class="docutils literal"><span class="pre">&#64;srpc</span></tt>, <tt class="docutils literal"><span class="pre">ServiceBase</span></tt> and <tt class="docutils literal"><span class="pre">Application</span></tt> inside the
-<tt class="docutils literal"><span class="pre">spyne</span></tt> module.</p>
+<li><p class="first">Import all model markers as well as the <tt class="docutils literal"><span class="pre">&#64;rpc</span></tt>, <tt class="docutils literal"><span class="pre">&#64;srpc</span></tt>, <tt class="docutils literal"><span class="pre">&#64;mrpc</span></tt>,
+<tt class="docutils literal"><span class="pre">ServiceBase</span></tt> and <tt class="docutils literal"><span class="pre">Application</span></tt> to the root <tt class="docutils literal"><span class="pre">spyne</span></tt> package.</p>
 </li>
 <li><p class="first">Implement JsonP protocol.</p>
 </li>
@@ -420,7 +227,7 @@ Sample response: <tt class="docutils literal"><span class="pre">{&quot;ver&quot;
 <p>Sample request:  <tt class="docutils literal"><span class="pre">{&quot;ver&quot;:1,</span> <span class="pre">&quot;body&quot;:</span> <span class="pre">{&quot;div&quot;:</span> <span class="pre">{&quot;dividend&quot;:4,&quot;divisor&quot;:0]}}</span></tt>
 Sample response: <tt class="docutils literal"><span class="pre">{&quot;ver&quot;:1,</span> <span class="pre">&quot;fault&quot;:</span> <span class="pre">{&quot;faultcode&quot;:</span> <span class="pre">&quot;Server&quot;,</span> <span class="pre">&quot;faultstring&quot;:</span> <span class="pre">&quot;Internal</span> <span class="pre">Error&quot;}}}</span></tt></p>
 </li>
-<li><p class="first">Steal and integrate the experimental WebSocket tranport for Twisted.</p>
+<li><p class="first">Steal and integrate the experimental WebSocket tranport from Twisted.</p>
 </li>
 <li><p class="first">Support Django natively using <tt class="xref py py-class docutils literal"><span class="pre">spyne.server.django.DjangoView</span></tt> and
 <tt class="xref py py-class docutils literal"><span class="pre">spyne.server.django.DjangoServer</span></tt>.</p>
@@ -432,11 +239,11 @@ Sample response: <tt class="docutils literal"><span class="pre">{&quot;ver&quot;
 <li><p class="first">Remove hard-coded pytz.utc defaults from everywhere. Use spyne.LOCAL_TZ to
 configure the default time zone.</p>
 </li>
-<li><p class="first">As a result of the above change, datetime objects deserialized by Spyne are
+<li><p class="first">As a result of the above change, <tt class="docutils literal"><span class="pre">datetime</span></tt> objects deserialized by Spyne
 are forced to the above time zone during soft validation (nothing should have
 changed from the user code perspective).</p>
 </li>
-<li><p class="first">Add default_factory to ModelBase customizer. It&#8217;s a callable that produces
+<li><p class="first">Add <tt class="docutils literal"><span class="pre">default_factory</span></tt> to ModelBase customizer. It&#8217;s a callable that produces
 default values on demand. Suitable to be used with e.g. lambdas that return
 mutable defaults.</p>
 </li>
@@ -449,20 +256,17 @@ to make object-specific in-place customizations to child types.</p>
 <li><p class="first">Add mapper between Django models and <tt class="xref py py-class docutils literal"><span class="pre">spyne.util.django.DjangoComplexModel</span></tt>
 types.</p>
 </li>
-<li><p class="first">Removed <tt class="docutils literal"><span class="pre">&#64;nillable_string</span></tt> and <tt class="docutils literal"><span class="pre">&#64;nillable_string_iterable</span></tt> decorators from
-type (de)serializers from/to string. These methods are meant to be used via the
-wrapper functions {from,to}_string in <tt class="docutils literal"><span class="pre">ProtocolBase</span></tt>.</p>
-</li>
-<li><p class="first">Spyne now tracks subclasses and adds them to the interface if they have the same
-namespace as their parent.</p>
+<li><p class="first">Spyne now tracks subclasses and adds them to the interface if they are in the
+same namespace as their parent.</p>
 </li>
 <li><p class="first">Simple dictionary protocol&#8217;s <tt class="docutils literal"><span class="pre">hier_delim</span></tt> default value is now &#8216;.&#8217;</p>
 </li>
-<li><p class="first">Fixes support for &gt; 1 XmlAttribute referencing the same &#8216;attribute_of&#8217; element
-in a ComplexModel subclass.</p>
+<li><p class="first">Fixes support for XmlAttributes with max_occurs&gt;1 referencing the same
+&#8216;attribute_of&#8217; element in a ComplexModel subclass.</p>
 </li>
-<li><p class="first">Render <tt class="docutils literal"><span class="pre">spyne.model.File</span></tt> as <tt class="docutils literal"><span class="pre">twisted.web.static.File</span></tt> when using HttpRpc
-over <tt class="docutils literal"><span class="pre">TwistedWebResource</span></tt>.</p>
+<li><p class="first">Renders <tt class="docutils literal"><span class="pre">spyne.model.File</span></tt> as <tt class="docutils literal"><span class="pre">twisted.web.static.File</span></tt> when using HttpRpc
+over <tt class="docutils literal"><span class="pre">TwistedWebResource</span></tt>. This lets twisted handle Http 1.1-specific
+functionality like range requests.</p>
 </li>
 <li><p class="first">Many, many, many bugs fixed.</p>
 </li>
@@ -1155,7 +959,7 @@ memory during processing.</li>
 http to a soap serialization/deserialization library that is architecture and
 transport agnostic.</li>
 <li>Hard dependency on WSGI removed.</li>
-<li>Sphinx docs with working examples: <a class="reference external" href="http://arskom.github.com/rpclib/">http://arskom.github.com/rpclib/</a></li>
+<li>Sphinx docs with working examples: <a class="reference external" href="http://arskom.github.com/soaplib/">http://arskom.github.com/soaplib/</a></li>
 <li>Serializers renamed to Models.</li>
 <li>Standalone xsd generation for ClassSerializer objects has been added. This
 allows soaplib to be used to define generic XML schemas, without SOAP
