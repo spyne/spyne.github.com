@@ -759,11 +759,11 @@ $(document).ready(function(){
         code = code.concat(db_boilerplate).concat([""]);
 
         if (ser == "SqlOtm" || ser == "SqlMtm") {
-            code = code.concat(obj_perm_db)
+            code = code.concat(obj_perm_db);
         }
         else {
-            code = code.concat(obj_perm)
-            imports.push("from spyne.model.complex import ComplexModel")
+            code = code.concat(obj_perm);
+            imports.push("from spyne.model.complex import ComplexModel");
         }
 
         code = code.concat(obj_user);
