@@ -1,1 +1,4 @@
-nbproject
+*.py[co]
+/blog/cache
+/blog/output
+/blog/.doit.db
