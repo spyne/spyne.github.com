@@ -5,19 +5,11 @@
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
-  <loc>http://spyne.io/blog/galleries/rss.xml</loc>
-  <lastmod>2014-07-24</lastmod>
- </sitemap>
- <sitemap>
   <loc>http://spyne.io/blog/rss.xml</loc>
   <lastmod>2014-07-24</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://spyne.io/blog/sitemap.xml</loc>
-  <lastmod>2014-07-24</lastmod>
- </sitemap>
- <sitemap>
-  <loc>http://spyne.io/blog/sitemapindex.xml</loc>
   <lastmod>2014-07-24</lastmod>
  </sitemap>
 </sitemapindex>
