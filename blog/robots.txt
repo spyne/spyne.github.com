@@ -1,0 +1,2 @@
+Sitemap: http://spyne.io/sitemapindex.xml
+
