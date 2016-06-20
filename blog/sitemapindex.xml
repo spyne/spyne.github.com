@@ -6,15 +6,11 @@
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
-  <loc>http://spyne.io/blog/galleries/rss.xml</loc>
-  <lastmod>2016-06-20T16:32:00Z</lastmod>
- </sitemap>
- <sitemap>
   <loc>http://spyne.io/blog/rss.xml</loc>
-  <lastmod>2016-06-20T16:32:00Z</lastmod>
+  <lastmod>2016-06-20T16:49:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://spyne.io/blog/sitemap.xml</loc>
-  <lastmod>2016-06-20T16:32:00Z</lastmod>
+  <lastmod>2016-06-20T16:49:00Z</lastmod>
  </sitemap>
 </sitemapindex>
