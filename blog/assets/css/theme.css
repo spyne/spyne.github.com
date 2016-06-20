@@ -1,14 +1,6 @@
-body {
-  padding-top: 60px;
-}
-@media (max-width: 979px) {
-  body {
-    padding-top: 0px;
-  }
-}
 #container {
     width: 960px;
-    margin: 50 auto;
+    margin: 0 auto;
 }
 
 #contentcolumn {
@@ -27,7 +19,11 @@ img {
     margin-bottom: 12px;
 }
 
-.footerbox {padding: 15px; text-align: center; margin-bottom: 15px;}
+.titlebox {
+    text-align: right;
+}
+
+#addthisbox {margin-bottom: 12px;}
 
 td.label {
     /* Issue #290 */
@@ -39,6 +35,7 @@ td.label {
     vertical-align: super;
     font-size: xx-small;
 }
+
 
 .caption {
     /* Issue 292 */
@@ -52,12 +49,6 @@ div.figure > a > img {
     display: block;
     margin-left: auto;
     margin-right: auto;
-}
-
-div.sidebar, div.admonition, div.attention, div.caution, div.danger, div.error, div.hint, div.important, div.note, div.tip, div.warning {
-    /* Issue 277 */
-    border: 1px solid #aaa;
-    border-radius: 5px;
 }
 
 blockquote p, blockquote {
@@ -76,8 +67,8 @@ ul.bricks > li {
     margin: 3px;
 }
 
-ul.breadcrumb > li:before {
-    content: " / ";
+.at300b, .stMainServices, .stButton, .stButton_gradient {
+    box-sizing: content-box;
 }
 
 pre, pre code {
@@ -89,17 +80,6 @@ pre, pre code {
 article.post-micro {
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-size: 1.5em;
-}
-
-/* fix anchors for headers */
-h1, h2, h3 {
-    margin-top: -40px;
-    padding-top: 60px;
-}
-
-h4, h5, h6 {
-    margin-top: -50px;
-    padding-top: 60px;
 }
 
 .image-block {
@@ -138,7 +118,7 @@ h4, h5, h6 {
 }
 
 .metadata p:before,
-.postlist .listdate:before {
+.postlist .listdate:after {
     content: " — ";
 }
 
@@ -164,11 +144,64 @@ h4, h5, h6 {
     margin-top: 1em;
 }
 
-.navbar .brand {
-    padding: 0 20px;
+.navbar-brand {
+    padding: 0 15px;
 }
 
-.navbar .brand #blog-title {
-    padding: 10px 0;
+.navbar-brand #blog-title {
+    padding: 15px 0;
     display: inline-block;
+}
+
+.navbar-brand #logo {
+    max-width: 100%;
+}
+
+.navbar-brand>img {
+    display: inline;
+}
+
+.row {
+    margin: 0;
+}
+
+/* for alignment with Bootstrap's .entry-content styling */
+.entry-summary {
+    margin-top: 1em;
+}
+
+/* Custom page footer */
+#footer {
+    padding-top: 19px;
+    color: #777;
+    border-top: 1px solid #e5e5e5;
+}
+
+/* hat tip bootstrap/html5 boilerplate */
+@media print {
+    *, *:before, *:after {
+        font-family: Garamond, Junicode, serif;
+    }
+
+    body {
+        font-size: 12pt;
+    }
+
+    article .entry-title a[href]:after,
+    article .metadata a[href]:after,
+    article .tags a[href]:after {
+        content: "";
+    }
+
+    article .metadata .sourceline {
+        display: none;
+    }
+
+    article .metadata .linkline a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    .navbar {
+        display: none;
+    }
 }

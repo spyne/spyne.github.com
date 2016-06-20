@@ -1,2 +1,4 @@
-Sitemap: http://spyne.io/sitemapindex.xml
+Sitemap: http://spyne.io/blog/sitemapindex.xml
 
+User-Agent: *
+Host: spyne.io

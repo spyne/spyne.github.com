@@ -1,27 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
-  <loc>http://spyne.io/blog/2012/index.html</loc>
-  <lastmod>2014-07-24</lastmod>
+  <loc>http://spyne.io/blog/2016/index.html</loc>
+  <lastmod>2016-06-20T16:32:00Z</lastmod>
  </url>
  <url>
   <loc>http://spyne.io/blog/archive.html</loc>
-  <lastmod>2014-07-24</lastmod>
+  <lastmod>2016-06-20T16:32:00Z</lastmod>
  </url>
  <url>
   <loc>http://spyne.io/blog/categories/index.html</loc>
-  <lastmod>2014-07-24</lastmod>
+  <lastmod>2016-06-20T16:32:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://spyne.io/blog/galleries/index.html</loc>
+  <lastmod>2016-06-20T16:32:00Z</lastmod>
  </url>
  <url>
   <loc>http://spyne.io/blog/index.html</loc>
-  <lastmod>2014-07-24</lastmod>
+  <lastmod>2016-06-20T16:32:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://spyne.io/blog/listings/index.html</loc>
+  <lastmod>2016-06-20T16:32:00Z</lastmod>
  </url>
  <url>
   <loc>http://spyne.io/blog/posts/first-stable-release-of-spyne.html</loc>
-  <lastmod>2014-07-24</lastmod>
+  <lastmod>2016-06-20T16:32:00Z</lastmod>
  </url>
 </urlset>
