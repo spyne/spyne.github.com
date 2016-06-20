@@ -544,6 +544,7 @@ DEPLOY_COMMANDS = {
         "mv output blog",
         "git add blog",
         "git commit -m \"blog deploy\"",
+        "git push",
         "git checkout blog-source",
     ]
 }
