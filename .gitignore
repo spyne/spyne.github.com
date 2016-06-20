@@ -1,4 +1,3 @@
 *.py[co]
-/blog/cache
-/blog/output
-/blog/.doit.db
+cache
+.doit.db
