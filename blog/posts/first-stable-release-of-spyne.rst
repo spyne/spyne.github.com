@@ -65,7 +65,9 @@ opinions on this matter were not as crystal clear as they were today. I just
 wanted my server-side functions to accept and return well-defined data without
 worrying about what the client would do with them, and Soap simply looked like
 it was up for the task by trying to be the champion of well-definedness.
+
 Soaplib, Rpclib and Spyne
+=========================
 
 Originally created by Aaron Bickell, Soaplib 0.8.1 was a barely functional
 prototype of a very promising design. After my taking over Soaplib’s
@@ -106,7 +108,9 @@ I started an endeavor with my first commit to Soaplib repo in May of 2009. With
 the release of Spyne-2.9.0 in September 29th, 2012, I consider that endeavor to
 be fulfilled. Now it’s time to build on top of Spyne and patch its shortcomings
 along the way.
+
 What is Spyne?
+==============
 
 Spyne is an RPC toolkit that imposes a clear distinction between Model, View and
 Controller, where View is split in two as “Protocol” and “Transport”. This means
@@ -131,7 +135,7 @@ request, so only supports primitive return values. Spyne does its best for
 bridging such gaps in functionality, for example by flattening request object
 hierarchy where necessary. (E.g. By default, this ({"call": {"obj": {"i": 5,
 "s": "str"}}}) JsonDocument request is equivalent to the following HttpRpc
-request: /call?obj_i=5&obj_s=str)
+request: /call?obj.i=5&obj.s=str)
 
 Not every transport is equal either. E.g. Twisted’s HTTP implementation holds
 the whole HTTP request in memory, so is not really suitable to receive big file
@@ -139,10 +143,11 @@ uploads via HTTP. (See the infamous bug #288 for more info.)
 
 Finally, producing server-side HTML with Spyne is also possible but not yet
 fully supported. There are experimental output-only protocols that serialize
-data as Html tables or Html MicroFormats. It remains to be seen whether or how
-these would fit into the current web development landscape.
+data as Html tables or as divs using the Html MicroFormat convention. It remains
+to be seen whether or how these would fit into the current web development
+landscape.
 
 So if you’re interested in using or helping with Spyne, head over to the docs
 and start hacking! For patches, comments and suggestions, do not hesitate to get
-in touch with us. Relevant information is in the readme document.
+in touch with us. Relevant information is in the Readme document.
 
