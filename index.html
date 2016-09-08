@@ -352,13 +352,13 @@ $(document).ready(function(){
                 if (validator != "") {
                     validator = ", " + validator;
                 }
-                return "HtmlTable(fields_as='columns'" + validator + ")";
+                return "HtmlColumnTable(" + validator + ")";
             }
             else if (prot == "HtmlRowTable") {
                 if (validator != "") {
                     validator = ", " + validator;
                 }
-                return "HtmlTable(fields_as='rows'" + validator + ")";
+                return "HtmlRowTable(" + validator + ")";
             }
             else {
                 return prot + "(" + validator + ")";
