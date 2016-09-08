@@ -56,15 +56,11 @@ $(document).ready(function(){
          "import logging"
         ,"logging.basicConfig(level=logging.DEBUG)"
         ,""
-        ,"from spyne.application import Application"
-        ,"from spyne.decorator import srpc"
-        ,"from spyne.service import ServiceBase"
-        ,"from spyne.model.primitive import Integer"
-        ,"from spyne.model.primitive import Unicode"
+        ,"from spyne import Application, rpc, ServiceBase, Integer, Unicode"
     ]
 
     var rpc_imports = [
-         "from spyne.model.complex import Iterable"
+         "from spyne import Iterable"
     ]
 
     var prot_imports = {
@@ -76,8 +72,8 @@ $(document).ready(function(){
         ,MessagePackDocument: "from spyne.protocol.msgpack import MessagePackDocument"
         ,MessagePackRpc: "from spyne.protocol.msgpack import MessagePackRpc"
         ,Csv: "from spyne.protocol.csv import Csv"
-        ,HtmlRowTable:    "from spyne.protocol.html import HtmlTable"
-        ,HtmlColumnTable: "from spyne.protocol.html import HtmlTable"
+        ,HtmlRowTable:    "from spyne.protocol.html import HtmlRowTable"
+        ,HtmlColumnTable: "from spyne.protocol.html import HtmlColumnTable"
         ,HtmlMicroFormat: "from spyne.protocol.html import HtmlMicroFormat"
     };
 
@@ -491,11 +487,8 @@ $(document).ready(function(){
         ,'from sqlalchemy import MetaData'
         ,'from sqlalchemy.orm import sessionmaker'
         ,''
-        ,"from spyne.model.complex import Array"
-        ,'from spyne.model.primitive import Integer32'
-        ,'from spyne.model.complex import TTableModel'
+        ,'from spyne import Array, Integer32, TTableModel, ServiceBase'
         ,'from spyne.server.wsgi import WsgiApplication'
-        ,'from spyne.service import ServiceBase'
     ];
 
     var db_boilerplate = [
@@ -763,7 +756,7 @@ $(document).ready(function(){
         }
         else {
             code = code.concat(obj_perm);
-            imports.push("from spyne.model.complex import ComplexModel");
+            imports.push("from spyne import ComplexModel");
         }
 
         code = code.concat(obj_user);
