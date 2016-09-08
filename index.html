@@ -56,7 +56,8 @@ $(document).ready(function(){
          "import logging"
         ,"logging.basicConfig(level=logging.DEBUG)"
         ,""
-        ,"from spyne import Application, rpc, ServiceBase, Integer, Unicode"
+        ,"from spyne import Application, rpc, ServiceBase, \\"
+        ,"    Integer, Unicode"
     ]
 
     var rpc_imports = [
@@ -487,7 +488,8 @@ $(document).ready(function(){
         ,'from sqlalchemy import MetaData'
         ,'from sqlalchemy.orm import sessionmaker'
         ,''
-        ,'from spyne import Array, Integer32, TTableModel, ServiceBase'
+        ,'from spyne import Array, Integer32, TTableModel, \\'
+        ,'    ServiceBase'
         ,'from spyne.server.wsgi import WsgiApplication'
     ];
 
