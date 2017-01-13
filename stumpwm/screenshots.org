@@ -1,0 +1,13 @@
+#+TITLE: 
+#+INCLUDE: frontmatter.org
+These screenshots are specifically designed to trigger a feverish
+commitment to stumpwm. If you have a heart condition or are easily
+whipped into psychotic frenzies please consult your doctor before
+viewing these pictures.
+#+ATTR_HTML: :width 500px
+[[file:images/screens/boring.jpg]]
+#+ATTR_HTML: :width 500px
+[[file:images/screens/exciting.jpg]]
+** User Submitted Screens
+#+ATTR_HTML: :width 500px
+[[file:images/screens/et-stumpscreen.jpg]]

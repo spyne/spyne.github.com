@@ -1,0 +1,21 @@
+#+TITLE: 
+#+INCLUDE: frontmatter.org
+** Wiki
+Our wiki is curated by the community.  If you have information to
+share, please add it here!  If you find something confusing or in the
+wrong place, move it! No contributions are bad contributions. 
+
+- [[https://github.com/stumpwm/stumpwm/wiki][StumpWM Community Wiki]]
+
+** StumpWM manual
+Choose your version. These are generated from the source code and then
+converted from the texinfo.  You can also compile the texinfo to an
+info file and read it in emacs.  (This is done automatically during
+the build process).  If you find something missing from the manual,
+please add it by editing the =stumpwm.texi.in= in the git repo, or
+open an issue on the issue tracker.
+- git :: [[./git/stumpwm-git.html][html]], [[./git/stumpwm-git.pdf][pdf]]
+- 1.0.0 :: [[./1.0.0/stumpwm-1.0.0.html][html]], [[./1.0.0/stumpwm-1.0.0.pdf][pdf]]
+- 0.9.9 :: [[./0.9.9/stumpwm-0.9.9.html][html]], [[./0.9.9/stumpwm-0.9.9.pdf][pdf]]
+- 0.9.8 :: [[./0.9.8/stumpwm-0.9.8.html][html]], [[./0.9.8/stumpwm-0.9.8.pdf][pdf]]
+- 0.9.7 :: [[./0.9.7/stumpwm-0.9.7.html][html]], [[./0.9.7/stumpwm-0.9.7.pdf][pdf]]

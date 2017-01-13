@@ -1,0 +1,14 @@
+#+TITLE: 
+#+INCLUDE: frontmatter.org
+** StumpWM's Universe
+- [[https://github.com/stumpwm/stumpwm][Github Page]]
+- [[https://github.com/stumpwm/stumpwm/wiki][Community Wiki]]
+- [[https://github.com/stumpwm/stumpwm-contrib][Modules/Extensions]]
+** Brethren
+- [[http://ratpoison.nongnu.org/][ratpoison]] - StumpWM's funky uncle.
+- [[http://ianyh.com/amethyst/][Amethyst]] - A tiling window manager for OS X 
+- [[http://common-lisp.net/project/clfswm/][CLFSWM]] - A(nother) Common Lisp FullScreen Window Manager
+- [[https://github.com/mwitmer/guile-wm][Guile-WM]] - A window managing framework written in Guile Scheme
+- [[http://awesome.naquadah.org/][Awesome]] - extended with Lua, very interesting feature set.
+- [[http://www.xmonad.org/][xmonad]] - Haskell based so that's neat.
+- [[http://www.emacswiki.org/][Vi IMproved]] - The editor of the beast. 

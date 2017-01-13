@@ -1,0 +1,14 @@
+#+TITLE: 
+#+INCLUDE: frontmatter.org
+To obtain a copy of stumpwm you can visit:
+- git (development version) :: [[https://github.com/stumpwm/stumpwm][GitHub]]
+- 1.0.0 :: [[https://github.com/stumpwm/stumpwm/archive/v1.0.0.tar.gz][tar.gz]] , [[https://github.com/stumpwm/stumpwm/archive/v1.0.0.zip][zip]]
+- 0.9.9 :: [[https://github.com/stumpwm/stumpwm/archive/0.9.9.tar.gz][tar.gz]] , [[https://github.com/stumpwm/stumpwm/archive/0.9.9.zip][zip]]
+- 0.9.8 :: [[https://github.com/stumpwm/stumpwm/archive/0.9.8.tar.gz][tar.gz]] , [[https://github.com/stumpwm/stumpwm/archive/0.9.8.zip][zip]]
+- 0.9.7 and earlier :: [[http://download.savannah.gnu.org/releases/stumpwm/][savannah releases]]
+
+To get started quickly:
+#+BEGIN_SRC sh
+git clone https://github.com/stumpwm/stumpwm.git
+less stumpwm/README.md
+#+END_SRC

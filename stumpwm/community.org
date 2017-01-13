@@ -1,0 +1,7 @@
+#+TITLE: 
+#+INCLUDE: frontmatter.org
+We have a vibrant and active community of lisp hackers who use StumpWM.
+- There's a =#stumpwm= channel on =irc.freenode.net=.
+- StumpWM has one mailing list for all manner of discussion related to
+  StumpWM. (click to sign up) [[https://lists.nongnu.org/mailman/listinfo/stumpwm-devel][stumpwm-devel@nongnu.org]].
+- For other stuff (tips tricks and examples) visit the [[https://github.com/stumpwm/stumpwm/wiki][stumpwm wiki]].

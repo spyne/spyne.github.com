@@ -1,0 +1,14 @@
+#+TITLE: 
+#+AUTHOR:    David Bjergaard
+#+EMAIL:     dbjergaard@gmail.com
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+OPTIONS: html-postamble:nil
+#+EXPORT_SELECT_TAGS: noexport
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="style.css" />
+
+#+ATTR_HTML: :width 600px
+[[./images/stumpwm-logo-stripe.png]]
+#+INCLUDE: ./header/header.org org

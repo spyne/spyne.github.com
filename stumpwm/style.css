@@ -1,0 +1,234 @@
+
+/* === === === === === === === === === === === === === === === === ===
+
+   Hacked from: texinfo-bright-colors.css (http://hollmen.net/texinfo/texinfo-bright-colors.css)
+   Version:   1.0
+   Date:      Thursday, September 04th, 2014
+   Author:    David Bjergaard dbjergaard@gmail.com
+
+
+   --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+   (c) Copyright, David Bjergaard
+       September, 2014
+
+   The current file is free software: you can redistribute it and/or
+   modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation, either version 3 of the
+   License, or (at your option) any later version.
+
+   The current file is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   === === === === === === === === === === === === === === === === */
+@font-face {
+    font-family: 'crimson';
+    src: url('./font/crimson-bold-webfont.eot');
+    src: url('./font/crimson-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./font/crimson-bold-webfont.woff') format('woff'),
+         url('./font/crimson-bold-webfont.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'crimson';
+    src: url('./font/crimson-bolditalic-webfont.eot');
+    src: url('./font/crimson-bolditalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./font/crimson-bolditalic-webfont.woff') format('woff'),
+         url('./font/crimson-bolditalic-webfont.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+
+}
+@font-face {
+    font-family: 'crimson';
+    src: url('./font/crimson-italic-webfont.eot');
+    src: url('./font/crimson-italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./font/crimson-italic-webfont.woff') format('woff'),
+         url('./font/crimson-italic-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+
+}
+@font-face {
+    font-family: 'crimson';
+    src: url('./font/crimson-roman-webfont.eot');
+    src: url('./font/crimson-roman-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./font/crimson-roman-webfont.woff') format('woff'),
+         url('./font/crimson-roman-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'crimson';
+    src: url('./font/crimson-semibold-webfont.eot');
+    src: url('./font/crimson-semibold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./font/crimson-semibold-webfont.woff') format('woff'),
+         url('./font/crimson-semibold-webfont.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'crimson';
+    src: url('./font/crimson-semibolditalic-webfont.eot');
+    src: url('./font/crimson-semibolditalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./font/crimson-semibolditalic-webfont.woff') format('woff'),
+         url('./font/crimson-semibolditalic-webfont.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+
+}
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600);
+@import url(http://fonts.googleapis.com/css?family=Alegreya+SC);
+@import url(http://fonts.googleapis.com/css?family=Inconsolata);
+@import url(http://fonts.googleapis.com/css?family=Crimson+Text:400,400italic,600);
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+h1.chapter{
+    font-weight: 400;
+}
+h1.settitle{
+    font-weight: 400;
+}
+pre.menu-comment{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
+    font-size: 18pt;
+}
+
+h2.section{
+    font-weight: 400;
+}
+h3.subsection{
+    font-weight: 400;
+}
+a {
+    /* font-family: 'Source Sans Pro',sans-serif; */
+    /* text-decoration: underline; */
+    color: #000080;
+}
+/* a:hover{ */
+/*     background: #D0D0D0; */
+/* } */
+
+a:visited{
+    color: #68228b;
+}
+
+b {
+    font-weight: 600;
+}
+body
+{
+    font-family: 'crimson', serif;
+    -moz-font-feature-settings: "liga", "calt", "xtex";
+    -webkit-font-feature-settings: "liga", "calt", "xtex";
+    -ms-font-feature-settings: "liga", "xtex";
+    -o-font-feature-settings: "liga", "xtex";
+    font-feature-settings: "liga", "xtex";
+    font-size: 15pt;
+    clear: center;
+    max-width: 30em;
+    line-height: 1.35;
+    text-align: justify;
+    padding: 50px;
+    margin: 0 auto;
+    background-size: 15%;
+    background-image: url("./images/lisp-lizard.png");
+    background-position: right bottom;
+    background-repeat: no-repeat;
+}
+
+h1 {
+  font-size: 1.5em;
+}
+h2 {
+  font-size: 1.1em;
+}
+h3 {
+  font-size: 1.1em;
+}
+h4 {
+  font-size: 1.0em;
+}
+h5 {
+  font-size: 0.9em;
+}
+h6 {
+  font-size: 0.8em;
+}
+
+p {
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
+}
+u {
+text-decoration:none;
+}
+blockquote {
+  /* background-color: #FFCCFF; */
+}
+
+ul { 
+  /* background-color: #FF9900;  */
+} 
+
+ol { 
+  /* background-color: #CCFF33;  */
+}
+table{
+    border-style: hidden;
+}
+
+th{
+    border-collapse: collapse;
+    text-align: left;
+    border-style: hidden;
+}
+
+tbody{
+	font-family: 'Source Sans Pro';
+	font-size: 18px;
+	background: #fff;
+	border-collapse: collapse;
+	text-align: left;
+        border-style: hidden;
+}
+
+tr {
+    border-style: hidden;
+}
+
+td {
+    border-style: hidden;
+}
+
+pre,code,example,tt,verbatim,samp,kbd {
+  font-family: 'Inconsolata', sans-serif;
+}
+
+kbd{
+    font-size: 1.10em;
+}
+
+hr { 
+    border: 0;
+    height: 1px;
+    background: #333;
+    background-image: -webkit-linear-gradient(left, #ccc, #333, #ccc);
+    background-image: -moz-linear-gradient(left, #ccc, #333, #ccc);
+    background-image: -ms-linear-gradient(left, #ccc, #333, #ccc);
+    background-image: -o-linear-gradient(left, #ccc, #333, #ccc);
+}
