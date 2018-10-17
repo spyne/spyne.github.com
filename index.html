@@ -291,7 +291,7 @@ $(document).ready(function(){
     function regen_code_rpc() {
         var retval = [];
 
-        var version = '2.12.14';
+        var version = '2.13.2-alpha';
 
         var inprot = $('input[name=inprot]:checked').val();
         var outprot = $('input[name=outprot]:checked').val();
@@ -1021,16 +1021,18 @@ $(document).ready(function(){
         <br>
         <span style="font-weight: bold">Latest release:</span> <br/>
         <div>
-            <strong>2.12.14</strong> | <a href="https://pypi.python.org/packages/source/s/spyne/spyne-2.12.14.tar.gz">Download</a>
+            <strong>2.13.2-alpha</strong> | <a href="https://pypi.python.org/packages/source/s/spyne/spyne-2.13.2a0.tar.gz">Download</a>
             <span class="pipe"> | </span>
-            <span style="display: inline-block">2016-10-28</span>
+            <span style="display: inline-block">2018-05-28</span>
             <span class="pipe"> | </span>
 
+            <!-- TODO: Does jenkins have something similar?
             <span style="display: inline-block">
                 <a href="https://travis-ci.org/arskom/spyne">
                     <img alt="Trunk Travis Status" src="https://api.travis-ci.org/arskom/spyne.png">
                 </a>
             </span>
+            -->
 
         </div>
     </div>
@@ -1039,9 +1041,9 @@ $(document).ready(function(){
         <li class="buttons"><a class="docs" href="docs/index.html">Docs</a></li>
         <li class="buttons"><a class="blog" href="blog/index.html">Blog</a></li>
         <li class="buttons"><a class="buttons github" href="https://github.com/arskom/spyne">GitHub</a></li>
-        <li class="buttons"><a class="pypi" href="http://pypi.python.org/pypi/spyne">PyPi</a></li>
-        <li class="buttons"><a class="so" href="http://stackoverflow.com/questions/tagged/spyne">StackOverflow</a></li>
-        <li class="buttons"><a class="jenkins" href="http://spyne.ci.cloudbees.com">Jenkins</a></li>
+        <li class="buttons"><a class="pypi" href="https://pypi.org/project/spyne/#history">PyPi</a></li>
+        <li class="buttons"><a class="so" href="https://stackoverflow.com/questions/tagged/spyne">StackOverflow</a></li>
+        <li class="buttons"><a class="jenkins" href="https://jenkins.arskom.com.tr/job/spyne/">Jenkins</a></li>
     </ul>
     <div class="clear"></div>
 </header>
